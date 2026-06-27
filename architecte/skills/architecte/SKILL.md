@@ -115,10 +115,23 @@ avec les noms réels (pas de placeholders).
 Produire `factory-docs/work/risks.md` (gabarit `templates/risks.md`) : risques
 techniques, mitigations, spikes/POC nécessaires. MAJ `architecture.risks`.
 
+### Étape 9 — Décisions à impact design (handoff vers le Designer)
+**Synthétiser la tranche de l'architecture qui se voit à l'écran** — c'est le contrat propre
+Architecte → Designer (le designer ne doit pas fouiller tout le handoff ; l'architecte sait ce qui se
+voit). Produire `factory-docs/work/design-impact.md` (gabarit `templates/design-impact.md`), par ordre
+d'importance : **1.** stack front + approche de style (framework, lib de composants, stratégie CSS — *ce
+qui rend le design system exécutable/synchronisable*) ; **2.** contrats transverses visibles
+(multitenance/theming par tenant ; identité/rôles/autorisations : variantes par rôle, non autorisé,
+connexion, session expirée ; navigation/routage) ; **3.** conventions d'API qui décident des états d'UI
+(format d'erreur → messages par champ, asynchrone, pagination/listes, cas vides) ; **4.** NFR qui touchent
+l'UX (niveau d'accessibilité visé, cibles responsive/breakpoints, i18n, budget de performance). **Exclure**
+le back/persistance/déploiement/ADR serveur. `(src: …)` partout ; **marquer/ne pas inventer** ; **sans
+objet** si N/A. MAJ `architecture.design_impact = true`.
+
 ## Porte de sortie
 - Réponses vérifiées (rien de bloquant en suspens) ; `drivers-quality.md`,
-  `components.md`, `tech-stack.md`, `standards.md`, ADR, `diagrams.md`, `risks.md`
-  produits ; conventions par langage installées dans `conventions/` ;
+  `components.md`, `tech-stack.md`, `standards.md`, ADR, `diagrams.md`, `risks.md`,
+  **`design-impact.md`** produits ; conventions par langage installées dans `conventions/` ;
   walking skeleton et séquence de features figés. `architecture.phase = "contrat"`.
 - **Traçabilité** : chaque énoncé porte sa source `(src: …)` (artefact cadrage ou
   atelier/utilisateur). **Rien d'inventé** ; tout trou reste `[À VALIDER]`.

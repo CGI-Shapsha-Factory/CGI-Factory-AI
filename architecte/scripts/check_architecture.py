@@ -9,7 +9,8 @@ echoue si le contrat technique est incomplet :
   - stack sans langage ;
   - un langage de la stack sans fichier de conventions installe ;
   - aucune feature sequencee (numerotation non figee) ;
-  - walking skeleton non designe.
+  - walking skeleton non designe ;
+  - section `Decisions a impact design` non produite (handoff designer).
 
 Exit 0 si tout est present et coherent, sinon 1. Reutilisable a la main, en hook
 git, ou en CI (socle deterministe de la factory).
@@ -70,6 +71,9 @@ def main(argv):
 
     if not arch.get("walking_skeleton"):
         problems.append("walking skeleton non designe")
+
+    if not arch.get("design_impact"):
+        problems.append("section `Decisions a impact design` non produite (handoff designer)")
 
     if problems:
         print("ARCHITECTURE INCOMPLETE - points bloquants :", file=sys.stderr)

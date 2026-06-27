@@ -1,25 +1,28 @@
 #!/usr/bin/env python
-"""Garde-fou deterministe (sans IA) de la phase design.
+"""Garde-fou deterministe (sans IA) de la phase design (atelier de couverture).
 
-Lit le manifeste partage d'un projet (factory-docs/manifest.json par defaut) et echoue si
-le contrat de design est incomplet :
+Le plugin ne genere PAS le design system (il nait dans Claude Design, via /design-sync). Ce
+garde-fou valide la COUVERTURE de l'atelier, pas des fichiers de tokens.
+
+Lit le manifeste partage d'un projet (factory-docs/manifest.json par defaut) et echoue si :
   - bloc `design` absent ;
-  - maquette validee non referencee ;
-  - tokens DTCG non ecrits (fichier absent) ;
-  - aucun composant ;
-  - un composant sans etats definis ;
-  - aucun parcours (couverture des use cases non figee) ;
-  - front-end non aligne / format de livraison des tokens absent ;
-  - cible d'accessibilite absente.
+  - checklist absente ou un bloc vide (foundation / experience / technical) ;
+  - un item de checklist au statut `open` (couverture incomplete) ;
+  - un item avec un statut invalide (hors open/deduced/decided/sans_objet) ;
+  - prompt Claude Design non genere (prompt_path) ;
+  - rapport de couverture absent (coverage_report_path) ;
+  - handoff design (guidelines) absent (guidelines_path).
 
-La validation de couverture (`coverage_validated`) reste une porte HUMAINE : ce script ne
-la verifie pas, comme la coherence de l'architecte. Exit 0 si tout est present, sinon 1.
+Les portes `coverage_sufficient` et `design_validated` restent des gestes HUMAINS : ce script
+ne les force jamais. Exit 0 si tout est present, sinon 1.
 
 Usage:
     python check_design.py [chemin/vers/manifest.json]
 """
 import json
 import sys
+
+VALID_STATUS = {"open", "deduced", "decided", "sans_objet"}
 
 
 def main(argv):
@@ -41,35 +44,38 @@ def main(argv):
 
     problems = []
 
-    if not design.get("source_maquette"):
-        problems.append("maquette validee non referencee (source_maquette)")
+    checklist = design.get("checklist")
+    if not isinstance(checklist, dict):
+        problems.append("checklist de couverture absente (lancer designer-init)")
+        checklist = {}
 
-    tokens = design.get("tokens") or {}
-    if not tokens.get("file"):
-        problems.append("tokens DTCG non ecrits (aucun fichier de tokens)")
+    open_ids, bad_status = [], []
+    total = 0
+    for bloc in ("foundation", "experience", "technical"):
+        items = checklist.get(bloc)
+        if not items:
+            problems.append(f"bloc de checklist `{bloc}` vide")
+            continue
+        for it in items:
+            total += 1
+            st = it.get("status") if isinstance(it, dict) else None
+            iid = (it.get("id") if isinstance(it, dict) else None) or "?"
+            if st not in VALID_STATUS:
+                bad_status.append(iid)
+            elif st == "open":
+                open_ids.append(iid)
 
-    components = design.get("components") or []
-    if not components:
-        problems.append("aucun composant defini")
+    if bad_status:
+        problems.append("items au statut invalide : " + ", ".join(bad_status))
+    if open_ids:
+        problems.append("items de checklist non couverts (statut `open`) : " + ", ".join(open_ids))
 
-    states = design.get("component_states") or {}
-    for comp in components:
-        comp_states = states.get(comp) if isinstance(states, dict) else None
-        if not comp_states:
-            problems.append(f"composant '{comp}' sans etats definis")
-
-    if not design.get("journeys"):
-        problems.append("aucun parcours (couverture des use cases non figee)")
-
-    align = design.get("stack_alignment") or {}
-    if not align.get("frontend"):
-        problems.append("front-end non aligne sur la stack de l'architecte")
-    if not align.get("token_delivery"):
-        problems.append("format de livraison des tokens absent")
-
-    access = design.get("accessibility") or {}
-    if not access.get("standard") or not access.get("target"):
-        problems.append("cible d'accessibilite (standard/niveau) absente")
+    if not design.get("prompt_path"):
+        problems.append("prompt Claude Design non genere (prompt_path)")
+    if not design.get("coverage_report_path"):
+        problems.append("rapport de couverture absent (coverage_report_path)")
+    if not design.get("guidelines_path"):
+        problems.append("handoff design (guidelines) absent (guidelines_path)")
 
     if problems:
         print("DESIGN INCOMPLET - points bloquants :", file=sys.stderr)
@@ -77,7 +83,7 @@ def main(argv):
             print(f"  - {p}", file=sys.stderr)
         return 1
 
-    print("DESIGN OK - contrat de design present et coherent.")
+    print(f"DESIGN OK - couverture complete ({total} items statues), prompt + rapport + handoff presents.")
     return 0
 
 

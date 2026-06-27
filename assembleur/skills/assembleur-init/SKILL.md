@@ -19,14 +19,15 @@ avec un bloc `assembly`.
 **Les 3 contrats doivent être validés.** Lire `factory-docs/manifest.json` :
 - si la phase amont n'est pas prête (`definition_of_ready.ready_for_speckit` faux), **ou** si
   l'architecture n'est pas validée (`architecture.coherence_validated` faux), **ou** si le
-  design n'est pas validé (`design.coverage_validated` faux) → **refuser** en clair :
+  design n'est pas validé (`design.design_validated` faux — le système Claude Design a été validé) →
+  **refuser** en clair :
   > « La convergence ne peut pas démarrer : il faut les trois contrats validés — le cadrage
-  > (prêt pour SpecKit), l'architecture (cohérence validée) et le design (couverture
-  > validée). Termine d'abord la phase qui manque. »
+  > (prêt pour SpecKit), l'architecture (cohérence validée) et le design (système validé). Termine
+  > d'abord la phase qui manque. »
 - Vérifier la présence des artefacts attendus dans `factory-docs/work/` : cadrage
   (`product-brief.md`, `glossaire.md`, `spec-index.md`, `*.brief.md`), architecte
-  (`tech-stack.md`, `components.md`, `decisions/`), designer (`foundations.md`,
-  `components.md`, `journeys.md`, `accessibility.md`).
+  (`tech-stack.md`, `components.md`, `decisions/`, `design-impact.md`), designer
+  (`design-guidelines.md` = handoff design : réf. du design system synchronisé + guidelines).
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 

@@ -1,70 +1,57 @@
 ---
 name: designer-coherence
-description: Valide la couverture du contrat de design (parcours + états) et prépare le passage à l'assembleur.
+description: Valide le design system généré par Claude Design, vérifie la couverture, et produit le handoff design (réf. du système synchronisé + guidelines) pour l'assembleur.
 ---
 
 # designer-coherence
 
-Dernière étape de la phase design : la **porte de validation de couverture** (def : « la
-porte humaine est l'arbitrage du designer, puis la validation de couverture des parcours
-et des états »). Vérifie que le contrat de design tient ensemble, sans trou, avant de
-passer le relais à l'assembleur.
+Dernière étape de la phase design : la **porte de validation du système généré** (def : « après Claude
+Design, la validation du système généré ; le designer valide avant que `/design-sync` ne l'engage vers la
+fabrication »). On vérifie que la **couverture** est tenue et que le design system produit est validé,
+puis on prépare le **handoff** pour l'assembleur.
 
 ## Porte d'entrée
-Le skill `designer` a produit le contrat (`design.phase = "contrat"`). Sinon, orienter en
-clair vers `/designer:designer`.
+Le skill `designer` a produit le prompt + le rapport de couverture (`design.phase = "atelier"`,
+`design.coverage_sufficient = true`). Sinon, orienter en clair vers `/designer:designer`.
+*(Entre les deux : l'humain a lancé **Claude Design** avec le prompt et obtenu un design system.)*
 
 ## Entrées
-Les artefacts de design dans `factory-docs/work/` : `design-principles.md`,
-`foundations.md`, `design-components.md`, `states-and-patterns.md`, `journeys.md`,
-`accessibility.md`, `design-decisions/DDR-*.md` ; le dossier `design-system/` (tokens DTCG
-+ config de livraison) ; le `spec-index.md` du cadrage ; le manifeste.
+`factory-docs/work/coverage-report.md` ; le bloc `design` du manifeste (checklist) ; le `spec-index.md`
+(parcours) et `design-impact.md` (architecte) ; la **référence du design system produit dans Claude
+Design** (à fournir par l'humain).
 
-## Contrôles de cohérence
-1. **Tokens ↔ fondations** : chaque fondation (couleur, typo, espacement, élévation,
-   mouvement) est matérialisée en tokens DTCG ; **aucune valeur brute codée en dur** dans
-   `design-components.md` (tout référence un token).
-2. **Composants ↔ maquette** : chaque composant visible dans la maquette validée a un
-   contrat dans `design-components.md` ; aucun composant orphelin.
-3. **Couverture des états** : chaque composant interactif a ses états requis définis
-   (default/hover/focus/active/disabled + loading/empty/error là où c'est pertinent) ; les
-   états canoniques d'écran sont couverts.
-4. **Couverture des parcours** : **chaque** use case du `spec-index.md` est couvert par un
-   parcours de `journeys.md` (couverture **complète** — pas seulement le MVP).
-5. **Tokens ↔ stack** : le format de livraison est cohérent avec le front-end de
-   l'architecte ; `design-system/` contient les fichiers de tokens exécutables (DTCG) + la
-   config de livraison (ou un fallback variables CSS + avertissement assumé).
-6. **Accessibilité** : cibles WCAG 2.2 AA présentes et cohérentes (paires de contraste
-   définies pour les tokens de couleur sémantiques ; modèle focus/clavier par composant).
-7. **Aucun trou bloquant** : pas de `[À VALIDER]` bloquant ouvert.
-
-Garde-fou déterministe : lancer `scripts/check_design.py` sur le manifeste — il échoue si
-une entrée structurante manque (maquette, tokens, composants & états, parcours, alignement
-stack, accessibilité).
+## Procédure
+1. **Vérifier la couverture** : la checklist (`design.checklist`) ne contient **aucun item `open`** (tout
+   `deduced`/`decided`/`sans_objet`). Les parcours du `spec-index.md` sont tous couverts (E1). Sinon,
+   renvoyer vers `/designer:designer` pour statuer les items restants. Lancer le garde-fou déterministe
+   `scripts/check_design.py`.
+2. **Porte humaine : validation du système généré** (porte 2, jamais automatisée). Le designer **valide**
+   le design system produit par Claude Design (cohérent avec la couverture, la direction stylistique et la
+   stack). Capter sa référence dans `design.design_system_ref`. Le skill ne passe **jamais**
+   `design.design_validated` à vrai de lui-même ; il le propose, l'humain confirme.
+3. **Produire le handoff design** → `factory-docs/work/design-guidelines.md` (gabarit
+   `templates/design-guidelines.md`) : **référence du design system validé + synchronisable** (`/design-sync`),
+   **règles d'états** (par écran), **patterns d'erreur** (validation à la sortie du champ, format API →
+   messages par champ), **socle d'accessibilité** (niveau visé), et la règle **aucune valeur de style en
+   dur**. MAJ `design.guidelines_path`.
 
 ## Sortie
-- Un **rapport de couverture** `factory-docs/work/coherence-report.md` : statut par
-  contrôle (atteint / non atteint) avec la raison, et la liste de ce qui manque
-  (actionnable, relié à l'étape/skill qui le résout).
-- Affichage en chat d'un **tableau de synthèse** (couvert / à corriger / manquant).
-- **Porte humaine** : le designer **valide** la couverture (geste humain). Le skill ne
-  passe **jamais** `design.coverage_validated` à vrai de lui-même ; il le propose, l'humain
-  confirme. Verdict honnête : pas de vert tant qu'un contrôle échoue.
-
-## Mise à jour du manifeste
-- `design.phase = "valide"` une fois la validation humaine actée.
-- `design.coverage_validated` passé à vrai **par l'humain** uniquement.
+- **Rapport de couverture** à jour (statut par item) + tableau de synthèse en chat (couvert / à corriger /
+  manquant).
+- **Handoff design** (`design-guidelines.md`) prêt pour l'assembleur ; `design.design_system_ref` posée.
+- **Porte humaine** : `design.design_validated = true` **par l'humain uniquement** ; `design.phase = "valide"`
+  une fois acté. Verdict honnête : pas de vert tant qu'un item reste `open`.
 
 ## Handoff (vers l'assembleur)
-Une fois validé, le contrat de design prêt à transmettre comprend : les principes, les
-**tokens DTCG exécutables** (`design-system/`) + leur format de livraison, les fondations,
-les contrats de composants & leurs états, les patterns, les parcours couvrant les use
-cases, le contrat d'accessibilité, et les DDR. (L'assembleur coud ces contrats par
-feature.)
+Le contrat de design prêt à transmettre = la **référence du design system validé/synchronisé** (Claude
+Design, pont `/design-sync`) + les **guidelines** (règles d'états, patterns d'erreur, socle a11y). C'est ce
+que l'Assembleur grave dans la constitution / le `claude.md` / la CI (voir §6 de la spec : forcer
+`/design-sync`, interdire les valeurs de style en dur, contrôler les états et patterns d'erreur).
 
 ## Règles invariantes
-- **L'humain valide.** La couverture n'est jamais auto-validée par l'IA.
-- **Refléter l'état réel.** Aucun contrôle maquillé ; un échec reste un échec.
+- **L'humain valide.** Le système généré n'est jamais auto-validé par l'IA.
+- **Refléter l'état réel.** Aucun item maquillé ; un `open` reste un trou.
+- **Le design system vit dans Claude Design** ; le plugin ne le régénère pas.
 - **Pas de fuite de champ** en sortie utilisateur (voir `references/ux-conventions.md`).
 
-Étape suivante : `/assembleur:assembleur-init` — démarrer la convergence des 3 contrats (fonctionnel, technique, design) puis l'amorçage du repo SpecKit. Ou corriger d'abord les points signalés via `/designer:designer`.
+Étape suivante : `/assembleur:assembleur-init` — démarrer la convergence des 3 contrats (fonctionnel, technique, design) puis l'amorçage du repo SpecKit. Ou corriger d'abord les items signalés via `/designer:designer`.

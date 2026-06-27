@@ -21,7 +21,7 @@ Ne jamais afficher de tableau de booléens bruts ni `coherence_validated == fals
 ## 2. Refus en langage naturel
 Quand un skill ne peut pas tourner, expliquer **en clair** pourquoi et quoi faire. Ex. :
 « La convergence ne peut pas démarrer : il manque un contrat validé — termine d'abord la
-phase concernée. » Jamais « ⛔ design.coverage_validated == false ».
+phase concernée. » Jamais « ⛔ design.design_validated == false ».
 
 ## 3. Marqueurs internes hors texte utilisateur
 Les marqueurs (`[À VALIDER]`, `NEEDS CLARIFICATION`) vivent dans les **artefacts**. À l'oral

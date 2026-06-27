@@ -45,11 +45,15 @@ Context** reprend les annexes technique/design du `spec.md`.
 `ucs` = liste ; une feature peut bundler plusieurs use cases). La **clé de jointure** entre
 les trois contrats est le **use case** (stable malgré la renumérotation/le réordonnancement
 de l'architecte) :
-- cadrage → `artifacts.briefs[].id ∈ feature.ucs` (chemin = `.path`) ;
-- designer → `design.journeys_coverage[].uc ∈ feature.ucs` ;
+- cadrage → `artifacts.briefs[].id ∈ feature.ucs` (chemin = `.path`) ; les **parcours/use cases**
+  viennent du cadrage (`spec-index.md`) ;
+- designer → **contrat global** : `design.design_system_ref` (système synchronisé via `/design-sync`) +
+  `design-guidelines.md` (états, patterns d'erreur, socle a11y) appliqués à tous les écrans (pas de
+  jointure par feature côté design) ;
 - architecte → le registre `feature_sequence` (donne l'`id` final **et** les `ucs`).
-L'assembleur joint, pour chaque feature, **tous** ses `ucs`, puis pose
-`feature_faces[].feature = id` (face complète seulement si tous les `ucs` sont couverts).
+L'assembleur joint, pour chaque feature, **tous** ses `ucs` (faces fonctionnelle/technique), et applique
+la face design **globale** ; puis pose `feature_faces[].feature = id` (face complète seulement si tous
+les `ucs` sont couverts et que le design system + guidelines s'appliquent).
 
 > Règle de couverture : **chaque** use case / feature de la `feature_sequence` (architecte) a
 > son `spec.md` ; le **walking skeleton** est la feature `001`.

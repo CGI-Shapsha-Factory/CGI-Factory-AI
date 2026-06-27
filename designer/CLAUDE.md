@@ -4,65 +4,79 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 `designer` plugin** (this directory). Factory-wide overview: `../CLAUDE.md`.
 
 ## Ce qu'est le plugin
-`designer` = **phase 3** de la Factory (contrat de design). Distille la **maquette
-validée** (démonstrateur convergé du cadrage) en un **contrat de design opposable** :
-un **design system exécutable** — tokens DTCG, fondations, composants & états, parcours,
-accessibilité WCAG 2.2 AA — **cohérent avec la stack retenue par l'architecte**. Principe
-cardinal : **il fige le système, pas les écrans.** Ce sont des **skills Markdown** ; pas
-de build/test.
+`designer` = **phase 3** de la Factory (contrat de design), repensé comme un **atelier de conception
+dirigé**. Son cœur est une **checklist de couverture** (3 blocs : fondation / expérience /
+technique-qui-se-voit) **pré-remplie par les handoffs** Cadrage (C) et Architecte (A), **co-construite**
+avec l'humain (H), qui garantit que **rien d'important n'est oublié avant Claude Design**. **Il ne génère
+PAS le design system** : celui-ci naît dans **Claude Design** (nativement) et est matérialisé en code par
+**`/design-sync`** (outil natif). Le plugin produit le **prompt Claude Design**, le **rapport de
+couverture** et le **handoff design**. Ce sont des **skills Markdown** ; pas de build/test.
+
+## Décision structurante (spec)
+Le design system **n'est pas** un fichier produit par un skill. Le plugin n'écrit **plus** de tokens DTCG
+ni de dossier `design-system/`. Il **mène l'atelier** puis **prépare le prompt** ; Claude Design crée le
+système, l'humain le valide, `/design-sync` l'engage vers la fabrication. Pas de front imposé CGI : **feuille
+blanche stylistique** possible (la marque est une entrée optionnelle).
 
 ## Langue & invocation
-- **Tout en français** (skills, templates, artefacts, interaction). Seuls les
-  identifiants/valeurs machine et noms d'outils/formats (`tokens.json`, DTCG,
-  Style Dictionary, WCAG, ARIA) restent tels quels.
-- **Skills uniquement, pas de `commands/`** (un command homonyme d'un skill boucle).
-  Invocation : `/designer:<skill>` + auto par le modèle.
+- **Tout en français** ; seuls les identifiants/valeurs machine et noms d'outils/formats (`/design-sync`,
+  Claude Design, WCAG, ARIA) restent tels quels.
+- **Skills uniquement, pas de `commands/`**. Invocation : `/designer:<skill>` + auto par le modèle.
 
 ## Les 3 skills (découpage justifié)
-- `designer-init` — setup (zéro décision IA) : gabarits + `design-system/` (seed tokens
-  DTCG) + bloc manifeste.
-- `designer` — construction interactive du contrat (porte humaine : **arbitrage du
-  designer**, gravé en DDR).
-- `designer-coherence` — porte humaine : **validation de couverture** (parcours + états).
-Mappe les deux portes humaines de la définition + un setup déterministe isolé.
+- `designer-init` — setup (zéro décision) : installe les 4 gabarits + sème la **checklist** dans le
+  manifeste. Porte : maquette validée **ET** architecture validée **ET** *Décisions à impact design*
+  présente.
+- `designer` — **l'atelier** : ingère les handoffs, pré-remplit la checklist, déroule les 3 blocs
+  (chaque item : `deduced`/`decided`/`sans_objet`/`open`), **porte humaine : arbitrage des choix
+  d'expérience**, puis produit le **prompt Claude Design** + le **rapport de couverture** quand la
+  couverture est jugée suffisante.
+- `designer-coherence` — **après Claude Design** : **porte humaine : validation du système généré** ;
+  vérifie la couverture (aucun item `open`) ; produit le **handoff design** (réf. du système synchronisé +
+  guidelines : états, patterns d'erreur, socle a11y). → assembleur.
 
 ## Workspace & manifeste
-Écrit dans le **workspace partagé** `factory-docs/work/` (à côté de cadrage et
-architecte). Le manifeste `factory-docs/manifest.json` reçoit un bloc **`design`**
-(source_maquette, principles, tokens, foundations, stack_alignment, components,
-component_states, states_patterns, journeys, journeys_coverage, accessibility, ddrs,
-coverage_validated). `design-system/` est créé à la **racine du projet** (vrais fichiers
-de tokens DTCG + config de livraison). Écriture = read-modify-write + revalidation JSON.
+Lit le **workspace partagé** `factory-docs/work/` (handoffs cadrage + architecte). Écrit dans
+`factory-docs/work/` (rapport de couverture, guidelines) et `factory-prompts/` (prompt Claude Design).
+**Ne crée plus** `design-system/`. Le manifeste reçoit un bloc **`design`** orienté **couverture** :
+`{phase, inputs{cadrage_ok, design_impact_ok}, checklist{foundation[], experience[], technical[]} (items
+{id,label,origin,status,note}), coverage_sufficient(H), prompt_path, coverage_report_path,
+design_system_ref, design_validated(H), guidelines_path}`. Écriture = read-modify-write + revalidation JSON.
 
 ## Intégration (entrées)
-Lit du **cadrage** : `product-brief.md`, `glossaire.md`, `spec-index.md` (use cases =
-parcours candidats), et la **maquette validée** (`manifest.demonstrateur`,
-`client_validated: true` + `external_ref`). Lit de l'**architecte** : `tech-stack.md`
-(framework front-end → format de livraison des tokens), `components.md`, `standards.md`
-+ `conventions/`. La table `references/question-map.md` indique où chaque réponse se
-trouve déjà → on ne pose que les trous (identité visuelle / marque si absente).
+- **Cadrage** : `product-brief.md` (vision/ton), `glossaire.md` (**entités/données affichées**),
+  `spec-index.md` (**parcours/use cases**), **maquette validée** (`demonstrateur`, `client_validated`) =
+  **direction, pas cible**.
+- **Architecte** : **`design-impact.md`** (section *Décisions à impact design* : stack front + style,
+  contrats transverses visibles, conventions d'API qui décident les états d'UI, NFR qui se voient). C'est
+  le contrat propre qui alimente le **versant technique** de la checklist.
 
-## Ordre de remplissage (dépendances)
-principes → fondations & tokens (DTCG) → livraison des tokens (selon stack) →
-composants & états → états & patterns → parcours → accessibilité → DDR (arbitrage) →
-validation de couverture.
+## Sorties (3)
+1. **Prompt Claude Design** (`factory-prompts/…`) — fait naître le design system.
+2. **Rapport de couverture** (`factory-docs/work/coverage-report.md`) — la trace de la rigueur.
+3. **Handoff design** (`factory-docs/work/design-guidelines.md`) — réf. du système synchronisé +
+   guidelines, consommé par l'Assembleur (qui grave les règles `/design-sync` en constitution/claude.md/CI).
+
+## Portes humaines (2, jamais automatisées)
+1. **Arbitrage des choix d'expérience** (pendant l'atelier) — `coverage_sufficient`.
+2. **Validation du système généré** (après Claude Design, avant `/design-sync`) — `design_validated`.
 
 ## Conventions partagées
-`references/interactive-loop.md` (boucle 3-options), `references/ux-conventions.md`
-(pas de fuite de champ, refus en clair, une ligne « Étape suivante »). Références design :
-`references/design-tokens-guide.md` (format DTCG, tiers), `references/states-catalog.md`
-(états UI + clavier WAI-ARIA APG). Garde-fou déterministe : `scripts/check_design.py`.
+`references/coverage-checklist-guide.md` (définition canonique + ancrages NN/g & WCAG),
+`references/states-catalog.md` (états écran/composant + clavier WAI-ARIA APG), `references/question-map.md`
+(d'où chaque item se déduit C/A), `references/interactive-loop.md`, `references/ux-conventions.md`.
+Garde-fou déterministe : `scripts/check_design.py` (valide la **couverture** : aucun item `open`, prompt +
+rapport + handoff présents — pas des tokens).
 
 ## Vérifications (à la place des tests)
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
-python -c "import json; json.load(open('references/design-system/tokens.seed.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
 python scripts/check_design.py <projet>/factory-docs/manifest.json
 ```
 
 ## Invariants
-Proposer/pas décider (DDR arbitrés par l'humain, couverture validée par l'humain) ;
-**figer le système, pas les écrans** ; marquer/pas inventer (`[À VALIDER]`) ; traçabilité
-`(src: maquette | cadrage | architecte | atelier)` ; tokens = vrais fichiers DTCG ;
-accessibilité WCAG 2.2 AA ; refus et restitutions en langage naturel.
+Proposer/pas décider (arbitrage expérience + validation système = humain) ; **marquer/pas inventer**
+(`sans objet` plutôt que forcer) ; **ne pas générer le design system** (Claude Design + `/design-sync`) ;
+commencer petit (anti-usine-à-gaz) ; traçabilité `(src: cadrage | architecte | maquette | atelier)` ;
+accessibilité = item de checklist + gravée en fabrication par l'assembleur ; refus en langage naturel.

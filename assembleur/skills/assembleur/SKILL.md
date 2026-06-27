@@ -20,8 +20,9 @@ Sinon, orienter en clair vers `/assembleur:assembleur-init`.
 - **Technique (architecte)** : `tech-stack.md`, `components.md`, `standards.md`,
   `decisions/ADR-*.md`, `drivers-quality.md` (scénarios qualité QS) ; manifeste
   `architecture` (`feature_sequence`, `walking_skeleton`, `stack`).
-- **Design (designer)** : `foundations.md`, `design-components.md`, `states-and-patterns.md`,
-  `journeys.md`, `accessibility.md`, `design-decisions/DDR-*.md` ; `design-system/tokens.json`.
+- **Design (designer)** : `design-guidelines.md` (handoff : **réf. du design system validé/synchronisé**
+  via `/design-sync` + guidelines — règles d'états, patterns d'erreur, socle a11y) + `coverage-report.md`.
+  *(Le design system lui-même vit dans Claude Design ; pas de fichiers de tokens dans le repo factory.)*
 - Conventions : `references/interactive-loop.md`, `references/ux-conventions.md`,
   `references/speckit-mapping.md`.
 
@@ -37,8 +38,10 @@ MAJ `assembly.glossary_consolidated = true`.
 (`ucs` = liste de use cases ; une feature peut **bundler plusieurs use cases**). Pour
 **chaque** feature (walking skeleton d'abord), joindre les 3 faces **pour chacun de ses `ucs`** :
 - **face fonctionnelle** : les briefs cadrage dont `artifacts.briefs[].id ∈ ucs` (chemins `.path`) ;
-- **face design** : les entrées `design.journeys_coverage` dont `.uc ∈ ucs` (parcours +
-  composants/états de `design-components.md` + tokens) ;
+- **face design** : le **design system synchronisé** (réf. `design.design_system_ref`) + les
+  **guidelines** (`design-guidelines.md` : états, patterns d'erreur, socle a11y), appliqués aux
+  parcours de la feature (issus du cadrage). Le design est un **contrat global** (pas un artefact par
+  feature) : la face design = « les écrans de la feature dérivent du design system et suivent les guidelines » ;
 - **face technique** : composants/stack/ADR que la feature touche (architecte `components.md`).
 Une face n'est **complète** que si **tous** les `ucs` de la feature sont couverts. Écrire
 `factory-docs/work/briefs/<id>-feature.brief.md` (gabarit `templates/feature-brief-3faces.md`).
@@ -54,10 +57,11 @@ périmé** d'un ancien découpage ne subsiste.
 Vérifier que **chaque feature part avec ses 3 faces complètes et non contradictoires**.
 Contrôles :
 1. **3 faces présentes** par feature du registre (fonctionnelle, technique, design).
-2. **Couverture inverse** : aucun brief cadrage ni parcours designer **orphelin** — tout
-   `uc` couvert en amont a bien une feature dans `architecture.feature_sequence`.
-3. **Non-contradiction** : un composant cité par la face design existe dans la face
-   technique ; pas de parcours sans FR ni de FR sans parcours ; glossaire sans terme en conflit.
+2. **Couverture inverse** : aucun brief cadrage **orphelin** — tout `uc` couvert en amont a bien une
+   feature dans `architecture.feature_sequence`. (Les parcours viennent du cadrage ; le design est un
+   contrat global via le handoff.)
+3. **Non-contradiction** : le design system + guidelines couvrent les composants/états requis par les
+   parcours ; pas de parcours sans FR ni de FR sans parcours ; glossaire sans terme en conflit.
 4. **Aucun trou bloquant** : pas de `[À VALIDER]` bloquant dans une face.
 Écrire `factory-docs/work/coherence-report.md` (gabarit `templates/coherence-report.md`) :
 statut par feature + contradictions. **Restituer en chat** ; l'humain valide. Ne **jamais**
@@ -69,14 +73,22 @@ Générer `<target_repo>/.specify/memory/constitution.md` (gabarit
 `templates/converged-constitution.md`, **format SpecKit** : métadonnées, principes P1..Pn,
 gouvernance) en **convergeant les principes non négociables** des 3 contrats :
 fonctionnel (identité, hors-périmètre, langage), technique (stack, règles ADR, cibles
-qualité, conventions, walking-skeleton-first), design (principes, accessibilité WCAG 2.2 AA,
-discipline des tokens). MAJ `assembly.constitution_generated = true`.
+qualité, conventions, walking-skeleton-first), design (**§6 — principes non négociables, à graver**) :
+- **tout écran dérive du design system synchronisé** (`/design-sync`) ; **aucune valeur de style en
+  dur** → on utilise les **tokens et composants** ;
+- **chaque écran couvre ses états** : chargement, vide, erreur, succès ;
+- **les erreurs suivent le contrat** : le format d'erreur de l'API se projette en affichage selon les
+  patterns définis (handoff design).
+MAJ `assembly.constitution_generated = true`.
 
 ### Étape 5 — CLAUDE.md projet + MEMORY.md
 - `<target_repo>/CLAUDE.md` (gabarit `templates/project-claude-md.md`) : section gérée entre
   `<!-- SPECKIT START -->` et `<!-- SPECKIT END -->` + guidance factory (vue d'ensemble,
   règles des 3 contrats, où vit quoi, comment lancer SpecKit, pointeurs glossaire/guidelines/
-  MEMORY). MAJ `assembly.claude_md_generated = true`.
+  MEMORY) + **§6 design** : instruction d'exécuter **`/design-sync` au démarrage** et de ne
+  construire qu'à partir des **tokens/composants synchronisés**, la **checklist des états** à couvrir
+  par écran, les **patterns d'erreur** et le **socle d'accessibilité** à respecter. MAJ
+  `assembly.claude_md_generated = true`.
 - `<target_repo>/MEMORY.md` (gabarit `templates/memory-index.md`) : index des 3 contrats +
   décisions (ADR + DDR) + glossaire + faces par feature. MAJ `assembly.memory_index_generated = true`.
 

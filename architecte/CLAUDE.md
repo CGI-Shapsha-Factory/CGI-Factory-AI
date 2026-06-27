@@ -26,8 +26,11 @@ Mappe les deux portes humaines de la définition + un setup déterministe isolé
 Écrit dans le **workspace partagé** `factory-docs/work/` (à côté de cadrage). Le
 manifeste `factory-docs/manifest.json` reçoit un bloc **`architecture`** (drivers,
 quality_attributes, components, stack, conventions_installed, adrs, walking_skeleton,
-feature_sequence, risks, coherence_validated). `conventions/` est créé à la **racine
+feature_sequence, risks, **design_impact**, coherence_validated). `conventions/` est créé à la **racine
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
+**Handoff designer** : le skill `architecte` produit `design-impact.md` (section « Décisions à impact
+design », §4.2 de la spec designer) — la tranche de l'archi qui se voit à l'écran, consommée par
+`/designer:designer` ; `check_architecture.py` exige `architecture.design_impact = true`.
 
 ## Intégration cadrage (entrées)
 Lit `factory-docs/work/{project-frame, product-brief, glossaire, spec-index,

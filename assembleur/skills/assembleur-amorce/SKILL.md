@@ -22,11 +22,18 @@ Le bloc `assembly` (faces, plan d'attaque), `factory-docs/work/coherence-report.
 
 ## Procédure
 
-### Étape 1 — CI & checks (génération)
+### Étape 1 — CI & checks (génération), dont les contrôles design-sync (§6)
 Écrire `<target_repo>/.github/workflows/factory-checks.yml` : câble les garde-fous
 déterministes (`check_discovery.py`, `check_architecture.py`, `check_design.py`,
-`check_assembly.py`) + les linters de `conventions/`. **Génération seulement** : l'équipe
-commit et active. MAJ `assembly.ci_generated = true`.
+`check_assembly.py`) + les linters de `conventions/`. **Rendre le contrat de design opposable
+(§6 spec designer)** — câbler aussi :
+- une **règle de lint qui interdit les valeurs de style en dur** (couleurs/tailles/espacements
+  littéraux) → **force l'usage des tokens** du design system synchronisé ;
+- un **point de contrôle de revue** : l'écran implémente-t-il ses **états requis** (chargement, vide,
+  erreur, succès) et ses **patterns d'erreur** ? (porté par l'agent reviewer comme un check) ;
+- l'**amorçage inclut le `design-sync` initial** : exécuter `/design-sync` au démarrage du projet pour
+  que le design system soit présent dès le départ.
+**Génération seulement** : l'équipe commit et active. MAJ `assembly.ci_generated = true`.
 
 ### Étape 2 — Finaliser le plan d'attaque
 Confirmer l'ordre des `/speckit.specify` (walking skeleton d'abord), les features

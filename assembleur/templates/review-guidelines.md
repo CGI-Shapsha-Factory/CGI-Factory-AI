@@ -10,10 +10,13 @@
 - Respect des ADR, de la stack et des conventions (`conventions/`) ?
 - Cibles de qualité (perf / sécurité / fiabilité) tenues ? *Constitution Check* passée ?
 
-## Review design (src: designer)
-- Tokens utilisés (aucune valeur de couleur/taille brute) ?
-- États couverts (vide / chargement / erreur / succès) ?
-- Accessibilité WCAG 2.2 AA : contraste, focus visible, clavier, cibles ≥ 24×24 px ?
+## Review design (src: designer — §6, opposable)
+- L'écran dérive-t-il du **design system synchronisé** (`/design-sync`) ? **Aucune valeur de style en
+  dur** (tokens/composants uniquement) ?
+- **États couverts** (vide / chargement / erreur / succès) ?
+- **Patterns d'erreur** respectés (validation à la sortie du champ ; format d'erreur API → messages par
+  champ) ?
+- Accessibilité au niveau visé (ex. WCAG 2.2 AA) : contraste, focus visible, clavier, cibles ≥ 24×24 px ?
 
 ## Guidelines dev
 - Une PR par feature (ou tranche) ; tests avant merge ; **CI verte** (`factory-checks`).

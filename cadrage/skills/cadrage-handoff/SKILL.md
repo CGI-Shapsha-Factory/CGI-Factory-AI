@@ -63,6 +63,13 @@ jamais cette porte.
    de la pré-constitution, puis la liste des `/speckit.specify`, **une par feature,
    dans l'ordre des dépendances** du spec index (walking skeleton en premier), avec
    les features parallélisables signalées.
+6. **Exposer le handoff pour le Designer** (entrées de la phase design, cf. spec designer §4.1) :
+   - la **liste des parcours / use cases** = le `spec-index.md` (déjà arbitré) ;
+   - les **types de données / entités affichées à l'utilisateur** = les **termes structurants**
+     du `glossaire.md` (entités métier visibles) ;
+   - la **maquette** (`demonstrateur`) est fournie comme **direction, pas comme cible** : le designer
+     a autorité pour la faire évoluer.
+   *(Rien de nouveau à produire : c'est un repère explicite sur ce que le designer consommera.)*
 
 ## Porte de sortie
 
