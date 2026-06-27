@@ -34,8 +34,6 @@ De la matière brute (transcripts, docs) au pack fonctionnel prêt pour SpecKit.
 | 9 | `cadrage-completude` | bilan Definition of Ready + résumé d'état *(rejouable)* | aucune |
 | 10 | `cadrage-handoff` | pré-constitution + briefs + spec index → repo ; expose le handoff designer | prêt pour SpecKit |
 
-**Tu tranches** : l'arbitrage du découpage (revue de couplage), et la validation de la maquette par le client.
-
 ### Phase 2 — `architecte` (contrat technique)
 Transforme le besoin fonctionnel en cadre technique et fige la séquence numérotée des features.
 
