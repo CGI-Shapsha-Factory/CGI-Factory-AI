@@ -19,7 +19,7 @@
 1. **Given** [état initial], **When** [action], **Then** [résultat attendu]
 
 ### Edge Cases
-- [état vide / erreur / hors-ligne] (src: designer/states-and-patterns)
+- [état vide / erreur / hors-ligne] (src: designer/design-guidelines)
 
 ## Requirements *(mandatory)*
 

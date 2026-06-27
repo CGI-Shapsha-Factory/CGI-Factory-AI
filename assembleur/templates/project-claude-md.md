@@ -12,7 +12,8 @@
 ## Contrats (3 faces)
 - **Fonctionnel** : briefs par feature dans `specs/` ; langage = `GLOSSARY.md`.
 - **Technique** : stack [..] ; style/format/nommage dans `conventions/` ; ADR de référence.
-- **Design** : design system `design-system/` (tokens DTCG) ; accessibilité **WCAG 2.2 AA**.
+- **Design** : design system **synchronisé depuis Claude Design via `/design-sync`** ; guidelines
+  (états, patterns d'erreur, socle a11y) dans le handoff design ; accessibilité au niveau visé.
 
 ## Où vit quoi
 - `.specify/memory/constitution.md` — principes non négociables (opposables).
@@ -24,7 +25,15 @@ Voir le plan d'attaque : `specify init --ai claude`, puis `/speckit.specify` par
 (**walking skeleton d'abord**) → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 La *Constitution Check* du `plan.md` est **opposable**.
 
+## Design (design-sync) — §6, opposable
+- **Exécuter `/design-sync` au démarrage** ; ne construire qu'à partir des **tokens et composants
+  synchronisés** (le design system vit dans Claude Design).
+- **Checklist des états par écran** : chargement, vide, erreur, succès.
+- **Patterns d'erreur** : validation à la sortie du champ ; format d'erreur API → messages par champ.
+- **Socle d'accessibilité** : niveau visé (ex. WCAG 2.2 AA) — contraste, focus visible, clavier.
+
 ## Règles clés (invariants des 3 contrats)
 - [ex. refus d'inventer / réponses sourcées] (fonctionnel)
 - [ex. filtrage par droits, requêtes paramétrées] (technique)
-- [ex. aucune valeur de couleur brute, états vide/chargement/erreur traités, AA] (design)
+- **aucune valeur de style en dur** (tokens uniquement) ; états vide/chargement/erreur/succès traités ;
+  erreurs selon le contrat ; accessibilité au niveau visé (design)

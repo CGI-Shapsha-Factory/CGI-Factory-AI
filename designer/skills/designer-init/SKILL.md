@@ -1,78 +1,70 @@
 ---
 name: designer-init
-description: Amorce la phase design : crée le dossier design-system (seed tokens DTCG), installe les gabarits et étend le manifeste.
+description: Amorce l'atelier design : installe les gabarits (checklist de couverture, rapport, prompt, guidelines) et étend le manifeste. Ne génère pas de design system.
 ---
 
 # designer-init
 
-Skill d'amorçage de la phase **design** : **tout premier skill** à lancer après que
-l'architecte a figé et validé le contrat technique. Il prépare le terrain (zéro décision
-de design) ; les autres skills (`designer`, `designer-coherence`) supposent qu'il a
-tourné.
+Skill d'amorçage de la phase **design** : **tout premier skill** à lancer après que l'architecte a figé et
+validé le contrat technique **et** produit sa section *Décisions à impact design*. Il prépare l'**atelier de
+couverture** (zéro décision de design) ; les autres skills (`designer`, `designer-coherence`) supposent
+qu'il a tourné. **Le plugin ne génère pas le design system** (il naît dans Claude Design, via `/design-sync`).
 
 ## Objectif
-Rendre un projet **prêt pour la phase design** : installer les gabarits, créer le dossier
-`design-system/` (avec un seed de tokens DTCG), et étendre le manifeste partagé avec un
-bloc `design`.
+Rendre un projet **prêt pour l'atelier design** : installer les gabarits et étendre le manifeste partagé
+avec un bloc `design` orienté **couverture** (checklist pré-remplie par les handoffs).
 
 ## Porte d'entrée
-**Le cadrage ET l'architecture doivent être prêts.** Lire `factory-docs/manifest.json` :
-- si la maquette n'a pas convergé (le démonstrateur n'est pas validé par le client) ou si
-  l'architecture n'est pas validée (la validation de cohérence n'est pas faite),
-  **refuser** en clair :
-  > « La phase design ne peut pas démarrer : il faut une maquette validée par le client
-  > (fin du cadrage) **et** un contrat technique validé par l'architecte. Termine d'abord
-  > ces deux phases. »
-- Vérifier la présence des artefacts attendus dans `factory-docs/work/` : côté cadrage
-  `product-brief.md`, `glossaire.md`, `spec-index.md` ; côté architecte `tech-stack.md`,
-  `components.md`, `standards.md`.
+**Cadrage prêt + maquette validée + architecture validée + Décisions à impact design présentes.** Lire
+`factory-docs/manifest.json` ; **refuser en clair** si :
+- la maquette n'a pas convergé (`demonstrateur.client_validated != true`), ou
+- l'architecture n'est pas validée (`architecture.coherence_validated != true`), ou
+- la section *Décisions à impact design* manque (`architecture.design_impact != true` / pas de
+  `design-impact.md`).
+  > « L'atelier design ne peut pas démarrer : il faut une maquette validée par le client, un contrat
+  > technique validé, et la section *Décisions à impact design* de l'architecte. Termine d'abord ces phases. »
+- Vérifier les artefacts dans `factory-docs/work/` : côté cadrage `product-brief.md`, `glossaire.md`,
+  `spec-index.md` (parcours + entités affichées) ; côté architecte `design-impact.md`.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
 ## Procédure
-1. **Installer les gabarits de design** dans `factory-docs/templates/` : copier depuis le
-   plugin `templates/` : `design-principles.md`, `foundations.md`, `components.md`,
-   `states-and-patterns.md`, `journeys.md`, `accessibility.md`, `ddr.md`.
-2. **Créer le dossier `design-system/`** à la **racine du projet** et y déposer le seed
-   universel de tokens DTCG (copie de `references/design-system/tokens.seed.json` →
-   `design-system/tokens.json`). **Le format de livraison spécifique à la stack**
-   (variables CSS, thème React/TS, preset Tailwind, config Style Dictionary) **n'est PAS
-   choisi ici** : le front-end n'est connu qu'après lecture du `tech-stack.md` — c'est le
-   skill `designer` qui le déposera (voir son étape de livraison des tokens).
-3. **Créer `factory-docs/work/design-decisions/`** (dossier des DDR, vide).
-4. **Étendre le manifeste** `factory-docs/manifest.json` : ajouter le bloc `design`
-   ci-dessous s'il est absent (read-modify-write + revalidation JSON) :
+1. **Installer les gabarits** dans `factory-docs/templates/` (copier depuis le plugin `templates/`) :
+   `coverage-checklist.md`, `coverage-report.md`, `claude-design-prompt.md`, `design-guidelines.md`.
+   *(Le plugin ne crée plus de dossier `design-system/` ni de seed de tokens : le design system naît dans
+   Claude Design.)*
+2. **Étendre le manifeste** `factory-docs/manifest.json` : ajouter le bloc `design` ci-dessous s'il est
+   absent (read-modify-write + revalidation JSON), en **semant la checklist** avec les items canoniques
+   de `coverage-checklist.md` au statut `open` :
 
 ```json
 "design": {
   "phase": "init",
-  "source_maquette": null,
-  "principles": [],
-  "tokens": { "format": "dtcg", "file": null, "tiers": [], "validated": false },
-  "foundations": { "color": false, "typography": false, "spacing": false, "elevation": false, "motion": false, "iconography": false, "breakpoints": false },
-  "stack_alignment": { "frontend": null, "token_delivery": null },
-  "components": [],
-  "required_states": ["default", "hover", "focus", "active", "disabled", "loading", "empty", "error"],
-  "component_states": {},
-  "states_patterns": [],
-  "journeys": [],
-  "journeys_coverage": [],
-  "accessibility": { "standard": "WCAG 2.2", "target": "AA", "validated": false },
-  "ddrs": [],
-  "coverage_validated": false
+  "inputs": { "cadrage_ok": false, "design_impact_ok": false },
+  "checklist": {
+    "foundation":  [ {"id":"F1","label":"Tokens essentiels","origin":"H","status":"open","note":""}, {"id":"F2","label":"Thématisation","origin":"A+H","status":"open","note":""}, {"id":"F3","label":"Composants de base + états","origin":"H","status":"open","note":""}, {"id":"F4","label":"Mouvement","origin":"H","status":"open","note":""} ],
+    "experience":  [ {"id":"E1","label":"Parcours et variantes","origin":"C","status":"open","note":""}, {"id":"E2","label":"États de chaque écran","origin":"C+H","status":"open","note":""}, {"id":"E3","label":"États vides utiles","origin":"H","status":"open","note":""}, {"id":"E4","label":"Hiérarchie et densité","origin":"C+H","status":"open","note":""}, {"id":"E5","label":"Feedback et confirmation","origin":"H+A","status":"open","note":""}, {"id":"E6","label":"Microcopie","origin":"H","status":"open","note":""} ],
+    "technical":   [ {"id":"T1","label":"Affichage des erreurs","origin":"A","status":"open","note":""}, {"id":"T2","label":"Chargement et asynchrone","origin":"A","status":"open","note":""}, {"id":"T3","label":"Listes, tableaux, pagination","origin":"A","status":"open","note":""}, {"id":"T4","label":"Identité, rôles, autorisations","origin":"A","status":"open","note":""}, {"id":"T5","label":"Navigation et routage","origin":"A","status":"open","note":""}, {"id":"T6","label":"Accessibilité, socle","origin":"A","status":"open","note":""}, {"id":"T7","label":"Responsive","origin":"A","status":"open","note":""}, {"id":"T8","label":"Internationalisation","origin":"A","status":"open","note":""}, {"id":"T9","label":"Budget de performance","origin":"A","status":"open","note":""} ]
+  },
+  "coverage_sufficient": false,
+  "prompt_path": null,
+  "coverage_report_path": null,
+  "design_system_ref": null,
+  "design_validated": false,
+  "guidelines_path": null
 }
 ```
+*Statut de chaque item : `open` → `deduced` (rempli depuis un handoff) | `decided` (tranché par l'humain) |
+`sans_objet` (sans objet, marqué pas forcé). Les portes `coverage_sufficient` et `design_validated` sont
+des **gestes humains** (jamais auto).*
 
 ## Porte de sortie
-- `design-system/` existe à la racine avec `tokens.json` (seed DTCG).
-- Les 7 gabarits de design sont dans `factory-docs/templates/`.
-- `factory-docs/work/design-decisions/` existe.
-- Le manifeste contient le bloc `design` (`phase: "init"`), et reparse sans erreur.
+- Les 4 gabarits sont dans `factory-docs/templates/`.
+- Le manifeste contient le bloc `design` (`phase: "init"`, checklist semée), et reparse sans erreur.
 - Rien d'existant n'a été écrasé (idempotence).
 
 ## Règles invariantes
-- **Aucune décision de design.** Ce skill prépare ; il ne choisit ni couleurs, ni
-  typographie, ni composants.
+- **Aucune décision de design** ni génération de design system. Ce skill prépare l'atelier.
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/designer:designer` — construire le contrat de design (principes, tokens, composants & états, parcours, accessibilité).
+Étape suivante : `/designer:designer` — dérouler la checklist de couverture (fondation, expérience, technique) et produire le prompt Claude Design.

@@ -6,7 +6,8 @@
 ## Contrats (3 faces)
 - **Fonctionnel** : `specs/` (briefs 3-faces), `GLOSSARY.md`.
 - **Technique** : `conventions/`, ADR de référence, stack (voir constitution P-technique).
-- **Design** : `design-system/tokens.json`, accessibilité WCAG 2.2 AA.
+- **Design** : design system **synchronisé depuis Claude Design** (`/design-sync`) + guidelines (états,
+  patterns d'erreur, socle a11y) ; réf. dans `design-guidelines.md`.
 
 ## Constitution
 `.specify/memory/constitution.md` — principes non négociables (P1..Pn) + gouvernance.

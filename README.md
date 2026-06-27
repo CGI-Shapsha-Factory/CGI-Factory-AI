@@ -70,7 +70,7 @@ Exécutés dans l'ordre, pilotés par un **manifeste partagé** (`factory-docs/m
 |---|--------|---------|------------------|
 | 1 | **`cadrage`** | Fonctionnel | Capte la matière brute (transcripts, docs) → vision produit, glossaire, découpage en features, briefs par feature, pré-constitution. |
 | 2 | **`architecte`** | Technique | Drivers & attributs de qualité (ISO/IEC 25010), composants, stack, ADR transverses, walking skeleton, conventions/linters, diagrammes (C4). |
-| 3 | **`designer`** | Design | Design system exécutable : tokens DTCG, fondations, composants & états, parcours, accessibilité WCAG 2.2 AA — cohérent avec la stack de l'architecte. |
+| 3 | **`designer`** | Design | Atelier de couverture : une checklist fondation / expérience / technique pré-remplie par les handoffs garantit que rien d'important n'est oublié, puis produit le **prompt Claude Design**, le rapport de couverture et le handoff design. Le design system naît dans **Claude Design** et passe au code via **`/design-sync`** — il n'est pas généré par le plugin. |
 | 4 | **`assembleur`** | Convergence | Coud les 3 contrats par feature, vérifie la cohérence, et amorce un projet **SpecKit** (constitution convergée, `CLAUDE.md`, briefs 3-faces, glossaire consolidé, seeds `spec.md`, CI, init Linear). |
 
 ## 🔁 Workflow
@@ -143,7 +143,7 @@ Sans IA dans la boucle, réutilisables en hook git / CI : `check_discovery` · `
 
 ## 🏗️ Construit avec / standards
 
-Claude Code · [SpecKit](https://github.com/github/spec-kit) · tokens **DTCG** + Style Dictionary · **WCAG 2.2 AA** + WAI-ARIA APG · **ISO/IEC 25010** · diagrammes **C4** · Linear.
+Claude Code · [SpecKit](https://github.com/github/spec-kit) · **Claude Design** + `/design-sync` · tokens **DTCG** + Style Dictionary · **WCAG 2.2 AA** + WAI-ARIA APG · **ISO/IEC 25010** · diagrammes **C4** · Linear.
 
 ---
 

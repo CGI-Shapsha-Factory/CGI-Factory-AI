@@ -32,7 +32,7 @@ avec un bloc `architecture`.
 1. **Installer les gabarits d'architecture** dans `factory-docs/templates/` (à côté
    des gabarits de cadrage) : copier depuis le plugin `templates/` :
    `drivers-quality.md`, `components.md`, `tech-stack.md`, `standards.md`,
-   `diagrams.md`, `adr.md`, `risks.md`.
+   `diagrams.md`, `adr.md`, `risks.md`, `design-impact.md`.
 2. **Créer le dossier `conventions/`** à la **racine du projet** et y déposer le
    socle universel `.editorconfig` (copie de
    `references/conventions/.editorconfig`). **Les fichiers de conventions par
@@ -55,13 +55,14 @@ avec un bloc `architecture`.
   "walking_skeleton": null,
   "feature_sequence": [],
   "risks": [],
+  "design_impact": false,
   "coherence_validated": false
 }
 ```
 
 ## Porte de sortie
 - `conventions/` existe à la racine avec `.editorconfig`.
-- Les 7 gabarits d'architecture sont dans `factory-docs/templates/`.
+- Les 8 gabarits d'architecture (dont `design-impact.md`) sont dans `factory-docs/templates/`.
 - `factory-docs/work/decisions/` existe.
 - Le manifeste contient le bloc `architecture` (`phase: "init"`), et reparse sans erreur.
 - Rien d'existant n'a été écrasé (idempotence).

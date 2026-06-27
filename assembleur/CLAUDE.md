@@ -43,11 +43,15 @@ Le manifeste reçoit un bloc **`assembly`**. Écriture = read-modify-write + rev
 ## Convergence (mapping 3 faces → SpecKit)
 Voir `references/speckit-mapping.md`. **Clé de jointure des 3 faces = le use case (`uc`)** (registre
 canonique `architecture.feature_sequence` = objets `{id, ucs, name, mvp}`, `ucs` étant une
-**liste** — une feature peut bundler plusieurs use cases en cas de fusion). Résumé : *fonctionnel* (brief cadrage + parcours
-designer) → User Scenarios + FR ; *technique* (scénarios qualité architecte) + *design*
-(a11y designer) → Success Criteria ; glossaire → Key Entities ; faces technique/design en
-annexe → Technical Context du futur `plan.md`. La constitution converge les **principes non
-négociables** des 3 contrats.
+**liste** — une feature peut bundler plusieurs use cases en cas de fusion). Faces **fonctionnelle** (brief
+cadrage) et **technique** (architecte) jointes **par use case** ; la **face design est globale** (réf. du
+design system Claude Design synchronisé via `/design-sync` + `design-guidelines.md`, appliquée à tous les
+écrans). Résumé : *fonctionnel* (brief cadrage + parcours du cadrage) → User Scenarios + FR ; *technique*
+(scénarios qualité architecte) + *design* (socle a11y des guidelines) → Success Criteria ; glossaire → Key
+Entities ; faces technique/design en annexe → Technical Context du futur `plan.md`. La constitution
+converge les **principes non négociables** des 3 contrats, **dont les règles design-sync (§6)** : tout
+écran dérive du design system synchronisé (aucune valeur de style en dur), états couverts, contrat
+d'erreur — gravées aussi dans le `claude.md` et la CI.
 
 ## Ordre de remplissage (dépendances)
 glossaire consolidé → couture 3-faces par feature → rapport de cohérence (porte) →

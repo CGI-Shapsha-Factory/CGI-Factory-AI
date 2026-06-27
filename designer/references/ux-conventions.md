@@ -9,22 +9,22 @@ en **langage naturel français**. Correspondance :
 
 | Interne (manifeste) | Langage utilisateur |
 |---|---|
-| `design.principles` | « les principes de design » |
-| `design.tokens` | « les tokens (le système de valeurs) » |
-| `design.foundations` | « les fondations (couleur, typo, espacement…) » |
-| `design.components` | « les composants » |
-| `design.component_states` | « les états des composants » |
-| `design.journeys` | « les parcours » |
-| `design.accessibility` | « l'accessibilité » |
-| `design.ddrs` | « les décisions de design (DDR) » |
-| `design.coverage_validated` | « la validation de couverture est faite » |
+| `design.checklist` | « la checklist de couverture » |
+| `design.checklist.foundation` | « la fondation (tokens, composants, mouvement) » |
+| `design.checklist.experience` | « le versant expérience » |
+| `design.checklist.technical` | « le versant technique qui se voit » |
+| item `status: sans_objet` | « sans objet sur ce projet » |
+| item `status: open` | « pas encore couvert » |
+| `design.coverage_sufficient` | « la couverture est jugée suffisante » |
+| `design.design_system_ref` | « le design system (Claude Design) » |
+| `design.design_validated` | « le système de design est validé » |
 
-Ne jamais afficher de tableau de booléens bruts ni `coverage_validated == false`.
+Ne jamais afficher de tableau de booléens bruts ni `design_validated == false`.
 
 ## 2. Refus en langage naturel
 Quand un skill ne peut pas tourner, expliquer **en clair** pourquoi et quoi faire. Ex. :
 « Cette étape ne peut pas démarrer : il faut une maquette validée et un contrat technique
-validé — termine d'abord le cadrage et l'architecture. » Jamais « ⛔ coverage_validated ==
+validé — termine d'abord le cadrage et l'architecture. » Jamais « ⛔ design_validated ==
 false ».
 
 ## 3. Marqueurs internes hors texte utilisateur
@@ -41,5 +41,5 @@ Terminer chaque exécution par exactement une phrase :
 
 ## 6. Langue
 **Tout en français** (interaction + artefacts). Seuls les identifiants/valeurs machine du
-manifeste et les noms d'outils/formats (`tokens.json`, DTCG, Style Dictionary, WCAG, ARIA)
-restent tels quels.
+manifeste et les noms d'outils/formats (`/design-sync`, Claude Design, DTCG, Style Dictionary,
+WCAG, ARIA) restent tels quels.

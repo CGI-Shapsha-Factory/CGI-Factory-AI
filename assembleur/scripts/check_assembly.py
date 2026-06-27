@@ -72,8 +72,10 @@ def main(argv):
         if f.get("coherent") is False:
             problems.append(f"feature '{feat}' faces contradictoires (non coherente)")
 
-    # Couverture INVERSE : aucun brief (cadrage) ni parcours (designer) orphelin.
-    # Une feature peut bundler plusieurs use cases (`ucs`) ; `uc` (singulier) est tolere.
+    # Couverture INVERSE : aucun brief (cadrage) orphelin. Les parcours/use cases viennent du
+    # cadrage (spec-index/briefs) ; le designer ne produit plus de journeys par feature (le design
+    # system nait dans Claude Design). Une feature peut bundler plusieurs use cases (`ucs`) ; `uc`
+    # (singulier) est tolere.
     def _feat_ucs(it):
         if not isinstance(it, dict):
             return []
@@ -81,11 +83,8 @@ def main(argv):
     seq_ucs = {u for it in seq for u in _feat_ucs(it)}
     if seq_ucs:
         brief_ucs = {b.get("id") for b in (manifest.get("artifacts") or {}).get("briefs") or [] if isinstance(b, dict)}
-        journey_ucs = {j.get("uc") for j in (manifest.get("design") or {}).get("journeys_coverage") or [] if isinstance(j, dict)}
         for uc in sorted(u for u in brief_ucs - seq_ucs if u):
             problems.append(f"brief cadrage '{uc}' orphelin (aucune feature dans feature_sequence)")
-        for uc in sorted(u for u in journey_ucs - seq_ucs if u):
-            problems.append(f"parcours designer '{uc}' orphelin (aucune feature dans feature_sequence)")
 
     if problems:
         print("CONVERGENCE INCOMPLETE - points bloquants :", file=sys.stderr)

@@ -19,9 +19,13 @@
 ### P2 — [nom] (technique)
 [Règle dérivée de la stack / d'un ADR / d'une cible de qualité.] (src: architecte/ADR-00X)
 
-### P3 — Accessibilité & design (design)
-Conformité **WCAG 2.2 niveau AA** ; discipline des tokens (aucune valeur brute) ; « on fige le
-système, pas les écrans ». (src: designer/accessibility, foundations)
+### P3 — Design system opposable (design, non négociable — §6)
+- **Tout écran dérive du design system synchronisé** (`/design-sync`) ; **aucune valeur de style en
+  dur** → on utilise les **tokens et composants**.
+- **Chaque écran couvre ses états** : chargement, vide, erreur, succès.
+- **Les erreurs suivent le contrat** : le format d'erreur de l'API se projette en affichage selon les
+  patterns définis.
+- Accessibilité au **niveau visé** (ex. WCAG 2.2 AA). (src: designer/design-guidelines)
 
 <!-- Ajouter P4.. selon les contrats. Chaque principe : énoncé APPLICABLE (pas une intention)
      + source. Un principe sans source reste [À VALIDER]. -->

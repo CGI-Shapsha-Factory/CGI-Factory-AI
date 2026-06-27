@@ -42,7 +42,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | 7 | `cadrage-clarification` | agrège les points ouverts → liste de balayage | ≥1 point ouvert |
 | 8 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
 | 9 | `cadrage-completude` | confronte à la Definition of Ready ; rapport + **tableau + résumé d'état** en chat ; résolution interactive | aucune (rejouable) |
-| 10 | `cadrage-handoff` | pré-constitution + briefs + spec index → repo SpecKit + plan de séquencement | **prêt pour SpecKit** |
+| 10 | `cadrage-handoff` | pré-constitution + briefs + spec index → repo SpecKit + plan de séquencement ; **expose le handoff designer** (parcours = spec-index, entités affichées = glossaire, maquette = direction) | **prêt pour SpecKit** |
 
 Flux : `cadrage-init` → `extraction` → (`vision` ∥ `glossaire`) → `decoupage` →
 **boucle démonstrateur** [`demonstrateur-brief` ⟳ `clarification` → `retour-demonstrateur`]
