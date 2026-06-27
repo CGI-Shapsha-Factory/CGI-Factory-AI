@@ -1,6 +1,7 @@
 ---
 name: cadrage-extraction
 description: Dépouille la matière brute de l'atelier en une capture structurée et traçable.
+argument-hint: "[fichier, fichiers ou dossier]"
 ---
 
 # cadrage-extraction
@@ -20,6 +21,11 @@ formulaire de saisie : la matière existe déjà, on la transforme et on la rang
 Une ou plusieurs sources déclarées par l'utilisateur. L'entrée est **souple** :
 accepter **un seul chemin de fichier**, **plusieurs chemins**, **ou un dossier**
 (dans ce cas, ingérer tous les fichiers de format supporté qu'il contient).
+
+Les chemins peuvent être **passés en argument** à l'invocation
+(`/cadrage:cadrage-extraction <chemins>` → disponibles via `$ARGUMENTS`) **ou** déclarés
+dans le chat. Si `$ARGUMENTS` est non vide, l'utiliser comme sources ; s'il est vide et
+qu'aucune source n'est déclarée, **demander les sources** (ne rien inventer).
 
 - **Pages Notion** (hubs réunion, transcripts) — via les outils Notion
   disponibles (`notion-fetch`, `notion-search`).
@@ -127,36 +133,38 @@ Liste consolidée des [À VALIDER] et [NON COUVERT EN ATELIER], avec pour
 chacun la section concernée. Alimente cadrage-clarification.
 ```
 
-## Passe découverte (13 questions de cadrage)
+## Passe découverte (13 questions de cadrage) — **interactive, une question à la fois**
 
 En plus de la capture, exécuter la **passe découverte** sur les 13 questions de
 `references/discovery-questions.md` (Q1–Q13). Elle remplit
 `factory-docs/work/project-frame.md` (gabarit `factory-docs/templates/project-frame.md`)
 et le bloc `discovery` du manifeste.
 
-1. **Extraire des sources.** Pour chaque Qn, chercher la réponse dans le transcript
-   et les docs. Si trouvée : statut `answered`, enregistrer la réponse + la
-   **source** `(src: …)`. Sinon : `pending`.
-2. **Élicitation via la boucle interactive à 3 options** (voir
-   `references/interactive-loop.md`). Présenter chaque question `pending`
-   **une par une**, en français, dans l'ordre Q1→Q13, avec **trois options** :
-   1. une **réponse recommandée** (suggestion plausible, clairement étiquetée
-      « suggestion » — le client ne l'a pas encore dite) ;
+> ⚠️ **Workflow OBLIGATOIRE, jamais en lot.** On **déroule les 13 questions une par une**, même
+> quand le transcript semble déjà répondre : le transcript fournit une **suggestion à confirmer**,
+> pas une réponse validée. **Interdit** : remplir les 13 d'un coup depuis les sources et annoncer un
+> bilan sans avoir rien demandé à l'utilisateur.
+
+1. **Préparer les suggestions (sans rien écrire, sans rien valider).** Pour chaque Qn, chercher dans
+   le transcript/docs une **réponse candidate** et la garder comme **suggestion pré-remplie** avec sa
+   trace `(src: transcript)`. **Aucune question n'est `answered` à ce stade.**
+2. **Dérouler la boucle interactive — Q1 → Q13, UNE À LA FOIS** (voir `references/interactive-loop.md`).
+   Pour **chaque** question, en français, afficher le compteur **« Qn/13 »**, l'intitulé, puis **trois
+   options** :
+   1. **Réponse recommandée** = la suggestion du transcript si elle existe (étiquetée `(src: transcript)`),
+      sinon une suggestion plausible étiquetée « suggestion » ;
    2. « **passer pour l'instant** » ;
    3. « **saisir ma réponse** ».
-   **Attendre la réponse** avant de poser la question suivante. Ne jamais remplir
-   de valeur démo / aléatoire à la place de l'utilisateur.
-   - **La réponse recommandée (option 1) est une SUGGESTION, pas une réponse** : elle
-     ne devient `answered` que si l'utilisateur la **choisit explicitement**. **La
-     présenter ≠ la valider.** Ne JAMAIS marquer une question `answered` sans (a) une
-     vraie trace dans la source, citée `(src: …)`, ou (b) un **choix explicite** de
-     l'utilisateur (option 1 ou 3). Sans choix, la question reste `pending` (jamais
-     auto-validée). Vaut en particulier pour les *seeds qualité* Q2/Q6/Q7.
-   - Réponse via option 1 ou 3 (**choix explicite**) → statut `answered`, source = `atelier/utilisateur`.
-   - « Passer » (option 2) → `[À VALIDER]`, statut `deferred` — reste un **trou
-     bloquant**.
-   À la fin de la boucle, annoncer soit que **tout est complété**, soit **combien
-   de points ont été passés** et restent bloquants.
+   Puis **POSE UNE SEULE QUESTION, ARRÊTE-TOI, et ATTENDS la réponse de l'utilisateur** avant de passer à
+   la suivante. **Jamais** plusieurs questions dans un même message ; **jamais** d'auto-complétion ;
+   **jamais** `answered` sans **choix explicite** (option 1 ou 3). Ne jamais remplir de valeur démo/aléatoire.
+   - Option 1 ou 3 (**choix explicite**) → statut `answered` ; source = `(src: transcript)` si la suggestion
+     transcript est **confirmée**, sinon `atelier/utilisateur`.
+   - « Passer » (option 2) → `[À VALIDER]`, statut `deferred` — reste un **trou bloquant**.
+   - Décisions groupées (l'utilisateur tranche plusieurs questions d'un coup) → **relire la liste parsée et
+     faire confirmer** avant d'écrire (cf. interactive-loop) ; sinon, une question à la fois.
+   À la fin de la boucle, annoncer soit que **tout est complété**, soit **combien de points ont été passés**
+   et restent bloquants. Vaut en particulier pour les *seeds qualité* Q2/Q6/Q7.
 3. **Écrire** les réponses dans `project-frame.md` (chaque champ avec sa `(src:)`,
    non répondu → `[À VALIDER]`). Le project-frame vit sous
    `factory-docs/work/project-frame.md`. Les réponses Q1 (qui utilise), Q3 (rôles)

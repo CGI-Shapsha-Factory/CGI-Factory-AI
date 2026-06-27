@@ -7,6 +7,10 @@ inventée : on demande, on ne comble pas.**
 
 ## Règle d'or
 - **Une question à la fois.** Jamais une liste de trous en bloc.
+- **Poser, s'arrêter, attendre.** Émettre **une seule** question par message, puis **attendre** la
+  réponse de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs
+  points d'un coup, **même si une source (transcript) semble tout répondre** — une réponse issue d'une
+  source **reste une suggestion à confirmer**, pas une validation.
 - Pour **chaque** question, présenter **trois options** :
   1. **Réponse recommandée** — une suggestion pré-remplie, plausible, clairement
      étiquetée « suggestion » (le client ne l'a pas encore dite).
