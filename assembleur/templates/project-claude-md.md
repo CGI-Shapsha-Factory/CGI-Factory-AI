@@ -21,9 +21,11 @@
 - `GLOSSARY.md` — langage ubiquitaire. `MEMORY.md` — index des contrats & décisions.
 
 ## Lancer SpecKit
-Voir le plan d'attaque : `specify init --ai claude`, puis `/speckit.specify` par feature
+Le repo est **déjà initialisé** (`specify init --ai claude`, précondition de la convergence) et la
+constitution finale convergée est en place. Voir le plan d'attaque : `/speckit.specify` par feature
 (**walking skeleton d'abord**) → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
-La *Constitution Check* du `plan.md` est **opposable**.
+La *Constitution Check* du `plan.md` est **opposable**. **Ne pas relancer `specify init`** (il
+écraserait la constitution).
 
 ## Design (design-sync) — §6, opposable
 - **Exécuter `/design-sync` au démarrage** ; ne construire qu'à partir des **tokens et composants

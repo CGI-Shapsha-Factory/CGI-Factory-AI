@@ -75,7 +75,8 @@ python scripts/check_assembly.py <projet>/factory-docs/manifest.json
 
 ## Invariants
 Proposer/pas décider (cohérence validée par l'humain, découpage validé par l'équipe) ;
-**effets de bord gated** (l'assembleur génère ; l'équipe lance `specify init`/CI ; Linear
-créé live **seulement après la porte équipe**) ; constitution = vrai fichier au format
-SpecKit ; marquer/pas inventer (`[À VALIDER]`/`NEEDS CLARIFICATION`) ; traçabilité
+**effets de bord gated** (l'assembleur génère ; l'équipe lance la CI ; Linear créé live
+**seulement après la porte équipe**) ; **`specify init` est une précondition** (lancé par l'équipe
+**avant** la convergence — `assembleur-init` l'exige) pour que la constitution convergée **remplace**
+le gabarit de SpecKit sans être réécrasée ; constitution = vrai fichier au format SpecKit ; marquer/pas inventer (`[À VALIDER]`/`NEEDS CLARIFICATION`) ; traçabilité
 `(src: cadrage | architecte | designer)` ; refus et restitutions en langage naturel.
