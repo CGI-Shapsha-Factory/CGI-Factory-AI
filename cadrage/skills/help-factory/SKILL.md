@@ -1,53 +1,75 @@
 ---
 name: help-factory
-description: Montre la carte complète de la Factory — les 4 plugins (cadrage, architecte, designer, assembleur), leurs skills, l'ordre et les portes humaines.
+description: Aide unique de la Factory — affiche la carte des 4 plugins (cadrage, architecte, designer, assembleur), un tableau par plugin avec le rôle de chaque skill, l'ordre et les portes humaines.
 ---
 
 # help-factory
 
-Skill d'aide. Quand il est invoqué, **affiche à l'utilisateur le guide ci-dessous en
-français, en bullet points** (sans noms de champs techniques). Il n'écrit aucun fichier et
-ne modifie aucun manifeste. Pour le détail de la phase amont, voir `/cadrage:help-cadrage`.
+Skill d'aide — **l'unique aide de la Factory** (couvre les 4 plugins). Quand il est invoqué,
+**affiche immédiatement le contenu ci-dessous TEL QUEL** (les 4 tableaux), sans rien recalculer.
+Il **n'écrit aucun fichier** et ne modifie aucun manifeste.
 
-## Guide à afficher
+## À afficher tel quel
 
-**La Factory IA transforme un atelier en projet spec-driven, en 4 phases. Chaque phase est
-un plugin qui produit un *contrat* validé par un humain, puis passe le relais. Ordre global :
-cadrage → architecte → designer → assembleur → SpecKit.**
+**La Factory IA transforme un atelier en projet spec-driven, en 4 phases.** Chaque phase est un plugin
+qui produit un *contrat* validé par un humain, puis passe le relais :
+**`cadrage → architecte → designer → assembleur → SpecKit`**.
+Chaque skill se termine par une ligne « **Étape suivante** » qui indique quoi lancer ensuite — tu avances
+de proche en proche. Le design system naît dans **Claude Design** et passe au code via **`/design-sync`**.
 
-- **Phase 1 — `cadrage` (contrat fonctionnel)** — de la matière brute (transcripts, docs) au
-  pack fonctionnel : vision, glossaire, découpage en use cases, maquette validée, briefs,
-  pré-constitution.
-  - Skills, dans l'ordre : `cadrage-init` → `cadrage-extraction` → `cadrage-vision` →
-    `cadrage-glossaire` → `cadrage-decoupage` → boucle maquette (`cadrage-demonstrateur-brief`
-    → `cadrage-retour-demonstrateur` → `cadrage-clarification`) → revue de couplage →
-    `cadrage-briefs` → `cadrage-completude` → `cadrage-handoff`. *Détail : `/cadrage:help-cadrage`.*
-  - Tu tranches : l'arbitrage du découpage, et la validation de la maquette par le client.
-  - → mène à la phase 2.
-- **Phase 2 — `architecte` (contrat technique)** — transforme le besoin fonctionnel en cadre
-  technique : drivers & attributs de qualité, composants, stack, décisions (ADR), walking
-  skeleton, conventions/linters, diagrammes ; fige la **séquence numérotée des features**.
-  - Skills : `architecte-init` → `architecte` → `architecte-coherence`.
-  - Tu tranches : l'arbitrage des ADR, puis la validation de cohérence du contrat technique.
-  - → mène à la phase 3.
-- **Phase 3 — `designer` (contrat de design)** — distille la maquette validée en un design
-  system exécutable : tokens DTCG, fondations, composants & états, parcours, accessibilité
-  WCAG 2.2 — cohérent avec la stack de l'architecte. *Il fige le système, pas les écrans.*
-  - Skills : `designer-init` → `designer` → `designer-coherence`.
-  - Tu tranches : l'arbitrage du designer, puis la validation de couverture (parcours + états).
-  - → mène à la phase 4.
-- **Phase 4 — `assembleur` (convergence → SpecKit)** — coud les 3 contrats par feature, vérifie
-  leur cohérence, puis amorce un repo SpecKit prêt à fabriquer : constitution finale convergée,
-  briefs 3-faces, glossaire consolidé, seeds de specs, CI — et initialise les features dans Linear.
-  - Skills : `assembleur-init` → `assembleur` → `assembleur-amorce` → `init-linear`.
-  - Tu tranches : le garant de cohérence (chaque feature part avec ses 3 faces complètes), puis
-    la validation du découpage par l'équipe.
-  - Handoff final : `specify init --ai claude` puis les `/speckit.specify` selon le plan
-    d'attaque ; les features sont suivies dans Linear.
+### Phase 1 — `cadrage` (contrat fonctionnel)
+De la matière brute (transcripts, docs) au pack fonctionnel prêt pour SpecKit.
 
-**Repère** : chaque skill se termine par une ligne « Étape suivante » qui te dit quoi lancer
-ensuite — tu avances ainsi de proche en proche. Pour savoir où tu en es dans une phase, lance
-son skill de bilan/cohérence (`cadrage-completude`, `architecte-coherence`, `designer-coherence`).
+| # | skill | rôle | porte / ordre |
+|---|-------|------|---------------|
+| 0 | `cadrage-init` | crée le workspace `factory-docs/` + le manifeste | à lancer en premier |
+| 1 | `cadrage-extraction` | dépouille les sources en capture tracée + pose les 13 questions de découverte | manifeste + ≥1 source |
+| 2 | `cadrage-vision` | synthétise la capture en vision produit (le quoi / le pourquoi) | capture existe |
+| 3 | `cadrage-glossaire` | construit le langage métier, validé terme par terme | capture existe |
+| 4 | `cadrage-decoupage` | découpage fonctionnel en use cases (par valeur) + carte de couplage | vision faite |
+| 5 | `cadrage-demonstrateur-brief` | prompt Claude Design pour la maquette de validation | vision / retour dispo |
+| 6 | `cadrage-retour-demonstrateur` | ingère le retour client sur la maquette, propage les corrections | retour dispo |
+| 7 | `cadrage-clarification` | regroupe les points ouverts en checklist de balayage *(rejouable)* | ≥1 point ouvert |
+| 8 | `cadrage-briefs` | brief auto-portant par feature, prêt pour SpecKit | couplage arbitré + maquette validée |
+| 9 | `cadrage-completude` | bilan Definition of Ready + résumé d'état *(rejouable)* | aucune |
+| 10 | `cadrage-handoff` | pré-constitution + briefs + spec index → repo ; expose le handoff designer | prêt pour SpecKit |
+
+**Tu tranches** : l'arbitrage du découpage (revue de couplage), et la validation de la maquette par le client.
+
+### Phase 2 — `architecte` (contrat technique)
+Transforme le besoin fonctionnel en cadre technique et fige la séquence numérotée des features.
+
+| skill | rôle | porte / ordre |
+|-------|------|---------------|
+| `architecte-init` | crée `conventions/` + installe les gabarits + bloc manifeste | cadrage prêt |
+| `architecte` | construit le contrat technique : drivers & attributs de qualité, composants, stack, ADR, walking skeleton, diagrammes, *Décisions à impact design* | **arbitrage des ADR** (humain) |
+| `architecte-coherence` | valide la cohérence du contrat technique | **validation de cohérence** (humain) |
+
+### Phase 3 — `designer` (contrat de design)
+**Atelier de couverture** : ne génère pas le design system — il garantit que rien n'est oublié et prépare Claude Design.
+
+| skill | rôle | porte / ordre |
+|-------|------|---------------|
+| `designer-init` | installe les gabarits + sème la checklist de couverture | maquette validée + architecture validée + *Décisions à impact design* |
+| `designer` | atelier de couverture (fondation / expérience / technique) → **prompt Claude Design** + rapport de couverture | **arbitrage des choix d'expérience** (humain) |
+| `designer-coherence` | valide le design system généré par Claude Design + produit le handoff design (réf. + guidelines) | **validation du système généré** (humain) |
+
+### Phase 4 — `assembleur` (convergence → SpecKit)
+Coud les 3 contrats par feature et amorce un repo SpecKit prêt à fabriquer.
+
+| skill | rôle | porte / ordre |
+|-------|------|---------------|
+| `assembleur-init` | vérifie les 3 contrats validés + capture le repo SpecKit cible (déjà `specify init`) | 3 contrats validés |
+| `assembleur` | coud les 3 contrats par feature + cohérence + pack SpecKit (constitution, CLAUDE.md, briefs 3-faces, glossaire, MEMORY.md, seeds spec.md) | **garant de cohérence** (humain) |
+| `assembleur-amorce` | amorce la CI + le hook Linear (Todo → En cours) | **validation de l'équipe** (humain) |
+| `init-linear` | crée le projet + les features dans Linear (clé API dans `.env`) | après la porte équipe |
+
+**Handoff final** : le repo est déjà initialisé (`specify init --ai claude`) et la constitution convergée
+en place → enchaîner les `/speckit.specify` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks`
+→ `/speckit.implement` ; les features sont suivies dans Linear.
+
+**Repère** : pour savoir où tu en es dans une phase, lance son skill de bilan/cohérence
+(`cadrage-completude`, `architecte-coherence`, `designer-coherence`, ou le rapport de cohérence de l'assembleur).
 
 ## Étape suivante
-« Étape suivante : `/cadrage:cadrage-init` pour démarrer depuis le début (phase amont), ou lance directement la phase qui correspond à ton avancement — `/architecte:architecte-init`, `/designer:designer-init` ou `/assembleur:assembleur-init`. Détail de la phase 1 : `/cadrage:help-cadrage`. »
+« Étape suivante : `/cadrage:cadrage-init` pour démarrer depuis le début, ou lance directement la phase qui correspond à ton avancement — `/architecte:architecte-init`, `/designer:designer-init` ou `/assembleur:assembleur-init`. »

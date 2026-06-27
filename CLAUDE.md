@@ -20,7 +20,7 @@ Ce dépôt n'est **pas un projet applicatif** : c'est une **collection de plugin
 
 Chaque plugin a (ou aura) son propre **`<plugin>/CLAUDE.md`** détaillé. Pour travailler sur `cadrage`, lire **`cadrage/CLAUDE.md`** en premier.
 
-**Vue d'ensemble utilisateur** de toute la chaîne (4 phases, ordre des skills, portes humaines) : le skill **`/cadrage:help-factory`** ; détail de la phase amont : `/cadrage:help-cadrage`.
+**Vue d'ensemble utilisateur** de toute la chaîne (4 phases, ordre des skills, portes humaines) : le skill **`/cadrage:help-factory`** — l'**aide unique** (statique, un tableau par plugin).
 
 ## Principe transverse
 - **L'IA propose, l'humain tranche.** Aucune gate structurante n'est franchie par l'IA.

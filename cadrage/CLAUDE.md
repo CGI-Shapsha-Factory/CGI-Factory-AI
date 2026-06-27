@@ -27,8 +27,8 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 - Le **workspace + manifeste** = créés **dans le projet client** par `cadrage-init`.
   Le plugin lit/écrit ces fichiers ; il ne les contient pas.
 
-## Les skills (11 du pipeline + `help-cadrage` + `help-factory`)
-`help-cadrage` (hors pipeline) affiche à l'utilisateur le rôle de chaque skill de **cadrage** et l'ordre d'exécution. `help-factory` (hors pipeline) affiche la **carte des 4 plugins** de la Factory (cadrage → architecte → designer → assembleur → SpecKit), l'ordre des skills et les portes humaines — c'est l'unique vue d'ensemble inter-plugins, volontairement hébergée ici à côté de `help-cadrage`.
+## Les skills (11 du pipeline + `help-factory`)
+`help-factory` (hors pipeline) est l'**aide unique** de la Factory : elle affiche, de façon **statique** (rendu immédiat), la **carte des 4 plugins** (cadrage → architecte → designer → assembleur → SpecKit) avec **un tableau par plugin** (rôle de chaque skill, ordre, portes humaines). C'est la seule aide — il n'y a plus de `help-cadrage` (son détail est absorbé dans le tableau cadrage).
 
 | # | skill | rôle | porte |
 |---|-------|------|-------|
@@ -47,7 +47,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 Flux : `cadrage-init` → `extraction` → (`vision` ∥ `glossaire`) → `decoupage` →
 **boucle démonstrateur** [`demonstrateur-brief` ⟳ `clarification` → `retour-demonstrateur`]
 jusqu'à convergence → **revue de couplage humaine** → `briefs` → `completude` → `handoff`.
-`completude` et `clarification` sont rejouables à tout moment. Aide : `/cadrage:help-cadrage`.
+`completude` et `clarification` sont rejouables à tout moment. Aide : `/cadrage:help-factory`.
 
 ## Workspace du projet client (structure plate)
 ```
@@ -102,8 +102,8 @@ bloc `discovery` du manifeste ; garde-fou déterministe `scripts/check_discovery
 Chaque skill est invocable **directement** par l'utilisateur via `/cadrage:<skill>`
 **et** auto-invocable par le modèle (via sa `description`). On n'utilise **pas** de
 wrappers `commands/` : un command homonyme d'un skill crée une boucle infinie
-(le command « lance le skill » qui re-résout vers le command). L'aide : `help-cadrage`
-(détail de la phase cadrage) et `help-factory` (vue d'ensemble des 4 plugins de la Factory).
+(le command « lance le skill » qui re-résout vers le command). L'aide : `help-factory`
+(aide unique : la carte des 4 plugins, un tableau par plugin).
 
 ## Contrat central
 `templates/feature-brief.md` (10 sections, auto-portant). Produit par `cadrage-briefs`,
