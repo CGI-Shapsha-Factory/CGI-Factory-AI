@@ -9,6 +9,9 @@
   "engines": {
     "node": ">=18"
   },
+  "dependencies": {
+    "@inquirer/prompts": "^7.0.0"
+  },
   "files": [
     "bin/",
     "install.py",
