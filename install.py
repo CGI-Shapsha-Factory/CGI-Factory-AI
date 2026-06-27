@@ -61,54 +61,16 @@ def print_list():
     print()
 
 
+def print_marketplace_alt():
+    print("\n— Alternative (toujours disponible) : install via le marketplace Claude Code —")
+    print(f"  /plugin marketplace add {MARKETPLACE_REPO}")
+    print(f"  /plugin install <module>@{MARKETPLACE_NAME}     # ex. cadrage@{MARKETPLACE_NAME}")
+    print("  (ou /plugin -> onglet Discover : modules groupes par role)")
+
+
 def select_checkbox(default_all=False):
-    """Menu a cases a cocher (fleches + espace) si TTY ; sinon repli numerote."""
-    if not sys.stdin.isatty():
-        return select_numbered(default_all)
-    try:
-        return _checkbox_tui(default_all)
-    except Exception:
-        return select_numbered(default_all)
-
-
-def _getch():
-    try:
-        import msvcrt  # Windows
-        ch = msvcrt.getch()
-        if ch in (b"\x00", b"\xe0"):      # touche speciale (fleches) -> 2e octet
-            return {b"H": "UP", b"P": "DOWN"}.get(msvcrt.getch(), "")
-        return {b"\r": "ENTER", b" ": "SPACE", b"\x03": "CTRLC"}.get(ch, ch.decode(errors="ignore"))
-    except ImportError:
-        import termios, tty
-        fd = sys.stdin.fileno(); old = termios.tcgetattr(fd)
-        try:
-            tty.setraw(fd); c = sys.stdin.read(1)
-            if c == "\x1b":               # sequence ANSI (fleches)
-                seq = sys.stdin.read(2)
-                return {"[A": "UP", "[B": "DOWN"}.get(seq, "")
-            return {"\r": "ENTER", "\n": "ENTER", " ": "SPACE", "\x03": "CTRLC"}.get(c, c)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old)
-
-
-def _checkbox_tui(default_all):
-    sel = {m: default_all for m in ORDER}; cur = 0
-    while True:
-        print("\033[2J\033[H", end="")  # clear
-        print("Factory IA — coche les modules a installer\n")
-        print("  (fleches haut/bas, ESPACE = cocher, ENTREE = valider)\n")
-        for i, m in enumerate(ORDER):
-            box = "[x]" if sel[m] else "[ ]"
-            pointer = ">" if i == cur else " "
-            desc, role = MODULES[m]
-            print(f" {pointer} {box} {m:<11} {desc}  ({role})")
-        key = _getch()
-        if key == "UP": cur = (cur - 1) % len(ORDER)
-        elif key == "DOWN": cur = (cur + 1) % len(ORDER)
-        elif key == "SPACE": sel[ORDER[cur]] = not sel[ORDER[cur]]
-        elif key == "ENTER": break
-        elif key == "CTRLC": print("\nAnnule."); sys.exit(1)
-    return [m for m in ORDER if sel[m]]
+    """Selection interactive robuste (liste numerotee) — fiable dans cmd/PowerShell/tout terminal."""
+    return select_numbered(default_all)
 
 
 def select_numbered(default_all=False):
@@ -150,7 +112,7 @@ def main():
     a = ap.parse_args()
 
     if a.list:
-        print_list(); return 0
+        print_list(); print_marketplace_alt(); return 0
 
     # selection des modules
     try:
@@ -199,6 +161,7 @@ def main():
         print("  /reload-plugins")
         for m in ok:
             print(f"  {NEXT_STEP[m]}   # demarrer le module {m}")
+    print_marketplace_alt()
     if ko:
         print(f"\n{len(ko)} module(s) en echec : {', '.join(ko)} "
               "(verifie ton acces au repo de la marketplace, puis relance).", file=sys.stderr)

@@ -1,22 +1,23 @@
 #!/usr/bin/env node
-// Installeur de la Factory IA — facon BMAD (wrapper npx, Node pur, zero dependance).
+// Installeur de la Factory IA — facon BMAD (wrapper npx).
 //
-//   npx github:CGI-Shapsha-Factory/CGI-Factory-AI            # menu interactif
+//   npx github:CGI-Shapsha-Factory/CGI-Factory-AI            # menu interactif (cases a cocher)
 //   npx github:CGI-Shapsha-Factory/CGI-Factory-AI --all --yes
 //   npx github:CGI-Shapsha-Factory/CGI-Factory-AI --modules cadrage,designer
 //
-// Equivalent Node de install.py. Enrobe `claude plugin install`. N'affiche aucun secret.
+// Menu via @inquirer/prompts (vraies cases a cocher cross-platform). Enrobe `claude plugin install`.
+// N'affiche aucun secret. L'install via le marketplace Claude Code reste TOUJOURS dispo (cf. fin).
 import { spawnSync } from "node:child_process";
-import readline from "node:readline";
 import process from "node:process";
+import { checkbox, confirm, select } from "@inquirer/prompts";
 
 const MARKETPLACE_NAME = "Shapsha-Factory";
 const MARKETPLACE_REPO = "CGI-Shapsha-Factory/CGI-Factory-AI";
 const ORDER = ["cadrage", "architecte", "designer", "assembleur"];
 const MODULES = {
-  cadrage:    ["Contrat fonctionnel : captation -> vision, glossaire, decoupage, briefs, pre-constitution.", "ex. chef de projet / PO"],
-  architecte: ["Contrat technique : drivers & qualite, composants, stack, ADR, walking skeleton, conventions.", "ex. architecte"],
-  designer:   ["Contrat de design : design system executable (tokens DTCG, composants & etats, parcours, WCAG 2.2).", "ex. dev front / UX"],
+  cadrage:    ["Contrat fonctionnel : captation -> vision, glossaire, decoupage, briefs.", "ex. chef de projet / PO"],
+  architecte: ["Contrat technique : drivers & qualite, composants, stack, ADR, walking skeleton.", "ex. architecte"],
+  designer:   ["Contrat de design : design system executable (tokens DTCG, etats, parcours, WCAG 2.2).", "ex. dev front / UX"],
   assembleur: ["Convergence des 3 contrats -> repo SpecKit + init Linear + hook de suivi.", "ex. lead / convergence"],
 };
 const NEXT_STEP = {
@@ -75,67 +76,27 @@ Usage : factory-method [options]
   --dry-run                montrer les commandes sans rien installer
   --help, -h               cette aide`);
 }
-function runCmd(cmdArr, dry) {
-  const printable = cmdArr.join(" ");
-  console.log((dry ? "  [dry-run] " : "  $ ") + printable);
+function printMarketplaceAlt() {
+  console.log("\n— Alternative (toujours disponible) : install via le marketplace Claude Code —");
+  console.log(`  /plugin marketplace add ${MARKETPLACE_REPO}`);
+  console.log(`  /plugin install <module>@${MARKETPLACE_NAME}     # ex. cadrage@${MARKETPLACE_NAME}`);
+  console.log("  (ou /plugin -> onglet Discover : modules groupes par role)");
+}
+function runCmd(cmdStr, dry) {
+  console.log((dry ? "  [dry-run] " : "  $ ") + cmdStr);
   if (dry) return true;
-  const r = spawnSync(cmdArr[0], cmdArr.slice(1), { stdio: "inherit", shell: true });
+  // chaine unique + shell:true (pas d'array d'args -> evite la DeprecationWarning ; tokens en liste blanche)
+  const r = spawnSync(cmdStr, { stdio: "inherit", shell: true });
   return r.status === 0;
 }
-const addMarketplaceCmd = () => ["claude", "plugin", "marketplace", "add", MARKETPLACE_REPO];
-const installCmd = (m, scope) => ["claude", "plugin", "install", `${m}@${MARKETPLACE_NAME}`, "--scope", scope];
+const addMarketplaceCmd = () => `claude plugin marketplace add ${MARKETPLACE_REPO}`;
+const installCmd = (m, scope) => `claude plugin install ${m}@${MARKETPLACE_NAME} --scope ${scope}`;
 
-function ask(question) {
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  return new Promise((res) => rl.question(question, (ans) => { rl.close(); res(ans); }));
-}
-async function selectNumbered(defaultAll) {
-  printList();
-  if (defaultAll) return [...ORDER];
-  const raw = (await ask("Numeros a installer (ex. 1,3) ou 'all' : ")).trim().toLowerCase();
-  if (["all", "*", "tout"].includes(raw)) return [...ORDER];
-  const picked = new Set();
-  for (const tok of raw.replace(/\s/g, "").split(",")) {
-    const n = Number(tok);
-    if (Number.isInteger(n) && n >= 1 && n <= ORDER.length) picked.add(ORDER[n - 1]);
-  }
-  return ORDER.filter((m) => picked.has(m));
-}
-function selectCheckbox() {
-  if (!process.stdin.isTTY) return selectNumbered(false);
-  return new Promise((resolve) => {
-    const sel = Object.fromEntries(ORDER.map((m) => [m, false]));
-    let cur = 0;
-    readline.emitKeypressEvents(process.stdin);
-    process.stdin.setRawMode(true);
-    process.stdin.resume();
-    const render = () => {
-      process.stdout.write("\x1b[2J\x1b[H");
-      process.stdout.write("Factory IA — coche les modules a installer\n");
-      process.stdout.write("  (fleches haut/bas, ESPACE = cocher, ENTREE = valider)\n\n");
-      ORDER.forEach((m, i) => {
-        const box = sel[m] ? "[x]" : "[ ]";
-        const ptr = i === cur ? ">" : " ";
-        const [desc, role] = MODULES[m];
-        process.stdout.write(` ${ptr} ${box} ${m.padEnd(11)} ${desc}  (${role})\n`);
-      });
-    };
-    const cleanup = () => {
-      process.stdin.setRawMode(false);
-      process.stdin.pause();
-      process.stdin.removeListener("keypress", onKey);
-    };
-    const onKey = (str, key) => {
-      if (!key) return;
-      if (key.name === "up") cur = (cur - 1 + ORDER.length) % ORDER.length;
-      else if (key.name === "down") cur = (cur + 1) % ORDER.length;
-      else if (key.name === "space") sel[ORDER[cur]] = !sel[ORDER[cur]];
-      else if (key.name === "return" || key.name === "enter") { cleanup(); console.log(); resolve(ORDER.filter((m) => sel[m])); return; }
-      else if (key.ctrl && key.name === "c") { cleanup(); console.log("\nAnnule."); process.exit(1); }
-      render();
-    };
-    process.stdin.on("keypress", onKey);
-    render();
+async function selectInteractive() {
+  return checkbox({
+    message: "Coche les modules a installer (Espace = cocher, Entree = valider)",
+    choices: ORDER.map((m) => ({ name: `${m.padEnd(11)} ${MODULES[m][0]}  (${MODULES[m][1]})`, value: m })),
+    loop: false,
   });
 }
 
@@ -143,29 +104,36 @@ async function main() {
   let a;
   try { a = parseArgs(process.argv.slice(2)); }
   catch (e) { console.error(`Erreur : ${e.message}`); return 2; }
-  if (a.help) { printHelp(); return 0; }
-  if (a.list) { printList(); return 0; }
+  if (a.help) { printHelp(); printMarketplaceAlt(); return 0; }
+  if (a.list) { printList(); printMarketplaceAlt(); return 0; }
 
   let modules;
   try {
     if (a.all) modules = [...ORDER];
     else if (a.modules != null) modules = parseModules(a.modules);
-    else modules = await selectCheckbox();
+    else if (!process.stdin.isTTY) {
+      console.error("Mode non-interactif : precise --modules a,b ou --all (ou lance dans un terminal).");
+      return 2;
+    } else {
+      modules = await selectInteractive();
+      modules = ORDER.filter((m) => modules.includes(m)); // ordre canonique
+    }
   } catch (e) { console.error(`Erreur : ${e.message}`); return 2; }
-  if (!modules.length) { console.log("Aucun module selectionne. Rien a faire."); return 0; }
+  if (!modules.length) { console.log("Aucun module selectionne. Rien a faire."); printMarketplaceAlt(); return 0; }
 
   if (!a.dryRun) {
-    const probe = spawnSync("claude", ["--version"], { stdio: "ignore", shell: true });
+    const probe = spawnSync("claude --version", { stdio: "ignore", shell: true });
     if (probe.status !== 0) {
       console.error("Le CLI `claude` est introuvable. Installe Claude Code puis relance.\n  https://code.claude.com/docs");
+      printMarketplaceAlt();
       return 3;
     }
   }
 
   console.log(`\nModules a installer : ${modules.join(", ")} (scope: ${a.scope})`);
-  if (!a.yes && process.stdin.isTTY && !a.dryRun) {
-    const ans = (await ask("Continuer ? [o/N] ")).trim().toLowerCase();
-    if (!["o", "oui", "y", "yes"].includes(ans)) { console.log("Annule."); return 1; }
+  if (!a.yes && !a.dryRun && process.stdin.isTTY) {
+    const ok = await confirm({ message: "Continuer ?", default: true });
+    if (!ok) { console.log("Annule."); return 1; }
   }
 
   if (!a.noAdd) {
@@ -187,11 +155,20 @@ async function main() {
     console.log("  /reload-plugins");
     for (const m of ok) console.log(`  ${NEXT_STEP[m]}   # demarrer le module ${m}`);
   }
+  printMarketplaceAlt();
   if (ko.length) {
-    console.error(`\n${ko.length} module(s) en echec : ${ko.join(", ")} (verifie ton acces au repo de la marketplace, puis relance).`);
+    console.error(`\n${ko.length} module(s) en echec : ${ko.join(", ")} (verifie ton acces au repo, puis relance).`);
     return 4;
   }
   return 0;
 }
 
-main().then((code) => process.exit(code)).catch((e) => { console.error(e); process.exit(1); });
+main()
+  .then((code) => process.exit(code))
+  .catch((e) => {
+    // Ctrl-C dans un prompt inquirer -> sortie propre
+    if (e && (e.name === "ExitPromptError" || /User force closed/i.test(e.message || ""))) {
+      console.log("\nAnnule."); process.exit(1);
+    }
+    console.error(e); process.exit(1);
+  });
