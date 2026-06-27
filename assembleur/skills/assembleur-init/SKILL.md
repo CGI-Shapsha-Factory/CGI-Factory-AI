@@ -33,7 +33,14 @@ avec un bloc `assembly`.
 
 ## Procédure
 1. **Capturer le repo SpecKit cible** : demander le chemin du repo cible (boucle 3-options).
-   L'écrire dans `assembly.target_repo`. C'est là qu'iront `.specify/`, `CLAUDE.md`, `specs/`.
+   L'écrire dans `assembly.target_repo`. C'est là qu'iront la constitution convergée, `CLAUDE.md`,
+   `specs/`. **Précondition — le repo doit déjà être initialisé** (`specify init --ai claude` lancé
+   par l'équipe) : il contient `.specify/` (scripts, templates, gabarit de constitution) et les
+   commandes `/speckit.*`. **Si `.specify/` est absent, refuser en clair** :
+   > « Avant la convergence, initialise le repo cible : lance `specify init --ai claude` dedans, puis
+   > relance `/assembleur:assembleur-init`. »
+   Ainsi l'assembleur **écrit après** `specify init` (le bon ordre) : sa constitution convergée
+   **remplace** le gabarit de SpecKit, sans risque d'être écrasée par un init ultérieur.
 2. **Installer les gabarits de convergence** dans `factory-docs/templates/` : copier depuis
    le plugin `templates/` : `converged-constitution.md`, `project-claude-md.md`,
    `feature-brief-3faces.md`, `spec-seed.md`, `glossary-consolidated.md`,
@@ -64,7 +71,7 @@ avec un bloc `assembly`.
 ```
 
 ## Porte de sortie
-- `assembly.target_repo` renseigné.
+- `assembly.target_repo` renseigné **et** repo déjà initialisé par SpecKit (`.specify/` présent).
 - Les 9 gabarits de convergence sont dans `factory-docs/templates/`.
 - `factory-docs/work/briefs/` et `guidelines/` existent.
 - Le manifeste contient le bloc `assembly` (`phase: "init"`), et reparse sans erreur.

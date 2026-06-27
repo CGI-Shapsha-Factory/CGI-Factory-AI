@@ -3,7 +3,13 @@
 Référence clé lue par le skill `assembleur`. Indique **comment chaque face alimente les
 fichiers SpecKit** (vérifié sur la structure SpecKit réelle).
 
-## Cible SpecKit (après `specify init --ai claude`)
+## Cible SpecKit — ORDRE : `specify init --ai claude` d'ABORD, puis l'assembleur écrit dedans
+> `specify init` est une **précondition** (lancée par l'équipe avant la convergence, vérifiée par
+> `assembleur-init`). Il pose le runtime (`.specify/scripts`, `templates`, `.claude/commands/speckit.*`)
+> **et un gabarit** de constitution ; l'assembleur écrit **ensuite** et **remplace** ce gabarit par la
+> constitution convergée. **Ne jamais relancer `specify init` après l'assembleur** (il écraserait la
+> constitution).
+
 ```
 <repo>/
 ├── .specify/

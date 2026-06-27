@@ -69,7 +69,9 @@ passer `assembly.coherence_validated` à vrai de soi-même. (Le garde-fou
 `scripts/check_assembly.py` couvre les contrôles 1 et 2 ; 3 et 4 sont arbitrés par l'humain.)
 
 ### Étape 4 — Constitution finale convergée
-Générer `<target_repo>/.specify/memory/constitution.md` (gabarit
+Générer `<target_repo>/.specify/memory/constitution.md` — **remplace le gabarit posé par
+`specify init`** (le repo a été initialisé avant la convergence, cf. `assembleur-init` ; bon ordre,
+pas de clobber) (gabarit
 `templates/converged-constitution.md`, **format SpecKit** : métadonnées, principes P1..Pn,
 gouvernance) en **convergeant les principes non négociables** des 3 contrats :
 fonctionnel (identité, hors-périmètre, langage), technique (stack, règles ADR, cibles
@@ -119,8 +121,9 @@ dépendances** (walking skeleton d'abord, parallélisables signalées) → `/spe
 
 ## Règles invariantes
 - **Proposer, ne pas décider.** La cohérence est validée par l'humain (garant de cohérence).
-- **Effets de bord gated.** Ce skill **génère** des fichiers ; il ne lance ni `specify init`
-  ni Linear (c'est `assembleur-amorce`, après la porte équipe).
+- **Effets de bord gated.** Ce skill **génère** des fichiers ; il ne lance pas `specify init`
+  (précondition lancée par l'équipe **avant** la convergence) ni Linear (c'est `assembleur-amorce`,
+  après la porte équipe).
 - **Pas de fuite de champ** en sortie utilisateur (voir `references/ux-conventions.md`).
 - **Skill indépendant.** Lit/écrit le manifeste partagé.
 

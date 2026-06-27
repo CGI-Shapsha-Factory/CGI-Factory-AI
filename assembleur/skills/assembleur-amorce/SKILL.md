@@ -36,9 +36,10 @@ déterministes (`check_discovery.py`, `check_architecture.py`, `check_design.py`
 **Génération seulement** : l'équipe commit et active. MAJ `assembly.ci_generated = true`.
 
 ### Étape 2 — Finaliser le plan d'attaque
-Confirmer l'ordre des `/speckit.specify` (walking skeleton d'abord), les features
-parallélisables, et la commande `specify init --ai claude` à lancer par l'équipe dans le
-repo cible.
+Confirmer l'ordre des `/speckit.specify` (walking skeleton d'abord) et les features
+parallélisables. **Ne pas relancer `specify init`** : le repo a été initialisé **avant** la
+convergence (précondition `assembleur-init`) et la constitution convergée y est déjà en place ;
+relancer init l'écraserait.
 
 ### Étape 3 — Porte humaine : l'équipe arbitre le découpage
 Le **découpage en features** est le **registre canonique** `architecture.feature_sequence`
@@ -94,4 +95,4 @@ dédié **`/assembleur:init-linear`** (clé API dans `.env`, dédup d'un projet 
 - **Marquer, ne pas inventer.** Pas de MCP Linear → fichier d'import, pas d'écriture fantôme.
 - **Pas de fuite de champ** en sortie utilisateur.
 
-Étape suivante : `/assembleur:init-linear` — créer les features dans Linear (après ta validation) ; puis l'équipe lance `specify init --ai claude` et les `/speckit.specify` selon le plan d'attaque.
+Étape suivante : `/assembleur:init-linear` — créer les features dans Linear (après ta validation) ; puis l'équipe enchaîne les `/speckit.specify` selon le plan d'attaque (le repo est déjà initialisé, constitution convergée en place).

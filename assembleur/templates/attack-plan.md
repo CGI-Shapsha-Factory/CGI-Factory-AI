@@ -3,10 +3,13 @@
 > Généré par l'assembleur. **L'équipe l'exécute** dans le repo cible (l'assembleur ne lance
 > pas `specify init` lui-même). (src: architecte/feature_sequence)
 
-## 0. Initialisation
-- Lancer `specify init --ai claude` dans `<target_repo>` (si pas déjà initialisé).
-- La constitution est **déjà fournie** (`.specify/memory/constitution.md`). La raffiner via
-  `/speckit.constitution` seulement si besoin (ne pas écraser sans raison).
+## 0. Prérequis (déjà fait AVANT la convergence)
+- Le repo cible a **déjà** été initialisé : `specify init --ai claude` a été lancé **avant**
+  l'assembleur (précondition vérifiée par `assembleur-init`). L'assembleur a donc écrit **après**
+  init : sa **constitution finale convergée** a **remplacé** le gabarit de SpecKit dans
+  `.specify/memory/constitution.md` (bon ordre, pas de clobber).
+- **Ne pas relancer `specify init`** ici : il réécraserait la constitution convergée. La raffiner
+  via `/speckit.constitution` seulement si besoin.
 
 ## 1. Séquence des features (ordre des dépendances)
 | Ordre | Feature | Walking skeleton | Parallélisable | Dépend de |
