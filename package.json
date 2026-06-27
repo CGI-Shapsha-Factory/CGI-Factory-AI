@@ -1,0 +1,20 @@
+{
+  "name": "factory-method",
+  "version": "0.1.0",
+  "description": "Installeur de la Factory IA (facon BMAD) : menu interactif pour installer les modules Claude Code choisis (cadrage, architecte, designer, assembleur).",
+  "type": "module",
+  "bin": {
+    "factory-method": "bin/factory-install.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/",
+    "install.py",
+    "INSTALL.md"
+  ],
+  "keywords": ["factory", "bootstrap", "installer", "claude-code", "spec-driven", "bmad"],
+  "license": "UNLICENSED",
+  "private": false
+}
