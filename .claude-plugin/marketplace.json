@@ -15,7 +15,7 @@
       },
       "category": "Cadrage (fonctionnel)",
       "tags": ["chef-de-projet", "po", "fonctionnel", "amont", "spec-driven"],
-      "description": "De la matiere brute d'atelier (transcripts, docs) au pack fonctionnel pret pour SpecKit."
+      "description": "Matiere brute d'atelier -> pack fonctionnel SpecKit."
     },
     {
       "name": "architecte",
@@ -26,7 +26,7 @@
       },
       "category": "Architecture (technique)",
       "tags": ["architecte", "technique", "adr", "stack", "spec-driven"],
-      "description": "Fige le contrat technique : drivers, composants, stack, ADR et walking skeleton."
+      "description": "Stack, composants, ADR, walking skeleton, qualite."
     },
     {
       "name": "designer",
@@ -37,7 +37,7 @@
       },
       "category": "Design (UX/UI)",
       "tags": ["designer", "front", "ux-ui", "design-system", "dtcg", "accessibilite"],
-      "description": "Atelier de couverture qui prepare le prompt Claude Design et le handoff design."
+      "description": "Atelier de couverture -> prompt Claude Design."
     },
     {
       "name": "assembleur",
@@ -48,7 +48,7 @@
       },
       "category": "Convergence (SpecKit/Linear)",
       "tags": ["lead", "convergence", "speckit", "linear", "handoff"],
-      "description": "Coud les 3 contrats par feature et amorce le repo SpecKit (+ init Linear)."
+      "description": "Coud les 3 contrats -> repo SpecKit + Linear."
     }
   ]
 }
