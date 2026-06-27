@@ -1,6 +1,6 @@
 {
   "name": "cadrage",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "Industrialise la phase amont d'un projet spec-driven : transforme la matière brute (transcripts Notion, fichiers texte) en un repo SpecKit prêt à lancer — constitution, brief par feature, spec index. Skills indépendants pilotés par un manifeste partagé.",
   "author": {
     "name": "IA Factory"

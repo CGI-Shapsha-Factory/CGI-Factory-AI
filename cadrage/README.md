@@ -34,7 +34,7 @@ d'agir et sa **porte de sortie** avant d'écrire le manifeste.
 | 8 | `cadrage-briefs` | Un brief auto-portant par feature (contrat central) | **decoupage_arbitrated ET demonstrateur_converged** |
 | 9 | `cadrage-completude` | Confronte le manifeste à la Definition of Ready | aucune |
 | 10 | `cadrage-handoff` | Prépare la pré-constitution + dépose briefs + spec index dans le repo SpecKit | **ready_for_speckit** |
-| — | `help-cadrage` | Affiche le rôle de chaque skill et l'ordre d'exécution (aide) | aucune |
+| — | `help-factory` | Aide unique : carte des 4 plugins, un tableau par plugin (rôle, ordre, portes) | aucune |
 
 Flux nominal : extraction → vision & glossaire → decoupage → **prompt
 démonstrateur → maquette (Claude Design) → balayage client → atelier de
