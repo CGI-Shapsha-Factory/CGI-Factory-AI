@@ -44,11 +44,11 @@ def parse_modules(s):
 
 
 def install_cmd(module, scope):
-    return ["claude", "plugin", "install", f"{module}@{MARKETPLACE_NAME}", "--scope", scope]
+    return f"claude plugin install {module}@{MARKETPLACE_NAME} --scope {scope}"
 
 
 def add_marketplace_cmd():
-    return ["claude", "plugin", "marketplace", "add", MARKETPLACE_REPO]
+    return f"claude plugin marketplace add {MARKETPLACE_REPO}"
 
 
 # ---------------- I/O ----------------
@@ -93,11 +93,34 @@ def confirm(question):
 
 
 def run(cmd, dry):
-    print(("  [dry-run] " if dry else "  $ ") + " ".join(cmd))
+    print(("  [dry-run] " if dry else "  $ ") + cmd)
     if dry:
         return True
-    r = subprocess.run(cmd)
-    return r.returncode == 0
+    return subprocess.run(cmd, shell=True).returncode == 0   # shell=True : claude.cmd sous Windows
+
+
+def run_capture(cmd, dry):
+    print(("  [dry-run] " if dry else "  $ ") + cmd)
+    if dry:
+        return True, ""
+    r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    out = (r.stdout or "") + (r.stderr or "")
+    if out.strip():
+        print("\n".join("  " + l for l in out.strip().splitlines()))
+    return r.returncode == 0, out
+
+
+def looks_like_git_error(out):
+    o = out.lower()
+    return "git" in o and any(s in o for s in ("not found", "unsafe location", "introuvable", "not detected"))
+
+
+def print_git_hint():
+    print("\n[!] Echec probable : Claude Code n'a pas trouve `git` (frequent sous Windows si git est")
+    print("    dans AppData). Corrige une fois, puis relance :")
+    print('    1) setx CLAUDE_CODE_GIT_BASH_PATH "C:\\chemin\\vers\\Git\\bin\\bash.exe"')
+    print("       (trouve : `where.exe git` -> remplace \\cmd\\git.exe par \\bin\\bash.exe)")
+    print("    2) ouvre un NOUVEAU terminal (et redemarre l'app Claude Code).")
 
 
 def main():
@@ -140,8 +163,10 @@ def main():
     # 1) marketplace (idempotent ; un echec = peut-etre deja ajoutee -> on continue)
     if not a.no_add_marketplace:
         print(f"\nMarketplace {MARKETPLACE_NAME} ({MARKETPLACE_REPO}) :")
-        ok = run(add_marketplace_cmd(), a.dry_run)
+        ok, out = run_capture(add_marketplace_cmd(), a.dry_run)
         if not ok and not a.dry_run:
+            if looks_like_git_error(out):
+                print_git_hint(); print_marketplace_alt(); return 5
             print("  (note: ajout non confirme — peut-etre deja presente ; je continue)")
 
     # 2) installation des modules choisis

@@ -9,7 +9,32 @@
 // N'affiche aucun secret. L'install via le marketplace Claude Code reste TOUJOURS dispo (cf. fin).
 import { spawnSync } from "node:child_process";
 import process from "node:process";
-import { checkbox, confirm, select } from "@inquirer/prompts";
+import path from "node:path";
+import { checkbox, confirm } from "@inquirer/prompts";
+
+// Sous Windows, l'env de npx peut ne pas transmettre `git` au sous-processus -> l'install
+// git-subdir echoue. On garantit que le dossier de git est sur le PATH des enfants.
+function findGitDir() {
+  const probe = spawnSync(process.platform === "win32" ? "where git" : "command -v git",
+                          { shell: true, encoding: "utf8" });
+  if (probe.status === 0 && probe.stdout) {
+    const line = probe.stdout.split(/\r?\n/).map((s) => s.trim()).find(Boolean);
+    if (line) return path.dirname(line);
+  }
+  const b = process.env.CLAUDE_CODE_GIT_BASH_PATH; // …\Git\[usr\]bin\bash.exe -> …\Git\cmd
+  if (b) {
+    const root = b.replace(/[\\/](usr[\\/])?bin[\\/]bash\.exe$/i, "");
+    if (root !== b) return path.join(root, "cmd");
+  }
+  return null;
+}
+const CHILD_ENV = { ...process.env };
+const _gd = findGitDir();
+if (_gd) {
+  const cur = CHILD_ENV.PATH || CHILD_ENV.Path || "";
+  if (!cur.toLowerCase().split(path.delimiter).includes(_gd.toLowerCase()))
+    CHILD_ENV.PATH = _gd + path.delimiter + cur;
+}
 
 const MARKETPLACE_NAME = "Shapsha-Factory";
 const MARKETPLACE_REPO = "CGI-Shapsha-Factory/CGI-Factory-AI";
@@ -86,8 +111,26 @@ function runCmd(cmdStr, dry) {
   console.log((dry ? "  [dry-run] " : "  $ ") + cmdStr);
   if (dry) return true;
   // chaine unique + shell:true (pas d'array d'args -> evite la DeprecationWarning ; tokens en liste blanche)
-  const r = spawnSync(cmdStr, { stdio: "inherit", shell: true });
+  const r = spawnSync(cmdStr, { stdio: "inherit", shell: true, env: CHILD_ENV });
   return r.status === 0;
+}
+function runCapture(cmdStr, dry) {
+  console.log((dry ? "  [dry-run] " : "  $ ") + cmdStr);
+  if (dry) return { ok: true, out: "" };
+  const r = spawnSync(cmdStr, { shell: true, encoding: "utf8", env: CHILD_ENV });
+  const out = (r.stdout || "") + (r.stderr || "");
+  if (out.trim()) process.stdout.write(out.replace(/^/gm, "  "));
+  return { ok: r.status === 0, out };
+}
+function looksLikeGitError(out) {
+  return /git/i.test(out) && /(not found|unsafe location|introuvable|not detected)/i.test(out);
+}
+function printGitHint() {
+  console.log("\n⚠ Echec probable : Claude Code n'a pas trouve `git` (frequent sous Windows si git est");
+  console.log("  dans AppData). Corrige une fois, puis relance :");
+  console.log('  1) setx CLAUDE_CODE_GIT_BASH_PATH "C:\\\\chemin\\\\vers\\\\Git\\\\bin\\\\bash.exe"');
+  console.log("     (trouve le chemin : `where.exe git` -> remplace \\cmd\\git.exe par \\bin\\bash.exe)");
+  console.log("  2) ouvre un NOUVEAU terminal (et redemarre l'app Claude Code).");
 }
 const addMarketplaceCmd = () => `claude plugin marketplace add ${MARKETPLACE_REPO}`;
 const installCmd = (m, scope) => `claude plugin install ${m}@${MARKETPLACE_NAME} --scope ${scope}`;
@@ -122,7 +165,7 @@ async function main() {
   if (!modules.length) { console.log("Aucun module selectionne. Rien a faire."); printMarketplaceAlt(); return 0; }
 
   if (!a.dryRun) {
-    const probe = spawnSync("claude --version", { stdio: "ignore", shell: true });
+    const probe = spawnSync("claude --version", { stdio: "ignore", shell: true, env: CHILD_ENV });
     if (probe.status !== 0) {
       console.error("Le CLI `claude` est introuvable. Installe Claude Code puis relance.\n  https://code.claude.com/docs");
       printMarketplaceAlt();
@@ -138,8 +181,11 @@ async function main() {
 
   if (!a.noAdd) {
     console.log(`\nMarketplace ${MARKETPLACE_NAME} (${MARKETPLACE_REPO}) :`);
-    const ok = runCmd(addMarketplaceCmd(), a.dryRun);
-    if (!ok && !a.dryRun) console.log("  (note: ajout non confirme — peut-etre deja presente ; je continue)");
+    const res = runCapture(addMarketplaceCmd(), a.dryRun);
+    if (!res.ok && !a.dryRun) {
+      if (looksLikeGitError(res.out)) { printGitHint(); printMarketplaceAlt(); return 5; }
+      console.log("  (note: ajout non confirme — peut-etre deja presente ; je continue)");
+    }
   }
 
   console.log("\nInstallation :");
