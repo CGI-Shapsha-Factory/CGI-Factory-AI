@@ -1,0 +1,21 @@
+# Socle universel de conventions d'édition (fallback inter-langages).
+# Installé dans tout projet par architecte ; complété par les configs par langage.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 100
+
+[*.{js,jsx,ts,tsx,json,jsonc,json5,yml,yaml,css,scss,html}]
+indent_size = 2
+
+[*.{md,markdown}]
+trim_trailing_whitespace = false
+
+[Makefile]
+indent_style = tab

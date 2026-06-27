@@ -1,0 +1,18 @@
+# Conventions Python — Ruff (lint + format), standard 2026.
+# Ruff remplace flake8 + black + isort + pyupgrade en un seul outil.
+# Copié dans `conventions/` du projet quand Python fait partie de la stack.
+line-length = 100
+target-version = "py312"
+
+[lint]
+# E/W: pycodestyle (PEP 8) · F: pyflakes · I: isort · N: pep8-naming
+# UP: pyupgrade · B: bugbear · C4: comprehensions · SIM: simplify · RUF: ruff
+select = ["E", "W", "F", "I", "N", "UP", "B", "C4", "SIM", "RUF"]
+ignore = []
+
+[lint.pydocstyle]
+convention = "google"
+
+[format]
+quote-style = "double"
+indent-style = "space"

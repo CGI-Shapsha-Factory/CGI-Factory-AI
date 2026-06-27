@@ -1,0 +1,18 @@
+{
+  "name": "designer",
+  "version": "0.1.2",
+  "description": "Phase design d'un projet spec-driven : distille la maquette validée en un contrat de design opposable — un design system exécutable (tokens DTCG, fondations, composants & états, parcours, accessibilité WCAG 2.2 AA) cohérent avec la stack retenue par l'architecte. Fige le système, pas les écrans. 3 skills interactifs, tout en français.",
+  "author": {
+    "name": "IA Factory"
+  },
+  "keywords": [
+    "designer",
+    "design-system",
+    "design-tokens",
+    "dtcg",
+    "ux-ui",
+    "accessibility",
+    "spec-driven",
+    "speckit"
+  ]
+}

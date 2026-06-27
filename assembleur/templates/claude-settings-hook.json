@@ -1,0 +1,16 @@
+{
+  "_comment": "Genere par /assembleur:assembleur-amorce dans <repo>/.claude/settings.json. Hook Linear Todo->En cours sur la 1re edition de code. Fail-safe : ne bloque jamais. Fusionner avec un settings.json existant plutot que l'ecraser.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/linear-start.py"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+# Conventions C — clang-format. Copié dans conventions/ du projet si C dans la stack.
+# (Complément lint disponible via .clang-tidy si besoin.)
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+BreakBeforeBraces: Linux
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+PointerAlignment: Right
+SortIncludes: true

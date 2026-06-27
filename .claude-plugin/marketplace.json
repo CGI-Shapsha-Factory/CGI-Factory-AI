@@ -1,0 +1,46 @@
+{
+  "$schema": "https://www.schemastore.org/claude-code-marketplace.json",
+  "name": "Shapsha-Factory",
+  "owner": {
+    "name": "CGI-Shapsha-Factory",
+    "email": "naif.asswiel@cgi.com"
+  },
+  "plugins": [
+    {
+      "name": "cadrage",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
+        "path": "cadrage"
+      },
+      "description": "Phase amont spec-driven : transforme la matiere brute (transcripts, docs) en un repo SpecKit pret a lancer. Decouverte interactive (13 questions), vision, glossaire, decoupage fonctionnel, briefs par feature, pre-constitution. Skills independants pilotes par un manifeste partage."
+    },
+    {
+      "name": "architecte",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
+        "path": "architecte"
+      },
+      "description": "Phase architecture spec-driven : transforme le besoin fonctionnel en cadre technique (drivers & attributs de qualite, composants, stack, ADR transverses, walking skeleton, conventions/linters, diagrammes). 3 skills interactifs pilotes par un manifeste partage."
+    },
+    {
+      "name": "designer",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
+        "path": "designer"
+      },
+      "description": "Phase design spec-driven : distille la maquette validee en un design system executable (tokens DTCG, fondations, composants & etats, parcours, accessibilite WCAG 2.2 AA) coherent avec la stack de l'architecte. Fige le systeme, pas les ecrans. 3 skills interactifs."
+    },
+    {
+      "name": "assembleur",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
+        "path": "assembleur"
+      },
+      "description": "Phase de convergence spec-driven : coud les 3 contrats (fonctionnel, technique, design) par feature, verifie leur coherence, et amorce un projet SpecKit consommable directement (constitution convergee, CLAUDE.md, briefs 3-faces, glossaire consolide, MEMORY.md, seeds spec.md, CI, init Linear). 3 skills interactifs."
+    }
+  ]
+}

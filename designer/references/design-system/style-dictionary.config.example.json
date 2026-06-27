@@ -1,0 +1,20 @@
+{
+  "$comment": "Exemple de config Style Dictionary v4 (DTCG natif). Copier dans design-system/style-dictionary.config.json et adapter au front-end retenu. Style Dictionary detecte le format DTCG ($value) automatiquement.",
+  "source": ["design-system/tokens.json"],
+  "platforms": {
+    "css": {
+      "transformGroup": "css",
+      "buildPath": "design-system/build/",
+      "files": [
+        { "destination": "variables.css", "format": "css/variables" }
+      ]
+    },
+    "ts": {
+      "transformGroup": "js",
+      "buildPath": "design-system/build/",
+      "files": [
+        { "destination": "tokens.ts", "format": "javascript/es6" }
+      ]
+    }
+  }
+}

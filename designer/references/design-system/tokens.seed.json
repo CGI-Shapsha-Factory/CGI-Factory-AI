@@ -1,0 +1,47 @@
+{
+  "$description": "Seed DTCG (Design Tokens Community Group). Remplacer les EXEMPLES par les valeurs extraites de la maquette validee. Trois tiers : primitive -> semantic -> component.",
+  "primitive": {
+    "color": {
+      "$type": "color",
+      "example-brand-600": { "$value": "#2563eb", "$description": "EXEMPLE - remplacer par la palette de la maquette" },
+      "example-neutral-900": { "$value": "#111111", "$description": "EXEMPLE - remplacer" },
+      "example-neutral-0": { "$value": "#ffffff", "$description": "EXEMPLE - remplacer" }
+    },
+    "dimension": {
+      "$type": "dimension",
+      "space-100": { "$value": "8px", "$description": "EXEMPLE - base d'espacement a confirmer" }
+    },
+    "fontFamily": {
+      "$type": "fontFamily",
+      "sans": { "$value": ["system-ui", "sans-serif"], "$description": "EXEMPLE - remplacer par la police de la maquette" }
+    },
+    "duration": {
+      "$type": "duration",
+      "fast": { "$value": "150ms", "$description": "EXEMPLE - a confirmer" }
+    }
+  },
+  "semantic": {
+    "color": {
+      "$type": "color",
+      "surface": {
+        "default": { "$value": "{primitive.color.example-neutral-0}", "$description": "fond principal" }
+      },
+      "text": {
+        "default": { "$value": "{primitive.color.example-neutral-900}", "$description": "texte courant - verifier contraste >= 4.5:1 sur surface.default" }
+      },
+      "brand": {
+        "default": { "$value": "{primitive.color.example-brand-600}", "$description": "actions primaires" }
+      },
+      "feedback": {
+        "error": { "$value": "{primitive.color.example-brand-600}", "$description": "EXEMPLE - remplacer par la couleur d'erreur" }
+      }
+    },
+    "space": {
+      "$type": "dimension",
+      "inset": { "$value": "{primitive.dimension.space-100}", "$description": "padding interne par defaut" }
+    }
+  },
+  "component": {
+    "$description": "Optionnel : tokens specifiques a un composant, en alias vers le tier semantic."
+  }
+}

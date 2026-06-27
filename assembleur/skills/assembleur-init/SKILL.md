@@ -1,0 +1,77 @@
+---
+name: assembleur-init
+description: Amorce la phase de convergence : vérifie les 3 contrats, capture le repo SpecKit cible, installe les gabarits et étend le manifeste.
+---
+
+# assembleur-init
+
+Skill d'amorçage de la phase **convergence** : **tout premier skill** à lancer après que
+les trois contrats (cadrage, architecte, designer) ont été validés. Il prépare le terrain
+(zéro décision de convergence) ; les autres skills (`assembleur`, `assembleur-amorce`)
+supposent qu'il a tourné.
+
+## Objectif
+Rendre un projet **prêt pour la convergence** : confirmer que les 3 contrats sont validés,
+capturer le **repo SpecKit cible**, installer les gabarits, et étendre le manifeste partagé
+avec un bloc `assembly`.
+
+## Porte d'entrée
+**Les 3 contrats doivent être validés.** Lire `factory-docs/manifest.json` :
+- si la phase amont n'est pas prête (`definition_of_ready.ready_for_speckit` faux), **ou** si
+  l'architecture n'est pas validée (`architecture.coherence_validated` faux), **ou** si le
+  design n'est pas validé (`design.coverage_validated` faux) → **refuser** en clair :
+  > « La convergence ne peut pas démarrer : il faut les trois contrats validés — le cadrage
+  > (prêt pour SpecKit), l'architecture (cohérence validée) et le design (couverture
+  > validée). Termine d'abord la phase qui manque. »
+- Vérifier la présence des artefacts attendus dans `factory-docs/work/` : cadrage
+  (`product-brief.md`, `glossaire.md`, `spec-index.md`, `*.brief.md`), architecte
+  (`tech-stack.md`, `components.md`, `decisions/`), designer (`foundations.md`,
+  `components.md`, `journeys.md`, `accessibility.md`).
+
+**Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
+
+## Procédure
+1. **Capturer le repo SpecKit cible** : demander le chemin du repo cible (boucle 3-options).
+   L'écrire dans `assembly.target_repo`. C'est là qu'iront `.specify/`, `CLAUDE.md`, `specs/`.
+2. **Installer les gabarits de convergence** dans `factory-docs/templates/` : copier depuis
+   le plugin `templates/` : `converged-constitution.md`, `project-claude-md.md`,
+   `feature-brief-3faces.md`, `spec-seed.md`, `glossary-consolidated.md`,
+   `coherence-report.md`, `review-guidelines.md`, `attack-plan.md`, `memory-index.md`.
+3. **Créer `factory-docs/work/briefs/` et `factory-docs/work/guidelines/`** (vides).
+4. **Étendre le manifeste** `factory-docs/manifest.json` : ajouter le bloc `assembly`
+   ci-dessous s'il est absent (read-modify-write + revalidation JSON) :
+
+```json
+"assembly": {
+  "phase": "init",
+  "target_repo": null,
+  "constitution_generated": false,
+  "claude_md_generated": false,
+  "glossary_consolidated": false,
+  "feature_faces": [],
+  "coherence_report": null,
+  "guidelines_generated": false,
+  "memory_index_generated": false,
+  "attack_plan": null,
+  "ci_generated": false,
+  "coherence_validated": false,
+  "team_validated": false,
+  "linear_initialized": false,
+  "linear_issues": [],
+  "linear_project": null
+}
+```
+
+## Porte de sortie
+- `assembly.target_repo` renseigné.
+- Les 9 gabarits de convergence sont dans `factory-docs/templates/`.
+- `factory-docs/work/briefs/` et `guidelines/` existent.
+- Le manifeste contient le bloc `assembly` (`phase: "init"`), et reparse sans erreur.
+- Rien d'existant n'a été écrasé (idempotence).
+
+## Règles invariantes
+- **Aucune décision de convergence.** Ce skill prépare ; il ne coud rien, ne génère aucune
+  constitution.
+- **Skill indépendant.** La cohérence passe par le manifeste partagé.
+
+Étape suivante : `/assembleur:assembleur` — coudre les 3 contrats par feature et générer le pack SpecKit.

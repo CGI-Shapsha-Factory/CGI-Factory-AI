@@ -1,0 +1,16 @@
+{
+  "name": "architecte",
+  "version": "0.2.5",
+  "description": "Phase architecture d'un projet spec-driven : transforme le besoin fonctionnel (sortie de cadrage) en cadre technique — drivers & attributs de qualité, composants, stack, ADR transverses, walking skeleton, conventions/linters, diagrammes, validation de cohérence. 3 skills interactifs, tout en français.",
+  "author": {
+    "name": "IA Factory"
+  },
+  "keywords": [
+    "architecte",
+    "architecture",
+    "spec-driven",
+    "speckit",
+    "adr",
+    "quality-attributes"
+  ]
+}
