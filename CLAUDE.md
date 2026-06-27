@@ -7,6 +7,7 @@ Ce dépôt n'est **pas un projet applicatif** : c'est une **collection de plugin
 
 - Dépôt : `github.com/NASSWIEL/Factory-IA` (public), branche `main`. Documents de conception dans le parent (`../context-complet.txt`, `../architecture.md`).
 - Distribution : les plugins sont publiés via une **marketplace `git-subdir`** (`.claude-plugin/marketplace.json`) pointant ce dépôt ; marketplace de référence : **Shapsha-Factory**. Les remotes (origin public + remote pro privé) et le mécanisme de **snapshot** (réinjection `README.md` + `marketplace.json`) sont consignés dans la **mémoire projet interne** — pas dans l'arbre versionné. Côté utilisateur : `/plugin marketplace update Shapsha-Factory`.
+- Installeur (façon BMAD) : **`install.py`** à la racine = un menu interactif (cases à cocher, choix libre des modules) qui enrobe `claude plugin install` ; flags non-interactifs `--modules`/`--all`/`--scope`/`--dry-run`. Doc : **`INSTALL.md`**. La marketplace expose aussi `category`/`tags` par plugin (groupement par rôle dans `/plugin` Discover).
 - Git : branche `main`, email `naifsaleem20@gmail.com`. Commit/push uniquement sur demande.
 
 ## Les plugins (phase amont = 4 contrats)

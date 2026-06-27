@@ -24,28 +24,36 @@ Quatre plugins qui transforment un atelier (transcripts, docs) en un projet prê
 
 ## 🚀 Démarrage rapide
 
-**Prérequis** — Claude Code installé et un accès à l'organisation GitHub `CGI-Shapsha-Factory` (dépôt privé). S'authentifier avec son compte CGI :
+**Prérequis** — Claude Code installé + un accès à l'organisation GitHub `CGI-Shapsha-Factory` (dépôt privé). S'authentifier avec son compte CGI :
 
 ```shell
 gh auth login        # GitHub.com → HTTPS → compte CGI
 ```
 
-**1 · Ajouter le marketplace** (directement depuis le dépôt de l'organisation) :
+### Option A — Installeur guidé (recommandé, façon BMAD)
+
+Une commande → un menu à **cases à cocher** → tu installes **seulement les modules dont tu as besoin** (choix libre). Voir **[INSTALL.md](INSTALL.md)**.
+
+```shell
+# via npx (Node >= 18, rien à cloner)
+npx github:CGI-Shapsha-Factory/CGI-Factory-AI            # menu interactif
+npx github:CGI-Shapsha-Factory/CGI-Factory-AI --all --yes
+npx github:CGI-Shapsha-Factory/CGI-Factory-AI --modules cadrage,designer
+
+# ou en Python (dépôt cloné)
+python install.py
+```
+
+### Option B — Installation manuelle (marketplace)
 
 ```shell
 /plugin marketplace add CGI-Shapsha-Factory/CGI-Factory-AI
+/plugin install cadrage@Shapsha-Factory        # puis architecte/designer/assembleur au besoin
 ```
 
-**2 · Installer les plugins** (le suffixe `@Shapsha-Factory` désigne le marketplace) :
+Dans l'app, `/plugin` → onglet **Discover** montre les modules **groupés par rôle** (catégories).
 
-```shell
-/plugin install cadrage@Shapsha-Factory
-/plugin install architecte@Shapsha-Factory
-/plugin install designer@Shapsha-Factory
-/plugin install assembleur@Shapsha-Factory
-```
-
-**3 · Démarrer** — la vue d'ensemble, puis cadrer un projet :
+### Démarrer un projet
 
 ```shell
 /cadrage:help-factory     # carte des 4 plugins, l'ordre et les portes humaines
