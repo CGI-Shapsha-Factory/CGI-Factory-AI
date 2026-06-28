@@ -24,39 +24,32 @@ d'acceptation (scénarios Étant donné / quand / alors).
 Gabarit de sortie : `factory-docs/templates/feature-brief.md` (le **contrat
 central**, copie installée par cadrage-init).
 
-## Porte d'entrée — DURE (double condition)
+## Pré-requis (vérification silencieuse)
 
-**`decoupage_arbitrated == true` ET `demonstrateur_converged == true`.** Porte
-dure : aucun brief n'est finalisé tant que ces deux conditions ne sont pas
-réunies.
+Deux conditions doivent être réunies avant de finaliser un brief : la revue de
+couplage a arbitré le découpage, **et** la boucle démonstrateur a convergé (maquette
+validée par le client, aucun point bloquant). Un brief dérive d'une **vision
+stable** ; tant que la boucle n'a pas convergé, la vision peut encore bouger.
 
-- **`decoupage_arbitrated`** : la revue de couplage humaine a arbitré le découpage.
-- **`demonstrateur_converged`** : la boucle démonstrateur a convergé — aucun point
-  de validation bloquant ouvert et maquette validée par le client. Un brief dérive
-  d'une **vision stable** ; tant que la boucle n'a pas convergé, la vision peut
-  encore bouger, donc les briefs ne se finalisent pas.
+Vérifier ces conditions **sans les annoncer** : ne jamais afficher de statut de
+« porte » ni de nom d'attribut. Si quelque chose manque, le dire **en clair** et
+orienter. Message cible :
 
-Si l'une des deux conditions n'est pas réunie, le skill **refuse de tourner**. La
-logique de gate ci-dessus reste intacte, mais le **message de refus est en
-français naturel**, sans aucun nom d'attribut ni tableau de booléens (convention
-`references/ux-conventions.md`). Message cible :
-
-> « Cette étape ne peut pas démarrer encore : la revue de couplage et la validation
-> du prototype doivent d'abord être faites. »
+> « Avant de rédiger les briefs, il reste à faire la revue de couplage et à valider
+> le prototype — on s'en occupe d'abord ? »
 
 **Garde-fou déterministe (anti-contournement).** Avant toute génération, lancer
 `python scripts/check_ready.py <projet>/factory-docs/manifest.json` : il échoue (exit 1)
-si `decoupage_arbitrated` ou `demonstrateur_converged` n'est pas vrai. **Ne jamais
-contourner** : en cas d'échec, refuser (message ci-dessus) et orienter vers la revue de
+si la revue de couplage ou la convergence du démonstrateur n'est pas faite. **Ne jamais
+contourner** : en cas d'échec, le dire en clair et orienter vers la revue de
 couplage (`/cadrage:cadrage-decoupage`) puis la boucle démonstrateur
-(`/cadrage:cadrage-demonstrateur-brief`). C'est la garantie déterministe que les deux
-portes humaines ont bien été franchies avant les briefs.
+(`/cadrage:cadrage-demonstrateur-brief`).
 
 Adapter selon ce qui manque (en restant en clair) : si le prototype n'est pas
 encore validé, renvoyer vers la boucle (clarification → retour-démonstrateur →
 brief-démonstrateur) puis le point de complétude ; s'il manque la revue de
-couplage, renvoyer vers cette revue. Ne **jamais** afficher
-`decoupage_arbitrated == false` ni équivalent. Ne contourne jamais cette porte.
+couplage, renvoyer vers cette revue. Ne **jamais** afficher de nom d'attribut ni de
+statut de gate.
 
 ## Procédure
 
@@ -71,58 +64,63 @@ Pour **chaque feature** du spec index arbitré, produire
 4. **Critères d'acceptation** — par story, **au moins un** scénario Étant donné /
    quand / alors. Cas nominal + cas limites connus.
 5. **Critères de succès mesurables** — outcomes en métriques avec cible chiffrée,
-   agnostiques de la techno. **`[À CHIFFRER]` si la cible n'a pas été captée.**
+   agnostiques de la techno. Si la cible n'a pas été captée, l'écrire en clair
+   « cible à préciser à l'architecture ».
 6. **Périmètre** — IN et OUT (OUT explicite).
 7. **Dépendances** — reprises du spec index, ordre induit.
 8. **Contraintes héritées** — celles de la vision/pré-constitution applicables.
 9. **Glossaire pertinent** — extrait du glossaire global, termes mobilisés.
-10. **Trous** — liste des `[À VALIDER]`. Vide quand le brief est complet.
+10. **Trous** — section conservée par contrat ; rien d'ouvert n'y est laissé (les
+    points se tranchent en session). Vide quand le brief est complet.
 
 **Formalisation à fournir :**
-- *Succès* : traduire chaque outcome capté en métrique + cible (ou `[À CHIFFRER]`).
+- *Succès* : traduire chaque outcome capté en métrique + cible (ou « à préciser à
+  l'architecture »).
 - *Acceptation* : pour chaque story, dériver au moins un scénario testable.
 
-**Ne rien inventer.** Tout élément absent de la matière → `[À VALIDER]` en
-section 10. Aucun critère fabriqué.
+**Ne rien inventer.** Un élément absent de la matière se **tranche en session** (on
+pose la question), il n'est pas marqué ni comblé. Aucun critère fabriqué. **Aucune
+provenance écrite** (pas de `(src:)`).
 
-## Porte de sortie
+## Vérification avant écriture
 
 Pour chaque brief, vérifier :
 - **Sections 1 à 9 présentes** (contrat central respecté).
 - **Chaque story a au moins un critère d'acceptation.**
-- **Critères de succès chiffrés ou marqués `[À CHIFFRER]`.**
+- **Critères de succès chiffrés ou marqués « cible à préciser à l'architecture ».**
 - **Périmètre OUT non vide.**
 - **Brief auto-suffisant** (auto-contrôle : lisible seul + pré-constitution).
-- **Traçabilité** : chaque story / critère d'acceptation / critère de succès porte
-  sa source `(src: <réf>)` ; sinon `[À VALIDER]`.
+- **Fidélité à la matière** : chaque story / critère est soutenu par la matière
+  (grounding interne) ; un point manquant se tranche en session. **Aucune `(src:)`
+  ni provenance écrite.**
 - **Auto-contrôle qualité INVEST / QUS** :
   - chaque story est **I**ndependent, **N**egotiable, **V**aluable, **E**stimable,
     **S**mall, **T**estable ;
   - chaque critère d'acceptation est **non ambigu** (bannir « rapide », « simple »,
     « convivial », « performant »…), **atomique** et **testable**.
-- **Statut** : `complete` si la section 10 n'a aucun trou **bloquant** ; sinon
-  `draft`. Un brief `complete` **peut** porter des `[À CHIFFRER]` **non-bloquants** (déférés à
-  l'architecture) : `complete` signifie « aucun trou bloquant », pas « zéro marqueur ».
+- **Statut** : `complete` si aucun point bloquant ne reste ; sinon `draft`. Un brief
+  `complete` **peut** porter des cibles « à préciser à l'architecture » **non-bloquantes**
+  (déférées) : `complete` signifie « aucun point bloquant », pas « tout chiffré ».
 
 ## Mise à jour du manifeste
 
 Read-modify-write puis revalidation JSON :
 - `artifacts.briefs[]` : une entrée par feature (`id` = l'**identifiant de use case**
   `UC…` du spec-index — identité fonctionnelle stable et **clé de jointure** réutilisée par
-  l'architecte (`feature_sequence`) et l'assembleur ; `name`, `path`, `status`, `gaps`, `mvp`).
+  l'architecte (`feature_sequence`) et l'assembleur ; `name`, `path`, `status`).
 - `definition_of_ready.all_briefs_complete = true` **si et seulement si** tous
   les briefs sont au statut `complete`.
 - `phase = "briefs"`.
-- `validation_points[]` : trous bloquants des briefs, `status = "open"`,
-  `raised_by = "briefs"`.
 - `updated_at`.
 
 ## Règles invariantes appliquées ici
 
-- **Porte dure d'arbitrage.** Le skill ne génère rien sans `decoupage_arbitrated`
-  vrai. C'est la matérialisation de la revue de couplage humaine.
-- **Marquer, ne pas inventer.** Trous en section 10, jamais de comblement.
+- **Pré-requis d'arbitrage.** Le skill ne finalise rien tant que la revue de
+  couplage et la convergence du démonstrateur ne sont pas faites — vérifié en
+  silence, jamais annoncé comme « porte ».
+- **Ne pas inventer.** Un manque se tranche en session, jamais comblé ni marqué.
+- **Contenu, pas provenance.** Aucune `(src:)`, aucun MVP.
 - **Contrat central.** Les 10 sections, sans dérive de structure.
-- **Skill indépendant.** Porte d'entrée et mise à jour via le manifeste.
+- **Skill indépendant.** Pré-requis et mise à jour via le manifeste.
 
 Étape suivante : `/cadrage:cadrage-completude` — confronter les briefs à la Definition of Ready et faire le point.

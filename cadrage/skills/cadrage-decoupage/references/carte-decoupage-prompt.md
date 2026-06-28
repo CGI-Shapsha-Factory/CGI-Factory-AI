@@ -13,8 +13,7 @@ arbitrer le découpage en revue de couplage.
 Style : violet #5336AB en primaire, sobre, lisible, sans-serif, aucun emoji.
 
 Représentation :
-- Chaque feature est un bloc, avec son identifiant, son nom et une étiquette MVP
-  ou hors MVP, les blocs MVP visuellement distingués.
+- Chaque feature est un bloc, avec son identifiant et son nom.
 - Les dépendances entre features sont des flèches orientées, l'ordre de
   fabrication doit se lire.
 - Les couplages, états partagés entre deux features, sont signalés par un lien
@@ -23,6 +22,6 @@ Représentation :
   attendre.
 - Le walking skeleton, première tranche de bout en bout, mis en avant.
 
-Ajoute une légende claire. La visualisation doit rendre évidents trois choses :
-l'ordre, le périmètre du MVP, et les couplages à surveiller.
+Ajoute une légende claire. La visualisation doit rendre évidents deux choses :
+l'ordre de fabrication, et les couplages à surveiller.
 ```

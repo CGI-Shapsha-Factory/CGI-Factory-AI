@@ -3,11 +3,12 @@
 
 Lit le manifeste d'un projet (factory-docs/manifest.json par defaut) et echoue
 si la couverture des 13 questions de cadrage est incomplete :
-  - une question au statut `pending` ou `deferred` sans justification -> trou bloquant ;
-  - une question `answered` sans `source` -> tracabilite manquante ;
-  - une question `na`/`deferred` sans `answer`/justification -> non justifiee.
+  - une question au statut `pending` -> non posee, trou bloquant.
 
-Exit 0 si tout est couvert (answered+source, ou na/deferred justifie), sinon 1.
+Aucune provenance n'est exigee (on n'ecrit pas de `source`). Une question
+`deferred` (laissee de cote par l'utilisateur) ou `na` est toleree.
+
+Exit 0 si tout est couvert (answered, na, ou deferred), sinon 1.
 Reutilisable a la main, en hook git, ou en CI (socle deterministe de la factory).
 
 Usage:
@@ -47,12 +48,8 @@ def main(argv):
             continue
         status = entry.get("status")
         if status not in OK_STATUSES:
-            problems.append(f"{qid}: statut `{status}` (question non couverte)")
+            problems.append(f"{qid}: statut `{status}` (question non posee)")
             continue
-        if status == "answered" and not entry.get("source"):
-            problems.append(f"{qid}: `answered` sans `source` (tracabilite manquante)")
-        if status in {"na", "deferred"} and not entry.get("answer"):
-            problems.append(f"{qid}: `{status}` sans justification (`answer` requis)")
 
     if problems:
         print("DISCOVERY INCOMPLETE - trous bloquants :", file=sys.stderr)

@@ -16,31 +16,32 @@ Il couvre deux travaux distincts : **capter la vision produit**, puis la
 Chaque skill fait une chose et est **invocable seul**. La cohérence ne vient pas
 d'un orchestrateur, elle vient d'un fichier d'état unique, le **manifeste**
 (`factory-docs/manifest.json`), que tous les skills lisent et mettent à
-jour en read-modify-write. Chaque skill vérifie sa **porte d'entrée** avant
-d'agir et sa **porte de sortie** avant d'écrire le manifeste.
+jour en read-modify-write. Chaque skill vérifie ses **pré-requis** en silence avant
+d'agir et contrôle sa sortie avant d'écrire le manifeste — sans jamais exposer de
+« porte » à l'utilisateur.
 
 ## Les onze skills, dans l'ordre du pipeline
 
-| # | Skill | Rôle | Porte d'entrée |
+| # | Skill | Rôle | Pré-requis |
 |---|-------|------|----------------|
 | 0 | `cadrage-init` | Amorce le workspace `factory-docs/` + `factory-prompts/`, installe les gabarits, crée le manifeste | aucune (projet vierge) |
-| 1 | `cadrage-extraction` | Matière brute → `capture-brute.md` + **passe découverte** (13 questions, interactif) → `project-frame.md` | manifeste existe + une source déclarée |
+| 1 | `cadrage-extraction` | Matière brute → `capture-brute.md` (contenu, sans horodatage ni src) + **passe découverte** (13 questions, interactif) → `project-frame.md` | manifeste existe + une source déclarée |
 | 2 | `cadrage-vision` | Capture → `product-brief.md` (le quoi, le pourquoi) | capture_brute existe |
-| 3 | `cadrage-glossaire` | Construit le langage ubiquitaire sourcé | capture_brute existe |
+| 3 | `cadrage-glossaire` | Construit le langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes), validé en bloc | capture_brute existe |
 | 4 | `cadrage-decoupage` | Vision → découpage **fonctionnel** (use cases par valeur) + couplage (**hypothèse**) | vision_complete |
 | 5 | `cadrage-demonstrateur-brief` | Prompt Claude Design du démonstrateur (mode initial / adaptatif) | vision dispo. / retour dispo. |
 | 6 | `cadrage-retour-demonstrateur` | Ingère le retour client, résout et **invalide** les points | retour disponible |
-| 7 | `cadrage-clarification` | Agrège les points à valider → **liste de balayage client** | ≥1 point ouvert |
+| 7 | `cadrage-clarification` | Repose en session les questions restées sans réponse | ≥1 point à clarifier |
 | 8 | `cadrage-briefs` | Un brief auto-portant par feature (contrat central) | **decoupage_arbitrated ET demonstrateur_converged** |
 | 9 | `cadrage-completude` | Confronte le manifeste à la Definition of Ready | aucune |
 | 10 | `cadrage-handoff` | Prépare la pré-constitution + dépose briefs + spec index dans le repo SpecKit | **ready_for_speckit** |
-| — | `help-factory` | Aide unique : carte des 4 plugins, un tableau par plugin (rôle, ordre, portes) | aucune |
+| — | `help-factory` | Aide unique : carte des 4 plugins, un tableau par plugin (rôle, ordre, décisions humaines) | aucune |
 
 Flux nominal : extraction → vision & glossaire → decoupage → **prompt
 démonstrateur → maquette (Claude Design) → balayage client → atelier de
 validation → retour → réjeu incrémental → prompt adaptatif → maquette**, en
 boucle jusqu'à `demonstrateur_converged` → **revue de couplage humaine** → briefs
-→ completude → handoff quand la porte maîtresse est verte.
+→ completude → handoff quand tout est prêt pour SpecKit.
 
 ### La boucle démonstrateur (incrémentale)
 
@@ -58,31 +59,33 @@ Design). Deux propriétés clés :
   (`[REMIS EN CAUSE]`), pas seulement l'enrichir. Sinon la cadrage accumule des
   couches contradictoires au lieu de converger.
 
-## Trois portes structurantes, jamais automatisées
+## Trois décisions humaines structurantes, jamais automatisées
 
-- **Porte 1, direction produit** — la boucle démonstrateur. Le client valide la
+- **Direction produit** — la boucle démonstrateur. Le client valide la
   maquette (`demonstrateur.client_validated`, geste humain), ce qui, avec aucun
   point bloquant ouvert, allume `demonstrateur_converged`.
 - **Revue de couplage** — entre `decoupage` et `briefs`. L'humain arbitre la
-  proposition et passe `arbitrated` à vrai. Un réjeu de découpage qui change
-  matériellement la proposition **réinitialise** cet arbitrage.
-- **Porte maîtresse, prêt pour SpecKit** — `ready_for_speckit`, calculée par
-  `completude`. Sans elle, `handoff` ne tourne pas.
+  proposition **en session** ; les décisions sont écrites **en place** dans la
+  carte de couplage, puis `arbitrated` passe à vrai. Un réjeu de découpage qui
+  change matériellement la proposition **réinitialise** cet arbitrage.
+- **Prêt pour SpecKit** — `ready_for_speckit`, calculée par `completude`. Sans
+  elle, `handoff` ne tourne pas.
 
-`cadrage-briefs` est gardé par une **double condition** : `decoupage_arbitrated`
-**et** `demonstrateur_converged` — un brief dérive d'une vision stable.
+Ces conditions sont vérifiées **en silence**, jamais affichées comme des « portes ».
+`cadrage-briefs` requiert `decoupage_arbitrated` **et** `demonstrateur_converged` —
+un brief dérive d'une vision stable.
 
 ## Règles invariantes
 
 - **Proposer, ne pas décider.** Le découpage est un arbitrage humain.
   `cadrage-decoupage` ne passe jamais `arbitrated` à vrai de lui-même.
 - **Deux découpages.** La captation produit un découpage **fonctionnel** (use cases
-  par valeur, vision PO) + une carte de couplage = **hypothèse**. La liste de
-  features **numérotée et séquencée** (et le walking skeleton) se fige **en sortie
-  d'architecture**. Les arbitrages de la revue de couplage sont tracés dans
-  `arbitrage-log.md` (append-only).
-- **Traçabilité source.** Chaque énoncé des artefacts porte sa source `(src:)` ;
-  sans trace → `[À VALIDER]`.
+  par valeur, vision PO, **sans MVP**) + une carte de couplage = **hypothèse**. La
+  liste de features **numérotée et séquencée** (et le walking skeleton) se fige **en
+  sortie d'architecture**. Les arbitrages de la revue de couplage sont écrits **en
+  place** dans `coupling-map.md` (pas de journal séparé).
+- **Contenu, pas provenance.** Les artefacts contiennent le **contenu décidé** : ni
+  horodatage, ni interlocuteur, ni `(src:)`.
 - **Découverte cadrée.** `cadrage-extraction` couvre 13 questions de cadrage
   (`skills/cadrage-extraction/references/discovery-questions.md`) : extraites du
   transcript, les manquantes posées **une par une**, stockées dans le
@@ -90,8 +93,10 @@ Design). Deux propriétés clés :
   `scripts/check_discovery.py` échoue tant qu'une question n'a pas de statut. Les
   questions de charge/disponibilité/performance sont des *seeds qualité* pour
   l'architecte.
-- **Marquer, ne pas inventer.** Tout élément sans trace dans la source est
-  marqué `[À VALIDER]` ou `[NON COUVERT EN ATELIER]`. Jamais de comblement.
+- **Ne pas inventer, ne rien persister d'ouvert.** Un élément non soutenu par la
+  matière est **omis** (pas de placeholder écrit) ; ce qui reste à trancher se
+  **résout en session** en posant la question. Seul `[REMIS EN CAUSE]` subsiste
+  dans un artefact (acquis contredit par un retour).
 - **Deux altitudes de validation.** La direction produit se valide une fois, par
   le prototype, hors plugin. La spécification se valide par feature, au niveau du
   brief et de `/speckit.clarify`, après le handoff.
@@ -112,7 +117,7 @@ cadrage/
 ├── scripts/                       # check_discovery.py (garde-fou déterministe)
 ├── templates/                     # gabarits EN des artefacts (project-frame, product-brief,
 │                                  #   feature-brief ← contrat central, spec-index, coupling-map,
-│                                  #   glossaire, arbitrage-log, pre-constitution)
+│                                  #   glossaire, pre-constitution)
 └── README.md
 ```
 
@@ -130,7 +135,7 @@ factory-docs/
 ├── templates/        # copies des gabarits installées dans le projet
 └── work/             # TOUS les artefacts à plat (capture-brute, project-frame,
                       #   product-brief, glossaire, spec-index, coupling-map,
-                      #   arbitrage-log, 00X-*.brief.md, pre-constitution, completude-report)
+                      #   00X-*.brief.md, pre-constitution, completude-report)
 factory-prompts/      # prompts générés, en <NNN>-<JJ-MM>-<nom>/
 ```
 `cadrage-init` **ne demande aucun nom** ; c'est `cadrage-extraction` qui demande le **nom du projet** (le nom du client n'est jamais collecté).

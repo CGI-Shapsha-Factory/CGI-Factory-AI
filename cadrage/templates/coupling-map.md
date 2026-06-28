@@ -34,12 +34,10 @@ Ce qui peut avancer en même temps, ce qui doit attendre.
 Défini dans le `spec-index.md` (source unique). Ici, seuls les **couplages que
 le walking skeleton expose** sont à arbitrer en premier.
 
-## Points à arbitrer dans la revue de couplage
-Liste actionnable des décisions humaines requises avant que la revue de couplage soit
-approuvée. Chaque point pointe vers les features et l'état partagé concernés.
-
 <!--
-Cette carte alimente la revue de couplage humaine. Le skill ne passe jamais
-decoupage_arbitrated à vrai. Marquer `[À VALIDER]` tout couplage suspecté mais
-non confirmé par la matière source.
+Cette carte est l'hypothèse de couplage, puis le support des décisions de revue
+de couplage. Les arbitrages se font EN SESSION avec l'utilisateur et leurs
+résultats sont écrits EN PLACE dans cette carte (état partagé / couplages /
+parallélisme mis à jour). Aucun journal d'arbitrage séparé, aucun point ouvert
+persisté, aucun marqueur `[À VALIDER]`. Pas de provenance écrite.
 -->
