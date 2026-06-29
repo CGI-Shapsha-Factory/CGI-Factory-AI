@@ -1,6 +1,6 @@
 # Catalogue des états & interactions clavier
 
-Référence lue par le skill `designer` (composants & états). Deux familles d'états : **états
+Référence lue par le skill `designer-atelier` (composants & états). Deux familles d'états : **états
 de composant** (interactifs) et **états d'écran** (data-driven).
 
 ## États de composant (interactifs)

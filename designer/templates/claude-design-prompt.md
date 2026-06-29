@@ -1,41 +1,57 @@
-# Prompt Claude Design — <projet>
+# Gabarit — Prompt Claude Design du design system
 
-> Généré par `/designer:designer` une fois la **couverture jugée suffisante**. Sert à faire **naître le
-> design system dans Claude Design** (nativement). Le design system produit est ensuite **validé par
-> l'humain** puis synchronisé en code par **`/design-sync`**. Ce prompt ne copie pas la maquette : elle
-> est une **inspiration/direction**, pas une cible. **Marquer ce qui manque plutôt que l'inventer.**
+> Gabarit statique lu par `/designer:designer-atelier` une fois la **couverture jugée
+> suffisante**. **Cet en-tête reste dans le plugin** ; le fichier sauvegardé sous
+> `prompts/designer/<NNN>-<JJ-MM>-claude-design.md` ne contient **que le corps du prompt**
+> (le bloc de code ci-dessous, rempli), **sans titre, sans note, sans métadonnée, sans pied
+> de page** — cf. `references/ux-conventions.md` §3bis.
+>
+> Le modèle **remplace tous les `<…>`** par le contenu réel tiré du `product-brief.md`
+> (vision, ton), du `spec-index.md` (parcours), du `glossaire.md` (entités/microcopie) et de
+> `design-impact.md` (stack cible §1, thématisation/identité §2, erreurs/async §3,
+> accessibilité/responsive/i18n/perf §4). Le prompt doit être **auto-portant** : Claude
+> Design n'a aucun contexte projet, tout doit être dans le prompt. **Aucune `(src:)` dans le
+> prompt sauvegardé.** Les items « sans objet » sont **omis** ; **aucun `[À VALIDER]`** ne
+> figure dans le prompt (tout point est résolu en session avant la génération).
 
-## 1. Contexte produit
-- Produit / vision (1–2 phrases) : … `(src: product-brief)`
-- Direction stylistique : maquette de cadrage comme **inspiration** (réf. …) ; **marque** si présente
-  (palette/typo/ton) sinon **direction à poser** (feuille blanche stylistique assumée). `(src: maquette / marque)`
-- Stack cible (rend le système exécutable/synchronisable) : framework front, lib de composants, stratégie
-  CSS/tokens. `(src: design-impact §1)`
+```
+Conçois et produis le design system de <produit en 1 phrase>, puis applique-le à tous les
+écrans. Objectif : un système cohérent, accessible et exécutable, prêt à être synchronisé en
+code. Ne copie pas la maquette existante : elle est une inspiration, pas une cible. Marque ce
+qui manque plutôt que de l'inventer.
 
-## 2. Fondation à produire (commencer petit)
-- **Tokens essentiels** : couleurs sémantiques (primaire, texte, fond, succès, erreur, alerte), échelle
-  typo (tailles + graisses), échelle d'espacement (4–8 valeurs), rayons, élévation.
-- **Thématisation** : clair / sombre si requis ; branding par tenant si multitenance. `(src: design-impact §2)`
-- **Composants de base** + **tous leurs états** (défaut, survol, focus, actif, désactivé, chargement,
-  erreur) : bouton, champ, select, case/radio, bascule, modale, notification, liste/tableau, navigation.
-- **Mouvement** : petit jeu de durées + easing, minimal, appliqué partout.
+Contexte produit
+- Produit / vision : <1–2 phrases>.
+- Direction stylistique : <maquette de cadrage comme inspiration (réf. …) ; marque si
+  présente — palette / typo / ton — sinon direction à poser, feuille blanche assumée>.
+- Stack cible (rend le système exécutable et synchronisable) : <framework front, lib de
+  composants, stratégie CSS / tokens>.
 
-## 3. Couverture exigée (consignes de discipline)
-- **Tous les états par composant** — ne pas livrer un composant sans ses états.
-- **Tous les parcours** clés couverts de bout en bout `(src: cadrage parcours)`.
-- **États d'écran** : chargement, vide (avec message + action), contenu, succès ; 1re utilisation ≠ aucun résultat.
-- **Erreurs** : validation à la sortie du champ (message explicite et actionnable), erreur serveur, perte
-  de connexion ; le **format d'erreur API** se projette en **messages par champ** `(src: design-impact §3)`.
-- **Identité/rôles** : variantes par rôle, non autorisé, connexion, session expirée `(src: design-impact §2)`.
-- **Accessibilité** : contraste AA, focus visible, cibles suffisantes, navigation clavier, erreurs pas par
-  la couleur seule, focus sur le 1er champ en erreur `(src: design-impact §4)`.
-- **Responsive** : breakpoints cibles + comportement mobile ; **i18n** si requis ; **budget perf**
-  (éviter animations lourdes si contrainte). `(src: design-impact §4)`
-- **Marquer ce qui manque** (ne pas inventer) ; ne pas sur-tokeniser ni créer de composant inutile.
+Fondation à produire (commencer petit, ne pas sur-tokeniser)
+- Tokens essentiels : couleurs sémantiques (primaire, texte, fond, succès, erreur, alerte),
+  échelle typographique (tailles + graisses), échelle d'espacement (4–8 valeurs), rayons,
+  élévation.
+- Thématisation : <clair / sombre si requis ; branding par tenant si multitenance>.
+- Composants de base avec TOUS leurs états (défaut, survol, focus, actif, désactivé,
+  chargement, erreur) : bouton, champ, select, case / radio, bascule, modale, notification,
+  liste / tableau, navigation.
+- Mouvement : petit jeu de durées + easing, minimal, appliqué partout.
 
-## 4. Ce qui est hors périmètre du prompt
-Le back, la persistance, le modèle de données interne, le déploiement (cf. exclusions du handoff architecte).
+Couverture exigée (consignes de discipline)
+- Tous les états par composant — ne livre pas un composant sans ses états.
+- Tous les parcours clés couverts de bout en bout : <lister les parcours>.
+- États d'écran : chargement, vide (message + action), contenu, succès ; distinguer 1re
+  utilisation et aucun résultat.
+- Erreurs : validation à la sortie du champ (message explicite et actionnable), erreur
+  serveur, perte de connexion ; le format d'erreur de l'API se projette en messages par
+  champ.
+- Identité / rôles : <variantes par rôle, non autorisé, écran de connexion, session
+  expirée>.
+- Accessibilité : contraste AA, focus visible, cibles suffisantes, navigation clavier,
+  erreurs jamais signalées par la couleur seule, focus porté sur le 1er champ en erreur.
+- Responsive : <breakpoints cibles + comportement mobile> ; internationalisation si requise ;
+  budget de performance (éviter les animations lourdes si contrainte).
 
----
-*Items « sans objet » de la checklist : omis du prompt. Items « ouverts » restants : listés comme
-`[À VALIDER]` à clarifier, jamais comblés.*
+Hors périmètre
+Le back, la persistance, le modèle de données interne et le déploiement ne sont pas demandés.
+```

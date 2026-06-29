@@ -1,7 +1,7 @@
 {
   "name": "assembleur",
-  "version": "0.1.10",
-  "description": "Phase de convergence d'un projet spec-driven : coud les 3 contrats (fonctionnel, technique, design) par feature, vérifie leur cohérence (chaque feature part avec ses 3 faces complètes et non contradictoires), puis amorce un projet SpecKit consommable directement — constitution finale convergée, CLAUDE.md, briefs 3-faces, glossaire consolidé, MEMORY.md, seeds spec.md, guidelines, plan d'attaque, CI, et init Linear (skill dédié init-linear : clé API Linear dans .env, dédup projet, défauts Todo/non-assigné) + suivi auto du statut Linear Todo→En cours via un hook Claude Code généré dans le repo cible. Grave les règles design-sync (§6) : tout écran dérive du design system synchronisé (aucune valeur de style en dur), états couverts, contrat d'erreur, + checks CI. 4 skills interactifs, tout en français.",
+  "version": "0.2.0",
+  "description": "Phase de convergence d'un projet spec-driven : lit les 3 contrats (fonctionnel, technique, design) en parallèle, les converge, et produit un PAQUET de handoff dans assembleur-out/ prêt pour SpecKit — pré-constitution (format constitution.md), graines spec par feature (format spec.md), carte des features (séquence + couplage), contexte technique, CLAUDE.md projet et dossier mémoire (MEMORY.md + thématiques). N'écrit jamais dans le repo cible (pas de .specify/, pas de specs/spec.md), pas de GLOSSARY, pas de Linear/CI. Grave la règle design-sync (tout écran dérive du design system synchronisé, aucune valeur de style en dur, états couverts, contrat d'erreur). 2 skills interactifs (assembleur-init, assembleur-convergence) + agent contract-reader, tout en français.",
   "author": {
     "name": "IA Factory"
   },
@@ -11,7 +11,6 @@
     "spec-driven",
     "speckit",
     "constitution",
-    "linear",
     "handoff"
   ]
 }

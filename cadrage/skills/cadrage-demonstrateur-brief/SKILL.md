@@ -84,8 +84,8 @@ rapide et ne pas casser l'acquis.
 
 ## Sauvegarde du prompt
 
-Écrire le prompt dans `factory-prompts/<NNN>-<JJ-MM>-<nom>.md` où `NNN` est le
-prochain numéro global (incrément du dernier `prompts[].n` du manifeste), `JJ-MM` la
+Écrire le prompt dans `prompts/cadrage/<NNN>-<JJ-MM>-<nom>.md` où `NNN` est le
+prochain numéro par plugin (incrément du dernier `prompts[].n` du manifeste ; compteur dans `prompts/cadrage/`), `JJ-MM` la
 date du jour, et `<nom>` le sujet (ex. `demonstrateur-initial`, `demonstrateur-delta-v2`).
 
 **Le fichier sauvegardé ne contient QUE le corps du prompt prêt à coller** (le bloc de
@@ -104,7 +104,7 @@ fichier. L'utilisateur doit pouvoir ouvrir le fichier et tout copier sans rien n
 - Mode adaptatif : le prompt est un **delta** référençant la maquette existante,
   **borné aux changements** du retour, sans repartir de zéro.
 - Le fichier sauvegardé **ne contient que le prompt** (aucun titre/date/mode/version).
-- Le prompt est **sauvegardé** sous `factory-prompts/` et tracé au manifeste.
+- Le prompt est **sauvegardé** sous `prompts/cadrage/` et tracé au manifeste.
 
 ## Mise à jour du manifeste
 

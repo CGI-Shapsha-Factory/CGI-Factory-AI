@@ -1,29 +1,26 @@
 # Plan d'attaque — fabrication SpecKit
 
-> Généré par l'assembleur. **L'équipe l'exécute** dans le repo cible (l'assembleur ne lance
-> pas `specify init` lui-même). (src: architecte/feature_sequence)
+> Livré en `assembleur-out/attack-plan.md`. **L'équipe l'exécute** : l'assembleur ne lance pas
+> SpecKit, il fournit le paquet. Contenu seul (aucune provenance).
 
-## 0. Prérequis (déjà fait AVANT la convergence)
-- Le repo cible a **déjà** été initialisé : `specify init --ai claude` a été lancé **avant**
-  l'assembleur (précondition vérifiée par `assembleur-init`). L'assembleur a donc écrit **après**
-  init : sa **constitution finale convergée** a **remplacé** le gabarit de SpecKit dans
-  `.specify/memory/constitution.md` (bon ordre, pas de clobber).
-- **Ne pas relancer `specify init`** ici : il réécraserait la constitution convergée. La raffiner
-  via `/speckit.constitution` seulement si besoin.
+## 0. Mettre le paquet en place
+- Copier le contenu de `assembleur-out/` à la racine du repo de fabrication (constitution, graines,
+  carte des features, contexte technique, `CLAUDE.md`, `memory/`).
+- Initialiser SpecKit : `specify init --ai claude` dans le repo.
 
-## 1. Séquence des features (ordre des dépendances)
+## 1. Constitution
+`/speckit.constitution` en fournissant `pre-constitution.md` — les principes non négociables sont déjà
+rédigés ; il ne reste qu'à les graver.
+
+## 2. Séquence des features (ordre des dépendances)
 | Ordre | Feature | Walking skeleton | Parallélisable | Dépend de |
 |-------|---------|------------------|----------------|-----------|
 | 1 | 001 — [..] | oui | non | — |
 | 2 | 002 — [..] | non | [oui/non] | 001 |
 
-## 2. Par feature (sur la branche `NNN-feature`)
-Le seed `specs/NNN-feature/spec.md` est déjà posé. Enchaîner :
-`/speckit.specify` (compléter/clarifier) → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
+> Ordre et couplage : voir `feature-map.md`. Le **walking skeleton** (001) d'abord.
 
-## 3. CI
-Activer `.github/workflows/factory-checks.yml` (garde-fous déterministes + linters `conventions/`).
-
-## 4. Linear (après validation de l'équipe)
-`/assembleur:assembleur-amorce` crée le projet Linear + **une issue par feature** (via MCP),
-**uniquement** après la validation du découpage par l'équipe.
+## 3. Par feature (sur la branche `NNN-feature`)
+La graine `features/<id>-…spec-seed.md` fournit la matière. Enchaîner :
+`/speckit.specify` (compléter à partir de la graine) → `/speckit.plan` (Technical Context dans
+`technical-context.md`) → `/speckit.tasks` → `/speckit.implement`.

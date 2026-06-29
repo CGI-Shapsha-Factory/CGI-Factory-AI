@@ -37,7 +37,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | 2 | `cadrage-vision` | capture → `product-brief.md` (quoi/pourquoi, sans techno) | capture existe |
 | 3 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
 | 4 | `cadrage-decoupage` | découpage **fonctionnel** (use cases par valeur, **sans MVP**) + couplage (hypothèse) ; **table affichée en chat** ; arbitrage **en session, écrit en place** | `vision_complete` |
-| 5 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`), sauvé sous `factory-prompts/` — **fichier = corps du prompt seul** | vision dispo / retour dispo |
+| 5 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`), sauvé sous `prompts/cadrage/` — **fichier = corps du prompt seul** | vision dispo / retour dispo |
 | 6 | `cadrage-retour-demonstrateur` | ingère le retour client, résout/invalide | retour dispo |
 | 7 | `cadrage-clarification` | repose en session, une à une, les questions restées sans réponse | questions ouvertes |
 | 8 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
@@ -58,7 +58,7 @@ cadrage-out/                       # documents générés par le cadrage (à la 
 ├── capture-brute, project-frame, product-brief, glossaire,
 │   spec-index, coupling-map, completude-report
 └── features-fonctionnels-brief/   # un brief par feature (<feature>.brief.md)
-factory-prompts/                   # prompts générés, en <NNN>-<JJ-MM>-<nom>.md (fichiers plats)
+prompts/cadrage/                   # prompts générés, en <NNN>-<JJ-MM>-<nom>.md (fichiers plats)
 ```
 Chaque plugin écrit dans son propre dossier de sortie à la racine (`cadrage-out/`,
 `architecte-out/`, `designer-out/`, `assembleur-out/`) et lit ceux de l'amont.

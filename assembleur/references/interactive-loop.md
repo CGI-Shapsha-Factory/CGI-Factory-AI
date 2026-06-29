@@ -1,30 +1,33 @@
 # Boucle interactive — convention partagée (assembleur)
 
-Convention pour toute collecte d'information manquante et toute validation (repo cible,
-résolution de contradictions entre faces, validation de cohérence, validation de l'équipe).
-**Aucune information n'est inventée : on demande, on ne comble pas.**
+Convention pour toute collecte d'information manquante et toute validation (résolution de
+contradictions entre faces, validation de cohérence). **Aucune information n'est inventée : on
+demande, on ne comble pas.**
 
 ## Règle d'or
-- **Une question / un point à la fois.** Jamais une liste en bloc.
-- Pour **chaque** point, présenter **trois options** :
-  1. **Réponse / proposition recommandée** — pré-remplie, plausible, étiquetée « suggestion ».
-  2. **« Passer pour l'instant »** — diffère le point. La valeur reste `[À VALIDER]` et
-     **demeure bloquante**.
-  3. **« Saisir ma réponse »** — l'utilisateur écrit sa propre réponse / décision.
-- **Attendre la réponse** avant le point suivant. Boucler jusqu'à résolution.
+- **Une question / un point à la fois.** Jamais une liste en bloc, jamais un tableau.
+- Pour **chaque** point, présenter en clair : **une réponse recommandée** (adaptée au projet) +
+  **une (ou des) alternative(s)** + **« saisir ma réponse »**. Désigner chaque chose par son **nom
+  en clair**, jamais par un code.
+- **Attendre la réponse** avant le point suivant, et **écrire la réponse en place** dans le fichier
+  concerné du paquet (`assembleur-out/…`) — **aucun fichier annexe**.
 
-## Workflows de validation (cohérence, équipe)
-Pour le **rapport de cohérence** et la **validation de l'équipe** : **afficher en chat** le
-récapitulatif (features, faces, contradictions ; ou découpage + walking skeleton + briefs),
-demander la validation, appliquer les corrections, et ne continuer (constitution finale,
-puis Linear) qu'une fois **validé par l'humain**. L'IA propose, l'humain tranche.
+## Aucun point laissé indéfini
+- Après la synthèse du paquet, **balayer tout marqueur** `[À VALIDER]` / `[À CHIFFRER]` /
+  `NEEDS CLARIFICATION` et **poser la question** correspondante, un point à la fois, jusqu'à ce
+  qu'**aucun marqueur ne reste**. **Ne jamais se contenter d'afficher** « il reste X points ».
+- **Ne pas conclure** la convergence tant qu'un point reste ouvert.
 
-## Traçabilité
-- Décision via option 1 ou 3 → **humaine**, tracée `(src: atelier/utilisateur)` ou
-  `(src: cadrage | architecte | designer)` si elle vient des contrats amont.
-- Option 2 (passer) → `[À VALIDER]` / `NEEDS CLARIFICATION`, reste **bloquant**.
-- **Interdit** : inventer une décision, une feature, une issue Linear.
+## Validation de cohérence
+Restituer le rapport de cohérence **en prose** (pas de tableau), demander la validation, appliquer
+les corrections, et ne marquer la cohérence validée qu'**après** le geste humain. L'IA propose,
+l'humain tranche.
+
+## Ce qu'on écrit
+- Une décision n'est enregistrée que sur une **réponse explicite** de l'utilisateur.
+- **Aucune provenance écrite** : pas de `(src:)`, pas d'horodatage, pas de nom de personne.
+- **Interdit** : inventer une décision ou une feature.
 
 ## Langue
-Tout en **français** (questions, options, restitutions, artefacts). Seuls les
-identifiants/valeurs machine et noms de format (SpecKit, Linear, `spec.md`) restent tels quels.
+Tout en **français** (questions, options, restitutions, artefacts). Seuls les identifiants/valeurs
+machine et noms de format (SpecKit, `spec.md`, `/design-sync`) restent tels quels.

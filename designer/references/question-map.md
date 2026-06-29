@@ -1,6 +1,6 @@
 # Table de correspondance — items de checklist → entrées (cadrage, architecte, humain)
 
-Lue par le skill `designer` (étape 1, pré-remplissage). Pour chaque **item de la checklist de couverture**,
+Lue par le skill `designer-atelier` (étape 1, pré-remplissage). Pour chaque **item de la checklist de couverture**,
 indique **d'où il se déduit**. Le skill auto-remplit (`status: deduced`, avec `(src: …)`) ce qui vient des
 handoffs et ne **pose** (boucle 3-options) que les items **H** ou restés `open`. Un item bloquant non
 statué empêche de juger la couverture suffisante. La **maquette** est une **direction** (inspiration), pas
