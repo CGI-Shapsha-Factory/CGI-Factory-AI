@@ -36,8 +36,9 @@ blanche stylistique** possible (la marque est une entrée optionnelle).
   guidelines : états, patterns d'erreur, socle a11y). → assembleur.
 
 ## Workspace & manifeste
-Lit le **workspace partagé** `factory-docs/work/` (handoffs cadrage + architecte). Écrit dans
-`factory-docs/work/` (rapport de couverture, guidelines) et `factory-prompts/` (prompt Claude Design).
+Lit les handoffs cadrage (`cadrage-out/`) et architecte (`architecte-out/`). Écrit dans
+`designer-out/` (rapport de couverture, guidelines) et `factory-prompts/` (prompt Claude Design, **fichier
+plat**). Le manifeste et les gabarits vivent dans `.factory/`.
 **Ne crée plus** `design-system/`. Le manifeste reçoit un bloc **`design`** orienté **couverture** :
 `{phase, inputs{cadrage_ok, design_impact_ok}, checklist{foundation[], experience[], technical[]} (items
 {id,label,origin,status,note}), coverage_sufficient(H), prompt_path, coverage_report_path,
@@ -52,9 +53,9 @@ design_system_ref, design_validated(H), guidelines_path}`. Écriture = read-modi
   le contrat propre qui alimente le **versant technique** de la checklist.
 
 ## Sorties (3)
-1. **Prompt Claude Design** (`factory-prompts/…`) — fait naître le design system.
-2. **Rapport de couverture** (`factory-docs/work/coverage-report.md`) — la trace de la rigueur.
-3. **Handoff design** (`factory-docs/work/design-guidelines.md`) — réf. du système synchronisé +
+1. **Prompt Claude Design** (`factory-prompts/<NNN>-<JJ-MM>-claude-design.md`, **fichier plat**) — fait naître le design system.
+2. **Rapport de couverture** (`designer-out/coverage-report.md`) — la trace de la rigueur.
+3. **Handoff design** (`designer-out/design-guidelines.md`) — réf. du système synchronisé +
    guidelines, consommé par l'Assembleur (qui grave les règles `/design-sync` en constitution/claude.md/CI).
 
 ## Portes humaines (2, jamais automatisées)
@@ -72,7 +73,7 @@ rapport + handoff présents — pas des tokens).
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python scripts/check_design.py <projet>/factory-docs/manifest.json
+python scripts/check_design.py <projet>/.factory/manifest.json
 ```
 
 ## Invariants

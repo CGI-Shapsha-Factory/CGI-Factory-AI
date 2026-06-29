@@ -57,12 +57,12 @@ de tokens/composants par anticipation.
 
 ### Étape 5 — Générer les sorties (seulement quand la couverture est jugée suffisante)
 Quand l'humain juge la **couverture suffisante** (`design.coverage_sufficient = true`, **geste humain**) :
-- **Prompt Claude Design** → `factory-prompts/<NNN>-<JJ-MM>-claude-design/prompt.md` (gabarit
+- **Prompt Claude Design** → `factory-prompts/<NNN>-<JJ-MM>-claude-design.md` (fichier plat ; gabarit
   `templates/claude-design-prompt.md`) : fondation à produire, direction stylistique (maquette =
   inspiration, marque si présente sinon direction à poser), **stack cible**, et **consignes de discipline**
   (tous les états par composant, tous les parcours, erreurs + états vides, marquer ce qui manque). Les
   items `sans_objet` sont omis ; les items `open` restants sont listés `[À VALIDER]`, jamais comblés.
-- **Rapport de couverture** → `factory-docs/work/coverage-report.md` (gabarit `templates/coverage-report.md`).
+- **Rapport de couverture** → `designer-out/coverage-report.md` (gabarit `.factory/templates/coverage-report.md`).
 - MAJ `design.prompt_path`, `design.coverage_report_path`, `design.phase = "atelier"`.
 
 ## Porte de sortie

@@ -16,18 +16,20 @@ capturer le **repo SpecKit cible**, installer les gabarits, et étendre le manif
 avec un bloc `assembly`.
 
 ## Porte d'entrée
-**Les 3 contrats doivent être validés.** Lire `factory-docs/manifest.json` :
-- si la phase amont n'est pas prête (`definition_of_ready.ready_for_speckit` faux), **ou** si
+**Les 3 contrats doivent être validés.** Lire `.factory/manifest.json` :
+- si la phase amont n'est pas prête (`definition_of_ready.cadrage_complete` faux), **ou** si
   l'architecture n'est pas validée (`architecture.coherence_validated` faux), **ou** si le
   design n'est pas validé (`design.design_validated` faux — le système Claude Design a été validé) →
   **refuser** en clair :
   > « La convergence ne peut pas démarrer : il faut les trois contrats validés — le cadrage
   > (prêt pour SpecKit), l'architecture (cohérence validée) et le design (système validé). Termine
   > d'abord la phase qui manque. »
-- Vérifier la présence des artefacts attendus dans `factory-docs/work/` : cadrage
-  (`product-brief.md`, `glossaire.md`, `spec-index.md`, `*.brief.md`), architecte
-  (`tech-stack.md`, `components.md`, `decisions/`, `design-impact.md`), designer
-  (`design-guidelines.md` = handoff design : réf. du design system synchronisé + guidelines).
+- Vérifier la présence des artefacts attendus : cadrage
+  (`cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
+  `cadrage-out/features-fonctionnels-brief/*.brief.md`), architecte
+  (`architecte-out/tech-stack.md`, `architecte-out/components.md`, `architecte-out/decisions/`,
+  `architecte-out/design-impact.md`), designer
+  (`designer-out/design-guidelines.md` = handoff design : réf. du design system synchronisé + guidelines).
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
@@ -41,12 +43,12 @@ avec un bloc `assembly`.
    > relance `/assembleur:assembleur-init`. »
    Ainsi l'assembleur **écrit après** `specify init` (le bon ordre) : sa constitution convergée
    **remplace** le gabarit de SpecKit, sans risque d'être écrasée par un init ultérieur.
-2. **Installer les gabarits de convergence** dans `factory-docs/templates/` : copier depuis
+2. **Installer les gabarits de convergence** dans `.factory/templates/` : copier depuis
    le plugin `templates/` : `converged-constitution.md`, `project-claude-md.md`,
    `feature-brief-3faces.md`, `spec-seed.md`, `glossary-consolidated.md`,
    `coherence-report.md`, `review-guidelines.md`, `attack-plan.md`, `memory-index.md`.
-3. **Créer `factory-docs/work/briefs/` et `factory-docs/work/guidelines/`** (vides).
-4. **Étendre le manifeste** `factory-docs/manifest.json` : ajouter le bloc `assembly`
+3. **Créer `assembleur-out/briefs/` et `assembleur-out/guidelines/`** (vides).
+4. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `assembly`
    ci-dessous s'il est absent (read-modify-write + revalidation JSON) :
 
 ```json
@@ -72,8 +74,8 @@ avec un bloc `assembly`.
 
 ## Porte de sortie
 - `assembly.target_repo` renseigné **et** repo déjà initialisé par SpecKit (`.specify/` présent).
-- Les 9 gabarits de convergence sont dans `factory-docs/templates/`.
-- `factory-docs/work/briefs/` et `guidelines/` existent.
+- Les 9 gabarits de convergence sont dans `.factory/templates/`.
+- `assembleur-out/briefs/` et `assembleur-out/guidelines/` existent.
 - Le manifeste contient le bloc `assembly` (`phase: "init"`), et reparse sans erreur.
 - Rien d'existant n'a été écrasé (idempotence).
 

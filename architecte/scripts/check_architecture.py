@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la phase architecture.
 
-Lit le manifeste partage d'un projet (factory-docs/manifest.json par defaut) et
+Lit le manifeste partage d'un projet (.factory/manifest.json par defaut) et
 echoue si le contrat technique est incomplet :
   - bloc `architecture` absent ;
   - profil d'equipe non renseigne (seule reponse demandee a l'utilisateur) ;
@@ -23,7 +23,7 @@ import sys
 
 
 def main(argv):
-    path = argv[1] if len(argv) > 1 else "factory-docs/manifest.json"
+    path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
     try:
         with open(path, encoding="utf-8") as f:
             manifest = json.load(f)

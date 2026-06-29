@@ -2,7 +2,7 @@
 Statut : draft | validated
 
 > Document de travail. Synthèse de niveau produit, le quoi et le pourquoi. Aucune
-> technologie. Produit par `cadrage-vision` à partir de `work/capture-brute.md`.
+> technologie. Produit par `cadrage-vision` à partir de `cadrage-out/capture-brute.md`.
 > **Contenu uniquement, sans provenance** (pas de `(src:)`, pas d'horodatage). Un
 > élément non soutenu par la matière est demandé en session, jamais comblé ni
 > marqué `[À VALIDER]`.

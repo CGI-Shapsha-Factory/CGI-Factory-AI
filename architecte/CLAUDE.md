@@ -23,8 +23,8 @@ il discipline et grave. Ce sont des **skills Markdown** ; pas de build/test.
 Mappe les deux portes humaines de la définition + un setup déterministe isolé.
 
 ## Workspace & manifeste
-Écrit dans le **workspace partagé** `factory-docs/work/` (à côté de cadrage). Le
-manifeste `factory-docs/manifest.json` reçoit un bloc **`architecture`** (drivers,
+Écrit ses propres sorties dans `architecte-out/` (à côté de `cadrage-out/`). Le
+manifeste `.factory/manifest.json` reçoit un bloc **`architecture`** (drivers,
 quality_attributes, components, stack, conventions_installed, adrs, walking_skeleton,
 feature_sequence, risks, **design_impact**, coherence_validated). `conventions/` est créé à la **racine
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
@@ -33,8 +33,9 @@ design », §4.2 de la spec designer) — la tranche de l'archi qui se voit à l
 `/designer:designer` ; `check_architecture.py` exige `architecture.design_impact = true`.
 
 ## Intégration cadrage (entrées)
-Lit `factory-docs/work/{project-frame, product-brief, glossaire, spec-index,
-*.brief, pre-constitution}.md`. La table `references/question-map.md` indique où
+Lit `cadrage-out/{project-frame, product-brief, glossaire, spec-index}.md` et les
+briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md`. La table
+`references/question-map.md` indique où
 chaque réponse d'architecture se trouve déjà → on ne re-pose que les trous (profil
 d'équipe). Convergence : `architecte` **fige le registre canonique**
 `architecture.feature_sequence` — la liste numérotée/séquencée des features (le 2ᵉ
@@ -55,7 +56,7 @@ Garde-fou déterministe : `scripts/check_architecture.py`.
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md   # doit ne rien retourner
-python scripts/check_architecture.py <projet>/factory-docs/manifest.json
+python scripts/check_architecture.py <projet>/.factory/manifest.json
 ```
 
 ## Invariants

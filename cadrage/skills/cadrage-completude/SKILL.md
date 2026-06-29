@@ -5,9 +5,10 @@ description: Confronte le projet à la Definition of Ready et rend le verdict d'
 
 # cadrage-completude
 
-Cinquième étape (rejouable à tout moment). Mesure l'état du pack amont contre la
-Definition of Ready et rend le verdict « prêt pour SpecKit ». C'est la vue
-cockpit.
+**Étape terminale du cadrage** (rejouable à tout moment). Mesure l'état du pack
+amont, résout en session ce qui peut l'être, et rend le verdict : **le cadrage
+est-il terminé, prêt à passer à l'architecte ?** C'est la vue cockpit et la
+dernière étape avant `/architecte:architecte-init`.
 
 ## Objectif
 
@@ -20,7 +21,7 @@ session** (on pose la question), rien d'ouvert n'est listé dans un fichier.
 
 ## Entrée
 
-Le manifeste `factory-docs/manifest.json` et tous les artefacts qu'il
+Le manifeste `.factory/manifest.json` et tous les artefacts qu'il
 référence (capture, vision, glossaire, spec index, briefs).
 
 ## Pré-requis (vérification silencieuse)
@@ -64,10 +65,13 @@ Le skill produit **deux choses** : un rapport complet écrit sur disque, et un
 affichage immédiat en session. **Toute la sortie utilisateur est en langage
 naturel français** : on n'affiche **jamais** de nom d'attribut ni de clé du
 manifeste (suivre la table de correspondance de `references/ux-conventions.md` — on
-dit « prêt pour SpecKit », « le glossaire est validé », « aucun point bloquant
-ouvert »… jamais `ready_for_speckit = false` ni un tableau de booléens bruts).
+dit « le cadrage est terminé, prêt pour l'architecte », « le glossaire est validé »,
+« aucun point bloquant ouvert »… jamais `cadrage_complete = false` ni un tableau de
+booléens bruts). **Jamais d'identifiant codé** (`B1`, `B2`, `A6`, `UC1`…) : on nomme
+chaque chose en clair. **Jamais de marqueur `[À CHIFFRER]`** : on dit « à préciser
+plus tard avec l'équipe technique ».
 
-### 1. Rapport écrit — `factory-docs/work/completude-report.md`
+### 1. Rapport écrit — `cadrage-out/completude-report.md`
 
 Écrire le **rapport complet** dans ce fichier, **daté et marqué comme instantané** :
 - **En-tête obligatoire** : « Rapport généré le `<updated_at>` à partir du manifeste — **le
@@ -83,8 +87,13 @@ En plus du fichier, **afficher directement dans la conversation** un **résumé
 d'état du projet** — un court paragraphe « où en est le projet », pensé pour
 quelqu'un qui reprend **après plusieurs jours** : en une lecture, il sait où il en
 est, ce qui reste à trancher, et quelle est la prochaine action. Donner le verdict
-en clair (« prêt pour SpecKit » ou « pas encore prêt, il reste… »). **Pas de tableau
-de critères ni de statut brut.**
+en clair (« le cadrage est terminé, prêt pour l'architecte » ou « pas encore prêt,
+il reste… »).
+
+**JAMAIS de tableau.** Ne produis **aucun tableau à colonnes**, et en particulier
+**aucune colonne « ce qui est complet »**. Un paragraphe en prose, point. Ne liste
+pas non plus les critères réussis : on parle de **ce qui reste**, en clair, sans
+identifiant codé.
 
 ## Résolution interactive en session
 
@@ -96,8 +105,16 @@ avant la suivante). On parcourt ainsi :
 - **Validation du glossaire** si elle n'a pas encore eu lieu : proposer la validation
   en bloc (pas terme par terme).
 - **Questions de découverte restées sans réponse** : les reposer une à une.
+- **Points bloquants** : ne pas se contenter de les énoncer. Pour **chaque** point
+  bloquant, **poser la question** correspondante à l'utilisateur (en clair, sans code
+  ni jargon), une à la fois, jusqu'à ce que toute l'information nécessaire soit là.
 - **Confirmation des éléments signalés** : tout point « à confirmer » est confirmé ou
   modifié en session.
+
+**Appliquer les réponses EN PLACE.** Dès qu'une réponse débloque ou corrige quelque
+chose, **modifier directement l'artefact concerné** dans `cadrage-out/` (product-brief,
+spec-index, brief, glossaire…). **Ne créer aucun nouveau fichier** pour stocker les
+réponses obtenues ; rien n'est mis de côté dans un journal.
 
 Rappels de la convention (rien n'est inventé) :
 - Une réponse explicite (recommandée acceptée ou saisie) → décision **humaine**.
@@ -114,7 +131,7 @@ verdict reste alors au rouge).
 
 Read-modify-write puis revalidation JSON :
 - Met à jour tout le bloc `definition_of_ready` (les booléens, dont
-  `demonstrateur_converged`, + `ready_for_speckit`). **Seul ce skill met à jour ces drapeaux** :
+  `demonstrateur_converged`, + `cadrage_complete`). **Seul ce skill met à jour ces drapeaux** :
   ne **jamais** les flipper ailleurs ni à la main après avoir résolu un point — **relancer
   `cadrage-completude`**, pour que le rapport écrit et le manifeste restent cohérents (jamais de
   manifeste « prêt » avec un rapport « pas prêt »).
@@ -127,8 +144,8 @@ Read-modify-write puis revalidation JSON :
 Le dashboard Definition of Ready (jauge de complétude, statut par critère,
 verdict maître, ce qui manque) se génère dans Claude Design. Le prompt prêt à
 coller est dans `references/dashboard-dor-prompt.md` (gabarit statique). Le prompt
-utilisé est sauvegardé sous `factory-prompts/<NNN>-<JJ-MM>-dashboard-dor/` et tracé
-dans `prompts[]`. Le fichier `prompt.md` ne contient **que le corps du prompt** (le
+utilisé est sauvegardé sous `factory-prompts/<NNN>-<JJ-MM>-dashboard-dor.md` et tracé
+dans `prompts[]`. Le fichier sauvegardé ne contient **que le corps du prompt** (le
 bloc de code du gabarit), sans titre/date/mode/version (cf. `references/ux-conventions.md`).
 
 ## Règles invariantes appliquées ici
@@ -136,12 +153,12 @@ bloc de code du gabarit), sans titre/date/mode/version (cf. `references/ux-conve
 - **Reflète l'état réel.** Le verdict ne passe au vert que sur du vert intégral.
   Aucun critère forcé, aucune résolution fabriquée, aucun chemin « démo → vert ».
   Une réponse différée ou un trou bloquant ouvert maintient le verdict au rouge.
-- **Pas de fuite de nom d'attribut ni de jargon de porte.** Verdict et critères
-  affichés en clair, en français (table de `references/ux-conventions.md`) — jamais
-  `ready_for_speckit = false`, jamais « porte », ni tableau de booléens bruts. Les
-  clés du manifeste restent internes (mises à jour ci-dessus).
+- **Pas de fuite de nom d'attribut, d'identifiant codé, ni de jargon de porte.**
+  Verdict et critères en clair, en français (table de `references/ux-conventions.md`) —
+  jamais `cadrage_complete = false`, jamais `B1`/`UC1`, jamais `[À CHIFFRER]`, jamais
+  « porte », ni tableau de booléens bruts. Les clés du manifeste restent internes.
 - **Rien d'ouvert persisté.** Aucune liste de trous écrite ; ce qui reste se tranche
-  en session. Le verdict « prêt pour SpecKit » conditionne le handoff.
+  en session, et les réponses sont appliquées **en place** dans `cadrage-out/`.
 - **Skill indépendant.** Lit et écrit le manifeste, sans orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-handoff` — assembler le pack et passer à SpecKit une fois le verdict au vert.
+Étape suivante : `/architecte:architecte-init` — une fois le cadrage terminé, l'architecte lit directement les fichiers de `cadrage-out/` pour bâtir le contrat technique.

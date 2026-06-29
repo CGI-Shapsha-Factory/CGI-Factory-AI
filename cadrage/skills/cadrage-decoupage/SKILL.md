@@ -27,11 +27,11 @@ de couplage, jamais une décision.
 
 ## Entrée
 
-- `factory-docs/work/product-brief.md`
-- `factory-docs/work/glossaire.md`
+- `cadrage-out/product-brief.md`
+- `cadrage-out/glossaire.md`
 
-Gabarits de sortie : `factory-docs/templates/spec-index.md` et
-`factory-docs/templates/coupling-map.md` (copie installée par cadrage-init).
+Gabarits de sortie : `.factory/templates/spec-index.md` et
+`.factory/templates/coupling-map.md` (copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)
 
@@ -191,8 +191,8 @@ Déroulé :
 La carte de découpage et dépendances (visualisation interactive pour la revue de
 couplage) se génère dans Claude Design. Le prompt prêt à coller est dans
 `references/carte-decoupage-prompt.md` (gabarit statique). Le prompt utilisé est
-sauvegardé sous `factory-prompts/<NNN>-<JJ-MM>-carte-decoupage/` et tracé dans
-`prompts[]`. Le fichier `prompt.md` ne contient **que le corps du prompt** (le bloc de
+sauvegardé sous `factory-prompts/<NNN>-<JJ-MM>-carte-decoupage.md` et tracé dans
+`prompts[]`. Le fichier sauvegardé ne contient **que le corps du prompt** (le bloc de
 code du gabarit), sans titre/date/mode/version (cf. `references/ux-conventions.md`).
 
 ## Règles invariantes appliquées ici

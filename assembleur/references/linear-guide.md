@@ -54,7 +54,7 @@ Features **non assignées**, en **Todo** (`unstarted`) ; labels `feature:<id>` /
 (id `001`) / `MVP` (si `mvp`) ; dépendances en relations `blocks` ; ordre = séquence.
 
 ## Fallback (clé absente / API indisponible)
-Produire `factory-docs/work/linear-features.json` (une entrée par feature), à importer manuellement.
+Produire `assembleur-out/linear-features.json` (une entrée par feature), à importer manuellement.
 **Pas d'écriture fantôme, pas de fausse confirmation.**
 
 ## Alternative

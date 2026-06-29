@@ -16,20 +16,20 @@ d'architecture, créer le dossier `conventions/`, et étendre le manifeste parta
 avec un bloc `architecture`.
 
 ## Porte d'entrée
-**Le cadrage doit être prêt.** Lire `factory-docs/manifest.json` :
-- s'il est absent, ou si la phase amont n'est pas prête (le verdict « prêt pour
-  SpecKit » n'est pas atteint, ou les artefacts clés manquent), **refuser** avec un
+**Le cadrage doit être prêt.** Lire `.factory/manifest.json` :
+- s'il est absent, ou si la phase amont n'est pas prête (le verdict « cadrage
+  complet » n'est pas atteint, ou les artefacts clés manquent), **refuser** avec un
   message en clair :
   > « La phase technique ne peut pas démarrer : le cadrage n'est pas encore prêt.
   > Termine d'abord la phase de cadrage (jusqu'au handoff). »
-- Vérifier la présence des artefacts cadrage attendus dans `factory-docs/work/` :
-  `project-frame.md`, `product-brief.md`, `glossaire.md`, `spec-index.md`,
-  `pre-constitution.md`, et les briefs `*.brief.md`.
+- Vérifier la présence des artefacts cadrage attendus : `cadrage-out/project-frame.md`,
+  `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
+  et les briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md`.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
 ## Procédure
-1. **Installer les gabarits d'architecture** dans `factory-docs/templates/` (à côté
+1. **Installer les gabarits d'architecture** dans `.factory/templates/` (à côté
    des gabarits de cadrage) : copier depuis le plugin `templates/` :
    `drivers-quality.md`, `components.md`, `tech-stack.md`, `standards.md`,
    `diagrams.md`, `adr.md`, `risks.md`, `design-impact.md`.
@@ -38,8 +38,8 @@ avec un bloc `architecture`.
    `references/conventions/.editorconfig`). **Les fichiers de conventions par
    langage ne sont PAS installés ici** : le langage n'est connu qu'après le workflow
    stack — c'est le skill `architecte` qui les déposera (voir son étape conventions).
-3. **Créer `factory-docs/work/decisions/`** (dossier des ADR, vide).
-4. **Étendre le manifeste** `factory-docs/manifest.json` : ajouter le bloc
+3. **Créer `architecte-out/decisions/`** (dossier des ADR, vide).
+4. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc
    `architecture` ci-dessous s'il est absent (read-modify-write + revalidation JSON) :
 
 ```json
@@ -62,8 +62,8 @@ avec un bloc `architecture`.
 
 ## Porte de sortie
 - `conventions/` existe à la racine avec `.editorconfig`.
-- Les 8 gabarits d'architecture (dont `design-impact.md`) sont dans `factory-docs/templates/`.
-- `factory-docs/work/decisions/` existe.
+- Les 8 gabarits d'architecture (dont `design-impact.md`) sont dans `.factory/templates/`.
+- `architecte-out/decisions/` existe.
 - Le manifeste contient le bloc `architecture` (`phase: "init"`), et reparse sans erreur.
 - Rien d'existant n'a été écrasé (idempotence).
 

@@ -16,24 +16,24 @@ avec un bloc `design` orienté **couverture** (checklist pré-remplie par les ha
 
 ## Porte d'entrée
 **Cadrage prêt + maquette validée + architecture validée + Décisions à impact design présentes.** Lire
-`factory-docs/manifest.json` ; **refuser en clair** si :
+`.factory/manifest.json` ; **refuser en clair** si :
 - la maquette n'a pas convergé (`demonstrateur.client_validated != true`), ou
 - l'architecture n'est pas validée (`architecture.coherence_validated != true`), ou
 - la section *Décisions à impact design* manque (`architecture.design_impact != true` / pas de
   `design-impact.md`).
   > « L'atelier design ne peut pas démarrer : il faut une maquette validée par le client, un contrat
   > technique validé, et la section *Décisions à impact design* de l'architecte. Termine d'abord ces phases. »
-- Vérifier les artefacts dans `factory-docs/work/` : côté cadrage `product-brief.md`, `glossaire.md`,
-  `spec-index.md` (parcours + entités affichées) ; côté architecte `design-impact.md`.
+- Vérifier les artefacts : côté cadrage `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`,
+  `cadrage-out/spec-index.md` (parcours + entités affichées) ; côté architecte `architecte-out/design-impact.md`.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
 ## Procédure
-1. **Installer les gabarits** dans `factory-docs/templates/` (copier depuis le plugin `templates/`) :
+1. **Installer les gabarits** dans `.factory/templates/` (copier depuis le plugin `templates/`) :
    `coverage-checklist.md`, `coverage-report.md`, `claude-design-prompt.md`, `design-guidelines.md`.
    *(Le plugin ne crée plus de dossier `design-system/` ni de seed de tokens : le design system naît dans
    Claude Design.)*
-2. **Étendre le manifeste** `factory-docs/manifest.json` : ajouter le bloc `design` ci-dessous s'il est
+2. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `design` ci-dessous s'il est
    absent (read-modify-write + revalidation JSON), en **semant la checklist** avec les items canoniques
    de `coverage-checklist.md` au statut `open` :
 
@@ -59,7 +59,7 @@ avec un bloc `design` orienté **couverture** (checklist pré-remplie par les ha
 des **gestes humains** (jamais auto).*
 
 ## Porte de sortie
-- Les 4 gabarits sont dans `factory-docs/templates/`.
+- Les 4 gabarits sont dans `.factory/templates/`.
 - Le manifeste contient le bloc `design` (`phase: "init"`, checklist semée), et reparse sans erreur.
 - Rien d'existant n'a été écrasé (idempotence).
 

@@ -1,27 +1,31 @@
 ---
 name: cadrage-briefs
-description: Génère un brief auto-portant par feature, prêt pour SpecKit.
+description: Génère un brief auto-portant par feature, repris par l'architecte.
 ---
 
 # cadrage-briefs
 
 Quatrième étape. Produit l'artefact dont tout le pipeline dépend : un brief
-auto-portant par feature, au contrat central, consommable par SpecKit.
+auto-portant par feature, au contrat central, repris en aval par l'architecte
+puis l'assembleur.
 
 ## Objectif
 
-Pour chaque feature, générer un **brief auto-suffisant** : un développeur qui ne
-lit que ce brief plus la pré-constitution a de quoi spécifier la feature. Inclut la
+Pour chaque feature, générer un **brief auto-suffisant** : un lecteur qui ne lit
+que ce brief a de quoi comprendre et spécifier la feature. Inclut la
 **formalisation** des critères de succès (outcome → métrique cible) et
 d'acceptation (scénarios Étant donné / quand / alors).
 
+**Pas d'horodatage, pas de date, pas de nom de personne** issu du transcript : on
+capte le **cœur fonctionnel** de la feature, pas qui l'a dite ni quand.
+
 ## Entrée
 
-- `factory-docs/work/spec-index.md` **arbitré**
-- `factory-docs/work/product-brief.md`
-- `factory-docs/work/glossaire.md`
+- `cadrage-out/spec-index.md` **arbitré**
+- `cadrage-out/product-brief.md`
+- `cadrage-out/glossaire.md`
 
-Gabarit de sortie : `factory-docs/templates/feature-brief.md` (le **contrat
+Gabarit de sortie : `.factory/templates/feature-brief.md` (le **contrat
 central**, copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)
@@ -39,7 +43,7 @@ orienter. Message cible :
 > le prototype — on s'en occupe d'abord ? »
 
 **Garde-fou déterministe (anti-contournement).** Avant toute génération, lancer
-`python scripts/check_ready.py <projet>/factory-docs/manifest.json` : il échoue (exit 1)
+`python scripts/check_ready.py <projet>/.factory/manifest.json` : il échoue (exit 1)
 si la revue de couplage ou la convergence du démonstrateur n'est pas faite. **Ne jamais
 contourner** : en cas d'échec, le dire en clair et orienter vers la revue de
 couplage (`/cadrage:cadrage-decoupage`) puis la boucle démonstrateur
@@ -54,7 +58,8 @@ statut de gate.
 ## Procédure
 
 Pour **chaque feature** du spec index arbitré, produire
-`work/00X-<feature>.brief.md` aux **10 sections du contrat central** :
+`cadrage-out/features-fonctionnels-brief/<feature>.brief.md` aux **10 sections du
+contrat central** (`<feature>` = l'intitulé métier en clair, sans préfixe codé) :
 
 1. **Narratif** — 2 à 4 phrases héritées de la vision. Problème résolu, valeur.
    Aucune techno.
@@ -68,7 +73,7 @@ Pour **chaque feature** du spec index arbitré, produire
    « cible à préciser à l'architecture ».
 6. **Périmètre** — IN et OUT (OUT explicite).
 7. **Dépendances** — reprises du spec index, ordre induit.
-8. **Contraintes héritées** — celles de la vision/pré-constitution applicables.
+8. **Contraintes héritées** — celles de la vision applicables.
 9. **Glossaire pertinent** — extrait du glossaire global, termes mobilisés.
 10. **Trous** — section conservée par contrat ; rien d'ouvert n'y est laissé (les
     points se tranchent en session). Vide quand le brief est complet.
@@ -89,7 +94,7 @@ Pour chaque brief, vérifier :
 - **Chaque story a au moins un critère d'acceptation.**
 - **Critères de succès chiffrés ou marqués « cible à préciser à l'architecture ».**
 - **Périmètre OUT non vide.**
-- **Brief auto-suffisant** (auto-contrôle : lisible seul + pré-constitution).
+- **Brief auto-suffisant** (auto-contrôle : lisible seul).
 - **Fidélité à la matière** : chaque story / critère est soutenu par la matière
   (grounding interne) ; un point manquant se tranche en session. **Aucune `(src:)`
   ni provenance écrite.**
