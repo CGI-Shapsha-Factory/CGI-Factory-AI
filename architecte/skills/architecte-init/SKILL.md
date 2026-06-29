@@ -72,4 +72,4 @@ avec un bloc `architecture`.
   pas de composants ni de stack.
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/architecte:architecte` — construire le contrat technique (drivers, composants, stack, ADR, walking skeleton, diagrammes).
+Étape suivante : `/architecte:architecte-contrat` — construire le contrat technique (drivers, composants, stack, ADR, walking skeleton, diagrammes).

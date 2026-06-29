@@ -3,7 +3,7 @@
 <!-- Un ADR par décision technique majeure. Remplacer NNN par un numéro de séquence
      complété par des zéros (001, 002, …). Nom de fichier : ADR-NNN-titre-court.md -->
 <!-- Remplir chaque [placeholder]. Utiliser les marqueurs [À VALIDER] / [À CHIFFRER]
-     là où une valeur manque. Conserver la convention (src: …). -->
+     là où une valeur manque.  -->
 
 **Date :** AAAA-MM-JJ
 **Statut :** Accepté

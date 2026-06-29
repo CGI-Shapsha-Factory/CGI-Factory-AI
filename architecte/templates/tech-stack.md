@@ -4,7 +4,7 @@
 <!-- Remplir chaque [placeholder]. La matrice composant × techno doit lister CHAQUE
      composant de components.md — garder les deux fichiers synchronisés. -->
 <!-- Utiliser les marqueurs [À VALIDER] / [À CHIFFRER] là où une valeur manque.
-     Conserver la convention (src: …) pour tracer l'origine d'un choix. -->
+      pour tracer l'origine d'un choix. -->
 
 ## Langages & runtimes
 

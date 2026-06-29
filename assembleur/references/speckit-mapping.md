@@ -47,7 +47,7 @@ La **Constitution Check** y vérifie le respect des principes ci-dessus ; le **T
 Context** reprend les annexes technique/design du `spec.md`.
 
 ## Jointure des 3 faces — clé = use case (`uc`)
-`architecture.feature_sequence` est le **registre canonique** (objets `{id, ucs, name, mvp}`,
+`architecture.feature_sequence` est le **registre canonique** (objets `{id, ucs, name}`,
 `ucs` = liste ; une feature peut bundler plusieurs use cases). La **clé de jointure** entre
 les trois contrats est le **use case** (stable malgré la renumérotation/le réordonnancement
 de l'architecte) :

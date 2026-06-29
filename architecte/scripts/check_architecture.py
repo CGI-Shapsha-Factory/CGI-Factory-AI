@@ -10,7 +10,9 @@ echoue si le contrat technique est incomplet :
   - un langage de la stack sans fichier de conventions installe ;
   - aucune feature sequencee (numerotation non figee) ;
   - walking skeleton non designe ;
-  - section `Decisions a impact design` non produite (handoff designer).
+  - section `Decisions a impact design` non produite (handoff designer) ;
+  - un marqueur residuel ([A VALIDER]/[A CHIFFRER]/[A DEFINIR]) subsiste dans un
+    fichier de `architecte-out/` (tout point doit etre tranche en session).
 
 Exit 0 si tout est present et coherent, sinon 1. Reutilisable a la main, en hook
 git, ou en CI (socle deterministe de la factory).
@@ -18,8 +20,28 @@ git, ou en CI (socle deterministe de la factory).
 Usage:
     python check_architecture.py [chemin/vers/manifest.json]
 """
+import glob
 import json
+import os
+import re
 import sys
+
+MARKER_RE = re.compile(r"\[\s*(?:À|A)\s+(?:VALIDER|CHIFFRER|D[ÉE]FINIR)\s*\]", re.IGNORECASE)
+
+
+def residual_markers(manifest_path):
+    """Renvoie la liste (fichier, marqueur) des marqueurs residuels dans architecte-out/."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
+    out_dir = os.path.join(root, "architecte-out")
+    hits = []
+    for md in glob.glob(os.path.join(out_dir, "**", "*.md"), recursive=True):
+        try:
+            text = open(md, encoding="utf-8").read()
+        except OSError:
+            continue
+        for m in set(MARKER_RE.findall(text)):
+            hits.append((os.path.relpath(md, root), m))
+    return hits
 
 
 def main(argv):
@@ -74,6 +96,9 @@ def main(argv):
 
     if not arch.get("design_impact"):
         problems.append("section `Decisions a impact design` non produite (handoff designer)")
+
+    for rel, marker in residual_markers(path):
+        problems.append(f"marqueur residuel {marker} dans {rel} (a trancher en session)")
 
     if problems:
         print("ARCHITECTURE INCOMPLETE - points bloquants :", file=sys.stderr)

@@ -5,7 +5,7 @@
      applicables, pas des recommandations. Claude Code vérifiera le nouveau code par
      rapport à ces standards. -->
 <!-- Remplir chaque [placeholder]. Utiliser les marqueurs [À VALIDER] / [À CHIFFRER]
-     là où une valeur manque. Conserver la convention (src: …). -->
+     là où une valeur manque.  -->
 
 > Le style de code, le formatage et le nommage sont matérialisés par les fichiers de
 > `conventions/` (un par langage) ; ce document couvre les standards non couverts par

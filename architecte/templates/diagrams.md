@@ -4,7 +4,10 @@
 <!-- Tous les diagrammes utilisent la syntaxe Mermaid. Remplacer chaque [placeholder]
      par des noms réels de l'architecture. Ajouter ou retirer des nœuds pour coller au
      système réel. -->
-<!-- Conserver la syntaxe Mermaid intacte. Utiliser [À VALIDER] là où une valeur manque. -->
+<!-- Conserver la syntaxe Mermaid intacte. Une valeur manquante se tranche en session,
+     pas laissée en marqueur dans le fichier final. Après écriture, les blocs Mermaid
+     sont rendus en images PNG dans `architecte-out/diagrammes/` par
+     `scripts/render_diagrams.py` (mermaid-cli). -->
 
 ---
 

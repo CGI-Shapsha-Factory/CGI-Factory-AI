@@ -18,9 +18,11 @@ il discipline et grave. Ce sont des **skills Markdown** ; pas de build/test.
 
 ## Les 3 skills (découpage justifié)
 - `architecte-init` — setup (zéro décision IA) : gabarits + `conventions/` + bloc manifeste.
-- `architecte` — construction interactive du contrat (porte humaine : **arbitrage des ADR**).
-- `architecte-coherence` — porte humaine : **validation de cohérence**.
+- `architecte-contrat` — construction interactive du contrat (porte humaine : **arbitrage des ADR**).
+- `architecte-coherence` — porte humaine : **validation de cohérence** (stricte, adversariale).
 Mappe les deux portes humaines de la définition + un setup déterministe isolé.
+*(Le skill principal s'appelle `architecte-contrat`, pas `architecte` — pour ne pas
+porter le même nom que le plugin.)*
 
 ## Workspace & manifeste
 Écrit ses propres sorties dans `architecte-out/` (à côté de `cadrage-out/`). Le
@@ -28,9 +30,10 @@ manifeste `.factory/manifest.json` reçoit un bloc **`architecture`** (drivers,
 quality_attributes, components, stack, conventions_installed, adrs, walking_skeleton,
 feature_sequence, risks, **design_impact**, coherence_validated). `conventions/` est créé à la **racine
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
-**Handoff designer** : le skill `architecte` produit `design-impact.md` (section « Décisions à impact
-design », §4.2 de la spec designer) — la tranche de l'archi qui se voit à l'écran, consommée par
-`/designer:designer` ; `check_architecture.py` exige `architecture.design_impact = true`.
+**Handoff designer** : le skill `architecte-contrat` produit `design-impact.md` (section « Décisions à
+impact design ») — la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer` ;
+`check_architecture.py` exige `architecture.design_impact = true`. Les diagrammes sont aussi rendus en
+**images PNG** dans `architecte-out/diagrammes/` (via `scripts/render_diagrams.py`, mermaid-cli).
 
 ## Intégration cadrage (entrées)
 Lit `cadrage-out/{project-frame, product-brief, glossaire, spec-index}.md` et les
@@ -39,9 +42,10 @@ briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md`. La table
 chaque réponse d'architecture se trouve déjà → on ne re-pose que les trous (profil
 d'équipe). Convergence : `architecte` **fige le registre canonique**
 `architecture.feature_sequence` — la liste numérotée/séquencée des features (le 2ᵉ
-découpage), en objets `{id, ucs, name, mvp}` (`ucs` = **liste** de use cases, une feature
+découpage), en objets `{id, ucs, name}` (`ucs` = **liste** de use cases, une feature
 pouvant en bundler plusieurs ; `id` `001…` = ordre de fabrication) — à partir des use
-cases du `spec-index.md`.
+cases du `spec-index.md`. **Aucune notion de MVP** : on ne décide pas ce qui est MVP ou
+non ; l'ordre est purement technique (dépendances).
 
 ## Ordre de remplissage (dépendances)
 drivers/qualité → composants → stack → conventions → ADR → walking skeleton+numérotation
@@ -61,5 +65,8 @@ python scripts/check_architecture.py <projet>/.factory/manifest.json
 
 ## Invariants
 Proposer/pas décider (ADR arbitrés par l'humain, cohérence validée par l'humain) ;
-marquer/pas inventer (`[À VALIDER]`) ; traçabilité `(src:)` ; conventions = vrais
-fichiers ; refus et restitutions en langage naturel.
+**rien laissé indéfini** — tout marqueur se résout en session, en place, avant
+d'avancer ; **contenu seul** dans les artefacts (aucune `(src:)`, aucun horodatage,
+aucun nom de personne) ; **aucune notion de MVP** ; conventions = vrais fichiers ;
+restitutions en **prose** (pas de tableau), **noms en clair** (jamais `C1`/`UC1`/`P1`),
+**manifeste mis à jour en silence** (jamais narré).

@@ -6,13 +6,13 @@
      workers d'arrière-plan, outils CLI, ordonnanceurs (schedulers) et adaptateurs
      d'intégration externe. -->
 <!-- Remplir chaque [placeholder]. Utiliser les marqueurs [À VALIDER] / [À CHIFFRER]
-     là où une valeur manque encore. Conserver la convention (src: …). -->
+     là où une valeur manque encore.  -->
 
 ---
 
 ## [NomDuComposant]
 
-- **Objet :** [Une phrase — la raison d'être de ce composant.] (src: …)
+- **Objet :** [Une phrase — la raison d'être de ce composant.]
 - **Responsabilités :**
   - [ce qu'il fait — 1]
   - [ce qu'il fait — 2]
@@ -35,7 +35,7 @@
 
 ## [NomDuComposant]
 
-- **Objet :** [...] (src: …)
+- **Objet :** [...]
 - **Responsabilités :**
   - [...]
 - **NON responsable de :**
