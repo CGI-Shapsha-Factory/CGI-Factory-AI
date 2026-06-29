@@ -10,9 +10,9 @@ Dernière étape de la phase technique : la **porte de validation de cohérence*
 Vérifie que le contrat technique tient ensemble, sans contradiction ni trou, avant
 de passer le relais à l'assembleur.
 
-## Porte d'entrée
-Le skill `architecte` a produit le contrat (`architecture.phase = "contrat"`).
-Sinon, orienter en clair vers `/architecte:architecte`.
+## Pré-requis (vérification silencieuse)
+Le contrat technique a été produit (le bloc `architecture` est rempli). Vérifier sans
+l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-contrat`.
 
 ## Entrées
 Les artefacts d'architecture dans `architecte-out/` : `drivers-quality.md`,
@@ -20,41 +20,66 @@ Les artefacts d'architecture dans `architecte-out/` : `drivers-quality.md`,
 `diagrams.md`, `risks.md`, `design-impact.md` ; le dossier `conventions/` ; les
 briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md` ; le manifeste.
 
-## Contrôles de cohérence
-1. **Composants ↔ stack** : chaque composant de `components.md` a une ligne dans la
-   matrice de `tech-stack.md` (et inversement). Aucun composant orphelin.
-2. **Drivers ↔ ADR** : chaque driver prioritaire est adressé par au moins un ADR ou
-   une décision tracée.
-3. **Use cases ↔ features numérotées** : chaque use case du `spec-index.md` est
-   couvert par une feature de la séquence numérotée (`architecture.feature_sequence`).
-4. **Diagrammes ↔ réel** : les diagrammes référencent les vrais composants/stores
-   (pas de placeholder résiduel).
-5. **Conventions ↔ stack** : chaque langage retenu a son fichier de conventions dans
-   `conventions/` (ou un fallback `.editorconfig` + avertissement assumé).
-6. **Aucun trou bloquant** : pas de `[À VALIDER]` bloquant ouvert ; toutes les
-   réponses structurantes sont présentes.
-7. **Walking skeleton** désigné et cohérent avec les dépendances.
-8. **Décisions à impact design** (handoff designer) : `design-impact.md` est produit et couvre la
-   tranche qui se voit — stack front + approche de style, contrats transverses visibles, conventions
-   d'API qui décident des états d'UI, NFR qui touchent l'UX. Sans cette section, le designer ne peut pas
-   pré-remplir son versant technique.
+## Contrôles de cohérence — stricts et adversariaux
+Ne **pas** se contenter de vérifier la présence. **Challenger** chaque contrat : ce
+qui manque, ce qui se contredit, ce qui pourrait casser. Au minimum :
 
-Garde-fou déterministe : lancer `scripts/check_architecture.py` sur le manifeste —
-il échoue si une réponse bloquante manque, si un langage retenu n'a pas son fichier
-de conventions, ou si la section `Décisions à impact design` n'est pas produite.
+1. **Aucun marqueur résiduel** : aucun `[À VALIDER]` / `[À CHIFFRER]` / `[À DÉFINIR]`
+   ne subsiste dans un fichier `architecte-out/`. Chaque marqueur trouvé est un point
+   à **résoudre en session** (voir ci-dessous).
+2. **Composants ↔ stack (deux sens)** : chaque composant a une techno **définie** dans
+   la matrice (pas « à définir ») ; aucune ligne de matrice sans composant. Aucun
+   orphelin d'aucun côté.
+3. **Drivers/qualité → réalisés** : chaque driver et chaque attribut de qualité a une
+   **cible concrète** (pas « à chiffrer ») **et** est adressé par un composant et/ou un
+   ADR. Un scénario QAW dont la mesure n'est pas observable/chiffrée est un échec.
+4. **Contradictions inter-artefacts** : confronter drivers ⨉ stack ⨉ ADR ⨉ déploiement.
+   Ex. : un driver « hébergement UE / pas de fuite » contredit-il un service externe
+   choisi ? la cible de disponibilité/performance est-elle réellement tenue par le
+   déploiement décrit ? un ADR contredit-il un autre ?
+5. **Couverture inverse** : chaque contrainte des briefs et chaque entité du glossaire
+   est-elle adressée par ≥1 composant ou ADR ? une entité de l'ERD sans composant qui
+   la gère = orpheline. un besoin de sécurité/droits/audit est-il reflété par un
+   composant **et** un ADR (journal d'audit présent si exigé) ?
+6. **Use cases ↔ features** : chaque use case du `spec-index.md` a une feature dans la
+   séquence ; aucune feature ne référence un use case inexistant.
+7. **Walking skeleton** : traverse-t-il réellement le **couplage le plus risqué** (pas
+   juste la première feature) ?
+8. **Diagrammes ↔ réel** : noms réels partout, aucun placeholder ; les composants des
+   diagrammes existent dans `components.md` ; les images PNG sont présentes dans
+   `architecte-out/diagrammes/`.
+9. **Conventions ↔ stack** : chaque langage retenu a son fichier de conventions.
+10. **Cohérence de nommage** : un même concept est nommé pareil partout (alignement
+    glossaire) — pas deux noms pour la même chose, pas deux choses sous le même nom.
+11. **Risques** : chaque risque porte impact + mitigation + déclencheur ; les spikes
+    bloquants sont identifiés avant la première feature.
+12. **Design-impact** : produit et couvrant la tranche qui se voit (stack front + style,
+    contrats transverses visibles, conventions d'API → états d'UI, NFR qui touchent l'UX).
+13. **Passe « ce qui manque / ce qui peut casser »** : une lecture critique finale, pas
+    une checklist de présence.
+
+Garde-fou déterministe : lancer `scripts/check_architecture.py` sur le manifeste — il
+échoue notamment s'il **reste un marqueur** dans un fichier `architecte-out/`, si un
+composant n'a pas de techno, ou si un langage retenu n'a pas son fichier de conventions.
+
+## Résolution interactive des points (obligatoire avant d'avancer)
+Tout point relevé — **bloquant ou non** — n'est **pas seulement affiché** : on **pose
+la question** à l'utilisateur, **un par un** (réponse recommandée adaptée au projet +
+alternative + saisir, cf. `references/interactive-loop.md`), et on **corrige en place**
+dans le fichier `architecte-out/` concerné. **Aucun fichier annexe.** **Ne pas passer**
+à `/designer:designer-init` tant qu'il reste un point ou un marqueur non résolu.
 
 ## Sortie
-- Un **rapport de cohérence** `architecte-out/coherence-report.md` : statut par
-  contrôle (atteint / non atteint) avec la raison, et la liste de ce qui manque
-  (actionnable, relié à l'étape/skill qui le résout).
-- Affichage en chat d'un **tableau de synthèse** (cohérent / à corriger / manquant).
-- **Porte humaine** : l'architecte **valide** la cohérence (geste humain). Le skill
-  ne passe **jamais** `architecture.coherence_validated` à vrai de lui-même ; il le
-  propose, l'humain confirme. Verdict honnête : pas de vert tant qu'un contrôle échoue.
+- Un **rapport de cohérence** `architecte-out/coherence-report.md` : ce qui a été
+  vérifié et ce qui a été corrigé, en clair — **sans marqueur résiduel**.
+- En chat : un **court bilan en prose** (pas de tableau, pas de nom de variable, pas
+  d'identifiant codé), puis la confirmation que tout est résolu.
+- **Décision humaine** : l'architecte **valide** la cohérence (geste humain). Le skill
+  ne valide jamais de lui-même ; il le propose, l'humain confirme.
 
-## Mise à jour du manifeste
-- `architecture.phase = "valide"` une fois la validation humaine actée.
-- `architecture.coherence_validated` passé à vrai **par l'humain** uniquement.
+## Mise à jour du manifeste (en silence)
+Une fois la validation humaine actée, mettre à jour le manifeste **sans le narrer**
+(jamais « je passe `coherence_validated = true` et `phase = "valide"` »).
 
 ## Handoff (vers l'assembleur)
 Une fois validé, le contrat technique prêt à transmettre comprend : les ADR et
@@ -65,8 +90,13 @@ découpages), le registre de risques, et les **Décisions à impact design**
 contrats par feature, une fois le contrat de design figé.)
 
 ## Règles invariantes
+- **Challenger, pas cocher.** Cohérence stricte et adversariale ; on cherche ce qui
+  manque et ce qui se contredit, pas la simple présence.
+- **Rien laissé indéfini.** Chaque point se résout en session, en place, avant
+  d'avancer. Aucun marqueur ne survit.
 - **L'humain valide.** La cohérence n'est jamais auto-validée par l'IA.
-- **Refléter l'état réel.** Aucun contrôle maquillé ; un échec reste un échec.
-- **Pas de fuite de champ** en sortie utilisateur (voir `references/ux-conventions.md`).
+- **Rien de la mécanique affiché.** Aucun nom de variable/clé manifeste, aucun
+  identifiant codé, aucun tableau (voir `references/ux-conventions.md`). Manifeste
+  mis à jour en silence ; à l'utilisateur, seulement le bilan en clair et la suite.
 
-Étape suivante : `/designer:designer-init` — démarrer le contrat de design (la phase design exige le cadrage ET l'architecture validés). Ou corriger d'abord les points signalés via `/architecte:architecte`.
+Étape suivante : `/designer:designer-init` — démarrer le contrat de design (la phase design exige le cadrage ET l'architecture validés). Ou corriger d'abord les points signalés via `/architecte:architecte-contrat`.

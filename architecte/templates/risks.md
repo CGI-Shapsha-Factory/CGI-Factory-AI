@@ -3,7 +3,7 @@
 <!-- Public visé : architectes + humains qui tranchent. Sert à piloter les spikes/POC
      et le contenu du walking skeleton. -->
 <!-- Remplir chaque [placeholder]. Utiliser les marqueurs [À VALIDER] / [À CHIFFRER]
-     là où une valeur manque. Conserver la convention (src: …). -->
+     là où une valeur manque.  -->
 
 > Les risques qui nécessitent un spike avant de s'engager sont signalés (colonne
 > « Spike/POC nécessaire ? » = Oui) ; le walking skeleton en dérisque une partie en
@@ -29,8 +29,8 @@
 <!-- Détailler chaque ligne marquée « Oui » ci-dessus : ce qu'on cherche à prouver et le
      critère d'arrêt (ce qui permet de déclarer le risque dérisqué). -->
 
-- **[Risque X]** — Hypothèse à valider : [...]. Critère de succès : [mesurable, ex. p95 < X ms à N req/s]. [À CHIFFRER] (src: …)
-- **[Risque Y]** — Hypothèse à valider : [...]. Critère de succès : [...]. (src: …)
+- **[Risque X]** — Hypothèse à valider : [...]. Critère de succès : [mesurable, ex. p95 < X ms à N req/s]. [À CHIFFRER]
+- **[Risque Y]** — Hypothèse à valider : [...]. Critère de succès : [...].
 
 ## Lien avec le walking skeleton
 

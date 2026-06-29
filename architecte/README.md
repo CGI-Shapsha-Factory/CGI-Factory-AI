@@ -45,9 +45,9 @@ cadrage : ~16/17 sont déjà répondues ; seul le **profil d'équipe** est deman
 ```
 architecte/
 ├── .claude-plugin/plugin.json
-├── skills/{architecte-init, architecte, architecte-coherence}/SKILL.md
+├── skills/{architecte-init, architecte-contrat, architecte-coherence}/SKILL.md
 ├── templates/   # drivers-quality, components, tech-stack, standards, diagrams, adr, risks
 ├── references/  # interactive-loop, ux-conventions, question-map, conventions/ (catalogue)
-├── scripts/check_architecture.py
+├── scripts/check_architecture.py · render_diagrams.py
 └── README.md
 ```

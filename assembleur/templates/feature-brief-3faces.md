@@ -1,6 +1,6 @@
 # Feature NNN — <nom> (brief 3-faces)
 
-MVP : [oui/non] · Walking skeleton : [oui/non] · Dépendances : [NNN, …]
+Walking skeleton : [oui/non] · Dépendances : [NNN, …]
 
 ## Face fonctionnelle (src: cadrage)
 - **Valeur / objectif :** [...]

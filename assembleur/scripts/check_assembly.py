@@ -55,7 +55,7 @@ def main(argv):
 
     # Couverture des 3 faces par feature, sur la sequence figee par l'architecte.
     seq = (manifest.get("architecture") or {}).get("feature_sequence") or []
-    # Registre canonique : entrees = objets {id, uc, name, mvp}. Tolere les bare strings (legacy).
+    # Registre canonique : entrees = objets {id, uc, name}. Tolere les bare strings (legacy).
     seq_ids = [it.get("id") if isinstance(it, dict) else it for it in seq]
     faces = asm.get("feature_faces") or []
     by_feat = {f.get("feature"): f for f in faces if isinstance(f, dict)}

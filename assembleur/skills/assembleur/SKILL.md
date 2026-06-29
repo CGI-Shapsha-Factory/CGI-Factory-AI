@@ -36,7 +36,7 @@ designer), source unique, sans doublon ni contradiction. Écrire `<target_repo>/
 MAJ `assembly.glossary_consolidated = true`.
 
 ### Étape 2 — Couture 3-faces par feature (jointure par use case)
-`architecture.feature_sequence` est le **registre canonique** : objets `{id, ucs, name, mvp}`
+`architecture.feature_sequence` est le **registre canonique** : objets `{id, ucs, name}`
 (`ucs` = liste de use cases ; une feature peut **bundler plusieurs use cases**). Pour
 **chaque** feature (walking skeleton d'abord), joindre les 3 faces **pour chacun de ses `ucs`** :
 - **face fonctionnelle** : les briefs cadrage dont `artifacts.briefs[].id ∈ ucs` (chemins `.path`) ;

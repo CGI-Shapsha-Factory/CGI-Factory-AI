@@ -18,19 +18,41 @@ sont en **langage naturel français**. Correspondance :
 | `definition_of_ready.cadrage_complete` | « le cadrage est prêt » |
 
 Ne jamais afficher de tableau de booléens bruts ni `coherence_validated == false`.
+**Règle absolue, même dans une justification** : on n'écrit **jamais** un nom de
+variable / clé manifeste dans le texte vu par l'utilisateur.
+
+## 1bis. Jamais d'identifiant codé en sortie
+Le PO/l'architecte lecteur ne retient pas les codes. **Interdit** en sortie : `C1`,
+`C2`, `UC1`, `UC2`, `P1`, `ADR A6`, `Q2`/`Q6`/`Q7`… On nomme **toujours en clair**
+(« le composant de recherche RAG », « le service de droits », « la question sur la
+performance »). Les ids internes restent dans l'artefact/le manifeste, **jamais
+affichés** ni utilisés pour désigner une chose à l'écran.
+
+## 1ter. Mise à jour du manifeste = silencieuse
+Le manifeste se met à jour **sans le narrer**. **Interdit** à l'écran : « MAJ
+`architecture.components` », « `architecture.phase = "contrat"` », « je passe
+`coherence_validated = true` ». À l'utilisateur, on dit **ce qui a été produit** (en
+clair) et **la prochaine étape** — rien de la mécanique sous le capot.
 
 ## 2. Refus en langage naturel
 Quand un skill ne peut pas tourner, expliquer **en clair** pourquoi et quoi faire.
 Ex. : « Cette étape ne peut pas démarrer : le cadrage n'est pas encore prêt — lance
 d'abord la phase de cadrage. » Jamais « ⛔ cadrage_complete == false ».
 
-## 3. Marqueurs internes hors texte utilisateur
-Les marqueurs (`[À VALIDER]`, `[À CHIFFRER]`) vivent dans les **artefacts**. À l'oral
-on dit « à valider », « à chiffrer ».
+## 3. Aucun marqueur laissé, aucun horodatage, aucune provenance
+- Les marqueurs `[À VALIDER]` / `[À CHIFFRER]` / `[À DÉFINIR]` ne **restent jamais**
+  dans un artefact terminé : ils se **résolvent en session** (cf.
+  `interactive-loop.md`), la réponse est écrite **en place**. On ne dit pas « il
+  reste X points » sans **poser la question**.
+- **Aucune provenance écrite** dans les artefacts : pas de `(src: …)`, **pas
+  d'horodatage** (`[00:07:47]`), **pas de nom de personne** issu du transcript
+  (« Priorité Sophie », « validé bâtonnier »…). On écrit le **contenu**, le cœur
+  technique — jamais qui l'a dit ni quand.
 
-## 4. Langage non technique pour les restitutions
-Composants, drivers, stack restitués en valeur/usage compréhensibles ; pas de jargon
-inutile ni d'identifiants techniques dans les tableaux affichés.
+## 4. Langage non technique, pas de tableau imposé
+Composants, drivers, stack, vérifications restitués en **prose claire** (valeur /
+usage). **Pas de tableau** de vérification, de synthèse ou de cohérence ; pas
+d'identifiant technique. Désigner chaque chose par son **nom métier**.
 
 ## 5. Une ligne « étape suivante » à la fin de chaque skill
 Terminer chaque exécution par exactement une phrase :

@@ -48,7 +48,7 @@ Le manifeste reçoit un bloc **`assembly`**. Écriture = read-modify-write + rev
 
 ## Convergence (mapping 3 faces → SpecKit)
 Voir `references/speckit-mapping.md`. **Clé de jointure des 3 faces = le use case (`uc`)** (registre
-canonique `architecture.feature_sequence` = objets `{id, ucs, name, mvp}`, `ucs` étant une
+canonique `architecture.feature_sequence` = objets `{id, ucs, name}`, `ucs` étant une
 **liste** — une feature peut bundler plusieurs use cases en cas de fusion). Faces **fonctionnelle** (brief
 cadrage) et **technique** (architecte) jointes **par use case** ; la **face design est globale** (réf. du
 design system Claude Design synchronisé via `/design-sync` + `design-guidelines.md`, appliquée à tous les

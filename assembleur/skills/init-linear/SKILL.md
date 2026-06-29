@@ -15,7 +15,7 @@ initialiser sur sa machine).
 découpage via `assembleur-amorce`). Sinon, **refuser en clair** :
 > « L'initialisation Linear ne peut pas démarrer : l'équipe doit d'abord valider le découpage. »
 et orienter vers `/assembleur:assembleur-amorce`. Le découpage = le **registre canonique**
-`architecture.feature_sequence` (objets `{id, ucs, name, mvp}`).
+`architecture.feature_sequence` (objets `{id, ucs, name}`).
 
 ## Étape 1 — Connexion à Linear (clé API personnelle dans `.env`)
 Lire la clé API Linear depuis `.env` (variable **`LINEAR_API_KEY`**).
@@ -60,7 +60,7 @@ Un collègue a pu **déjà initialiser** le projet : le flag local ne le voit pa
   - **description** = résumé du brief 3-faces + lien `specs/<id>-feature/spec.md` ;
   - **état = Todo** (`unstarted`) — **jamais Backlog** ;
   - **assigné = personne** (non assigné) ;
-  - **labels** : `feature:<id>` (clé de dédup stable), `walking-skeleton` (si `001`), `MVP` (si `mvp`) ;
+  - **labels** : `feature:<id>` (clé de dédup stable), `walking-skeleton` (si `001`) ;
   - **dépendances** = relations `blocked-by` selon la séquence.
   - **Dédup** : si une issue portant `feature:<id>` (ou le préfixe `<id> —`) existe déjà dans le projet,
     **ne pas la recréer**.
@@ -85,7 +85,7 @@ et s'arrêter (pas de doublon). La recherche de l'étape 3 couvre, elle, le cas 
 
 ## Fallback (clé API absente / API indisponible)
 **Ne rien inventer.** Produire `assembleur-out/linear-features.json` (une entrée par feature :
-`{ordre, feature, ucs, name, walking_skeleton, mvp, spec_path, depends_on}`) à importer manuellement, et
+`{ordre, feature, ucs, name, walking_skeleton, spec_path, depends_on}`) à importer manuellement, et
 le signaler.
 
 ## Règles invariantes

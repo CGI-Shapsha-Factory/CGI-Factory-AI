@@ -43,14 +43,14 @@ relancer init l'écraserait.
 
 ### Étape 3 — Porte humaine : l'équipe arbitre le découpage
 Le **découpage en features** est le **registre canonique** `architecture.feature_sequence`
-(objets `{id, ucs, name, mvp}` ; `ucs` = liste de use cases ; walking skeleton = l'`id` `001`).
-Restituer en chat, **par feature** : `id` + `ucs` + nom, MVP/hors-MVP, dépendances, et le brief
+(objets `{id, ucs, name}` ; `ucs` = liste de use cases ; walking skeleton = l'`id` `001`).
+Restituer en chat, **par feature** : `id` + `ucs` + nom, dépendances, et le brief
 3-faces. Demander à
 l'équipe d'**arbitrer** — deux issues possibles :
 - **Valider tel quel** → poser `assembly.team_validated = true` (**geste humain**, jamais auto).
 - **Demander un changement de découpage** (fusion / scission / réordonnancement d'une feature,
   walking skeleton différent) → **ne pas initialiser Linear** ; renvoyer vers
-  `/architecte:architecte` pour **re-figer le registre**, puis `/assembleur:assembleur` pour
+  `/architecte:architecte-contrat` pour **re-figer le registre**, puis `/assembleur:assembleur` pour
   **re-coudre** (un simple ajustement de brief se corrige via `/assembleur:assembleur`).
 **Sans `team_validated`, ne pas toucher à Linear.**
 
