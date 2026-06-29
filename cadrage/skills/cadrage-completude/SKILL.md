@@ -11,40 +11,34 @@ cockpit.
 
 ## Objectif
 
-Produire un **rapport de complétude** honnête : statut par critère, liste
-actionnable de ce qui manque, et le **verdict maître**. Le skill mesure, il ne
-maquille pas. **Honnêteté absolue** : le verdict ne passe au vert **que si tout
-est réellement vert**. Une réponse de découverte différée, ou n'importe quel trou
-bloquant ouvert, maintient le verdict au **rouge**. Aucune résolution n'est
-fabriquée : il n'existe **aucun chemin « démo → vert »**.
+Produire un **rapport de complétude** honnête : statut par critère et le **verdict
+maître**. Le skill mesure, il ne maquille pas. **Honnêteté absolue** : le verdict ne
+passe au vert **que si tout est réellement vert**. Une question de découverte laissée
+de côté maintient le verdict au **rouge**. Aucune résolution n'est fabriquée : il
+n'existe **aucun chemin « démo → vert »**. Ce qui peut être tranché se tranche **en
+session** (on pose la question), rien d'ouvert n'est listé dans un fichier.
 
 ## Entrée
 
 Le manifeste `factory-docs/manifest.json` et tous les artefacts qu'il
 référence (capture, vision, glossaire, spec index, briefs).
 
-## Porte d'entrée
+## Pré-requis (vérification silencieuse)
 
-**Aucune.** Invocable à tout moment pour prendre la température du projet.
+**Aucun.** Invocable à tout moment pour prendre la température du projet.
 
 ## Logique de validation
 
 Calculer les booléens à partir de l'état réel des artefacts et du manifeste :
 
-- **`vision_complete`** — product brief : OUT non vide, critères de succès
-  présents, aucun trou bloquant.
-- **`glossary_validated`** — tous les termes marqués `structurant = oui` dans le
-  glossaire (mobilisés par la vision ou servant de nom / frontière d'un use case)
-  sont au statut `validé`.
-- **`decoupage_arbitrated`** — un humain a arbitré le découpage (drapeau vrai).
+- **`vision_complete`** — product brief : OUT non vide, critères de succès présents.
+- **`glossary_validated`** — le glossaire a été **validé en bloc** par l'utilisateur.
+- **`decoupage_arbitrated`** — la revue de couplage a été tranchée en session (drapeau vrai).
 - **`all_briefs_complete`** — tous les briefs au statut `complete`.
-- **`no_blocking_gaps`** — aucun artefact ne porte un trou classé **bloquant**, et
-  **aucun `validation_point` bloquant n'est `open`** (les `[À CHIFFRER]` et les
-  `[À VALIDER]` non bloquants n'empêchent pas le ET). En particulier, **toute
-  capacité du périmètre IN non couverte** (section couverture du `spec-index.md`)
-  est un trou bloquant, et **toute question de découverte `pending`/`deferred`**
-  (bloc `discovery` du manifeste) est un trou bloquant — vérifiable par
-  `scripts/check_discovery.py`.
+- **`no_blocking_gaps`** — **toute question de découverte `pending`/`deferred`**
+  (bloc `discovery` du manifeste) maintient le verdict au rouge — vérifiable par
+  `scripts/check_discovery.py`. Une capacité du périmètre IN non couverte se
+  **tranche en session**.
 - **`demonstrateur_converged`** — **calculé** : `aucun validation_point bloquant
   ouvert` **ET** `demonstrateur.client_validated == true`. Le skill **lit**
   `client_validated` (geste humain à l'étape 10), il ne le force jamais. Un projet
@@ -82,56 +76,39 @@ ouvert »… jamais `ready_for_speckit = false` ni un tableau de booléens bruts
 - Statut par critère (atteint / non atteint) avec la raison, en clair.
 - **Verdict maître** bien visible, au vert seulement si tous les critères sont verts
   (voir la règle d'honnêteté ci-dessus).
-- Liste de **ce qui manque**, actionnable, chaque manque relié à l'étape/skill qui
-  le résout.
-- Tableau des features : par feature, statut du brief et nombre de trous restants.
 
 ### 2. Affichage en session
 
-En plus du fichier, **afficher directement dans la conversation** :
-
-**(a) Tableau de synthèse à trois colonnes** (français, langage naturel) :
-
-| Ce qui manque | Ce qu'il faut corriger | Ce qui est complet |
-|---|---|---|
-
-- *Ce qui manque* : éléments absents à produire (briefs non écrits, point de
-  cadrage sans réponse, capacité du périmètre non couverte…).
-- *Ce qu'il faut corriger* : éléments présents mais à reprendre (trou bloquant à
-  lever, terme de glossaire à valider, point à clarifier…).
-- *Ce qui est complet* : critères déjà verts.
-
-**(b) Résumé d'état du projet** — un court paragraphe « où en est le projet »
-pensé pour quelqu'un qui reprend **après plusieurs jours** : en une lecture, il
-sait où il en est, ce qui bloque encore, et quelle est la prochaine action. Donner
-le verdict en clair (« prêt pour SpecKit » ou « pas encore prêt, il reste… »).
+En plus du fichier, **afficher directement dans la conversation** un **résumé
+d'état du projet** — un court paragraphe « où en est le projet », pensé pour
+quelqu'un qui reprend **après plusieurs jours** : en une lecture, il sait où il en
+est, ce qui reste à trancher, et quelle est la prochaine action. Donner le verdict
+en clair (« prêt pour SpecKit » ou « pas encore prêt, il reste… »). **Pas de tableau
+de critères ni de statut brut.**
 
 ## Résolution interactive en session
 
-Plutôt qu'une **liste statique** de trous, le skill enchaîne sur une **boucle
-interactive** pour résoudre ce qui peut l'être tout de suite, selon la convention
-partagée `references/interactive-loop.md` (**une question à la fois, trois options :
-réponse recommandée / passer pour l'instant / saisir ma réponse** ; on attend la
-réponse avant la question suivante). On parcourt ainsi :
+Le skill enchaîne sur une **boucle interactive** pour trancher ce qui peut l'être
+tout de suite, selon `references/interactive-loop.md` (**une question à la fois, une
+réponse recommandée + réponse libre, pas de menu numéroté** ; on attend la réponse
+avant la suivante). On parcourt ainsi :
 
-- **Validation du glossaire terme par terme** : chaque terme structurant non encore
-  validé est présenté isolément pour confirmation (ou modification).
-- **Résolution des trous bloquants** : chaque trou bloquant ouvert est traité en
-  conversation via la boucle à trois options.
-- **Confirmation des éléments signalés** : tout point marqué « à confirmer » /
-  « à clarifier » est confirmé ou modifié.
+- **Validation du glossaire** si elle n'a pas encore eu lieu : proposer la validation
+  en bloc (pas terme par terme).
+- **Questions de découverte restées sans réponse** : les reposer une à une.
+- **Confirmation des éléments signalés** : tout point « à confirmer » est confirmé ou
+  modifié en session.
 
 Rappels de la convention (rien n'est inventé) :
-- Réponse via *recommandée* ou *saisir* → décision **humaine**, tracée
-  `(src: atelier/utilisateur)`.
-- *Passer pour l'instant* → reste « à confirmer », **demeure un trou bloquant** et
-  **ne débloque jamais** le verdict.
-- **Interdit** d'écrire une valeur « démo » / aléatoire comme un fait : la seule
-  façon de remplir un trou est un choix explicite de l'utilisateur.
+- Une réponse explicite (recommandée acceptée ou saisie) → décision **humaine**.
+  **Aucune provenance écrite.**
+- Un point que l'utilisateur ne tranche pas reste « à confirmer », **ne débloque
+  jamais** le verdict, et **n'est écrit nulle part**.
+- **Interdit** d'écrire une valeur « démo » comme un fait.
 
 À la fin de la boucle : « **Tout est complété — tu peux passer à l'étape
-suivante.** », ou indiquer combien de points ont été **passés** et restent
-bloquants (auquel cas le verdict reste au rouge).
+suivante.** », ou rappeler oralement combien de points restent à trancher (le
+verdict reste alors au rouge).
 
 ## Mise à jour du manifeste
 
@@ -151,18 +128,20 @@ Le dashboard Definition of Ready (jauge de complétude, statut par critère,
 verdict maître, ce qui manque) se génère dans Claude Design. Le prompt prêt à
 coller est dans `references/dashboard-dor-prompt.md` (gabarit statique). Le prompt
 utilisé est sauvegardé sous `factory-prompts/<NNN>-<JJ-MM>-dashboard-dor/` et tracé
-dans `prompts[]`.
+dans `prompts[]`. Le fichier `prompt.md` ne contient **que le corps du prompt** (le
+bloc de code du gabarit), sans titre/date/mode/version (cf. `references/ux-conventions.md`).
 
 ## Règles invariantes appliquées ici
 
 - **Reflète l'état réel.** Le verdict ne passe au vert que sur du vert intégral.
   Aucun critère forcé, aucune résolution fabriquée, aucun chemin « démo → vert ».
   Une réponse différée ou un trou bloquant ouvert maintient le verdict au rouge.
-- **Pas de fuite de nom d'attribut.** Verdict et critères sont affichés en clair,
-  en français (table de `references/ux-conventions.md`) — jamais
-  `ready_for_speckit = false` ni un tableau de booléens bruts. Les clés du
-  manifeste restent internes (mises à jour ci-dessus).
-- **Porte maîtresse.** Le verdict « prêt pour SpecKit » conditionne le handoff.
+- **Pas de fuite de nom d'attribut ni de jargon de porte.** Verdict et critères
+  affichés en clair, en français (table de `references/ux-conventions.md`) — jamais
+  `ready_for_speckit = false`, jamais « porte », ni tableau de booléens bruts. Les
+  clés du manifeste restent internes (mises à jour ci-dessus).
+- **Rien d'ouvert persisté.** Aucune liste de trous écrite ; ce qui reste se tranche
+  en session. Le verdict « prêt pour SpecKit » conditionne le handoff.
 - **Skill indépendant.** Lit et écrit le manifeste, sans orchestrateur.
 
 Étape suivante : `/cadrage:cadrage-handoff` — assembler le pack et passer à SpecKit une fois le verdict au vert.

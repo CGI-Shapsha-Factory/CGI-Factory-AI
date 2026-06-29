@@ -22,11 +22,11 @@ démonstrateur, en distinguant ce qui **complète** de ce qui **contredit**.
 - Le registre `validation_points` du manifeste (points ouverts à confronter).
 - L'état `demonstrateur` du manifeste (`current_version`, `external_ref`).
 
-## Porte d'entrée
+## Pré-requis (vérification silencieuse)
 
 **Un retour de démonstrateur est disponible** (une source de type `retour` est
-déclarée). Sinon, **refuse d'agir** et indique qu'il faut d'abord un transcript de
-retour.
+déclarée). Sinon, indiquer en clair qu'il faut d'abord un transcript de retour, sans
+exposer de mécanique interne de pré-requis.
 
 ## Traitement — capter ET invalider
 
@@ -50,7 +50,7 @@ retour.
    retour → nouveau `validation_point` (`open`), qui repart vers
    `cadrage-clarification`.
 
-## Porte de sortie
+## Vérification
 
 - Les **points adressés** par le client sont `answered` dans le registre, avec
   leur réponse.

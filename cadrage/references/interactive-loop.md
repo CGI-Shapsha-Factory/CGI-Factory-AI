@@ -1,43 +1,38 @@
 # Boucle interactive — convention partagée
 
 Convention DRY pour toute collecte d'information manquante (découverte,
-arbitrage de couplage, validation de glossaire, résolution de trous en
+arbitrage de couplage, validation de glossaire, résolution de points en
 complétude). Référencée par les skills concernés. **Aucune information n'est
 inventée : on demande, on ne comble pas.**
 
 ## Règle d'or
-- **Une question à la fois.** Jamais une liste de trous en bloc.
-- **Poser, s'arrêter, attendre.** Émettre **une seule** question par message, puis **attendre** la
-  réponse de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs
-  points d'un coup, **même si une source (transcript) semble tout répondre** — une réponse issue d'une
-  source **reste une suggestion à confirmer**, pas une validation.
-- Pour **chaque** question, présenter **trois options** :
-  1. **Réponse recommandée** — une suggestion pré-remplie, plausible, clairement
-     étiquetée « suggestion » (le client ne l'a pas encore dite).
-  2. **« Passer pour l'instant »** — diffère la question (le client n'a pas encore
-     répondu). La valeur reste `[À VALIDER]` et **demeure un trou bloquant**.
-  3. **« Saisir ma réponse »** — l'utilisateur écrit sa propre réponse.
-- **Attendre la réponse** avant de poser la question suivante. Boucler jusqu'à ce
-  que chaque question soit **répondue** (option 1 ou 3) ou **passée** (option 2).
-- **Décisions groupées → relecture obligatoire.** Si l'utilisateur tranche **plusieurs points
-  en un seul message**, **relire la liste parsée avant d'écrire** : « J'enregistre : 1) … 2) …
-  3) … — tu confirmes ? » et attendre l'accord. Ne jamais enregistrer un lot de décisions sans
-  cette relecture.
-- À la fin de la boucle : « **Tout est complété — tu peux passer à l'étape
-  suivante.** » (ou indiquer combien de points ont été passés et restent bloquants).
+- **Une question à la fois.** Poser **une seule** question par message, puis **attendre** la réponse
+  de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs points d'un
+  coup, **même si une source (transcript) semble tout répondre** — une réponse issue d'une source
+  **reste une suggestion à confirmer**, pas une validation.
+- **Poser la question, proposer une réponse recommandée, attendre.** Pour chaque point : exposer le
+  point en clair, puis proposer **une réponse recommandée** — une suggestion plausible, clairement
+  étiquetée « suggestion ». L'utilisateur **accepte** cette suggestion **ou** donne directement la
+  sienne. **Ne pas afficher de menu numéroté d'options** (pas de « 1. … 2. … 3. Saisir ma réponse ») :
+  l'utilisateur sait qu'il peut répondre librement.
+- **Si l'utilisateur ne tranche pas un point** (il préfère le laisser de côté) : **on n'écrit rien**
+  pour ce point. Aucun marqueur, aucune liste de points ouverts persistée — le point est simplement
+  omis de l'artefact. On peut le lui rappeler oralement en fin de boucle, jamais l'écrire dans un fichier.
+- **Décisions groupées → relecture obligatoire.** Si l'utilisateur tranche **plusieurs points en un
+  seul message**, **relire la liste parsée avant d'écrire** : « J'enregistre : 1) … 2) … 3) … — tu
+  confirmes ? » et attendre l'accord. Ne jamais enregistrer un lot de décisions sans cette relecture.
+- À la fin de la boucle : « **Tout est complété — tu peux passer à l'étape suivante.** »
 
-## Traçabilité
-- **La réponse recommandée (option 1) est une SUGGESTION : la présenter ne vaut pas
-  réponse.** Une question/un point ne passe `answered`/arbitré que sur un **choix
-  explicite** de l'utilisateur (option 1 ou 3). Sans choix, il reste ouvert — **jamais
-  auto-validé**.
-- Réponse via option 1 ou 3 → décision **humaine**, tracée `(src: atelier/utilisateur)`.
-- Option 2 (passer) → `[À VALIDER]`, `status: deferred` dans le manifeste, reste
-  un **trou bloquant** (ne débloque jamais une gate).
-- **Interdit** : écrire une valeur « démo » / « aléatoire » comme si c'était un
-  fait. La seule façon de remplir est un choix explicite de l'utilisateur.
+## Ce qu'on écrit
+- Un point n'est enregistré que sur une **réponse explicite** de l'utilisateur (suggestion acceptée ou
+  réponse saisie). La réponse recommandée est une **suggestion** : la présenter ne vaut pas réponse.
+- **Ne jamais écrire de provenance dans l'artefact** : pas d'horodatage, pas d'interlocuteur, pas de
+  `(src: …)`. On écrit le **contenu décidé**, rien d'autre. (La règle « ne rien inventer » reste une
+  consigne interne de grounding, pas une mention écrite.)
+- **Interdit** : écrire une valeur « démo » / « aléatoire » comme si c'était un fait. La seule façon de
+  remplir est une réponse explicite de l'utilisateur ; sinon on omet.
 
 ## Langue
-- **Tout est en français** : les questions, options, messages, et ce qui est écrit
-  dans les artefacts/templates. (Seules les clés/valeurs machine du manifeste —
-  `status`, `pending`, etc. — restent des identifiants.)
+- **Tout est en français** : les questions, la réponse recommandée, les messages, et ce qui est écrit
+  dans les artefacts/templates. (Seules les clés/valeurs machine du manifeste — `status`, `pending`,
+  etc. — restent des identifiants.)

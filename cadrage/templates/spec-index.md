@@ -15,21 +15,18 @@ Méthode : trois passes (surface, parcours, risque). Chaque use case est une
 
 ## Use cases (proposition fonctionnelle)
 
-| id  | nom | frontière IN | frontière OUT | activités utilisateur couvertes (source) | couplage suspecté (hypothèse) | MVP |
-|-----|------|-------------|--------------|----------------------------------|----------------------------------|-----|
-| UC1 | <use case> | … | … | … (src: …) | — | oui |
-| UC2 | <use case> | … | … | … (src: …) | UC1 ? | oui |
-| UC3 | <use case> | … | … | … (src: …) | UC1 ? | non |
+| id  | nom | frontière IN | frontière OUT | activités utilisateur couvertes | couplage suspecté (hypothèse) |
+|-----|------|-------------|--------------|----------------------------------|----------------------------------|
+| UC1 | <use case> | … | … | … | — |
+| UC2 | <use case> | … | … | … | UC1 ? |
+| UC3 | <use case> | … | … | … | UC1 ? |
 
 > Une ligne par use case. `couplage suspecté` est une **hypothèse** à confronter
 > à l'architecture, pas un ordre de construction. Les IDs (`UC…`) sont provisoires :
-> la numérotation finale `feature 00X` est fixée par l'architecture. Chaque
-> activité couverte porte sa **source** ; marquer `[À VALIDER]` toute frontière
-> ou couplage non tranché par la matière source.
-
-## Périmètre MVP (par valeur)
-Liste des use cases avec `MVP = oui` — la valeur minimale livrable, vue par le PO. Un choix de
-valeur, indépendant de la stack.
+> la numérotation finale `feature 00X` est fixée par l'architecture. **Aucune
+> notion de MVP**, **aucune provenance écrite** (pas de `(src:)`). Les frontières
+> non tranchées par la matière se tranchent **en session** lors de la revue de
+> couplage, pas marquées `[À VALIDER]`.
 
 ## Walking skeleton (candidat)
 Use case **candidat** pour la première tranche bout-en-bout. Ce n'est qu'une
@@ -40,19 +37,16 @@ dérisque la stack, c'est donc une affaire technique).
 Cartographie de **chaque capacité du périmètre IN** (product-brief §4) vers le ou les use cases
 qui la couvrent. Une capacité **non couverte** est un trou **bloquant**.
 
-| capacité IN (product-brief §4) | couverte par | statut |
-|----------------------------------|------------|--------|
-| <capacité> | UC1, UC3 | couverte |
-| <capacité> | — | `[À VALIDER]` (non couverte) |
-
-## Trous
-Liste des éléments `[À VALIDER]` du découpage. Points à trancher dans la revue de couplage.
+| capacité IN (product-brief §4) | couverte par |
+|----------------------------------|------------|
+| <capacité> | UC1, UC3 |
+| <capacité> | <à trancher en session> |
 
 <!--
-PORTE DE SORTIE (cadrage-decoupage) : chaque use case est une tranche verticale
+VÉRIFICATION (cadrage-decoupage) : chaque use case est une tranche verticale
 de valeur, avec une frontière et un couplage suspecté (hypothèse) ; la coupling-map est
-produite ; le périmètre MVP est marqué ; la couverture du périmètre IN est
-complète (toute capacité non couverte = trou bloquant) ; arbitrated RESTE faux.
-La numérotation/séquençage final et le walking skeleton sont de la responsabilité de
-l'architecture. Voir coupling-map.md pour les couplages (hypothèse).
+produite ; la couverture du périmètre IN est complète (toute capacité non couverte
+se tranche EN SESSION) ; aucune notion de MVP ; aucune provenance écrite ; aucun
+`[À VALIDER]` persisté. arbitrated passe à vrai après la revue de couplage en session.
+La numérotation/séquençage final et le walking skeleton relèvent de l'architecture.
 -->

@@ -23,13 +23,13 @@ De la matière brute (transcripts, docs) au pack fonctionnel prêt pour SpecKit.
 | # | skill | rôle | porte / ordre |
 |---|-------|------|---------------|
 | 0 | `cadrage-init` | crée le workspace `factory-docs/` + le manifeste | à lancer en premier |
-| 1 | `cadrage-extraction` | dépouille les sources en capture tracée + pose les 13 questions de découverte | manifeste + ≥1 source |
+| 1 | `cadrage-extraction` | dépouille les sources en capture (contenu, sans horodatage) + pose les 13 questions de découverte | manifeste + ≥1 source |
 | 2 | `cadrage-vision` | synthétise la capture en vision produit (le quoi / le pourquoi) | capture existe |
-| 3 | `cadrage-glossaire` | construit le langage métier, validé terme par terme | capture existe |
+| 3 | `cadrage-glossaire` | construit le langage métier du projet, validé en bloc | capture existe |
 | 4 | `cadrage-decoupage` | découpage fonctionnel en use cases (par valeur) + carte de couplage | vision faite |
 | 5 | `cadrage-demonstrateur-brief` | prompt Claude Design pour la maquette de validation | vision / retour dispo |
 | 6 | `cadrage-retour-demonstrateur` | ingère le retour client sur la maquette, propage les corrections | retour dispo |
-| 7 | `cadrage-clarification` | regroupe les points ouverts en checklist de balayage *(rejouable)* | ≥1 point ouvert |
+| 7 | `cadrage-clarification` | pose les questions restantes en session *(rejouable)* | ≥1 point à clarifier |
 | 8 | `cadrage-briefs` | brief auto-portant par feature, prêt pour SpecKit | couplage arbitré + maquette validée |
 | 9 | `cadrage-completude` | bilan Definition of Ready + résumé d'état *(rejouable)* | aucune |
 | 10 | `cadrage-handoff` | pré-constitution + briefs + spec index → repo ; expose le handoff designer | prêt pour SpecKit |

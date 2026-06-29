@@ -21,57 +21,54 @@ dans la matière.
 (pour reprendre Q1 qui utilise, Q3 rôles, Q9 type de projet). Le gabarit de sortie
 est `factory-docs/templates/product-brief.md` (copie installée par cadrage-init).
 
-## Porte d'entrée
+## Pré-requis (vérification silencieuse)
 
-**`artifacts.capture_brute` existe** dans le manifeste (le fichier est présent).
-Sinon, **refuse d'agir** et oriente vers `cadrage-extraction`.
+`artifacts.capture_brute` existe dans le manifeste (le fichier est présent).
+Sinon, l'indiquer en clair et proposer de faire l'extraction d'abord — sans
+afficher de « porte ».
 
 ## Procédure
 
 1. **Lire** la capture brute, le `project-frame.md` (Q1/Q3/Q9) et le manifeste.
 2. **Remplir le product brief** section par section, en n'utilisant **que** la
-   matière de la capture. **Chaque énoncé porte sa source `(src: <réf>)`**
-   (transcript / doc + repère) ; un énoncé sans trace reste `[À VALIDER]`.
+   matière de la capture. **Aucune provenance écrite** (pas de `(src:)`, pas
+   d'horodatage) ; un élément non soutenu par la matière est **omis** ou **demandé
+   en session**, jamais marqué `[À VALIDER]`.
 3. **Périmètre OUT (forcé non vide).** Lister les exclusions explicites de la
-   capture. S'il n'y en a pas de tracée, **proposer** des exclusions plausibles
-   au regard du périmètre IN, chacune **marquée `[À VALIDER]`** comme proposition
-   à confirmer. OUT ne doit jamais rester vide, mais aucune exclusion n'est
-   présentée comme un fait acquis si elle n'est pas dans la source.
+   capture. S'il n'y en a pas, **proposer** des exclusions plausibles au regard du
+   périmètre IN et **les faire trancher en session** (demander à l'utilisateur).
+   OUT ne doit jamais rester vide ; on n'y écrit que ce qui est confirmé.
 4. **Critères de succès produit.** Traduire les objectifs en métriques d'usage
-   (pas de code). Si une cible n'a pas été captée, écrire le critère et le
-   marquer `[À CHIFFRER]`.
-5. **Hypothèse produit initiale.** Formuler l'hypothèse centrale et la marquer
-   **`[À ÉPROUVER]`**. Ne JAMAIS l'écrire comme validée : elle se valide hors
-   plugin, par le prototype (Porte 1, direction produit).
-6. **Marquer les trous.** Tout élément absent de la capture → `[À VALIDER]` ou
-   `[NON COUVERT EN ATELIER]`. Consolider en section Trous.
-7. **Classer chaque trou** `bloquant` ou `non bloquant` (voir porte de sortie).
+   (pas de code). Si une cible n'a pas été captée, écrire le critère et préciser
+   en clair « cible à préciser à l'architecture » (pas de marqueur).
+5. **Hypothèse produit initiale.** Formuler l'hypothèse centrale en précisant
+   qu'elle **se valide par le prototype** (boucle démonstrateur), jamais comme
+   acquise.
+6. **Demander, ne pas inventer.** Tout élément essentiel absent de la capture est
+   **posé en session** ; s'il n'est pas tranché, il est **omis** (pas de marqueur,
+   pas de section « Trous »).
 
 ### Sections du product brief
 
 Conformes à `factory-docs/templates/product-brief.md` : Problème, Objectif business,
 Parties prenantes et rôles, Périmètre IN, Non-périmètre OUT (non vide),
-Contraintes, Critères de succès produit, Hypothèse produit initiale `[À ÉPROUVER]`,
-Trous.
+Contraintes, Critères de succès produit, Hypothèse produit initiale.
 
-## Porte de sortie
+## Vérification avant écriture
 
 Avant d'écrire le manifeste, vérifier :
 - **Toutes les sections présentes.**
-- **Non-périmètre OUT non vide** (réel ou proposé `[À VALIDER]`).
-- **Critères de succès mesurables ou marqués `[À CHIFFRER]`.**
-- **Hypothèse produit marquée `[À ÉPROUVER]`**, jamais validée.
-- **Chaque énoncé porte sa source `(src:)`** ; sinon `[À VALIDER]`.
-- **Trous comptés et classés** bloquant / non bloquant.
+- **Non-périmètre OUT non vide.**
+- **Hypothèse produit** présentée comme à valider par le prototype, jamais validée.
+- **Aucune `(src:)`, aucun `[À VALIDER]`** dans l'artefact ; un essentiel manquant
+  a été posé en session (sinon omis).
 
-### Trou bloquant vs non bloquant
+### Direction produit tenue ?
 
-- **Bloquant** : absence qui empêche de tenir la direction produit — pas de
-  problème, pas d'objectif business, pas de partie prenante porteuse du besoin,
-  périmètre IN vide.
-- **Non bloquant** : détail à raffiner sans remettre en cause la direction —
-  une cible `[À CHIFFRER]`, une exclusion OUT proposée `[À VALIDER]`, un acteur
-  secondaire manquant.
+La vision est complète quand les essentiels sont là : problème, objectif business,
+au moins une partie prenante porteuse du besoin, périmètre IN non vide, OUT non
+vide. Un essentiel manquant se **demande en session** ; tant qu'il manque, la
+vision n'est pas complète.
 
 ## Réjeu incrémental (idempotence)
 
@@ -80,27 +77,23 @@ retour de démonstrateur (`cadrage-retour-demonstrateur`) — ce skill **met à
 jour le product brief en place**, il ne le régénère pas à l'aveugle :
 - **Préserve** le contenu déjà validé ou inchangé.
 - **Applique** les corrections venues des entrées mises à jour.
-- **Retire** les marqueurs résolus (`[À VALIDER]` / `[À CHIFFRER]` levés).
-- **Signale les nouveaux** trous apparus.
+- **Pose en session** les éléments essentiels nouvellement manquants.
 - **N'écrase jamais en silence un élément contredit** : un acquis remis en cause
   par un retour est marqué `[REMIS EN CAUSE]` avec sa raison, puis tranché par
-  l'humain — jamais supprimé ni réécrit en douce (règle « capter et invalider »).
+  l'humain — jamais supprimé ni réécrit en douce.
 
-Réconciliation par identité de section / de point : aucune duplication. Recompte
-les trous et recalcule `vision_complete` à partir de l'état réconcilié.
+Réconciliation par identité de section / de point : aucune duplication. Recalcule
+`vision_complete` à partir de l'état réconcilié.
 
 ## Mise à jour du manifeste
 
 Read-modify-write puis revalidation JSON :
-- `artifacts.product_brief.status` (`draft` tant qu'il reste un trou bloquant,
-  sinon `validated` reste réservé à la validation humaine — garder `draft` par
-  défaut), `artifacts.product_brief.gaps = <nombre d'entrées de la section Trous>`.
-- `definition_of_ready.vision_complete = true` **si et seulement si** : aucun
-  trou bloquant, **ET** OUT non vide, **ET** critères de succès présents. Sinon
-  `false`.
+- `artifacts.product_brief.status` (`draft` par défaut ; `validated` reste réservé
+  à la validation humaine).
+- `definition_of_ready.vision_complete = true` **si et seulement si** : les
+  essentiels sont présents (problème, objectif business, partie prenante porteuse,
+  IN non vide) **ET** OUT non vide **ET** critères de succès présents. Sinon `false`.
 - `phase = "vision"` (si la phase courante est `extraction`).
-- `validation_points[]` : ajouter les trous structurants, `status = "open"`,
-  `raised_by = "vision"`.
 - `updated_at` à l'horodatage courant.
 
 ## Livrable visuel
@@ -109,16 +102,18 @@ Le canvas vision produit (synthèse visuelle d'une page, lisible par un comité)
 génère dans Claude Design à partir du product brief. Le prompt prêt à coller est
 dans `references/canvas-vision-prompt.md` (gabarit statique). Le prompt
 effectivement utilisé est sauvegardé sous `factory-prompts/<NNN>-<JJ-MM>-canvas-vision/`
-et tracé dans `prompts[]` du manifeste. C'est un livrable de communication, pas
+et tracé dans `prompts[]` du manifeste. Le fichier `prompt.md` ne contient **que le
+corps du prompt** (le bloc de code du gabarit), sans titre/date/mode/version
+(cf. `references/ux-conventions.md`). C'est un livrable de communication, pas
 une porte — il n'altère pas les autres champs du manifeste.
 
 ## Règles invariantes appliquées ici
 
-- **Marquer, ne pas inventer.** OUT proposé est marqué `[À VALIDER]`, jamais
-  présenté comme acté. Aucun objectif ou critère fabriqué.
+- **Demander, ne pas inventer.** OUT proposé est tranché en session, jamais
+  présenté comme acté. Aucun objectif ou critère fabriqué. Pas de `(src:)`.
 - **Hypothèse à éprouver, jamais validée.** Deux altitudes de validation : la
   direction produit se valide par le prototype, hors plugin.
-- **Skill indépendant.** Porte d'entrée vérifiée via le manifeste, pas via un
+- **Skill indépendant.** Pré-requis vérifié via le manifeste, pas via un
   orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-glossaire` — fixer le vocabulaire structurant porté par la vision avant le découpage.
+Étape suivante : `/cadrage:cadrage-glossaire` — fixer le vocabulaire du projet porté par la vision avant le découpage.

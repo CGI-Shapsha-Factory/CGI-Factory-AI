@@ -1,90 +1,72 @@
 ---
 name: cadrage-clarification
-description: Agrège tous les points ouverts en une liste de balayage client priorisée.
+description: Repose en session, une à une, les questions du projet restées sans réponse.
 ---
 
 # cadrage-clarification
 
-Boucle de feedback. Consolide **tous les points à valider** du projet en un
-registre unique et en tire une **liste de balayage** que tu déroules avec le
-client en atelier — notamment l'atelier de validation du démonstrateur.
+Boucle de feedback. Reprend les questions du projet **restées sans réponse** et les
+**repose à l'utilisateur en session**, une à une — notamment au moment de la
+validation du démonstrateur. Rien n'est listé dans un fichier : tout se tranche dans
+le chat.
 
 ## Objectif
 
-Maintenir le registre `validation_points` et produire une checklist client
-actionnable, priorisée, qui lève les points bloquants d'abord, sans noyer le
-client.
+Faire le tour des points encore ouverts du projet et les **lever en conversation**,
+sans noyer l'utilisateur. Le skill ne produit pas de checklist persistée : il **pose
+les bonnes questions** et applique les réponses dans les artefacts concernés.
 
 ## Entrée
 
-- Tous les marqueurs des artefacts : `[À VALIDER]`, `[NON COUVERT EN ATELIER]`,
-  `[À CHIFFRER]`, `[REMIS EN CAUSE]` (capture, vision, glossaire, spec index,
-  coupling map, briefs).
-- Les conflits signalés du glossaire et les souhaits hors périmètre repérés.
-- Le registre `validation_points` existant (alimenté par les autres skills).
+- Les questions de découverte encore `pending`/`deferred` (bloc `discovery`).
+- Le glossaire pas encore validé en bloc.
+- Les acquis marqués `[REMIS EN CAUSE]` (retour de démonstrateur à retrancher).
+- Les souhaits hors périmètre repérés, à confirmer.
 
-## Porte d'entrée
+## Pré-requis (vérification silencieuse)
 
-**Au moins un point ouvert** (un marqueur d'artefact ou un `validation_point`
-`open`). Sinon, **ne génère rien** et signale qu'il n'y a rien à clarifier.
-
-## Les cinq types de points
-
-Le registre agrège **tous les types**, pas seulement les trous :
-
-| type | origine typique |
-|------|-----------------|
-| `gap` | trou `[À VALIDER]` / `[NON COUVERT EN ATELIER]` |
-| `glossary-conflict` | définition divergente / ambiguïté du glossaire |
-| `contradiction` | acquis `[REMIS EN CAUSE]` (retour de démonstrateur) |
-| `unmeasured` | critère de succès `[À CHIFFRER]` |
-| `out-scope` | souhait hors périmètre à confirmer |
+**Au moins un point reste à trancher.** Sinon, indiquer en clair qu'il n'y a rien à
+clarifier et s'arrêter.
 
 ## Procédure
 
-1. **Collecter** tous les points (marqueurs des artefacts + `validation_points`
-   existants + conflits + souhaits hors périmètre).
-2. **Réconcilier le registre `validation_points` (idempotence).** Rapprocher par
-   identité (ref + énoncé) des entrées existantes : **ne pas dupliquer**, préserver
-   les `answered` / `invalidated`, ajouter les nouveaux `open`, retirer du
-   balayage ce qui est résolu. Aucun point déjà tranché n'est reposé.
-3. **Typer** chaque point parmi les cinq types.
-4. **Grouper par thème** (parties prenantes, périmètre, objectifs/métriques,
-   intégration, sémantique/glossaire, couplage, retour démonstrateur…).
-5. **Formuler des énoncés spécifiques et répondables** — pas « préciser le
-   besoin » mais « quelle est la cible chiffrée de réduction du temps d'appel ? ».
-6. **Prioriser** : d'abord ce qui bloque un artefact ou une porte (point
-   bloquant), ensuite le raffinement.
-7. **Relier chaque point à l'artefact qu'il débloque** (et au skill qui le
-   reprendra).
-8. **Plafonner par session** (~8–10 points), surplus reporté en « lot suivant ».
+1. **Recenser** (en mémoire de session, sans écrire de liste) ce qui reste ouvert :
+   questions de découverte sans réponse, glossaire non validé, acquis remis en cause,
+   souhaits hors périmètre.
+2. **Prioriser** : d'abord ce qui bloque un artefact, ensuite le raffinement.
+3. **Reposer chaque point en session, un à la fois**, via la boucle interactive
+   (`references/interactive-loop.md`) : exposer le point en clair, proposer une
+   **réponse recommandée** (suggestion étiquetée), l'utilisateur accepte ou donne la
+   sienne. **Pas de menu numéroté.** Attendre la réponse avant le point suivant.
+4. **Formuler des questions spécifiques et répondables** — pas « préciser le besoin »
+   mais « quelle est la cible chiffrée de réduction du temps d'appel ? ».
+5. **Appliquer chaque réponse tout de suite** dans l'artefact concerné (project-frame,
+   glossaire, spec-index…). Un point que l'utilisateur ne tranche pas reste ouvert,
+   **n'est écrit nulle part**.
+6. **Plafonner par session** (~8–10 questions) pour ne pas noyer l'utilisateur ; le
+   reste sera reposé à un prochain passage.
 
-## Sortie — `clarifications.md` (liste de balayage client)
+## Vérification
 
-Checklist destinée au client, groupée par thème. Chaque point : énoncé répondable,
-type, priorité, artefact débloqué, origine. Plafond par session, report explicite
-du surplus. C'est l'ordre du jour que tu déroules en atelier de validation.
-
-## Porte de sortie
-
-- Le registre agrège bien les **cinq types** de points.
-- La liste de balayage est **exploitable en atelier** : énoncés spécifiques,
-  groupés, priorisés, plafonnés, chacun relié à son artefact.
-- **Idempotence** : aucun doublon, aucun point déjà résolu reposé.
+- Les points reposés sont **spécifiques et répondables**.
+- Chaque réponse est **appliquée dans l'artefact** qu'elle débloque.
+- **Aucune liste de points ouverts n'est écrite** dans un fichier, **aucune
+  provenance** (pas de `(src:)`).
 
 ## Mise à jour du manifeste
 
 Read-modify-write puis revalidation JSON :
-- `validation_points[]` : registre réconcilié (ajouts `open`, statuts préservés).
+- Met à jour les statuts `discovery[]` des questions tranchées en session.
 - `updated_at`.
-- Ne modifie aucune porte (ni `decoupage_arbitrated`, ni
-  `demonstrateur_converged` — calculés ailleurs).
+- Ne modifie aucune porte (ni `decoupage_arbitrated`, ni `demonstrateur_converged` —
+  calculés ailleurs).
 
 ## Règles invariantes appliquées ici
 
-- **Marquer, ne pas inventer.** Le skill exploite les points marqués ; il ne
-  comble rien, il aide l'humain à les lever.
-- **Idempotence.** Réconcilie le registre, ne le régénère pas à l'aveugle.
+- **Tout interactif.** On repose les questions en session, on ne génère pas de
+  checklist persistée.
+- **Ne pas inventer.** On aide l'utilisateur à trancher ; un point non tranché reste
+  ouvert et n'est pas comblé.
 - **Skill indépendant.** Lit les artefacts et le manifeste, sans orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-retour-demonstrateur` — dérouler la liste en atelier puis ingérer le retour client.
+Étape suivante : `/cadrage:cadrage-retour-demonstrateur` — ingérer le retour client après la validation de la maquette.

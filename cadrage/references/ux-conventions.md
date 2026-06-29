@@ -21,23 +21,39 @@ Le manifeste garde ses clés (contrat machine), mais le **texte affiché** et le
 
 Ne jamais afficher de tableau de booléens bruts (ex. `decoupage_arbitrated == true`).
 
-**Ne jamais parler de « portes » ouvertes/fermées** ni de drapeaux : énoncer en clair
-*ce qui* est validé. Ex. : au lieu de « les deux portes sont ouvertes », dire « le
-découpage est arbitré et la maquette est validée par le client ».
+**Interdiction stricte de surfacer toute mécanique interne.** Ne **jamais** parler de
+« porte » / « porte d'entrée » / gate / drapeau, ni afficher un statut de pré-requis
+(« vision_complete = false »), ni exposer le raisonnement de vérification d'étape. Si une
+étape ne peut pas démarrer, soit **on pose une question en clair** à l'utilisateur, soit
+**on avance** quand la direction produit est explicite — jamais un avertissement type
+« ⚠️ Porte d'entrée : … ».
 
-## 2. Messages de refus en langage naturel
-Quand un skill ne peut pas tourner (gate non franchie), expliquer **en clair**
-pourquoi et quoi faire. Exemple cible :
-> « Cette étape ne peut pas démarrer encore : la revue de couplage et la
-> validation du prototype doivent d'abord être faites. »
-Jamais : « ⛔ REFUSES: decoupage_arbitrated == false ».
+## 2. Quand une étape manque d'un pré-requis
+Ne pas afficher de refus technique. Poser **une question en clair** sur ce qui manque, ou
+avancer si la direction est claire. Exemple cible :
+> « Avant de découper, j'ai besoin de la vision produit — on la fait maintenant ? »
+Jamais : « ⛔ REFUSES: decoupage_arbitrated == false », ni « Porte d'entrée : … ».
 
-## 3. Marqueurs internes hors texte utilisateur
-**Marqueurs canoniques — n'utiliser QUE ceux-ci, toujours en français :** `[À VALIDER]`,
-`[À CHIFFRER]`, `[À ÉPROUVER]`, `[REMIS EN CAUSE]`, `[NON COUVERT EN ATELIER]`. **Interdites** :
-toutes les variantes anglaises — `[TO CONFIRM]`, `[TO QUANTIFY]`, `[TO PROVE]`, `[NOT COVERED]`,
-`[TBD]`… (ne jamais les écrire dans un artefact). Ces marqueurs vivent dans les **artefacts** (lus
-par le LLM), pas dans les phrases adressées à l'utilisateur. À l'oral on dit « à confirmer », etc.
+## 2bis. Jamais de conformité / RGPD côté utilisateur
+L'utilisateur du cadrage (Product Owner) **n'est pas concerné** par la conformité, le RGPD,
+ou les contraintes transverses (droits, audit, journalisation). **Ne jamais les afficher ni
+en faire des points d'arbitrage visibles.** Ces préoccupations sont captées **en silence**
+comme contraintes transverses transmises à l'architecte, hors du regard de l'utilisateur.
+
+## 3. Aucun placeholder persisté
+On **n'écrit pas** de point non tranché dans un artefact : un point sans réponse est **omis**
+(cf. `interactive-loop.md`), jamais marqué `[À VALIDER]`. Seul marqueur encore admis dans un
+artefact : `[REMIS EN CAUSE]` (un acquis contredit par un retour, conservé pour relecture
+humaine). À l'oral on dit « à confirmer », « remis en cause », etc. — jamais de variantes
+anglaises (`[TBD]`, `[TO CONFIRM]`…).
+
+## 3bis. Fichiers prompt sauvegardés = corps seul, prêt à coller
+Tout prompt écrit sous `factory-prompts/…/prompt.md` contient **uniquement le prompt
+prêt à coller** dans Claude Design. **Interdit** dans le fichier : titre (`# Prompt
+Claude Design — …`), ligne `Date : … | Mode : … | Version : …`, `---` d'en-tête, ou
+toute autre métadonnée. La métadonnée (mode, version, date, sujet) vit dans l'entrée
+`prompts[]` du manifeste, **jamais** dans le fichier. Objectif : l'utilisateur ouvre
+le fichier et copie tout, sans rien nettoyer.
 
 ## 4. Langage produit (non technique) pour le découpage
 Dans les affichages de découpage/vision, parler **valeur et usage** (style Product

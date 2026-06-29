@@ -19,16 +19,16 @@ brut que le plugin **architecte** transformera en driver/scénario (QAW).
 | Q6 | Quelle disponibilité du système est requise ? | NFR | Disponibilité & performance | **oui** |
 | Q7 | Contraintes de performance ? | NFR | Disponibilité & performance | **oui** |
 | Q8 | Contraintes légales ? | légal/réglementaire | Légal/réglementaire | — |
-| Q9 | Type de projet ? MVP ? projet long terme ? | opérationnel | Type de projet | — |
+| Q9 | Type de projet ? (ponctuel, long terme, périmètre visé) | opérationnel | Type de projet | — |
 | Q10 | Qui gère la production ? le client ? nous ? | opérationnel | Exploitation/production | — |
 | Q11 | Où l'application est-elle déployée ? infra existante ou nouvelle ? cloud ? | opérationnel | Hébergement & déploiement | — |
 | Q12 | Budget pour l'infrastructure ? | opérationnel | Budget infra | — |
 | Q13 | Besoins spécifiques d'authentification / autorisation ? | sécurité/auth | Auth & autorisation | — |
 
 **Statuts possibles par question** (le bloc `discovery` du manifeste) :
-- `answered` — réponse trouvée (source obligatoire : transcript/doc ou `workshop/user`).
-- `pending` — pas encore répondue (à poser interactivement). **Trou bloquant.**
-- `deferred` — `[À VALIDER]`, repoussée à un atelier ultérieur (justification requise). **Trou bloquant.**
-- `na` — non applicable pour ce projet (justification requise).
+- `answered` — réponse tranchée par l'utilisateur (aucune provenance écrite dans l'artefact).
+- `pending` — pas encore posée (à poser interactivement).
+- `deferred` — laissée de côté par l'utilisateur ; **rien n'est écrit** dans l'artefact pour ce champ.
+- `na` — non applicable pour ce projet.
 
 La porte `discovery_complete` est à vrai quand **aucune** question n'est `pending`/`deferred`.
