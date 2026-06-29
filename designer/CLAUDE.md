@@ -27,18 +27,19 @@ blanche stylistique** possible (la marque est une entrée optionnelle).
 - `designer-init` — setup (zéro décision) : installe les 4 gabarits + sème la **checklist** dans le
   manifeste. Porte : maquette validée **ET** architecture validée **ET** *Décisions à impact design*
   présente.
-- `designer` — **l'atelier** : ingère les handoffs, pré-remplit la checklist, déroule les 3 blocs
-  (chaque item : `deduced`/`decided`/`sans_objet`/`open`), **porte humaine : arbitrage des choix
-  d'expérience**, puis produit le **prompt Claude Design** + le **rapport de couverture** quand la
-  couverture est jugée suffisante.
+- `designer-atelier` — **l'atelier** : ingère les handoffs, pré-remplit la checklist, déroule les 3 blocs
+  (chaque item : `deduced`/`decided`/`sans_objet`/`open` ; affiché **validé** / **à traiter** / **sans
+  objet**), **porte humaine : arbitrage des choix d'expérience**, **résout en session tout point resté à
+  traiter**, puis produit le **prompt Claude Design** + le **rapport de couverture** quand la couverture est
+  jugée suffisante.
 - `designer-coherence` — **après Claude Design** : **porte humaine : validation du système généré** ;
   vérifie la couverture (aucun item `open`) ; produit le **handoff design** (réf. du système synchronisé +
   guidelines : états, patterns d'erreur, socle a11y). → assembleur.
 
 ## Workspace & manifeste
 Lit les handoffs cadrage (`cadrage-out/`) et architecte (`architecte-out/`). Écrit dans
-`designer-out/` (rapport de couverture, guidelines) et `factory-prompts/` (prompt Claude Design, **fichier
-plat**). Le manifeste et les gabarits vivent dans `.factory/`.
+`designer-out/` (rapport de couverture, guidelines) et `prompts/designer/` (prompt Claude Design, **fichier
+plat** ; dossier créé par `designer-init`). Le manifeste et les gabarits vivent dans `.factory/`.
 **Ne crée plus** `design-system/`. Le manifeste reçoit un bloc **`design`** orienté **couverture** :
 `{phase, inputs{cadrage_ok, design_impact_ok}, checklist{foundation[], experience[], technical[]} (items
 {id,label,origin,status,note}), coverage_sufficient(H), prompt_path, coverage_report_path,
@@ -53,7 +54,7 @@ design_system_ref, design_validated(H), guidelines_path}`. Écriture = read-modi
   le contrat propre qui alimente le **versant technique** de la checklist.
 
 ## Sorties (3)
-1. **Prompt Claude Design** (`factory-prompts/<NNN>-<JJ-MM>-claude-design.md`, **fichier plat**) — fait naître le design system.
+1. **Prompt Claude Design** (`prompts/designer/<NNN>-<JJ-MM>-claude-design.md`, **fichier plat**, **corps seul prêt à coller**) — fait naître le design system.
 2. **Rapport de couverture** (`designer-out/coverage-report.md`) — la trace de la rigueur.
 3. **Handoff design** (`designer-out/design-guidelines.md`) — réf. du système synchronisé +
    guidelines, consommé par l'Assembleur (qui grave les règles `/design-sync` en constitution/claude.md/CI).

@@ -1,24 +1,31 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la phase convergence (assembleur).
 
-Lit le manifeste partage d'un projet (.factory/manifest.json par defaut) et echoue si la
-convergence est incomplete :
-  - bloc `assembly` absent ;
-  - repo SpecKit cible non renseigne ;
-  - constitution / CLAUDE.md / glossaire / MEMORY.md non generes ;
-  - plan d'attaque absent ;
-  - une feature de `architecture.feature_sequence` sans ses 3 faces (functional, technical,
-    design) ou marquee non coherente.
+L'assembleur produit un PAQUET de handoff dans `assembleur-out/` (il n'ecrit jamais dans un
+repo cible). Ce garde-fou lit le manifeste (.factory/manifest.json par defaut), en deduit la
+racine du projet, et echoue si :
+  - le bloc `assembly` est absent ;
+  - un fichier du paquet manque (pre-constitution, >=1 graine de feature, feature-map,
+    technical-context, memory/MEMORY.md, CLAUDE.md, coherence-report, attack-plan) ;
+  - il reste un marqueur ([A VALIDER]/[A CHIFFRER]/NEEDS CLARIFICATION) dans `assembleur-out/`
+    (tout point doit etre tranche en session) ;
+  - une feature de `architecture.feature_sequence` n'a pas sa graine dans `features/`.
 
-Les portes HUMAINES (`coherence_validated`, `team_validated`, `linear_initialized`) ne sont
-PAS verifiees ici - comme la coherence de l'architecte / la couverture du designer. Exit 0 si
-tout est present, sinon 1.
+La porte HUMAINE (`coherence_validated`) n'est PAS verifiee ici. Exit 0 si tout est present,
+sinon 1.
 
 Usage:
     python check_assembly.py [chemin/vers/manifest.json]
 """
+import glob
 import json
+import os
+import re
 import sys
+
+MARKER_RE = re.compile(
+    r"\[\s*(?:À|A)\s+(?:VALIDER|CHIFFRER)\s*\]|NEEDS\s+CLARIFICATION", re.IGNORECASE
+)
 
 
 def main(argv):
@@ -38,53 +45,47 @@ def main(argv):
         print("ERREUR: bloc `assembly` absent (lancer assembleur-init).", file=sys.stderr)
         return 1
 
+    root = os.path.dirname(os.path.dirname(os.path.abspath(path)))
+    out = os.path.join(root, "assembleur-out")
     problems = []
 
-    if not asm.get("target_repo"):
-        problems.append("repo SpecKit cible non renseigne (target_repo)")
-    if not asm.get("constitution_generated"):
-        problems.append("constitution non generee")
-    if not asm.get("claude_md_generated"):
-        problems.append("CLAUDE.md projet non genere")
-    if not asm.get("glossary_consolidated"):
-        problems.append("glossaire non consolide")
-    if not asm.get("memory_index_generated"):
-        problems.append("MEMORY.md (index) non genere")
-    if not asm.get("attack_plan"):
-        problems.append("plan d'attaque absent")
+    def rel(*parts):
+        return os.path.join(out, *parts)
 
-    # Couverture des 3 faces par feature, sur la sequence figee par l'architecte.
-    seq = (manifest.get("architecture") or {}).get("feature_sequence") or []
-    # Registre canonique : entrees = objets {id, uc, name}. Tolere les bare strings (legacy).
-    seq_ids = [it.get("id") if isinstance(it, dict) else it for it in seq]
-    faces = asm.get("feature_faces") or []
-    by_feat = {f.get("feature"): f for f in faces if isinstance(f, dict)}
-    if not seq_ids:
-        problems.append("aucune feature_sequence (architecture) a converger")
-    for feat in seq_ids:
-        f = by_feat.get(feat)
-        if not f:
-            problems.append(f"feature '{feat}' sans ses 3 faces (absente de feature_faces)")
+    # 1. Presence du paquet.
+    required = [
+        ("pre-constitution.md", rel("pre-constitution.md")),
+        ("feature-map.md", rel("feature-map.md")),
+        ("technical-context.md", rel("technical-context.md")),
+        ("memory/MEMORY.md", rel("memory", "MEMORY.md")),
+        ("CLAUDE.md", rel("CLAUDE.md")),
+        ("coherence-report.md", rel("coherence-report.md")),
+        ("attack-plan.md", rel("attack-plan.md")),
+    ]
+    for label, p in required:
+        if not os.path.isfile(p):
+            problems.append(f"fichier du paquet manquant: {label}")
+
+    seeds = glob.glob(rel("features", "*.spec-seed.md"))
+    if not seeds:
+        problems.append("aucune graine de feature dans features/ (*.spec-seed.md)")
+
+    # 2. Aucun marqueur residuel dans assembleur-out/.
+    for md in glob.glob(os.path.join(out, "**", "*.md"), recursive=True):
+        try:
+            text = open(md, encoding="utf-8").read()
+        except OSError:
             continue
-        missing = [k for k in ("functional", "technical", "design") if not f.get(k)]
-        if missing:
-            problems.append(f"feature '{feat}' faces manquantes: {missing}")
-        if f.get("coherent") is False:
-            problems.append(f"feature '{feat}' faces contradictoires (non coherente)")
+        if MARKER_RE.search(text):
+            problems.append(f"marqueur residuel dans {os.path.relpath(md, root)} (a trancher en session)")
 
-    # Couverture INVERSE : aucun brief (cadrage) orphelin. Les parcours/use cases viennent du
-    # cadrage (spec-index/briefs) ; le designer ne produit plus de journeys par feature (le design
-    # system nait dans Claude Design). Une feature peut bundler plusieurs use cases (`ucs`) ; `uc`
-    # (singulier) est tolere.
-    def _feat_ucs(it):
-        if not isinstance(it, dict):
-            return []
-        return it.get("ucs") or ([it["uc"]] if it.get("uc") else [])
-    seq_ucs = {u for it in seq for u in _feat_ucs(it)}
-    if seq_ucs:
-        brief_ucs = {b.get("id") for b in (manifest.get("artifacts") or {}).get("briefs") or [] if isinstance(b, dict)}
-        for uc in sorted(u for u in brief_ucs - seq_ucs if u):
-            problems.append(f"brief cadrage '{uc}' orphelin (aucune feature dans feature_sequence)")
+    # 3. Couverture : chaque feature de la sequence a sa graine (par prefixe d'id).
+    seq = (manifest.get("architecture") or {}).get("feature_sequence") or []
+    seq_ids = [it.get("id") if isinstance(it, dict) else it for it in seq]
+    seed_names = [os.path.basename(s) for s in seeds]
+    for fid in seq_ids:
+        if fid and not any(n.startswith(f"{fid}-") for n in seed_names):
+            problems.append(f"feature '{fid}' sans graine dans features/")
 
     if problems:
         print("CONVERGENCE INCOMPLETE - points bloquants :", file=sys.stderr)
@@ -92,7 +93,7 @@ def main(argv):
             print(f"  - {p}", file=sys.stderr)
         return 1
 
-    print("ASSEMBLAGE OK - les 3 contrats convergent, pack SpecKit present.")
+    print("ASSEMBLAGE OK - le paquet de handoff SpecKit est complet dans assembleur-out/.")
     return 0
 
 

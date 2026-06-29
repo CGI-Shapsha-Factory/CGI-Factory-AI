@@ -1,6 +1,6 @@
 # Référence — la checklist de couverture (le cœur du plugin)
 
-Définition canonique de la checklist déroulée par `/designer:designer`. **Le plugin applique des règles
+Définition canonique de la checklist déroulée par `/designer:designer-atelier`. **Le plugin applique des règles
 établies du domaine, il ne les invente pas** : NN/g pour les états d'écran et les règles d'erreur, WCAG
 pour l'accessibilité.
 
@@ -13,20 +13,27 @@ La force du plugin = **forcer la couverture des deux**.
 
 ## Colonne Origine & statuts
 - **C** déduit du handoff Cadrage · **A** déduit du handoff Architecte · **H** co-construit avec l'humain.
-- Statut : `open` (non couvert, bloquant) → `deduced` (rempli d'un handoff) | `decided` (tranché H) |
-  `sans_objet` (sans objet, marqué pas forcé). **Aucun `open`** quand la couverture est suffisante.
+- **Statut montré à l'utilisateur** : **validé** (couvert) · **à traiter** (non couvert, bloquant) ·
+  **sans objet** (ne s'applique pas). **Aucun item « à traiter »** quand la couverture est suffisante.
+- *En interne*, le manifeste garde un statut plus fin — `open` → `deduced` (rempli d'un handoff) |
+  `decided` (tranché H) | `sans_objet` — mais l'affichage se réduit aux trois mots ci-dessus, et **chaque
+  item se désigne par sa phrase en clair, jamais par un code** (`F1`/`E1`/`T1`… = clés internes).
 
 ## Calibrage (anti-usine-à-gaz)
 Commencer petit : tokens essentiels, composants de base, patterns clés. **Étendre seulement** quand un
 besoin réel apparaît. Ne pas créer de tokens ni de composants par anticipation. La checklist est un **filet
 de couverture sur ce qui compte**, pas une obligation de tout remplir.
 
-## Les 3 blocs (résumé — détail dans `templates/coverage-checklist.md`)
-- **Fondation** : F1 tokens essentiels · F2 thématisation · F3 composants de base + états · F4 mouvement.
-- **Expérience** (H tranche) : E1 parcours · E2 états d'écran · E3 états vides utiles · E4 hiérarchie/densité
-  · E5 feedback/confirmation · E6 microcopie.
-- **Technique qui se voit** (découle de l'archi) : T1 erreurs · T2 chargement/async · T3 listes/pagination ·
-  T4 identité/rôles · T5 navigation/routage · T6 accessibilité · T7 responsive · T8 i18n · T9 budget perf.
+## Les 3 blocs (résumé — phrases complètes dans `templates/coverage-checklist.md`)
+- **Fondation** : la palette/typo/espacements de base · les thèmes d'affichage · les composants de base
+  avec tous leurs états · les animations et transitions.
+- **Expérience** (H tranche) : chaque parcours clé de bout en bout · les états de chaque écran · les écrans
+  sans données (message + action) · la hiérarchie et la densité · les retours et confirmations après action ·
+  le ton des textes de l'interface.
+- **Technique qui se voit** (découle de l'archi) : l'affichage des erreurs · les temps d'attente et le
+  chargement · les listes/tableaux et leur pagination · l'identité et les droits · la navigation et
+  l'organisation de l'information · le socle d'accessibilité · l'adaptation aux écrans · la prise en charge
+  de plusieurs langues · le budget de performance.
 
 ## Ancrages (le plugin applique)
 - **États canoniques d'écran** : chargement, vide, erreur, contenu/succès — distinguer 1re utilisation et

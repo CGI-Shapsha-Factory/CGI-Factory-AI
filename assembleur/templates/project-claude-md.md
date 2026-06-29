@@ -1,41 +1,37 @@
-<!-- CLAUDE.md du PROJET (repo SpecKit). La section entre les marqueurs est gérée par SpecKit
-     (update-agent-context) — ne pas l'éditer à la main. Hors marqueurs = guidance factory. -->
+<!-- CLAUDE.md du PROJET, livré en `assembleur-out/CLAUDE.md`. L'équipe le place à la racine du repo
+     de fabrication. < 200 lignes, concis. Instructions durables + @imports vers les fichiers mémoire.
+     Contenu seul. -->
 
 # <PROJECT_NAME>
 
-[Une phrase : ce que fait le produit.] (src: cadrage/product-brief)
+[Une phrase : ce que fait le produit.]
 
-<!-- SPECKIT START -->
-<!-- Section gérée automatiquement par SpecKit. -->
-<!-- SPECKIT END -->
+## Contrats (3 faces) — où regarder
+- **Fonctionnel** : les graines de feature (`features/<id>-…spec-seed.md`) ; langage = `@memory/domain.md`.
+- **Technique** : `@technical-context.md` et `@memory/architecture.md` (stack, composants, ADR, conventions).
+- **Design** : `@memory/design.md` (design system synchronisé + états + erreurs + a11y).
 
-## Contrats (3 faces)
-- **Fonctionnel** : briefs par feature dans `specs/` ; langage = `GLOSSARY.md`.
-- **Technique** : stack [..] ; style/format/nommage dans `conventions/` ; ADR de référence.
-- **Design** : design system **synchronisé depuis Claude Design via `/design-sync`** ; guidelines
-  (états, patterns d'erreur, socle a11y) dans le handoff design ; accessibilité au niveau visé.
-
-## Où vit quoi
-- `.specify/memory/constitution.md` — principes non négociables (opposables).
-- `specs/NNN-feature/spec.md` — une feature = 3 faces (fonctionnel + technique + design).
-- `GLOSSARY.md` — langage ubiquitaire. `MEMORY.md` — index des contrats & décisions.
+## Constitution (opposable)
+`pre-constitution.md` porte les **principes non négociables**. À donner à `/speckit.constitution` au
+démarrage de SpecKit ; chaque `plan.md` passe ensuite la *Constitution Check*.
 
 ## Lancer SpecKit
-Le repo est **déjà initialisé** (`specify init --ai claude`, précondition de la convergence) et la
-constitution finale convergée est en place. Voir le plan d'attaque : `/speckit.specify` par feature
-(**walking skeleton d'abord**) → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
-La *Constitution Check* du `plan.md` est **opposable**. **Ne pas relancer `specify init`** (il
-écraserait la constitution).
+Voir `attack-plan.md` : `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) →
+`/speckit.specify` par feature **dans l'ordre du `feature-map.md`** (walking skeleton d'abord) →
+`/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 
-## Design (design-sync) — §6, opposable
-- **Exécuter `/design-sync` au démarrage** ; ne construire qu'à partir des **tokens et composants
-  synchronisés** (le design system vit dans Claude Design).
-- **Checklist des états par écran** : chargement, vide, erreur, succès.
-- **Patterns d'erreur** : validation à la sortie du champ ; format d'erreur API → messages par champ.
-- **Socle d'accessibilité** : niveau visé (ex. WCAG 2.2 AA) — contraste, focus visible, clavier.
+## Design (design-sync) — non négociable
+- **Exécuter `/design-sync`** ; ne construire qu'à partir des **tokens et composants synchronisés** —
+  **aucune valeur de style en dur**.
+- **États par écran** : chargement, vide, erreur, succès.
+- **Patterns d'erreur** : le format d'erreur de l'API se projette en messages par champ.
+- **Accessibilité** : au niveau visé (ex. WCAG 2.2 AA) — contraste, focus visible, clavier.
 
 ## Règles clés (invariants des 3 contrats)
-- [ex. refus d'inventer / réponses sourcées] (fonctionnel)
-- [ex. filtrage par droits, requêtes paramétrées] (technique)
-- **aucune valeur de style en dur** (tokens uniquement) ; états vide/chargement/erreur/succès traités ;
-  erreurs selon le contrat ; accessibilité au niveau visé (design)
+- [ex. règle fonctionnelle non négociable]
+- [ex. règle technique : filtrage par droits, requêtes paramétrées]
+- **aucune valeur de style en dur** (tokens uniquement) ; états couverts ; erreurs selon le contrat ;
+  accessibilité au niveau visé.
+
+## Commandes
+[Build / test / lint, dérivées de la stack — ex. `uv run pytest`, `npm test`.]

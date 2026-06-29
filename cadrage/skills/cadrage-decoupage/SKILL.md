@@ -191,7 +191,7 @@ Déroulé :
 La carte de découpage et dépendances (visualisation interactive pour la revue de
 couplage) se génère dans Claude Design. Le prompt prêt à coller est dans
 `references/carte-decoupage-prompt.md` (gabarit statique). Le prompt utilisé est
-sauvegardé sous `factory-prompts/<NNN>-<JJ-MM>-carte-decoupage.md` et tracé dans
+sauvegardé sous `prompts/cadrage/<NNN>-<JJ-MM>-carte-decoupage.md` et tracé dans
 `prompts[]`. Le fichier sauvegardé ne contient **que le corps du prompt** (le bloc de
 code du gabarit), sans titre/date/mode/version (cf. `references/ux-conventions.md`).
 

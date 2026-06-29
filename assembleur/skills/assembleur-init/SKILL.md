@@ -1,87 +1,66 @@
 ---
 name: assembleur-init
-description: Amorce la phase de convergence : vérifie les 3 contrats, capture le repo SpecKit cible, installe les gabarits et étend le manifeste.
+description: Amorce la phase de convergence : vérifie les 3 contrats validés, installe les gabarits, crée assembleur-out/ et étend le manifeste.
 ---
 
 # assembleur-init
 
-Skill d'amorçage de la phase **convergence** : **tout premier skill** à lancer après que
-les trois contrats (cadrage, architecte, designer) ont été validés. Il prépare le terrain
-(zéro décision de convergence) ; les autres skills (`assembleur`, `assembleur-amorce`)
-supposent qu'il a tourné.
+Skill d'amorçage de la phase **convergence** : **tout premier skill** à lancer après
+que les trois contrats (cadrage, architecte, designer) ont été validés. Il prépare le
+terrain (zéro décision de convergence) ; `assembleur-convergence` suppose qu'il a tourné.
 
 ## Objectif
-Rendre un projet **prêt pour la convergence** : confirmer que les 3 contrats sont validés,
-capturer le **repo SpecKit cible**, installer les gabarits, et étendre le manifeste partagé
-avec un bloc `assembly`.
+Rendre un projet **prêt pour la convergence** : confirmer que les 3 contrats sont
+validés, installer les gabarits, créer le dossier de sortie `assembleur-out/`, et
+étendre le manifeste partagé avec un bloc `assembly`. **Il n'y a aucun repo cible à
+capturer** : l'assembleur produit un **paquet** dans `assembleur-out/`, il n'écrit
+jamais dans un repo SpecKit.
 
-## Porte d'entrée
-**Les 3 contrats doivent être validés.** Lire `.factory/manifest.json` :
-- si la phase amont n'est pas prête (`definition_of_ready.cadrage_complete` faux), **ou** si
-  l'architecture n'est pas validée (`architecture.coherence_validated` faux), **ou** si le
-  design n'est pas validé (`design.design_validated` faux — le système Claude Design a été validé) →
-  **refuser** en clair :
-  > « La convergence ne peut pas démarrer : il faut les trois contrats validés — le cadrage
-  > (prêt pour SpecKit), l'architecture (cohérence validée) et le design (système validé). Termine
+## Pré-requis (vérification silencieuse)
+**Les 3 contrats doivent être validés.** Lire `.factory/manifest.json` sans l'annoncer :
+- si le cadrage n'est pas terminé, **ou** l'architecture pas validée, **ou** le design
+  pas validé → **le dire en clair** :
+  > « La convergence ne peut pas démarrer : il faut les trois contrats validés — le
+  > cadrage, l'architecture (cohérence validée) et le design (système validé). Termine
   > d'abord la phase qui manque. »
 - Vérifier la présence des artefacts attendus : cadrage
-  (`cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
-  `cadrage-out/features-fonctionnels-brief/*.brief.md`), architecte
-  (`architecte-out/tech-stack.md`, `architecte-out/components.md`, `architecte-out/decisions/`,
-  `architecte-out/design-impact.md`), designer
-  (`designer-out/design-guidelines.md` = handoff design : réf. du design system synchronisé + guidelines).
+  (`cadrage-out/product-brief.md`, `glossaire.md`, `spec-index.md`,
+  `features-fonctionnels-brief/*.brief.md`), architecte
+  (`architecte-out/tech-stack.md`, `components.md`, `decisions/`, `design-impact.md`),
+  designer (`designer-out/design-guidelines.md`).
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
 ## Procédure
-1. **Capturer le repo SpecKit cible** : demander le chemin du repo cible (boucle 3-options).
-   L'écrire dans `assembly.target_repo`. C'est là qu'iront la constitution convergée, `CLAUDE.md`,
-   `specs/`. **Précondition — le repo doit déjà être initialisé** (`specify init --ai claude` lancé
-   par l'équipe) : il contient `.specify/` (scripts, templates, gabarit de constitution) et les
-   commandes `/speckit.*`. **Si `.specify/` est absent, refuser en clair** :
-   > « Avant la convergence, initialise le repo cible : lance `specify init --ai claude` dedans, puis
-   > relance `/assembleur:assembleur-init`. »
-   Ainsi l'assembleur **écrit après** `specify init` (le bon ordre) : sa constitution convergée
-   **remplace** le gabarit de SpecKit, sans risque d'être écrasée par un init ultérieur.
-2. **Installer les gabarits de convergence** dans `.factory/templates/` : copier depuis
-   le plugin `templates/` : `converged-constitution.md`, `project-claude-md.md`,
-   `feature-brief-3faces.md`, `spec-seed.md`, `glossary-consolidated.md`,
-   `coherence-report.md`, `review-guidelines.md`, `attack-plan.md`, `memory-index.md`.
-3. **Créer `assembleur-out/briefs/` et `assembleur-out/guidelines/`** (vides).
-4. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `assembly`
+1. **Installer les gabarits de convergence** dans `.factory/templates/` : copier depuis
+   le plugin `templates/` : `pre-constitution.md`, `spec-seed.md`, `feature-map.md`,
+   `technical-context.md`, `project-claude-md.md`, `memory-index.md`, `memory-domain.md`,
+   `memory-architecture.md`, `memory-design.md`, `memory-features.md`,
+   `coherence-report.md`, `attack-plan.md`.
+2. **Créer le dossier de sortie** `assembleur-out/` avec ses sous-dossiers `features/`
+   et `memory/` (vides).
+3. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `assembly`
    ci-dessous s'il est absent (read-modify-write + revalidation JSON) :
 
 ```json
 "assembly": {
   "phase": "init",
-  "target_repo": null,
-  "constitution_generated": false,
-  "claude_md_generated": false,
-  "glossary_consolidated": false,
-  "feature_faces": [],
+  "feature_seeds": [],
   "coherence_report": null,
-  "guidelines_generated": false,
-  "memory_index_generated": false,
-  "attack_plan": null,
-  "ci_generated": false,
   "coherence_validated": false,
-  "team_validated": false,
-  "linear_initialized": false,
-  "linear_issues": [],
-  "linear_project": null
+  "package_paths": {}
 }
 ```
 
-## Porte de sortie
-- `assembly.target_repo` renseigné **et** repo déjà initialisé par SpecKit (`.specify/` présent).
-- Les 9 gabarits de convergence sont dans `.factory/templates/`.
-- `assembleur-out/briefs/` et `assembleur-out/guidelines/` existent.
+## Vérification avant de conclure
+- Les gabarits de convergence sont dans `.factory/templates/`.
+- `assembleur-out/` (avec `features/` et `memory/`) existe.
 - Le manifeste contient le bloc `assembly` (`phase: "init"`), et reparse sans erreur.
 - Rien d'existant n'a été écrasé (idempotence).
 
 ## Règles invariantes
-- **Aucune décision de convergence.** Ce skill prépare ; il ne coud rien, ne génère aucune
-  constitution.
+- **Aucune décision de convergence.** Ce skill prépare ; il ne converge rien.
+- **Paquet seul.** Aucun repo cible ; tout ira dans `assembleur-out/`.
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/assembleur:assembleur` — coudre les 3 contrats par feature et générer le pack SpecKit.
+Étape suivante : `/assembleur:assembleur-convergence` — lire les 3 contrats en parallèle, les converger et produire le paquet de handoff SpecKit.

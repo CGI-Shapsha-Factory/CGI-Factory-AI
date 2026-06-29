@@ -47,23 +47,19 @@ Transforme le besoin fonctionnel en cadre technique et fige la séquence numéro
 
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
-| `designer-init` | installe les gabarits + sème la checklist de couverture | maquette validée + architecture validée + *Décisions à impact design* |
-| `designer` | atelier de couverture (fondation / expérience / technique) → **prompt Claude Design** + rapport de couverture | **arbitrage des choix d'expérience** (humain) |
+| `designer-init` | installe les gabarits + sème la checklist de couverture + crée `prompts/designer/` | maquette validée + architecture validée + *Décisions à impact design* |
+| `designer-atelier` | atelier de couverture (fondation / expérience / technique) → **prompt Claude Design** (corps seul, dans `prompts/designer/`) + rapport de couverture | **arbitrage des choix d'expérience** (humain) |
 | `designer-coherence` | valide le design system généré par Claude Design + produit le handoff design (réf. + guidelines) | **validation du système généré** (humain) |
 
-### Phase 4 — `assembleur` (convergence → SpecKit)
-Coud les 3 contrats par feature et amorce un repo SpecKit prêt à fabriquer.
+### Phase 4 — `assembleur` (convergence → paquet SpecKit)
+Lit les 3 contrats en parallèle, les converge, et produit un **paquet de handoff** dans `assembleur-out/` (il n'écrit jamais dans le repo cible).
 
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
-| `assembleur-init` | vérifie les 3 contrats validés + capture le repo SpecKit cible (déjà `specify init`) | 3 contrats validés |
-| `assembleur` | coud les 3 contrats par feature + cohérence + pack SpecKit (constitution, CLAUDE.md, briefs 3-faces, glossaire, MEMORY.md, seeds spec.md) | **garant de cohérence** (humain) |
-| `assembleur-amorce` | amorce la CI + le hook Linear (Todo → En cours) | **validation de l'équipe** (humain) |
-| `init-linear` | crée le projet + les features dans Linear (clé API dans `.env`) | après la porte équipe |
+| `assembleur-init` | vérifie les 3 contrats validés + installe les gabarits + crée `assembleur-out/` | 3 contrats validés |
+| `assembleur-convergence` | lit les 3 contrats **en parallèle** + converge + produit le paquet (pré-constitution, graines spec, carte des features, contexte technique, CLAUDE.md, mémoire) + résout les points en session | **garant de cohérence** (humain) |
 
-**Handoff final** : le repo est déjà initialisé (`specify init --ai claude`) et la constitution convergée
-en place → enchaîner les `/speckit.specify` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks`
-→ `/speckit.implement` ; les features sont suivies dans Linear.
+**Handoff final** : l'équipe prend le paquet de `assembleur-out/` → `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) → les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 
 **Repère** : pour savoir où tu en es dans une phase, lance son skill de bilan/cohérence
 (`cadrage-completude`, `architecte-coherence`, `designer-coherence`, ou le rapport de cohérence de l'assembleur).

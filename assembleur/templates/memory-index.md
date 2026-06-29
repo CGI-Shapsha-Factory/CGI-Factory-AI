@@ -1,23 +1,25 @@
 # MEMORY.md — index mémoire projet
 
-<!-- Index pour les sessions Claude Code sur CE projet (repo SpecKit). Pointeurs, pas de
-     contenu dupliqué. Tenu à jour quand un contrat évolue. -->
+<!-- Livré en `assembleur-out/memory/MEMORY.md`. Index concis (≤ 200 lignes) : des POINTEURS, pas
+     de contenu dupliqué. L'équipe le copie (avec le reste du paquet) dans le repo de fabrication.
+     Les fichiers thématiques sont chargés à la demande. Contenu seul. -->
 
-## Contrats (3 faces)
-- **Fonctionnel** : `specs/` (briefs 3-faces), `GLOSSARY.md`.
-- **Technique** : `conventions/`, ADR de référence, stack (voir constitution P-technique).
-- **Design** : design system **synchronisé depuis Claude Design** (`/design-sync`) + guidelines (états,
-  patterns d'erreur, socle a11y) ; réf. dans `design-guidelines.md`.
+## Le projet en une phrase
+[Ce que fait le produit.]
+
+## Contrats (3 faces) — où regarder
+- **Fonctionnel** : les graines `features/<id>-…spec-seed.md` (User Scenarios + FR) ; langage = `memory/domain.md`.
+- **Technique** : `technical-context.md` + `memory/architecture.md` (stack, composants, ADR, conventions).
+- **Design** : `memory/design.md` (design system synchronisé + états + erreurs + a11y).
 
 ## Constitution
-`.specify/memory/constitution.md` — principes non négociables (P1..Pn) + gouvernance.
+`pre-constitution.md` — principes non négociables (P1..Pn) + gouvernance. (Donnée à `/speckit.constitution`.)
 
-## Décisions
-- **ADR** (technique) : [ADR-001 — titre, …]
-- **DDR** (design) : [DDR-001 — titre, …]
+## Découpage
+`feature-map.md` — séquence, couplage/dépendances, walking skeleton (feature `001`).
 
-## Features (3 faces, par ordre de séquence)
-| Feature | spec | walking skeleton |
-|---------|------|------------------|
-| 001 — [..] | `specs/001-…/spec.md` | oui |
-| 002 — [..] | `specs/002-…/spec.md` | non |
+## Fichiers mémoire (chargés à la demande)
+- `memory/domain.md` — langage ubiquitaire & entités.
+- `memory/architecture.md` — stack, composants, décisions, conventions, qualité.
+- `memory/design.md` — design system, états, accessibilité.
+- `memory/features.md` — séquence & 3 faces par feature.

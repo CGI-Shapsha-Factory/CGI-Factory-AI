@@ -36,4 +36,4 @@
 - **Budget de performance** : limites qui contraignent le design (ex. éviter animations lourdes). — sinon **sans objet**.
 
 ---
-*Consommé par `/designer:designer` (pré-remplit le versant technique de la checklist de couverture).*
+*Consommé par `/designer:designer-atelier` (pré-remplit le versant technique de la checklist de couverture).*

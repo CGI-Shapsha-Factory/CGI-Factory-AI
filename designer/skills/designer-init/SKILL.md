@@ -31,8 +31,9 @@ avec un bloc `design` orienté **couverture** (checklist pré-remplie par les ha
 ## Procédure
 1. **Installer les gabarits** dans `.factory/templates/` (copier depuis le plugin `templates/`) :
    `coverage-checklist.md`, `coverage-report.md`, `claude-design-prompt.md`, `design-guidelines.md`.
-   *(Le plugin ne crée plus de dossier `design-system/` ni de seed de tokens : le design system naît dans
-   Claude Design.)*
+   **Créer le dossier des prompts** `prompts/designer/` à la racine du projet (il recevra le prompt Claude
+   Design en fichier plat). *(Le plugin ne crée plus de dossier `design-system/` ni de seed de tokens : le
+   design system naît dans Claude Design.)*
 2. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `design` ci-dessous s'il est
    absent (read-modify-write + revalidation JSON), en **semant la checklist** avec les items canoniques
    de `coverage-checklist.md` au statut `open` :
@@ -60,6 +61,7 @@ des **gestes humains** (jamais auto).*
 
 ## Porte de sortie
 - Les 4 gabarits sont dans `.factory/templates/`.
+- Le dossier `prompts/designer/` existe à la racine du projet (prêt à recevoir le prompt Claude Design).
 - Le manifeste contient le bloc `design` (`phase: "init"`, checklist semée), et reparse sans erreur.
 - Rien d'existant n'a été écrasé (idempotence).
 
@@ -67,4 +69,4 @@ des **gestes humains** (jamais auto).*
 - **Aucune décision de design** ni génération de design system. Ce skill prépare l'atelier.
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/designer:designer` — dérouler la checklist de couverture (fondation, expérience, technique) et produire le prompt Claude Design.
+Étape suivante : `/designer:designer-atelier` — dérouler la checklist de couverture (fondation, expérience, technique) et produire le prompt Claude Design.
