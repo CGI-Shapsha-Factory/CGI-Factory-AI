@@ -15,10 +15,10 @@ Le skill `architecte` a produit le contrat (`architecture.phase = "contrat"`).
 Sinon, orienter en clair vers `/architecte:architecte`.
 
 ## Entrées
-Les artefacts d'architecture dans `factory-docs/work/` : `drivers-quality.md`,
+Les artefacts d'architecture dans `architecte-out/` : `drivers-quality.md`,
 `components.md`, `tech-stack.md`, `standards.md`, `decisions/ADR-*.md`,
 `diagrams.md`, `risks.md`, `design-impact.md` ; le dossier `conventions/` ; les
-briefs `*.brief.md` ; le manifeste.
+briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md` ; le manifeste.
 
 ## Contrôles de cohérence
 1. **Composants ↔ stack** : chaque composant de `components.md` a une ligne dans la
@@ -44,7 +44,7 @@ il échoue si une réponse bloquante manque, si un langage retenu n'a pas son fi
 de conventions, ou si la section `Décisions à impact design` n'est pas produite.
 
 ## Sortie
-- Un **rapport de cohérence** `factory-docs/work/coherence-report.md` : statut par
+- Un **rapport de cohérence** `architecte-out/coherence-report.md` : statut par
   contrôle (atteint / non atteint) avec la raison, et la liste de ce qui manque
   (actionnable, relié à l'étape/skill qui le résout).
 - Affichage en chat d'un **tableau de synthèse** (cohérent / à corriger / manquant).

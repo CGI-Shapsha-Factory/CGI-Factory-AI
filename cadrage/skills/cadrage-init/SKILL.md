@@ -11,9 +11,10 @@ gabarits installés et le manifeste. Tous les autres skills supposent qu'il a d�
 
 ## Objectif
 
-Rendre un projet client **prêt à être cadré** : un workspace `factory-docs/`
-auto-portant (gabarits inclus), un dossier `factory-prompts/` pour les prompts
-générés, et un manifeste initialisé.
+Rendre un projet client **prêt à être cadré** : un dossier caché **`.factory/`**
+(manifeste + gabarits, la mécanique interne), un dossier de sortie **`cadrage-out/`**
+à la racine pour les documents générés, un dossier `factory-prompts/` pour les
+prompts générés, et un manifeste initialisé.
 
 ## Pré-requis (vérification silencieuse)
 
@@ -27,23 +28,23 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 > c'est plus cohérent. Ici, `project` reste `null` dans le manifeste, à renseigner
 > par `cadrage-extraction`. **Le nom du client n'est jamais demandé ni stocké.**
 
-1. **Créer l'arborescence** à la racine du projet client (workspace **à plat** :
-   tous les artefacts vivent dans `work/`, sans sous-dossiers de phase) :
+1. **Créer l'arborescence** à la racine du projet client :
    ```
-   factory-docs/
+   .factory/                (caché — la mécanique interne)
    ├── manifest.json        (fichier — contrat machine)
-   ├── templates/           (copies blanches des gabarits installés)
-   └── work/                (tous les artefacts remplis, à plat)
-   factory-prompts/         (sibling de factory-docs — prompts générés)
+   └── templates/           (copies blanches des gabarits installés)
+   cadrage-out/             (documents générés par le cadrage, à la racine)
+   └── features-fonctionnels-brief/   (un brief par feature)
+   factory-prompts/         (prompts générés)
    ```
-2. **Installer les gabarits** dans `factory-docs/templates/` : copier les gabarits
+2. **Installer les gabarits** dans `.factory/templates/` : copier les gabarits
    du plugin (`project-frame.md`, `product-brief.md`, `feature-brief.md`,
-   `spec-index.md`, `coupling-map.md`, `glossaire.md`, `pre-constitution.md`). Ce
-   sont les copies de travail du projet — les skills les lisent depuis là. Copier
-   aussi la référence des questions de découverte (`discovery-questions.md`) dans
-   `factory-docs/templates/`. Puis **créer `factory-docs/work/` vide** ; les
-   artefacts s'y déposeront au fil des skills.
-3. **Écrire le manifeste** `factory-docs/manifest.json` (squelette ci-dessous ;
+   `spec-index.md`, `coupling-map.md`, `glossaire.md`). Ce sont les copies de
+   travail du projet — les skills les lisent depuis là. Copier aussi la référence
+   des questions de découverte (`discovery-questions.md`) dans `.factory/templates/`.
+   Puis **créer `cadrage-out/` (avec son sous-dossier `features-fonctionnels-brief/`)
+   vide** ; les artefacts s'y déposeront au fil des skills.
+3. **Écrire le manifeste** `.factory/manifest.json` (squelette ci-dessous ;
    laisser `project` à `null` — il sera renseigné par `cadrage-extraction` ; pas de
    champ `client` ; dates en ISO 8601, laisser le reste neutre).
 4. **Laisser `factory-prompts/` vide** : il se remplit au fil des prompts générés
@@ -57,13 +58,12 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
   "phase": "init",
   "sources": [],
   "artifacts": {
-    "capture_brute": { "path": "factory-docs/work/capture-brute.md", "status": "draft" },
-    "project_frame": { "path": "factory-docs/work/project-frame.md", "status": "draft" },
-    "product_brief": { "path": "factory-docs/work/product-brief.md", "status": "draft" },
-    "glossaire": { "path": "factory-docs/work/glossaire.md", "terms": 0, "validated_terms": 0 },
-    "spec_index": { "path": "factory-docs/work/spec-index.md", "features": 0, "arbitrated": false },
-    "briefs": [],
-    "pre_constitution": { "path": "factory-docs/work/pre-constitution.md", "status": "absent" }
+    "capture_brute": { "path": "cadrage-out/capture-brute.md", "status": "draft" },
+    "project_frame": { "path": "cadrage-out/project-frame.md", "status": "draft" },
+    "product_brief": { "path": "cadrage-out/product-brief.md", "status": "draft" },
+    "glossaire": { "path": "cadrage-out/glossaire.md", "terms": 0, "validated_terms": 0 },
+    "spec_index": { "path": "cadrage-out/spec-index.md", "features": 0, "arbitrated": false },
+    "briefs": []
   },
   "demonstrateur": {
     "current_version": 0,
@@ -96,7 +96,7 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
     "all_briefs_complete": false,
     "no_blocking_gaps": false,
     "demonstrateur_converged": false,
-    "ready_for_speckit": false
+    "cadrage_complete": false
   }
 }
 ```
@@ -115,10 +115,11 @@ création/mise à jour du manifeste, pas la date d'une source.
 
 ## Résultat attendu
 
-- `factory-docs/` (avec `templates/` et `work/` à plat) et `factory-prompts/`
-  existent ; `work/` est créé et vide.
-- `factory-docs/templates/` contient les 7 gabarits installés.
-- `factory-docs/manifest.json` reparse sans erreur, `phase = "init"`.
+- `.factory/` (avec `manifest.json` et `templates/`), `cadrage-out/` (avec
+  `features-fonctionnels-brief/`) et `factory-prompts/` existent ; `cadrage-out/`
+  est créé et vide.
+- `.factory/templates/` contient les 6 gabarits installés.
+- `.factory/manifest.json` reparse sans erreur, `phase = "init"`.
 - `project` est à `null` (il sera renseigné par `cadrage-extraction`) ; pas de champ `client`.
 - Rien d'existant n'a été écrasé (idempotence).
 

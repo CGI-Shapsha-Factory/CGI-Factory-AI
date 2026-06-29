@@ -9,7 +9,8 @@ ADR**, puis la **validation de cohérence**.
 ## Principe
 L'IA propose et structure, **l'humain tranche**. Tout en **français**. Le plugin
 ne contient **que des skills** (pas de commande slash). Il lit les artefacts de
-cadrage et écrit dans le **workspace partagé** `factory-docs/`.
+cadrage depuis `cadrage-out/` et écrit ses propres sorties dans `architecte-out/`
+(manifeste et gabarits dans `.factory/`).
 
 ## Les 3 skills, dans l'ordre
 | # | Skill | Rôle | Porte d'entrée |
@@ -19,10 +20,11 @@ cadrage et écrit dans le **workspace partagé** `factory-docs/`.
 | 2 | `architecte-coherence` | **Validation de cohérence** (composants↔stack↔ADR↔diagrammes↔features) + rapport + garde-fou déterministe | contrat produit |
 
 ## Entrées (depuis `cadrage`)
-`factory-docs/work/` : `project-frame.md` (Q1–Q13 + *seeds qualité*), `product-brief.md`,
-`glossaire.md`, `spec-index.md`, `*.brief.md`, `pre-constitution.md`.
+`cadrage-out/` : `project-frame.md` (Q1–Q13 + *seeds qualité*), `product-brief.md`,
+`glossaire.md`, `spec-index.md`, et les briefs sous
+`cadrage-out/features-fonctionnels-brief/*.brief.md`.
 
-## Sorties (dans `factory-docs/work/`)
+## Sorties (dans `architecte-out/`)
 `drivers-quality.md`, `components.md`, `tech-stack.md`, `standards.md`,
 `decisions/ADR-*.md`, `diagrams.md`, `risks.md`, `coherence-report.md` ; + le dossier
 `conventions/` (à la racine du projet) avec les **vrais fichiers de config** par

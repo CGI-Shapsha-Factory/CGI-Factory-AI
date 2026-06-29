@@ -32,12 +32,18 @@ Linear. Ce sont des **skills Markdown** ; pas de build/test.
 Mappe les deux portes humaines (cohérence, validation équipe) + un setup déterministe + l'effet Linear isolé.
 
 ## Workspace & manifeste
-Lit le **workspace partagé** `factory-docs/work/` (sorties des 3 plugins). Écrit :
+Lit les sorties des 3 plugins amont : `cadrage-out/` (product-brief, glossaire, spec-index,
+`features-fonctionnels-brief/*.brief.md`), `architecte-out/` (tech-stack, components, standards,
+drivers-quality, design-impact, `decisions/`), `designer-out/` (design-guidelines, coverage-report).
+Le manifeste et les gabarits vivent dans `.factory/` (`.factory/manifest.json`, `.factory/templates/`).
+Écrit :
 - dans le **repo SpecKit cible** (`target_repo`) : `.specify/memory/constitution.md`,
   `CLAUDE.md`, `specs/NNN-feature/spec.md`, `GLOSSARY.md`, `MEMORY.md`,
   `.github/workflows/factory-checks.yml` ;
-- dans `factory-docs/work/` : `briefs/NNN-feature.brief.md` (3-faces), `coherence-report.md`,
-  `guidelines/`, `attack-plan.md`.
+- dans `assembleur-out/` (ses propres sorties de travail) : `briefs/NNN-feature.brief.md` (3-faces),
+  `coherence-report.md`, `guidelines/`, `attack-plan.md`, `linear-features.json`.
+**L'assembleur dérive lui-même la constitution convergée** des fichiers bruts du cadrage (pas de
+pré-constitution) : il reste le point de convergence/handoff produisant la `converged-constitution`.
 Le manifeste reçoit un bloc **`assembly`**. Écriture = read-modify-write + revalidation JSON.
 
 ## Convergence (mapping 3 faces → SpecKit)
@@ -70,7 +76,7 @@ personnelle dans `.env`** + API GraphQL, **après la porte** ; couvre aussi la t
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python scripts/check_assembly.py <projet>/factory-docs/manifest.json
+python scripts/check_assembly.py <projet>/.factory/manifest.json
 ```
 
 ## Invariants

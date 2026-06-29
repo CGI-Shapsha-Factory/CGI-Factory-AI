@@ -1,8 +1,9 @@
 # Cadrage Amont
 
 Plugin Claude qui **industrialise la phase amont d'un projet spec-driven**. Il
-transforme de la matière brute — transcripts Notion, fichiers texte — en un repo
-SpecKit prêt à lancer : une pré-constitution, un brief par feature, un spec index.
+transforme de la matière brute — transcripts Notion, fichiers texte — en un **pack
+fonctionnel** repris par l'architecte : vision, glossaire, découpage, un brief par
+feature. Tout est écrit dans `cadrage-out/` (la mécanique interne vit dans `.factory/`).
 
 Il couvre deux travaux distincts : **capter la vision produit**, puis la
 **découper en features cohérentes et fabricables**.
@@ -15,16 +16,16 @@ Il couvre deux travaux distincts : **capter la vision produit**, puis la
 
 Chaque skill fait une chose et est **invocable seul**. La cohérence ne vient pas
 d'un orchestrateur, elle vient d'un fichier d'état unique, le **manifeste**
-(`factory-docs/manifest.json`), que tous les skills lisent et mettent à
+(`.factory/manifest.json`), que tous les skills lisent et mettent à
 jour en read-modify-write. Chaque skill vérifie ses **pré-requis** en silence avant
 d'agir et contrôle sa sortie avant d'écrire le manifeste — sans jamais exposer de
 « porte » à l'utilisateur.
 
-## Les onze skills, dans l'ordre du pipeline
+## Les dix skills, dans l'ordre du pipeline
 
 | # | Skill | Rôle | Pré-requis |
 |---|-------|------|----------------|
-| 0 | `cadrage-init` | Amorce le workspace `factory-docs/` + `factory-prompts/`, installe les gabarits, crée le manifeste | aucune (projet vierge) |
+| 0 | `cadrage-init` | Amorce `.factory/` (manifeste + gabarits) + `cadrage-out/` + `factory-prompts/` | aucune (projet vierge) |
 | 1 | `cadrage-extraction` | Matière brute → `capture-brute.md` (contenu, sans horodatage ni src) + **passe découverte** (13 questions, interactif) → `project-frame.md` | manifeste existe + une source déclarée |
 | 2 | `cadrage-vision` | Capture → `product-brief.md` (le quoi, le pourquoi) | capture_brute existe |
 | 3 | `cadrage-glossaire` | Construit le langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes), validé en bloc | capture_brute existe |
@@ -33,15 +34,15 @@ d'agir et contrôle sa sortie avant d'écrire le manifeste — sans jamais expos
 | 6 | `cadrage-retour-demonstrateur` | Ingère le retour client, résout et **invalide** les points | retour disponible |
 | 7 | `cadrage-clarification` | Repose en session les questions restées sans réponse | ≥1 point à clarifier |
 | 8 | `cadrage-briefs` | Un brief auto-portant par feature (contrat central) | **decoupage_arbitrated ET demonstrateur_converged** |
-| 9 | `cadrage-completude` | Confronte le manifeste à la Definition of Ready | aucune |
-| 10 | `cadrage-handoff` | Prépare la pré-constitution + dépose briefs + spec index dans le repo SpecKit | **ready_for_speckit** |
+| 9 | `cadrage-completude` | **Étape terminale** : bilan Definition of Ready + résolution en session, puis relais vers l'architecte | aucune |
 | — | `help-factory` | Aide unique : carte des 4 plugins, un tableau par plugin (rôle, ordre, décisions humaines) | aucune |
 
 Flux nominal : extraction → vision & glossaire → decoupage → **prompt
 démonstrateur → maquette (Claude Design) → balayage client → atelier de
 validation → retour → réjeu incrémental → prompt adaptatif → maquette**, en
 boucle jusqu'à `demonstrateur_converged` → **revue de couplage humaine** → briefs
-→ completude → handoff quand tout est prêt pour SpecKit.
+→ completude → **`/architecte:architecte-init`**. Il n'y a **plus de skill handoff** :
+l'architecte (puis l'assembleur) lisent directement les fichiers de `cadrage-out/`.
 
 ### La boucle démonstrateur (incrémentale)
 
@@ -68,8 +69,8 @@ Design). Deux propriétés clés :
   proposition **en session** ; les décisions sont écrites **en place** dans la
   carte de couplage, puis `arbitrated` passe à vrai. Un réjeu de découpage qui
   change matériellement la proposition **réinitialise** cet arbitrage.
-- **Prêt pour SpecKit** — `ready_for_speckit`, calculée par `completude`. Sans
-  elle, `handoff` ne tourne pas.
+- **Cadrage terminé** — `cadrage_complete`, calculée par `completude` : c'est la
+  dernière étape avant l'architecte, qui lit ensuite directement `cadrage-out/`.
 
 Ces conditions sont vérifiées **en silence**, jamais affichées comme des « portes ».
 `cadrage-briefs` requiert `decoupage_arbitrated` **et** `demonstrateur_converged` —
@@ -98,12 +99,12 @@ un brief dérive d'une vision stable.
   **résout en session** en posant la question. Seul `[REMIS EN CAUSE]` subsiste
   dans un artefact (acquis contredit par un retour).
 - **Deux altitudes de validation.** La direction produit se valide une fois, par
-  le prototype, hors plugin. La spécification se valide par feature, au niveau du
-  brief et de `/speckit.clarify`, après le handoff.
-- **Frontière des artefacts.** Documents de travail (vision, glossaire,
-  pré-constitution) → workspace `factory-docs/`. Artefacts de fabrication (briefs,
-  spec index) → markdown dans le repo SpecKit ; la constitution finale est générée
-  par SpecKit. Le skill `cadrage-handoff` matérialise la frontière.
+  le prototype, hors plugin. La spécification se valide par feature, plus tard dans
+  la chaîne (architecte → assembleur → SpecKit).
+- **Frontière des artefacts.** Tous les documents du cadrage (vision, glossaire,
+  découpage, briefs) sont écrits dans `cadrage-out/` ; la mécanique (manifeste,
+  gabarits) vit dans `.factory/`. L'architecte puis l'assembleur lisent directement
+  ces fichiers ; la constitution finale convergée est produite par l'assembleur.
 - **Skills indépendants.** Pas d'orchestrateur monolithique. La cohérence vient
   du manifeste.
 
@@ -117,28 +118,28 @@ cadrage/
 ├── scripts/                       # check_discovery.py (garde-fou déterministe)
 ├── templates/                     # gabarits EN des artefacts (project-frame, product-brief,
 │                                  #   feature-brief ← contrat central, spec-index, coupling-map,
-│                                  #   glossaire, pre-constitution)
+│                                  #   glossaire)
 └── README.md
 ```
 
 Le **contrat central** est `templates/feature-brief.md` : l'artefact
 dont tout le pipeline dépend. `cadrage-briefs` le produit, `cadrage-completude`
-le valide, SpecKit le consomme. Il doit être auto-portant. **Templates en anglais**
-(lus par le LLM) ; **interaction en français** (questions, refus, résumés).
+le valide, l'architecte puis l'assembleur le reprennent. Il doit être auto-portant.
+**Templates en anglais** (lus par le LLM) ; **interaction en français**.
 
 ## Workspace du projet client (créé par `cadrage-init`)
 
-Structure **plate** :
 ```
-factory-docs/
-├── manifest.json     # état machine du projet
-├── templates/        # copies des gabarits installées dans le projet
-└── work/             # TOUS les artefacts à plat (capture-brute, project-frame,
-                      #   product-brief, glossaire, spec-index, coupling-map,
-                      #   00X-*.brief.md, pre-constitution, completude-report)
-factory-prompts/      # prompts générés, en <NNN>-<JJ-MM>-<nom>/
+.factory/                          # caché — la mécanique interne
+├── manifest.json                  # état machine du projet
+└── templates/                     # copies des gabarits installées dans le projet
+cadrage-out/                       # documents générés par le cadrage (à la racine)
+├── capture-brute, project-frame, product-brief, glossaire,
+│   spec-index, coupling-map, completude-report
+└── features-fonctionnels-brief/   # un brief par feature (<feature>.brief.md)
+factory-prompts/                   # prompts générés, en <NNN>-<JJ-MM>-<nom>.md (fichiers plats)
 ```
 `cadrage-init` **ne demande aucun nom** ; c'est `cadrage-extraction` qui demande le **nom du projet** (le nom du client n'est jamais collecté).
-Le plugin est l'outil ; `factory-docs/` et `factory-prompts/` portent l'état et
-les livrables d'UN projet client. La **constitution finale** n'est pas produite
-ici : SpecKit la génère à partir de `factory-docs/work/pre-constitution.md`.
+Le plugin est l'outil ; `.factory/`, `cadrage-out/` et `factory-prompts/` portent l'état
+et les livrables d'UN projet client. La **constitution finale** convergée est produite
+plus tard par l'assembleur, pas ici.

@@ -14,12 +14,18 @@ Le manifeste garde ses clés (contrat machine), mais le **texte affiché** et le
 | `all_briefs_complete` | « tous les briefs sont complets » |
 | `no_blocking_gaps` | « aucun point bloquant ouvert » |
 | `demonstrateur_converged` | « le prototype est validé par le client » |
-| `ready_for_speckit` | « prêt pour SpecKit » |
+| `cadrage_complete` | « le cadrage est terminé, prêt pour l'architecte » |
 | `discovery_complete` | « toutes les questions de cadrage sont répondues » |
 | `validation_points[]` | « les points à clarifier » |
 | `arbitrated: false` | « proposition — revue de couplage pas encore faite » |
 
 Ne jamais afficher de tableau de booléens bruts (ex. `decoupage_arbitrated == true`).
+
+**Règle absolue (jamais d'exception, même dans une explication ou une justification) :**
+on **n'écrit jamais** un nom de variable / clé du manifeste dans le texte vu par
+l'utilisateur — pas `all_briefs_complete`, pas `cadrage_complete`, pas
+`demonstrateur_converged`, etc. On reformule **toujours** en clair. Phrase interdite type
+« all_briefs_complete = false à cause de… » → dire « il reste un brief à compléter… ».
 
 **Interdiction stricte de surfacer toute mécanique interne.** Ne **jamais** parler de
 « porte » / « porte d'entrée » / gate / drapeau, ni afficher un statut de pré-requis
@@ -48,12 +54,21 @@ humaine). À l'oral on dit « à confirmer », « remis en cause », etc. — ja
 anglaises (`[TBD]`, `[TO CONFIRM]`…).
 
 ## 3bis. Fichiers prompt sauvegardés = corps seul, prêt à coller
-Tout prompt écrit sous `factory-prompts/…/prompt.md` contient **uniquement le prompt
+Tout prompt écrit sous `factory-prompts/….md` contient **uniquement le prompt
 prêt à coller** dans Claude Design. **Interdit** dans le fichier : titre (`# Prompt
 Claude Design — …`), ligne `Date : … | Mode : … | Version : …`, `---` d'en-tête, ou
 toute autre métadonnée. La métadonnée (mode, version, date, sujet) vit dans l'entrée
 `prompts[]` du manifeste, **jamais** dans le fichier. Objectif : l'utilisateur ouvre
 le fichier et copie tout, sans rien nettoyer.
+
+## 3ter. Jamais d'identifiant codé ni de marqueur technique en sortie
+Le PO ne connaît ni ne retient les identifiants. **Interdit** en sortie utilisateur :
+- les **codes** type `B1`, `B2`, `A6`, `UC1`, `UC2`… — toujours nommer la chose **en
+  clair** (« la validation de conformité par le bâtonnier », « le use case de recherche
+  documentaire »), jamais par son code interne ;
+- les **marqueurs techniques** comme `[À CHIFFRER]`. On garde l'**information** mais en
+  **phrase naturelle adaptée au PO** (ex. « cette capacité reste à préciser plus tard
+  avec l'équipe technique ») — l'architecte relira l'orientation dans l'artefact.
 
 ## 4. Langage produit (non technique) pour le découpage
 Dans les affichages de découpage/vision, parler **valeur et usage** (style Product
@@ -66,7 +81,7 @@ Terminer **chaque** exécution par exactement une phrase :
 ## 6. Langue
 **Tout en français** : interaction (questions, refus, résumés, tableaux affichés)
 ET artefacts/templates. Seules les clés/valeurs machine du manifeste restent des
-identifiants (`status`, `pending`, `ready_for_speckit`…).
+identifiants (`status`, `pending`, `cadrage_complete`…).
 
 ## 7. Expliquer les termes du framework à leur première apparition
 Tout terme propre à la factory — **walking skeleton, contrainte transverse, démonstrateur,

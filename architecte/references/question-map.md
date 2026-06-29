@@ -2,7 +2,7 @@
 
 Lue par le skill `architecte` (étape de vérification). Pour chaque question
 structurante d'architecture, indique **où la réponse se trouve déjà** dans les
-artefacts de cadrage (`factory-docs/work/`). Le skill auto-remplit depuis ces
+artefacts de cadrage (`cadrage-out/`). Le skill auto-remplit depuis ces
 champs (avec `(src: …)`) et ne **pose** (boucle 3-options) que les questions
 **non couvertes**. Une question bloquante non répondue empêche de démarrer la
 génération des fichiers d'architecture.

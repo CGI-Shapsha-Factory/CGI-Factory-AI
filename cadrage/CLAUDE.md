@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 ## Ce qu'est le plugin
 `cadrage` industrialise la **phase amont** (contrat fonctionnel) d'un projet
 spec-driven : il transforme la **matière brute** d'un atelier (transcripts, docs)
-en un pack prêt pour **SpecKit** — pré-constitution, brief par feature, spec index.
+en un **pack fonctionnel** (vision, glossaire, découpage, brief par feature) repris en aval par l'architecte.
 Ce n'est **pas un projet applicatif** : ce sont des **skills Markdown** + un
 `plugin.json`. Pas de build, pas de lint, pas de tests unitaires.
 
@@ -18,7 +18,7 @@ python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='u
 # chaque skill a un frontmatter name
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
 # garde-fou découverte (sur le manifeste d'un projet)
-python scripts/check_discovery.py <projet>/factory-docs/manifest.json
+python scripts/check_discovery.py <projet>/.factory/manifest.json
 ```
 Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 
@@ -32,7 +32,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 
 | # | skill | rôle | porte |
 |---|-------|------|-------|
-| 0 | `cadrage-init` | crée `factory-docs/{templates,work}` + manifeste (le nom du projet est demandé par `cadrage-extraction`) | aucune |
+| 0 | `cadrage-init` | crée `.factory/` (manifeste + gabarits) + `cadrage-out/` (le nom du projet est demandé par `cadrage-extraction`) | aucune |
 | 1 | `cadrage-extraction` | matière brute (fichier/multi/dossier ; .txt/.md/.pdf/.docx) → `capture-brute.md` (contenu, **sans horodatage ni src**) + **passe découverte** (13 questions, interactive) → `project-frame.md` | manifeste existe + 1 source |
 | 2 | `cadrage-vision` | capture → `product-brief.md` (quoi/pourquoi, sans techno) | capture existe |
 | 3 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
@@ -41,39 +41,41 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | 6 | `cadrage-retour-demonstrateur` | ingère le retour client, résout/invalide | retour dispo |
 | 7 | `cadrage-clarification` | repose en session, une à une, les questions restées sans réponse | questions ouvertes |
 | 8 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
-| 9 | `cadrage-completude` | confronte à la Definition of Ready ; rapport + **tableau + résumé d'état** en chat ; résolution interactive | aucune (rejouable) |
-| 10 | `cadrage-handoff` | pré-constitution + briefs + spec index → repo SpecKit + plan de séquencement ; **expose le handoff designer** (parcours = spec-index, entités affichées = glossaire, maquette = direction) | **prêt pour SpecKit** |
+| 9 | `cadrage-completude` | **étape terminale** : bilan Definition of Ready (résumé en prose, **jamais de tableau**) + résolution interactive en place, puis relais vers l'architecte | aucune (rejouable) |
 
 Flux : `cadrage-init` → `extraction` → (`vision` ∥ `glossaire`) → `decoupage` →
 **boucle démonstrateur** [`demonstrateur-brief` ⟳ `clarification` → `retour-demonstrateur`]
-jusqu'à convergence → **revue de couplage humaine** → `briefs` → `completude` → `handoff`.
+jusqu'à convergence → **revue de couplage humaine** → `briefs` → `completude` → **`/architecte:architecte-init`**.
 `completude` et `clarification` sont rejouables à tout moment. Aide : `/cadrage:help-factory`.
+**Plus de skill handoff** : l'architecte (puis l'assembleur) lisent directement les fichiers de `cadrage-out/` ; le handoff/convergence est le rôle de l'assembleur.
 
-## Workspace du projet client (structure plate)
+## Workspace du projet client
 ```
-factory-docs/
-├── manifest.json     # état machine du projet
-├── templates/        # gabarits FR installés (copies projet)
-└── work/             # TOUS les artefacts à plat : capture-brute, project-frame,
-                      #   product-brief, glossaire, spec-index, coupling-map,
-                      #   00X-*.brief.md, pre-constitution, completude-report
-factory-prompts/      # prompts générés, en <NNN>-<JJ-MM>-<nom>/
+.factory/                          # caché — la mécanique interne
+├── manifest.json                  # état machine du projet
+└── templates/                     # gabarits FR installés (copies projet)
+cadrage-out/                       # documents générés par le cadrage (à la racine)
+├── capture-brute, project-frame, product-brief, glossaire,
+│   spec-index, coupling-map, completude-report
+└── features-fonctionnels-brief/   # un brief par feature (<feature>.brief.md)
+factory-prompts/                   # prompts générés, en <NNN>-<JJ-MM>-<nom>.md (fichiers plats)
 ```
-Pas de sous-dossiers numérotés. Le pack SpecKit du handoff se dépose dans le **repo cible**.
+Chaque plugin écrit dans son propre dossier de sortie à la racine (`cadrage-out/`,
+`architecte-out/`, `designer-out/`, `assembleur-out/`) et lit ceux de l'amont.
 
-## Schéma du manifeste (`factory-docs/manifest.json`)
+## Schéma du manifeste (`.factory/manifest.json`)
 Créé par `cadrage-init` uniquement. Blocs : `project`/dates ; `phase` ;
 `sources[]` ; `artifacts{}` (capture_brute, project_frame, product_brief, glossaire,
-spec_index{arbitrated}, briefs[], pre_constitution) ;
+spec_index{arbitrated}, briefs[]) ;
 `demonstrateur{client_validated, iterations[]}` ; `validation_points[]` (boucle démonstrateur
 uniquement — aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
 `discovery[]` (13 entrées Q1–Q13, statut answered|pending|deferred|na, **sans champ `source`**) + `discovery_complete` ;
-`definition_of_ready{}` (6 booléens) + `ready_for_speckit`. Écriture = read-modify-write
+`definition_of_ready{}` (6 booléens) + `cadrage_complete`. Écriture = read-modify-write
 + revalidation JSON.
 
 ## Invariants (à respecter dans tout skill)
 - **Proposer, trancher en session.** Les gates humaines (`decoupage_arbitrated`,
-  `client_validated`, `ready_for_speckit`) ne s'allument pas toutes seules ; mais
+  `client_validated`, `cadrage_complete`) ne s'allument pas toutes seules ; mais
   l'arbitrage de couplage se conduit **avec l'utilisateur dans le chat** et les
   décisions sont écrites **en place** (pas de journal séparé).
 - **Ne rien inventer, ne rien persister d'ouvert.** On ne s'appuie que sur la matière ;
@@ -89,7 +91,10 @@ uniquement — aucun point de découpage ouvert n'y est persisté) ; `prompts[]`
 - **Glossaire = termes du projet.** Le vocabulaire de construction du produit (entités,
   rôles, actions), pas les outils/acronymes de l'existant ; validé **en bloc**.
 - **Aucune mécanique exposée.** Jamais de « porte d'entrée », gate, RGPD/conformité
-  affichés à l'utilisateur (cf. `references/ux-conventions.md`).
+  affichés à l'utilisateur ; **jamais de nom de variable** (`all_briefs_complete`,
+  `cadrage_complete`…), **jamais d'identifiant codé** (`B1`, `UC1`, `A6`), **jamais de
+  marqueur** `[À CHIFFRER]` — on reformule tout en langage naturel adapté au PO
+  (cf. `references/ux-conventions.md`).
 
 ## Conventions d'interaction (voir `references/`)
 - **Boucle interactive** (`references/interactive-loop.md`) : une question à la fois —
@@ -115,8 +120,9 @@ wrappers `commands/` : un command homonyme d'un skill crée une boucle infinie
 (aide unique : la carte des 4 plugins, un tableau par plugin).
 
 ## Contrat central
-`templates/feature-brief.md` (10 sections, auto-portant). Produit par `cadrage-briefs`,
-validé par `cadrage-completude`, consommé par SpecKit. **Ne pas modifier sa structure.**
+`templates/feature-brief.md` (10 sections, auto-portant). Produit par `cadrage-briefs`
+(dans `cadrage-out/features-fonctionnels-brief/`), validé par `cadrage-completude`,
+repris par l'architecte puis l'assembleur. **Ne pas modifier sa structure.**
 
 ## Pour modifier un skill
 Chaque `SKILL.md` : objectif, entrées, pré-requis (vérification silencieuse), procédure,

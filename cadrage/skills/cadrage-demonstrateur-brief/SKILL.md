@@ -55,8 +55,8 @@ Un prompt médiocre donne une maquette médiocre. Pour produire un **prompt exce
 existe). Le découpage fournit les parcours clés. Si la direction est claire, on
 avance ; sinon on le dit en clair, sans exposer de mécanique interne de pré-requis.
 
-**Entrée.** `work/product-brief.md` et les parcours / activités utilisateur
-du `work/spec-index.md`.
+**Entrée.** `cadrage-out/product-brief.md` et les parcours / activités utilisateur
+du `cadrage-out/spec-index.md`.
 
 **Sortie.** Un prompt Claude Design (variante **initial** du gabarit) pour un
 **démonstrateur de validation de direction** : couvre les parcours clés (walking
@@ -84,11 +84,11 @@ rapide et ne pas casser l'acquis.
 
 ## Sauvegarde du prompt
 
-Écrire le prompt dans `factory-prompts/<NNN>-<JJ-MM>-<nom>/prompt.md` où `NNN` est le
+Écrire le prompt dans `factory-prompts/<NNN>-<JJ-MM>-<nom>.md` où `NNN` est le
 prochain numéro global (incrément du dernier `prompts[].n` du manifeste), `JJ-MM` la
 date du jour, et `<nom>` le sujet (ex. `demonstrateur-initial`, `demonstrateur-delta-v2`).
 
-**Le fichier `prompt.md` ne contient QUE le corps du prompt prêt à coller** (le bloc de
+**Le fichier sauvegardé ne contient QUE le corps du prompt prêt à coller** (le bloc de
 code du gabarit, rempli) : **aucun titre, aucune ligne `Date : … | Mode : … | Version :
 …`, aucun `---` d'en-tête** (cf. `references/ux-conventions.md`). La métadonnée (mode,
 version, date, sujet) vit dans l'entrée `prompts[]` du manifeste, jamais dans le
@@ -126,7 +126,7 @@ Read-modify-write puis revalidation JSON :
 - **Rendu professionnel, pas le design system final.** La maquette doit paraître
   crédible et finie pour valider la direction ; la charte exhaustive et les composants
   définitifs se figent plus tard, dans le plugin `designer`.
-- **Fichier prompt propre.** Le `prompt.md` sauvegardé = corps seul, prêt à coller.
+- **Fichier prompt propre.** Le fichier sauvegardé = corps seul, prêt à coller.
 - **Proposer, ne pas décider.** Le prompt propose ; le client valide la maquette,
   hors plugin.
 - **Skill indépendant.** Lit la vision / le retour et le manifeste, sans

@@ -18,11 +18,11 @@ Chaque skill se termine par une ligne « **Étape suivante** » qui indique quoi
 de proche en proche. Le design system naît dans **Claude Design** et passe au code via **`/design-sync`**.
 
 ### Phase 1 — `cadrage` (contrat fonctionnel)
-De la matière brute (transcripts, docs) au pack fonctionnel prêt pour SpecKit.
+De la matière brute (transcripts, docs) au pack fonctionnel repris par l'architecte.
 
 | # | skill | rôle | porte / ordre |
 |---|-------|------|---------------|
-| 0 | `cadrage-init` | crée le workspace `factory-docs/` + le manifeste | à lancer en premier |
+| 0 | `cadrage-init` | crée la mécanique `.factory/` + le dossier `cadrage-out/` + le manifeste | à lancer en premier |
 | 1 | `cadrage-extraction` | dépouille les sources en capture (contenu, sans horodatage) + pose les 13 questions de découverte | manifeste + ≥1 source |
 | 2 | `cadrage-vision` | synthétise la capture en vision produit (le quoi / le pourquoi) | capture existe |
 | 3 | `cadrage-glossaire` | construit le langage métier du projet, validé en bloc | capture existe |
@@ -30,9 +30,8 @@ De la matière brute (transcripts, docs) au pack fonctionnel prêt pour SpecKit.
 | 5 | `cadrage-demonstrateur-brief` | prompt Claude Design pour la maquette de validation | vision / retour dispo |
 | 6 | `cadrage-retour-demonstrateur` | ingère le retour client sur la maquette, propage les corrections | retour dispo |
 | 7 | `cadrage-clarification` | pose les questions restantes en session *(rejouable)* | ≥1 point à clarifier |
-| 8 | `cadrage-briefs` | brief auto-portant par feature, prêt pour SpecKit | couplage arbitré + maquette validée |
-| 9 | `cadrage-completude` | bilan Definition of Ready + résumé d'état *(rejouable)* | aucune |
-| 10 | `cadrage-handoff` | pré-constitution + briefs + spec index → repo ; expose le handoff designer | prêt pour SpecKit |
+| 8 | `cadrage-briefs` | brief auto-portant par feature (dans `cadrage-out/features-fonctionnels-brief/`) | couplage arbitré + maquette validée |
+| 9 | `cadrage-completude` | **étape terminale** : bilan + résolution en session, puis relais vers l'architecte | *(rejouable)* — fin du cadrage |
 
 ### Phase 2 — `architecte` (contrat technique)
 Transforme le besoin fonctionnel en cadre technique et fige la séquence numérotée des features.

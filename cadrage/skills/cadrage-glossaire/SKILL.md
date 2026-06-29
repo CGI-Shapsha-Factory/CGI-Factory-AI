@@ -28,13 +28,13 @@ référence au développement.
 
 ## Entrée
 
-- `factory-docs/work/capture-brute.md` (section 5, termes métier candidats,
+- `cadrage-out/capture-brute.md` (section 5, termes métier candidats,
   et le reste de la matière).
-- `factory-docs/work/product-brief.md` si présent (termes mobilisés par la
+- `cadrage-out/product-brief.md` si présent (termes mobilisés par la
   vision).
-- `factory-docs/work/glossaire.md` existant, pour le mode **incrémental**.
+- `cadrage-out/glossaire.md` existant, pour le mode **incrémental**.
 
-Gabarit de sortie : `factory-docs/templates/glossaire.md` (copie installée par cadrage-init).
+Gabarit de sortie : `.factory/templates/glossaire.md` (copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)
 
@@ -59,7 +59,7 @@ faut d'abord faire l'extraction, sans afficher de « porte ».
    validées, ajouter les nouveaux termes, et signaler toute nouvelle source qui
    contredirait une définition existante (`[REMIS EN CAUSE]`, pas écrasement).
 5. **Afficher le glossaire en session, puis valider EN BLOC.**
-   Une fois le glossaire généré et écrit dans `factory-docs/work/glossaire.md` :
+   Une fois le glossaire généré et écrit dans `cadrage-out/glossaire.md` :
    - **Afficher le glossaire dans le chat sous forme de tableau en français**
      (terme, définition dans les mots du client) — en langage clair, sans exposer
      de nom de colonne du manifeste ni d'identifiant technique
@@ -75,7 +75,7 @@ faut d'abord faire l'extraction, sans afficher de « porte ».
 
 ### Structure de `glossaire.md`
 
-Conforme à `factory-docs/templates/glossaire.md` : table (terme, définition dans les
+Conforme à `.factory/templates/glossaire.md` : table (terme, définition dans les
 mots du client, statut). **Pas de colonne source ni `structurant`**, pas de section
 « oui/non ». Une ambiguïté de sens se tranche en session, elle n'est pas persistée
 comme conflit ouvert.

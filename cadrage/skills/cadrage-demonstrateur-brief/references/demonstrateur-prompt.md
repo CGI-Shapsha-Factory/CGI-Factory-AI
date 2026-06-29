@@ -1,7 +1,7 @@
 # Gabarit — Prompt Claude Design du démonstrateur
 
 > Gabarit statique lu par `cadrage-demonstrateur-brief`. **Cet en-tête reste dans le
-> plugin** ; le fichier sauvegardé sous `factory-prompts/…/prompt.md` ne contient
+> plugin** ; le fichier sauvegardé sous `factory-prompts/….md` ne contient
 > **que le corps du prompt** (le bloc de code ci-dessous, rempli), sans titre ni
 > métadonnée — cf. `references/ux-conventions.md`.
 >

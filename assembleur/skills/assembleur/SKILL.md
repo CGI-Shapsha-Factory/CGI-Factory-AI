@@ -14,13 +14,15 @@ avec ses **3 faces complètes et non contradictoires**.
 `assembleur-init` a tourné (le manifeste contient le bloc `assembly` avec `target_repo`).
 Sinon, orienter en clair vers `/assembleur:assembleur-init`.
 
-## Entrées (les 3 contrats, dans `factory-docs/work/`)
-- **Fonctionnel (cadrage)** : `product-brief.md`, `glossaire.md`, `spec-index.md` (use cases),
-  `*.brief.md`, `pre-constitution.md`.
-- **Technique (architecte)** : `tech-stack.md`, `components.md`, `standards.md`,
+## Entrées (les 3 contrats)
+- **Fonctionnel (cadrage, `cadrage-out/`)** : `product-brief.md`, `glossaire.md`, `spec-index.md`
+  (use cases), `features-fonctionnels-brief/*.brief.md`. *(Pas de pré-constitution : l'assembleur
+  dérive lui-même la constitution convergée des fichiers bruts du cadrage — product-brief,
+  project-frame, glossaire, spec-index, briefs.)*
+- **Technique (architecte, `architecte-out/`)** : `tech-stack.md`, `components.md`, `standards.md`,
   `decisions/ADR-*.md`, `drivers-quality.md` (scénarios qualité QS) ; manifeste
   `architecture` (`feature_sequence`, `walking_skeleton`, `stack`).
-- **Design (designer)** : `design-guidelines.md` (handoff : **réf. du design system validé/synchronisé**
+- **Design (designer, `designer-out/`)** : `design-guidelines.md` (handoff : **réf. du design system validé/synchronisé**
   via `/design-sync` + guidelines — règles d'états, patterns d'erreur, socle a11y) + `coverage-report.md`.
   *(Le design system lui-même vit dans Claude Design ; pas de fichiers de tokens dans le repo factory.)*
 - Conventions : `references/interactive-loop.md`, `references/ux-conventions.md`,
@@ -44,7 +46,7 @@ MAJ `assembly.glossary_consolidated = true`.
   feature) : la face design = « les écrans de la feature dérivent du design system et suivent les guidelines » ;
 - **face technique** : composants/stack/ADR que la feature touche (architecte `components.md`).
 Une face n'est **complète** que si **tous** les `ucs` de la feature sont couverts. Écrire
-`factory-docs/work/briefs/<id>-feature.brief.md` (gabarit `templates/feature-brief-3faces.md`).
+`assembleur-out/briefs/<id>-feature.brief.md` (gabarit `templates/feature-brief-3faces.md`).
 MAJ `assembly.feature_faces[]` (`{feature: <id>, ucs, functional, technical, design, coherent}`).
 
 **Régénération idempotente (boucle de re-découpage).** Si l'équipe a re-découpé (retour
@@ -63,7 +65,7 @@ Contrôles :
 3. **Non-contradiction** : le design system + guidelines couvrent les composants/états requis par les
    parcours ; pas de parcours sans FR ni de FR sans parcours ; glossaire sans terme en conflit.
 4. **Aucun trou bloquant** : pas de `[À VALIDER]` bloquant dans une face.
-Écrire `factory-docs/work/coherence-report.md` (gabarit `templates/coherence-report.md`) :
+Écrire `assembleur-out/coherence-report.md` (gabarit `templates/coherence-report.md`) :
 statut par feature + contradictions. **Restituer en chat** ; l'humain valide. Ne **jamais**
 passer `assembly.coherence_validated` à vrai de soi-même. (Le garde-fou
 `scripts/check_assembly.py` couvre les contrôles 1 et 2 ; 3 et 4 sont arbitrés par l'humain.)
@@ -102,12 +104,12 @@ Given/When/Then ← parcours + brief), Functional Requirements (FR-xxx), Success
 (trous → `NEEDS CLARIFICATION`) + annexes face technique / face design.
 
 ### Étape 7 — Guidelines
-Écrire `factory-docs/work/guidelines/` (gabarit `templates/review-guidelines.md`) : guidelines
+Écrire `assembleur-out/guidelines/` (gabarit `templates/review-guidelines.md`) : guidelines
 de **review** par face (fonctionnelle / technique / design) + guidelines dev. MAJ
 `assembly.guidelines_generated = true`.
 
 ### Étape 8 — Plan d'attaque
-Écrire `factory-docs/work/attack-plan.md` (gabarit `templates/attack-plan.md`) : `specify init
+Écrire `assembleur-out/attack-plan.md` (gabarit `templates/attack-plan.md`) : `specify init
 --ai claude` → constitution déjà fournie → `/speckit.specify` par feature **dans l'ordre des
 dépendances** (walking skeleton d'abord, parallélisables signalées) → `/speckit.plan` →
 `/speckit.tasks` ; + étape CI + étape Linear (gated). MAJ `assembly.attack_plan` + `phase = "converge"`.

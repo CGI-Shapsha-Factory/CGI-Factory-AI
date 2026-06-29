@@ -17,7 +17,7 @@ orienter en clair vers `/assembleur:assembleur` (ou rappeler que la cohérence d
 être validée).
 
 ## Entrées
-Le bloc `assembly` (faces, plan d'attaque), `factory-docs/work/coherence-report.md`,
+Le bloc `assembly` (faces, plan d'attaque), `assembleur-out/coherence-report.md`,
 `attack-plan.md`, la `feature_sequence` (architecte) ; `references/linear-guide.md`.
 
 ## Procédure

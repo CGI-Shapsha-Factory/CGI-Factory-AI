@@ -72,7 +72,7 @@ Un collègue a pu **déjà initialiser** le projet : le flag local ne le voit pa
 Écrire `<target_repo>/.claude/linear-map.json` = liste `{feature, id, identifier, url, branch_slug}`
 (`id` = uuid, `branch_slug` = slug du nom). Elle permet au **hook `linear-start.py`** (généré par
 `assembleur-amorce`) de retrouver l'issue depuis la branche git **sans dépendre** du chemin
-`factory-docs/`. Indiquer la **convention de branche** : `<identifier>-<slug>` (ex.
+`.factory/`. Indiquer la **convention de branche** : `<identifier>-<slug>` (ex.
 `eng-123-recherche-qa`) — c'est la clé de résolution du hook **et** du filet natif Linear.
 
 ## Étape 5 — Restitution
@@ -84,7 +84,7 @@ Si `assembly.linear_initialized == true` (déjà fait sur cette machine) : affic
 et s'arrêter (pas de doublon). La recherche de l'étape 3 couvre, elle, le cas d'un collègue.
 
 ## Fallback (clé API absente / API indisponible)
-**Ne rien inventer.** Produire `factory-docs/work/linear-features.json` (une entrée par feature :
+**Ne rien inventer.** Produire `assembleur-out/linear-features.json` (une entrée par feature :
 `{ordre, feature, ucs, name, walking_skeleton, mvp, spec_path, depends_on}`) à importer manuellement, et
 le signaler.
 

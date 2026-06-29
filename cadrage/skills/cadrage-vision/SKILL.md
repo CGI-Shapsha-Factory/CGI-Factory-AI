@@ -17,9 +17,9 @@ dans la matière.
 
 ## Entrée
 
-`factory-docs/work/capture-brute.md` et `factory-docs/work/project-frame.md`
+`cadrage-out/capture-brute.md` et `cadrage-out/project-frame.md`
 (pour reprendre Q1 qui utilise, Q3 rôles, Q9 type de projet). Le gabarit de sortie
-est `factory-docs/templates/product-brief.md` (copie installée par cadrage-init).
+est `.factory/templates/product-brief.md` (copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)
 
@@ -50,7 +50,7 @@ afficher de « porte ».
 
 ### Sections du product brief
 
-Conformes à `factory-docs/templates/product-brief.md` : Problème, Objectif business,
+Conformes à `.factory/templates/product-brief.md` : Problème, Objectif business,
 Parties prenantes et rôles, Périmètre IN, Non-périmètre OUT (non vide),
 Contraintes, Critères de succès produit, Hypothèse produit initiale.
 
@@ -101,8 +101,8 @@ Read-modify-write puis revalidation JSON :
 Le canvas vision produit (synthèse visuelle d'une page, lisible par un comité) se
 génère dans Claude Design à partir du product brief. Le prompt prêt à coller est
 dans `references/canvas-vision-prompt.md` (gabarit statique). Le prompt
-effectivement utilisé est sauvegardé sous `factory-prompts/<NNN>-<JJ-MM>-canvas-vision/`
-et tracé dans `prompts[]` du manifeste. Le fichier `prompt.md` ne contient **que le
+effectivement utilisé est sauvegardé sous `factory-prompts/<NNN>-<JJ-MM>-canvas-vision.md`
+et tracé dans `prompts[]` du manifeste. Le fichier sauvegardé ne contient **que le
 corps du prompt** (le bloc de code du gabarit), sans titre/date/mode/version
 (cf. `references/ux-conventions.md`). C'est un livrable de communication, pas
 une porte — il n'altère pas les autres champs du manifeste.

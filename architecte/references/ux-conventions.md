@@ -15,14 +15,14 @@ sont en **langage naturel français**. Correspondance :
 | `architecture.adrs` | « les décisions d'architecture (ADR) » |
 | `architecture.walking_skeleton` | « le walking skeleton » |
 | `architecture.coherence_validated` | « la validation de cohérence est faite » |
-| `ready_for_speckit` | « le cadrage est prêt » |
+| `definition_of_ready.cadrage_complete` | « le cadrage est prêt » |
 
 Ne jamais afficher de tableau de booléens bruts ni `coherence_validated == false`.
 
 ## 2. Refus en langage naturel
 Quand un skill ne peut pas tourner, expliquer **en clair** pourquoi et quoi faire.
 Ex. : « Cette étape ne peut pas démarrer : le cadrage n'est pas encore prêt — lance
-d'abord la phase de cadrage. » Jamais « ⛔ ready_for_speckit == false ».
+d'abord la phase de cadrage. » Jamais « ⛔ cadrage_complete == false ».
 
 ## 3. Marqueurs internes hors texte utilisateur
 Les marqueurs (`[À VALIDER]`, `[À CHIFFRER]`) vivent dans les **artefacts**. À l'oral

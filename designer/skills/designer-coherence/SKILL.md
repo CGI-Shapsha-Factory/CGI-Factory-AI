@@ -16,8 +16,8 @@ Le skill `designer` a produit le prompt + le rapport de couverture (`design.phas
 *(Entre les deux : l'humain a lancé **Claude Design** avec le prompt et obtenu un design system.)*
 
 ## Entrées
-`factory-docs/work/coverage-report.md` ; le bloc `design` du manifeste (checklist) ; le `spec-index.md`
-(parcours) et `design-impact.md` (architecte) ; la **référence du design system produit dans Claude
+`designer-out/coverage-report.md` ; le bloc `design` du manifeste (checklist) ; le `cadrage-out/spec-index.md`
+(parcours) et `architecte-out/design-impact.md` (architecte) ; la **référence du design system produit dans Claude
 Design** (à fournir par l'humain).
 
 ## Procédure
@@ -29,8 +29,8 @@ Design** (à fournir par l'humain).
    le design system produit par Claude Design (cohérent avec la couverture, la direction stylistique et la
    stack). Capter sa référence dans `design.design_system_ref`. Le skill ne passe **jamais**
    `design.design_validated` à vrai de lui-même ; il le propose, l'humain confirme.
-3. **Produire le handoff design** → `factory-docs/work/design-guidelines.md` (gabarit
-   `templates/design-guidelines.md`) : **référence du design system validé + synchronisable** (`/design-sync`),
+3. **Produire le handoff design** → `designer-out/design-guidelines.md` (gabarit
+   `.factory/templates/design-guidelines.md`) : **référence du design system validé + synchronisable** (`/design-sync`),
    **règles d'états** (par écran), **patterns d'erreur** (validation à la sortie du champ, format API →
    messages par champ), **socle d'accessibilité** (niveau visé), et la règle **aucune valeur de style en
    dur**. MAJ `design.guidelines_path`.

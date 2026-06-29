@@ -1,6 +1,6 @@
 {
   "name": "assembleur",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Phase de convergence d'un projet spec-driven : coud les 3 contrats (fonctionnel, technique, design) par feature, vérifie leur cohérence (chaque feature part avec ses 3 faces complètes et non contradictoires), puis amorce un projet SpecKit consommable directement — constitution finale convergée, CLAUDE.md, briefs 3-faces, glossaire consolidé, MEMORY.md, seeds spec.md, guidelines, plan d'attaque, CI, et init Linear (skill dédié init-linear : clé API Linear dans .env, dédup projet, défauts Todo/non-assigné) + suivi auto du statut Linear Todo→En cours via un hook Claude Code généré dans le repo cible. Grave les règles design-sync (§6) : tout écran dérive du design system synchronisé (aucune valeur de style en dur), états couverts, contrat d'erreur, + checks CI. 4 skills interactifs, tout en français.",
   "author": {
     "name": "IA Factory"
