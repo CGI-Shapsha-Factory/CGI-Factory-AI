@@ -1,4 +1,2 @@
 .playwright-mcp/
-node_modules/
-package-lock.json
 .env

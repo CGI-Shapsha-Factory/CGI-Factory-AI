@@ -7,7 +7,7 @@ Ce dépôt n'est **pas un projet applicatif** : c'est une **collection de plugin
 
 - Dépôt : `github.com/NASSWIEL/Factory-IA` (**privé depuis 2026-06-26**), branche `main`. Documents de conception dans le parent (`../context-complet.txt`, `../architecture.md`).
 - Distribution : marketplace **`git-subdir`** (`.claude-plugin/marketplace.json`) → **Shapsha-Factory**. Le repo pro CGI (`CGI-Shapsha-Factory/CGI-Factory-AI`) reçoit les évolutions par **workflow PR** (branche depuis `cgi/main` + réinjection `README.md` / `marketplace.json` / `docs/factory-ia.png`, puis PR + merge — **plus de force-push**). Détails (remotes, recette PR, token) en **mémoire projet interne**, pas dans l'arbre versionné. Côté utilisateur : `/plugin marketplace update Shapsha-Factory`.
-- Installeur (façon BMAD) : **`install.py`** (Python) **+ wrapper npx** (`package.json` + `bin/factory-install.mjs`) = un menu interactif (cases à cocher, **choix libre** des modules) qui enrobe `claude plugin install` ; flags `--modules`/`--all`/`--scope`/`--yes`/`--dry-run`. Doc : **`INSTALL.md`**. La marketplace expose aussi `category`/`tags` par plugin (groupement par rôle dans `/plugin` Discover).
+- Installation : **uniquement via la marketplace** (`.claude-plugin/marketplace.json` → Shapsha-Factory). Côté utilisateur : `/plugin marketplace add` puis `/plugin install <plugin>@Shapsha-Factory`. La marketplace expose aussi `category`/`tags` par plugin (groupement par rôle dans `/plugin` Discover). *(L'ancien installeur façon BMAD — `install.py` / wrapper npx / `INSTALL.md` — a été retiré : la marketplace suffit.)*
 - Git : branche `main`, email `naifsaleem20@gmail.com`. Commit/push uniquement sur demande.
 
 ## Les plugins (phase amont = 4 contrats)
