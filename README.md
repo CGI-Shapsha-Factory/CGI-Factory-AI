@@ -4,7 +4,7 @@
 
 **Fabrique logicielle spec-driven pour Claude Code — l'IA propose et structure, l'humain décide.**
 
-Quatre plugins qui transforment un atelier (transcripts, docs) en un projet prêt à fabriquer avec SpecKit — sans jamais laisser l'IA franchir une décision structurante.
+Quatre plugins qui transforment un atelier (transcripts, docs) en un **paquet prêt à fabriquer avec SpecKit** — sans jamais laisser l'IA franchir une décision structurante.
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-plugins-8A2BE2)
 ![Plugins](https://img.shields.io/badge/plugins-4-1f6feb)
@@ -30,21 +30,9 @@ Quatre plugins qui transforment un atelier (transcripts, docs) en un projet prê
 gh auth login        # GitHub.com → HTTPS → compte CGI
 ```
 
-### Option A — Installeur guidé (recommandé, façon BMAD)
+### Installation (marketplace)
 
-Une commande → un menu à **cases à cocher** → tu installes **seulement les modules dont tu as besoin** (choix libre). Voir **[INSTALL.md](INSTALL.md)**.
-
-```shell
-# via npx (Node >= 18, rien à cloner)
-npx github:CGI-Shapsha-Factory/CGI-Factory-AI            # menu interactif
-npx github:CGI-Shapsha-Factory/CGI-Factory-AI --all --yes
-npx github:CGI-Shapsha-Factory/CGI-Factory-AI --modules cadrage,designer
-
-# ou en Python (dépôt cloné)
-python install.py
-```
-
-### Option B — Installation manuelle (marketplace)
+L'installation se fait **uniquement via la marketplace** Claude Code — il n'y a **pas** d'installeur `npx`/Python (l'ancien a été retiré). Chaque plugin est une collection de **skills Markdown** : pas de build, pas de dépendance à installer.
 
 ```shell
 /plugin marketplace add CGI-Shapsha-Factory/CGI-Factory-AI
@@ -64,41 +52,41 @@ Dans l'app, `/plugin` → onglet **Discover** montre les modules **groupés par 
 
 ## 🧩 Les quatre plugins
 
-Exécutés dans l'ordre, pilotés par un **manifeste partagé** (`factory-docs/manifest.json`) — chacun produit un **contrat** validé par une porte humaine.
+Exécutés dans l'ordre, pilotés par un **manifeste partagé** (`.factory/manifest.json`) — chacun produit un **contrat** validé par une porte humaine et écrit dans son propre dossier de sortie à la racine (`cadrage-out/`, `architecte-out/`, `designer-out/`, `assembleur-out/`). La mécanique interne (manifeste + gabarits) vit dans le dossier caché `.factory/` ; les prompts Claude Design dans `prompts/<plugin>/`.
 
 | # | Plugin | Contrat | Ce qu'il produit |
 |---|--------|---------|------------------|
-| 1 | **`cadrage`** | Fonctionnel | Capte la matière brute (transcripts, docs) → vision produit, glossaire, découpage en features, briefs par feature, pré-constitution. |
-| 2 | **`architecte`** | Technique | Drivers & attributs de qualité (ISO/IEC 25010), composants, stack, ADR transverses, walking skeleton, conventions/linters, diagrammes (C4). |
-| 3 | **`designer`** | Design | Atelier de couverture : une checklist fondation / expérience / technique pré-remplie par les handoffs garantit que rien d'important n'est oublié, puis produit le **prompt Claude Design**, le rapport de couverture et le handoff design. Le design system naît dans **Claude Design** et passe au code via **`/design-sync`** — il n'est pas généré par le plugin. |
-| 4 | **`assembleur`** | Convergence | Coud les 3 contrats par feature, vérifie la cohérence, et amorce un projet **SpecKit** (constitution convergée, `CLAUDE.md`, briefs 3-faces, glossaire consolidé, seeds `spec.md`, CI, init Linear). |
+| 1 | **`cadrage`** | Fonctionnel | Capte la matière brute (transcripts, docs) → vision produit, glossaire du projet, découpage en features de valeur + carte de couplage, un brief par feature. → `cadrage-out/` |
+| 2 | **`architecte`** | Technique | Drivers & attributs de qualité (ISO/IEC 25010), composants, stack, ADR transverses, walking skeleton, conventions/linters, diagrammes C4 **rendus en images PNG**. → `architecte-out/` |
+| 3 | **`designer`** | Design | **Atelier de couverture** : une checklist fondation / expérience / technique pré-remplie par les handoffs garantit que rien d'important n'est oublié, puis produit le **prompt Claude Design**, le rapport de couverture et le handoff design. Le design system naît dans **Claude Design** et passe au code via **`/design-sync`** — il n'est pas généré par le plugin. → `designer-out/` |
+| 4 | **`assembleur`** | Convergence | Lit les 3 contrats **en parallèle** et produit un **paquet de handoff SpecKit** dans `assembleur-out/` : **pré-constitution** (format `constitution.md`), **graines spec** par feature (format `spec.md`), **carte des features** (séquence + couplage), **contexte technique**, `CLAUDE.md` projet et un dossier **mémoire**. Il n'écrit jamais dans le repo cible. |
 
 ## 🔁 Workflow
 
 ```text
-cadrage  →  architecte  →  designer  →  assembleur  →  SpecKit  →  Linear
+cadrage  →  architecte  →  designer  →  assembleur  →  SpecKit
 ```
 
-**cadrage** (fonctionnel) → **architecte** (technique) → **designer** (design) → **assembleur** (convergence + amorçage du repo) → fabrication **SpecKit** (`specify` → `plan` → `tasks` → `implement`) → suivi des features dans **Linear**.
+**cadrage** (fonctionnel) → **architecte** (technique) → **designer** (design) → **assembleur** (convergence → **paquet de handoff**) → fabrication **SpecKit** : l'équipe prend le paquet de `assembleur-out/` et lance `specify init` → `/speckit.constitution` (depuis la pré-constitution) → `/speckit.specify` par feature (ordre du `feature-map.md`, walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 
-Chaque passage est une **porte humaine** : arbitrage du découpage et maquette validée (cadrage), arbitrage des ADR puis cohérence (architecte), arbitrage du designer puis couverture (designer), garant de cohérence puis validation d'équipe (assembleur). Et chaque skill se termine par une ligne « Étape suivante » qui guide vers la suite.
+Chaque passage est une **porte humaine** : arbitrage du découpage et maquette validée (cadrage), arbitrage des ADR puis cohérence (architecte), arbitrage du designer puis couverture (designer), garant de cohérence (assembleur). Et chaque skill se termine par une ligne « Étape suivante » qui guide vers la suite.
 
 ## 🔥 Pourquoi Factory IA ?
 
 | | Cadrage « ad hoc » assisté par IA | Avec **Factory IA** |
 |---|---|---|
-| Décisions structurantes | l'IA comble les blancs | **l'humain tranche** ; les manques sont marqués `[À VALIDER]` |
+| Décisions structurantes | l'IA comble les blancs | **l'humain tranche** ; rien n'est laissé indéfini — tout point se **résout en session** |
 | Sortie | prose non opposable | **contrats** (fonctionnel, technique, design) cousus par feature |
 | Cohérence | au jugé | **garde-fous déterministes** qui refusent en aval |
-| Traçabilité | diffuse | chaque énoncé porte sa source `(src:)` |
-| Handoff | manuel | **repo SpecKit amorcé** + features initialisées dans Linear |
+| Lisibilité | jargon, variables, horodatages | **langage naturel** ; contenu seul (pas de provenance, pas de nom de variable affiché) |
+| Handoff | manuel | **paquet SpecKit prêt** (pré-constitution + graines spec + carte des features + mémoire) |
 
 ## ✨ Principes
 
-- **Contrats figés en amont** — chaque plugin produit un contrat arbitré par un humain ; un manque est **signalé** (`[À VALIDER]`), jamais comblé d'office.
+- **Contrats figés en amont** — chaque plugin produit un contrat arbitré par un humain ; un manque se **résout en session** (on pose la question, on écrit la réponse en place), jamais comblé d'office.
 - **L'IA propose, l'humain tranche** — aucune porte structurante n'est franchie par l'IA.
 - **Hygiène déterministe en aval** — des scripts sans IA valident les manifestes (réutilisables en hook git / CI).
-- **Traçabilité** — chaque énoncé porte sa source `(src: cadrage | architecte | designer | …)`.
+- **Contenu, pas provenance** — les artefacts portent le fond décidé ; pas d'horodatage, pas de nom de personne, pas de nom de variable affiché à l'utilisateur.
 - **Tout en français** — skills, artefacts, interaction ; seuls les identifiants machine et noms d'outils restent tels quels.
 
 ## 🗂️ Structure d'un plugin
@@ -109,13 +97,13 @@ Chaque passage est une **porte humaine** : arbitrage du découpage et maquette v
 ├── skills/<skill>/SKILL.md         # skills, invocables via /<plugin>:<skill>
 ├── templates/                      # gabarits des artefacts produits
 ├── references/                     # conventions partagées (boucle interactive, UX…)
+├── agents/                         # sous-agents custom (ex. assembleur : contract-reader)
 └── scripts/check_*.py              # garde-fous déterministes (sans IA)
 ```
 
 ## 🧭 Vue d'ensemble & aide
 
-- **`/cadrage:help-factory`** — la carte des 4 plugins : rôle de chaque skill, ordre, portes humaines.
-- **`/cadrage:help-cadrage`** — le détail de la phase amont (cadrage).
+- **`/cadrage:help-factory`** — l'**aide unique** : la carte des 4 plugins (rôle de chaque skill, ordre, portes humaines).
 
 ## 👥 Déploiement d'équipe (optionnel)
 
@@ -139,11 +127,11 @@ Pour pré-déclarer le marketplace et les plugins à toute l'équipe, ajouter à
 
 ## 🛠️ Garde-fous déterministes
 
-Sans IA dans la boucle, réutilisables en hook git / CI : `check_discovery` · `check_ready` (cadrage) · `check_architecture` · `check_design` · `check_assembly`. Ils échouent tant qu'une réponse structurante manque — c'est la « compilation » de la Factory.
+Sans IA dans la boucle, réutilisables en hook git / CI : `check_discovery` · `check_ready` (cadrage) · `check_architecture` · `check_design` · `check_assembly`. Ils échouent tant qu'une réponse structurante manque ou qu'un point reste à trancher — c'est la « compilation » de la Factory. L'architecte rend aussi ses diagrammes en images PNG (`render_diagrams.py`, mermaid-cli).
 
 ## 🏗️ Construit avec / standards
 
-Claude Code · [SpecKit](https://github.com/github/spec-kit) · **Claude Design** + `/design-sync` · tokens **DTCG** + Style Dictionary · **WCAG 2.2 AA** + WAI-ARIA APG · **ISO/IEC 25010** · diagrammes **C4** · Linear.
+Claude Code · [SpecKit](https://github.com/github/spec-kit) · **Claude Design** + `/design-sync` · **WCAG 2.2 AA** + WAI-ARIA APG · **ISO/IEC 25010** · diagrammes **C4** (mermaid-cli).
 
 ---
 
