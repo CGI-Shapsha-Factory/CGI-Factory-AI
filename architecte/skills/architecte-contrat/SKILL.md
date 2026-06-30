@@ -29,11 +29,27 @@ sans l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-init`.
 
 ## Procédure — ordre imposé (chaque étape consomme la précédente)
 
-### Étape 0 — Vérifier les réponses (ne rien re-demander d'inutile)
-Charger `references/question-map.md`. **Auto-remplir en silence** chaque réponse
-d'architecture depuis l'artefact de cadrage indiqué — **sans afficher de tableau**
-question/source/réponse, sans identifiant `Qn`. Ne **poser que les trous**, en clair
-et **un par un** (cf. `references/interactive-loop.md`) :
+### Étape 0 — Lire le cadrage en parallèle (exhaustif), puis vérifier
+**Lire tout le cadrage pertinent, en parallèle, pour ne rien manquer.** Dispatcher des
+sous-agents lecteurs (`agentType: "architecte-reader"`), **un par lot**, chacun avec un
+**schéma de sortie structuré**, en **un seul message** (appels parallèles) — puis
+synthétiser leurs retours. Lots :
+1. **Vision & cadre** — `cadrage-out/product-brief.md`, `cadrage-out/project-frame.md`.
+   Extraire : identité produit, périmètre IN/OUT, contraintes (légales/sécurité/données),
+   seeds qualité (charge, disponibilité, performance), réponses de cadrage (Q1–Q13).
+2. **Domaine & découpage** — `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
+   `cadrage-out/coupling-map.md`. Extraire : entités/langage, use cases + frontières,
+   walking skeleton candidat, couplages/dépendances.
+3. **Briefs** — `cadrage-out/features-fonctionnels-brief/*.brief.md`. Extraire, par feature :
+   user stories, critères d'acceptation/succès, contraintes héritées.
+
+*(Garde simple : s'il n'y a quasiment rien à lire, un seul lecteur suffit ; au-delà,
+fan-out. Plafonné à la concurrence — au-delà, mettre en lot.)*
+
+**Passe de complétude** : après synthèse, vérifier que rien n'a été manqué ni contredit
+(au besoin, relire un lot). Le `references/question-map.md` sert ensuite à savoir **quelle
+réponse vient déjà du cadrage** : ne **poser que les trous**, en clair et **un par un**
+(cf. `references/interactive-loop.md`), **sans tableau** ni identifiant `Qn` :
 - **profil d'équipe** (taille, expertise langage/framework) — absent du cadrage ;
 - tout point de cadrage resté à confirmer et **bloquant**.
 Si un trou bloquant n'est pas tranché, **ne pas démarrer la génération** : le dire en

@@ -45,10 +45,12 @@ plat** ; dossier créé par `designer-init`). Le manifeste et les gabarits viven
 {id,label,origin,status,note}), coverage_sufficient(H), prompt_path, coverage_report_path,
 design_system_ref, design_validated(H), guidelines_path}`. Écriture = read-modify-write + revalidation JSON.
 
-## Intégration (entrées)
+## Intégration (entrées) — lecture parallèle exhaustive
+`designer-atelier` lit les handoffs **en parallèle** (fan-out de sous-agents `designer-reader`,
+retours structurés complets + passe de complétude) pour pré-remplir la checklist sans rien manquer :
 - **Cadrage** : `product-brief.md` (vision/ton), `glossaire.md` (**entités/données affichées**),
-  `spec-index.md` (**parcours/use cases**), **maquette validée** (`demonstrateur`, `client_validated`) =
-  **direction, pas cible**.
+  `spec-index.md` (**parcours/use cases**, lu jamais modifié), **maquette validée** (`demonstrateur`,
+  `client_validated`) = **direction, pas cible**.
 - **Architecte** : **`design-impact.md`** (section *Décisions à impact design* : stack front + style,
   contrats transverses visibles, conventions d'API qui décident les états d'UI, NFR qui se voient). C'est
   le contrat propre qui alimente le **versant technique** de la checklist.
@@ -67,6 +69,8 @@ design_system_ref, design_validated(H), guidelines_path}`. Écriture = read-modi
 `references/coverage-checklist-guide.md` (définition canonique + ancrages NN/g & WCAG),
 `references/states-catalog.md` (états écran/composant + clavier WAI-ARIA APG), `references/question-map.md`
 (d'où chaque item se déduit C/A), `references/interactive-loop.md`, `references/ux-conventions.md`.
+Agent de lecture : `agents/designer-reader.md` (lecture complète + sortie structurée, dispatché en
+parallèle par `designer-atelier`).
 Garde-fou déterministe : `scripts/check_design.py` (valide la **couverture** : aucun item `open`, prompt +
 rapport + handoff présents — pas des tokens).
 

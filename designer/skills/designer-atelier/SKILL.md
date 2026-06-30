@@ -37,12 +37,22 @@ Les phrases complètes de référence sont dans `templates/coverage-checklist.md
 
 ## Procédure (= déroulé de l'atelier)
 
-### Étape 1 — Ingestion des handoffs & pré-remplissage
-Lire les handoffs Cadrage et Architecte. **Pré-remplir la checklist** (`design.checklist`) avec ce qui en
-est déductible : items d'origine **C** depuis le cadrage (parcours, états d'écran, hiérarchie…), items
-d'origine **A** depuis `design-impact.md` (erreurs, async, listes, identité/rôles, navigation,
-accessibilité visée, responsive, i18n, perf ; thématisation/multitenance). Chaque item ainsi rempli passe
-en interne à `status: deduced` (montré **validé**) avec sa `note`/source. Marquer
+### Étape 1 — Ingestion des handoffs (lecture parallèle) & pré-remplissage
+**Lire tous les handoffs pertinents, en parallèle, pour ne rien manquer.** Dispatcher des sous-agents
+lecteurs (`agentType: "designer-reader"`), **un par lot**, chacun avec un **schéma de sortie structuré**,
+en **un seul message** (appels parallèles), puis synthétiser. Lots :
+1. **Cadrage** — `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`.
+   Extraire : ton/vision, entités/données affichées, parcours / use cases, états d'écran impliqués.
+2. **Architecte** — `architecte-out/design-impact.md`. Extraire : stack front + style, contrats
+   transverses visibles, conventions d'API → états d'UI, NFR qui se voient (a11y, responsive, i18n, perf).
+
+*(Garde simple : entrée minuscule → un seul lecteur ; sinon fan-out.)* **Passe de complétude** : vérifier
+qu'aucun élément des handoffs n'a été manqué avant de pré-remplir.
+
+**Pré-remplir la checklist** (`design.checklist`) depuis les retours structurés : items d'origine **C**
+(parcours, états d'écran, hiérarchie…), items d'origine **A** depuis `design-impact.md` (erreurs, async,
+listes, identité/rôles, navigation, accessibilité visée, responsive, i18n, perf ; thématisation). Chaque
+item ainsi rempli passe en interne à `status: deduced` (montré **validé**) avec sa `note`. Marquer
 `design.inputs.cadrage_ok` / `design.inputs.design_impact_ok`. Le pré-remplissage suit
 `references/question-map.md`.
 
