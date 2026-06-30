@@ -30,21 +30,9 @@ Quatre plugins qui transforment un atelier (transcripts, docs) en un projet prê
 gh auth login        # GitHub.com → HTTPS → compte CGI
 ```
 
-### Option A — Installeur guidé (recommandé, façon BMAD)
+### Installation (marketplace)
 
-Une commande → un menu à **cases à cocher** → tu installes **seulement les modules dont tu as besoin** (choix libre). Voir **[INSTALL.md](INSTALL.md)**.
-
-```shell
-# via npx (Node >= 18, rien à cloner)
-npx github:CGI-Shapsha-Factory/CGI-Factory-AI            # menu interactif
-npx github:CGI-Shapsha-Factory/CGI-Factory-AI --all --yes
-npx github:CGI-Shapsha-Factory/CGI-Factory-AI --modules cadrage,designer
-
-# ou en Python (dépôt cloné)
-python install.py
-```
-
-### Option B — Installation manuelle (marketplace)
+L'installation se fait **uniquement via la marketplace** Claude Code — il n'y a **pas** d'installeur `npx`/Python (l'ancien a été retiré). Chaque plugin est une collection de **skills Markdown** : pas de build, pas de dépendance à installer.
 
 ```shell
 /plugin marketplace add CGI-Shapsha-Factory/CGI-Factory-AI
