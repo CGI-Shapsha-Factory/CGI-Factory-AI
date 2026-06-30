@@ -1,6 +1,6 @@
 {
   "name": "assembleur",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Phase de convergence d'un projet spec-driven : lit les 3 contrats (fonctionnel, technique, design) en parallèle, les converge, et produit un PAQUET de handoff dans assembleur-out/ prêt pour SpecKit — pré-constitution (format constitution.md), graines spec par feature (format spec.md), carte des features (séquence + couplage), contexte technique, CLAUDE.md projet et dossier mémoire (MEMORY.md + thématiques). N'écrit jamais dans le repo cible (pas de .specify/, pas de specs/spec.md), pas de GLOSSARY, pas de Linear/CI. Grave la règle design-sync (tout écran dérive du design system synchronisé, aucune valeur de style en dur, états couverts, contrat d'erreur). 2 skills interactifs (assembleur-init, assembleur-convergence) + agent contract-reader, tout en français.",
   "author": {
     "name": "IA Factory"

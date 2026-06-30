@@ -48,8 +48,14 @@ parallèles) puis synthétiser leurs retours :
    d'accessibilité** visé.
 
 Lire aussi le manifeste (`architecture.feature_sequence` = `{id, ucs, name}`,
-`walking_skeleton`, `design.design_system_ref`). **Si un lot revient incomplet**, le
-relire avant de synthétiser. La jointure des faces se fait **par use case** (`ucs`).
+`walking_skeleton`, `design.design_system_ref`). Chaque lot renvoie un **extrait
+structuré complet** (fidèle sur le fond, organisé) — jamais un résumé qui coupe, jamais
+un dump brut. La jointure des faces se fait **par use case** (`ucs`).
+
+**Passe de complétude (exactitude).** Avant de synthétiser, recouper les retours : chaque
+use case du `spec-index` a-t-il sa matière fonctionnelle, technique et design ? un lot
+est-il revenu incomplet ? deux lots se contredisent-ils ? **Relire** le lot concerné si
+un trou ou une contradiction apparaît. Ne synthétiser que sur des retours complets.
 
 ## Étape 2 — Produire le paquet `assembleur-out/`
 

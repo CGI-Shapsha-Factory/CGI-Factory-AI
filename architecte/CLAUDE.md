@@ -35,12 +35,13 @@ impact design ») — la tranche de l'archi qui se voit à l'écran, consommée 
 `check_architecture.py` exige `architecture.design_impact = true`. Les diagrammes sont aussi rendus en
 **images PNG** dans `architecte-out/diagrammes/` (via `scripts/render_diagrams.py`, mermaid-cli).
 
-## Intégration cadrage (entrées)
-Lit `cadrage-out/{project-frame, product-brief, glossaire, spec-index}.md` et les
-briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md`. La table
-`references/question-map.md` indique où
-chaque réponse d'architecture se trouve déjà → on ne re-pose que les trous (profil
-d'équipe). Convergence : `architecte` **fige le registre canonique**
+## Intégration cadrage (entrées) — lecture parallèle exhaustive
+Lit `cadrage-out/{project-frame, product-brief, glossaire, spec-index, coupling-map}.md` et les
+briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md`. **`architecte-contrat` lit le
+cadrage en parallèle** (fan-out de sous-agents `architecte-reader`, partitionnés par préoccupation,
+retours structurés complets + passe de complétude) — pour maximiser l'exactitude et le temps mural,
+sans rien manquer. La table `references/question-map.md` indique ensuite où chaque réponse se trouve
+déjà → on ne re-pose que les trous (profil d'équipe). Convergence : `architecte` **fige le registre canonique**
 `architecture.feature_sequence` — la liste numérotée/séquencée des features (le 2ᵉ
 découpage), en objets `{id, ucs, name}` (`ucs` = **liste** de use cases, une feature
 pouvant en bundler plusieurs ; `id` `001…` = ordre de fabrication) — à partir des use
@@ -54,6 +55,8 @@ drivers/qualité → composants → stack → conventions → ADR → walking sk
 ## Conventions partagées
 `references/interactive-loop.md` (boucle 3-options), `references/ux-conventions.md`
 (pas de fuite de champ, refus en clair, une ligne « Étape suivante » par skill).
+Agent de lecture : `agents/architecte-reader.md` (lecture complète + sortie structurée,
+dispatché en parallèle par `architecte-contrat`).
 Garde-fou déterministe : `scripts/check_architecture.py`.
 
 ## Vérifications
