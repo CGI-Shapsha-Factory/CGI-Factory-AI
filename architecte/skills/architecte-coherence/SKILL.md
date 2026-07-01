@@ -35,9 +35,15 @@ qui manque, ce qui se contredit, ce qui pourrait casser. Au minimum :
    si un composant décrit une stack que `tech-stack.md` ne retient pas (ex. un composant en .NET
    alors que la stack retient Python), une version divergente, ou une version « latest »/vague.
    **Un composant Frontend/UI existe** si le produit a des écrans.
-3. **Drivers/qualité → réalisés** : chaque driver et chaque attribut de qualité a une
-   **cible concrète** (pas « à chiffrer ») **et** est adressé par un composant et/ou un
-   ADR. Un scénario QAW dont la mesure n'est pas observable/chiffrée est un échec.
+3. **Drivers vs attributs de qualité — distincts, non redondants, dérivés** :
+   - un **driver** (objectif métier / contrainte / risque) est **concret** et **adressé** par un
+     composant, un ADR et/ou un attribut de qualité — pas forcément chiffré ;
+   - un **attribut de qualité** (-ilité) a une **cible mesurable** + un **scénario QAW** observable
+     et chiffré, **et** est adressé par un composant et/ou un ADR ;
+   - **aucune redondance** : un driver et un attribut de qualité ne désignent jamais le **même
+     concept** (ex. un driver « Maintenabilité » alors qu'un attribut « Maintenabilité » existe =
+     doublon à fusionner) ; **chaque attribut de qualité découle d'un driver** (sinon : driver
+     manquant à ajouter, ou -ilité injustifiée à retirer).
 4. **Contradictions inter-artefacts** : confronter drivers ⨉ stack ⨉ ADR ⨉ déploiement.
    Ex. : un driver « hébergement UE / pas de fuite » contredit-il un service externe
    choisi ? la cible de disponibilité/performance est-elle réellement tenue par le

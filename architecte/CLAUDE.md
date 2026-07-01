@@ -54,6 +54,9 @@ non ; l'ordre est purement technique (dépendances).
 ## Ordre de remplissage (dépendances)
 drivers/qualité → composants → stack → conventions → ADR → walking skeleton+numérotation
 → diagrammes → risques → validation de cohérence.
+**Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
+risques** (le pourquoi / les limites) ; les attributs de qualité sont les **-ilités mesurées qui en
+découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `templates/drivers-quality.md`).
 
 ## Conventions partagées
 `references/interactive-loop.md` (boucle 3-options), `references/ux-conventions.md`

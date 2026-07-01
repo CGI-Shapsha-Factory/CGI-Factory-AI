@@ -42,6 +42,9 @@ numérotée** (convergence des deux découpages). Chaque document porte un **fro
   « latest ») — vérifié par le garde-fou déterministe.
 - **Diagrammes fiables sans intervention** : rendu auto-installé (mermaid-cli + navigateur
   système, CA d'entreprise respectée **sans** désactiver TLS), replis automatiques, zéro prompt.
+- **Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
+  risques** ; les attributs de qualité sont les **-ilités mesurées qui en découlent** (cible +
+  scénario) — pas de doublon entre les deux.
 
 ## Conventions de code (vrais fichiers)
 Catalogue dans `references/conventions/` : Python → `ruff.toml` ; TS/JS → `biome.json`
