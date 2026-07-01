@@ -65,12 +65,19 @@ réponse vient déjà du cadrage** : ne **poser que les trous**, en clair et **u
 Si un trou bloquant n'est pas tranché, **ne pas démarrer la génération** : le dire en
 clair et s'arrêter. Écrire le profil d'équipe au manifeste (en silence).
 
-### Étape 1 — Drivers & attributs de qualité
+### Étape 1 — Drivers & attributs de qualité (deux temps liés)
 À partir des seeds qualité (charge, disponibilité, performance) + les contraintes
-(légal, sécurité, données) : **classer les drivers par priorité** (ce qui compte le
-plus pour CE produit) et **classer les attributs de qualité**, puis formuler des
-**scénarios de qualité testables (QAW)**. Restituer **en prose** dans le chat (par
-leur nom en clair), faire valider, puis écrire `architecte-out/drivers-quality.md`
+(légal, sécurité, données) :
+1. **Identifier les drivers** = ce qui **oriente** l'architecture : **objectifs métier**,
+   **contraintes** (légales / organisationnelles / techniques / d'usage) et **risques
+   majeurs**, classés par priorité. **Jamais une -ilité** ici.
+2. **En dériver les attributs de qualité** = les **-ilités mesurables** (ISO 25010 :
+   fiabilité, sécurité, performance, disponibilité, maintenabilité…) **issues** de ces
+   drivers, chacune avec une **cible chiffrée** et **reliée au driver dont elle découle** ;
+   puis formuler les **scénarios de qualité testables (QAW)**.
+**Les deux ne se recouvrent pas** : un attribut de qualité qui répète un driver — ou une
+-ilité listée comme driver — est une **erreur à corriger**. Restituer **en prose** dans le
+chat (par leur nom en clair), faire valider, puis écrire `architecte-out/drivers-quality.md`
 (gabarit `templates/drivers-quality.md`). Mettre à jour le manifeste en silence.
 
 ### Étape 2 — Workflow composants (interactif)
