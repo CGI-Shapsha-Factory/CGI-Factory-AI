@@ -13,17 +13,25 @@ date: AAAA-MM-JJ
      l'utilisateur, on écrit la réponse en place). Contenu seul : aucune provenance,
      aucun horodatage, aucun nom de personne. -->
 
-> Ces drivers et attributs dérivent des seeds qualité du cadrage (charge / disponibilité /
+> **Drivers** = objectifs métier + contraintes + risques (le *pourquoi* et les limites).
+> **Attributs de qualité** = les -ilités **dérivées** de ces drivers, chacune mesurée + un scénario
+> testable. Les deux **ne se recouvrent pas** : une -ilité ne se reliste pas comme driver, un driver
+> ne se reliste pas comme -ilité. Le tout dérive des seeds qualité du cadrage (charge / disponibilité /
 > performance) et des contraintes. On écrit le contenu, jamais qui l'a dit ni quand.
 
 ---
 
 ## Drivers d'architecture
 
-<!-- Ce qui compte le plus pour CE produit, classé par priorité (1 = le plus
-     structurant). Un driver est une force qui oriente l'architecture : enjeu métier,
-     contrainte forte, attribut de qualité dominant, risque majeur. Le désigner par son
-     NOM en clair, jamais par un code. -->
+<!-- Ce qui ORIENTE l'architecture pour CE produit, classé par priorité (1 = le plus
+     structurant). Un driver est de l'une de ces 3 espèces, JAMAIS une -ilité :
+       - un OBJECTIF MÉTIER (ex. « zéro réponse non sourcée est éliminatoire ») ;
+       - une CONTRAINTE légale / organisationnelle / technique / d'usage (ex. « hébergement UE
+         obligatoire », « équipe de 3,5 personnes », « 3 sources documentaires hétérogènes ») ;
+       - un RISQUE majeur.
+     Une -ilité (fiabilité, sécurité, performance, disponibilité, maintenabilité…) n'est PAS un
+     driver : elle va dans « Attributs de qualité » ci-dessous (elle en DÉCOULE). Désigner chaque
+     driver par son NOM en clair, jamais par un code. -->
 
 | Priorité | Driver                                  | Pourquoi il pèse sur l'architecture                     |
 |----------|-----------------------------------------|---------------------------------------------------------|
@@ -36,19 +44,21 @@ date: AAAA-MM-JJ
 
 ## Attributs de qualité
 
-<!-- Attributs de qualité (qualités non fonctionnelles) classés par importance pour ce
-     produit. Classer chaque attribut sous une caractéristique ISO/IEC 25010:2023 :
-     pertinence fonctionnelle, efficacité de performance, compatibilité, capacité
-     d'interaction (utilisabilité), fiabilité, sécurité, maintenabilité, flexibilité
-     (portabilité), sûreté (safety). Ne garder que celles qui s'appliquent. -->
+<!-- Les -ilités (qualités non fonctionnelles) qui DÉCOULENT des drivers ci-dessus, classées par
+     importance. Chacune : une CIBLE MESURABLE + le driver dont elle découle. Classer chaque attribut
+     sous une caractéristique ISO/IEC 25010:2023 : pertinence fonctionnelle, efficacité de performance,
+     compatibilité, capacité d'interaction (utilisabilité), fiabilité, sécurité, maintenabilité,
+     flexibilité (portabilité), sûreté (safety). Ne garder que celles qui s'appliquent.
+     RÈGLE ANTI-REDONDANCE : ne jamais recopier ici un driver (objectif/contrainte/risque), ni relister
+     un attribut de qualité dans la table des drivers. Chaque ligne pointe le driver source. -->
 
-| Priorité | Attribut                      | Cible / exigence (mesurable)                    |
-|----------|-------------------------------|-------------------------------------------------|
-| 1        | [ex. Performance]             | [ex. p95 < 200 ms sur les lectures]             |
-| 2        | [ex. Disponibilité]           | [ex. 99,9 % de dispo mensuelle]                 |
-| 3        | [ex. Sécurité]                | [ex. toutes les données au repos chiffrées]     |
-| 4        | [ex. Charge / scalabilité]    | [ex. N utilisateurs simultanés au pic]          |
-| 5        | [ex. Évolutivité / maintenabilité] | [ex. nouveau type d'intégration en < 1 sprint] |
+| Priorité | Attribut                      | Cible / exigence (mesurable)                    | Découle du driver           |
+|----------|-------------------------------|-------------------------------------------------|-----------------------------|
+| 1        | [ex. Performance]             | [ex. p95 < 200 ms sur les lectures]             | [nom du driver source]      |
+| 2        | [ex. Disponibilité]           | [ex. 99,9 % de dispo mensuelle]                 | [nom du driver source]      |
+| 3        | [ex. Sécurité]                | [ex. toutes les données au repos chiffrées]     | [nom du driver source]      |
+| 4        | [ex. Charge / scalabilité]    | [ex. N utilisateurs simultanés au pic]          | [nom du driver source]      |
+| 5        | [ex. Évolutivité / maintenabilité] | [ex. nouveau type d'intégration en < 1 sprint] | [nom du driver source] |
 
 <!-- Classer du plus prioritaire au moins prioritaire. Une cible non chiffrée se précise
      en session avec l'utilisateur (réponse recommandée + alternative + saisir), écrite
