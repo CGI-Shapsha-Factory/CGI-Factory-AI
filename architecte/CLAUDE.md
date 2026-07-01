@@ -33,7 +33,10 @@ du projet** (vrais fichiers de config). Écriture = read-modify-write + revalida
 **Handoff designer** : le skill `architecte-contrat` produit `design-impact.md` (section « Décisions à
 impact design ») — la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer-atelier` ;
 `check_architecture.py` exige `architecture.design_impact = true`. Les diagrammes sont aussi rendus en
-**images PNG** dans `architecte-out/diagrammes/` (via `scripts/render_diagrams.py`, mermaid-cli).
+**images PNG** dans `architecte-out/diagrammes/` (via `scripts/render_diagrams.py`, mermaid-cli) ; le
+rendu est **robuste et auto-installé** (navigateur système, CA d'entreprise respectée sans désactiver
+TLS, replis mermaid-cli → npx → Kroki local), pré-provisionné par `architecte-init`
+(`scripts/provision_render.py`), sans prompt.
 
 ## Intégration cadrage (entrées) — lecture parallèle exhaustive
 Lit `cadrage-out/{project-frame, product-brief, glossaire, spec-index, coupling-map}.md` et les
@@ -57,7 +60,11 @@ drivers/qualité → composants → stack → conventions → ADR → walking sk
 (pas de fuite de champ, refus en clair, une ligne « Étape suivante » par skill).
 Agent de lecture : `agents/architecte-reader.md` (lecture complète + sortie structurée,
 dispatché en parallèle par `architecte-contrat`).
-Garde-fou déterministe : `scripts/check_architecture.py`.
+Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exactes** de
+`tech-stack.md`, **front-matter `version`/`date`** de chaque doc, marqueurs résiduels) ;
+`scripts/render_diagrams.py` (rendu Mermaid robuste, auto-install, replis, sans prompt) ;
+`scripts/provision_render.py` (pré-installe le rendu à l'init) ; `scripts/bump_doc_version.py`
+(incrément du compteur de version des documents).
 
 ## Vérifications
 ```bash
@@ -67,9 +74,14 @@ python scripts/check_architecture.py <projet>/.factory/manifest.json
 ```
 
 ## Invariants
-Proposer/pas décider (ADR arbitrés par l'humain, cohérence validée par l'humain) ;
-**rien laissé indéfini** — tout marqueur se résout en session, en place, avant
-d'avancer ; **contenu seul** dans les artefacts (aucune `(src:)`, aucun horodatage,
-aucun nom de personne) ; **aucune notion de MVP** ; conventions = vrais fichiers ;
+Proposer/pas décider (**jamais la stack à la place de l'utilisateur** : options + compromis +
+arbitrage humain, **sans biais fournisseur** ; l'expérience avec une techno ne vaut pas décision ;
+ADR consignés **après** décision ; cohérence validée par l'humain) ; **composant frontend** porté
+par l'architecte dès qu'il y a des écrans (le designer garde le design system visuel) ; **versions
+exactes épinglées** pour chaque techno (jamais « latest ») ; **documents versionnés** (front-matter
+`version`/`date` ; ADR immuables en version 1) ; **rien laissé indéfini** — tout marqueur se résout
+en session, en place, avant d'avancer ; **contenu seul** dans les artefacts (aucune `(src:)`, aucun
+horodatage **dans le corps**, aucun nom de personne ; le front-matter version/date est une
+métadonnée, pas de la provenance) ; **aucune notion de MVP** ; conventions = vrais fichiers ;
 restitutions en **prose** (pas de tableau), **noms en clair** (jamais `C1`/`UC1`/`P1`),
 **manifeste mis à jour en silence** (jamais narré).

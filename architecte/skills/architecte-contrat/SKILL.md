@@ -26,6 +26,16 @@ sans l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-init`.
 > silence** : ne jamais narrer « MAJ `architecture.*` » ni un nom de variable. Toute
 > valeur manquante se **résout en session** (cf. `references/interactive-loop.md`) et
 > s'écrit **en place** — aucun marqueur n'est laissé dans un fichier final.
+>
+> **Versionnage des documents.** Chaque fichier écrit sous `architecte-out/` commence par un
+> front-matter `--- version: N / date: AAAA-MM-JJ ---`. **Première** génération d'un document :
+> `version: 1`. À chaque **régénération** : relire le `version:` existant et écrire **`N+1`**,
+> avec `date:` = jour courant (format ISO `AAAA-MM-JJ`) — le helper
+> `scripts/bump_doc_version.py <fichier>` calcule la prochaine version. **Exception ADR** : un ADR accepté est
+> immuable — il **reste `version: 1`** et évolue via son champ `Statut` (+ un ADR successeur). Ce
+> front-matter `version`/`date` est une **métadonnée de document** — il n'est **pas** visé par
+> l'interdiction de provenance/horodatage (qui concerne le corps : pas de `(src:)`, pas
+> d'horodatage épars, pas de nom de personne).
 
 ## Procédure — ordre imposé (chaque étape consomme la précédente)
 
@@ -65,21 +75,45 @@ leur nom en clair), faire valider, puis écrire `architecte-out/drivers-quality.
 
 ### Étape 2 — Workflow composants (interactif)
 Dériver une **liste de composants candidats** depuis le périmètre fonctionnel
-(briefs + spec-index). **Restituer la liste en prose** (nom métier + rôle en une
+(briefs + spec-index). **Dès que le produit a un écran utilisateur, la liste inclut
+TOUJOURS un composant Frontend/UI** (l'application qui rend les écrans) — composant
+technique à part entière, au même titre que le back, les workers, la base. L'existence
+du plugin designer **ne dispense pas** de l'architecture front : le designer produit le
+design system **visuel**, pas le **composant technique** front (porté ici + sa stack à
+l'étape 3). **Restituer la liste en prose** (nom métier + rôle en une
 phrase) — **jamais de tableau, jamais de code `C1`/`C2`**. **Demander si ça convient
 ou s'il faut modifier** ; appliquer les retours (ajout/fusion/suppression) ; **boucler
 jusqu'à validation**. Puis écrire `architecte-out/components.md` (gabarit
 `templates/components.md`). Mettre à jour le manifeste en silence.
 
 ### Étape 3 — Workflow stack technique (interactif)
-Pour chaque domaine de décision (langage(s), framework(s), bibliothèques
-principales, base de données, style d'API, communication asynchrone, déploiement,
-observabilité), si la réponse n'est pas déjà dans le cadrage : **proposer 2–4
-options avec avantages/inconvénients + une recommandation**, l'utilisateur tranche
-(boucle 3-options). Respecter l'ordre des dépendances entre choix (langage avant
-framework, etc.). **Validation finale** de la stack en chat. Écrire
-`architecte-out/tech-stack.md` (gabarit `templates/tech-stack.md`, dont la
-**matrice composant × techno** — une ligne par composant). Mettre à jour le manifeste en silence.
+Domaines de décision : **langage(s), framework(s) back, framework front / bibliothèque de
+composants / stratégie CSS-tokens, bibliothèques principales, base de données, style d'API,
+communication asynchrone, fournisseur cloud, déploiement, observabilité**. Pour **chaque**
+domaine (front et déploiement compris), **même si le cadrage suggère une piste** : **proposer
+2 à 4 options réellement diverses avec avantages/inconvénients + une recommandation**, puis
+**attendre le choix explicite de l'utilisateur** avant de continuer. **Ne jamais
+auto-sélectionner** une techno ni graver un choix non tranché.
+
+**Anti-biais (obligatoire).** Un choix antérieur ne restreint pas silencieusement les suivants
+à l'écosystème d'un même fournisseur : pour chaque domaine, présenter **au moins une alternative
+crédible hors de cet écosystème** — **interdit** de ne proposer que des options d'un seul
+fournisseur (pas d'« Azure-vs-Azure »). Le **fournisseur cloud** et le **déploiement** sont des
+**décisions ouvertes** à part entière : ne jamais les déduire d'une « infra existante » sauf si
+l'utilisateur l'a **dit explicitement** — et alors, le lui **confirmer comme sa décision**, ne
+pas l'affirmer.
+
+**Expérience ≠ décision.** Si l'utilisateur mentionne connaître une techno (« je maîtrise
+React »), **ne pas l'adopter d'office** : demander « Puisque tu connais React, on part là-dessus
+ou on évalue d'autres options ? ». La décision finale vient **toujours** de lui.
+
+Respecter l'ordre des dépendances entre choix (langage avant framework, etc.).
+**Version exacte pour CHAQUE techno** : à la finalisation, chaque langage, framework,
+bibliothèque, base et outil reçoit une **version exacte et épinglée** (ex. « PostgreSQL 17.2 »,
+« React 19.1.0 ») — tranchée en session si inconnue ; **jamais** « latest » / « stable » / vide.
+**Validation finale** de la stack en chat. Écrire `architecte-out/tech-stack.md` (gabarit
+`templates/tech-stack.md`, dont la **matrice composant × techno** — une ligne par composant, **le
+composant front inclus**). Mettre à jour le manifeste en silence.
 
 ### Étape 4 — Activer les conventions (vrais fichiers)
 Pour chaque **langage retenu** à l'étape 3, copier le(s) fichier(s) de config
@@ -99,10 +133,14 @@ logging, sécurité, tests, API, données, git, doc). Mettre à jour le manifest
 
 ### Étape 5 — ADR (arbitrage humain)
 Pour chaque décision structurante (style d'archi, API, persistance, identité/authz,
-multitenance, déploiement, observabilité…), produire un **ADR** (gabarit
-`templates/adr.md`) dans `architecte-out/decisions/ADR-NNN-titre.md` : contexte,
-décision, options, conséquences, déclencheur de revue. **C'est une décision arbitrée
-par l'humain** : l'architecte valide chaque ADR. Mettre à jour le manifeste en silence.
+multitenance, **fournisseur cloud**, déploiement, observabilité…), produire un **ADR**
+(gabarit `templates/adr.md`) dans `architecte-out/decisions/ADR-NNN-titre.md` : contexte,
+décision, options **réellement présentées**, conséquences, déclencheur de revue.
+**N'écrire un ADR qu'APRÈS que l'humain a explicitement tranché la décision** (à l'étape 3
+ou ici) : l'ADR **consigne** un choix validé, il ne le **crée** pas. **Ne jamais** y inscrire
+une décision non tranchée, une formule « décision non remise en question » sur un choix jamais
+proposé, ni une **prémisse non énoncée** (composition d'équipe, infra existante…) — si une
+prémisse manque, la **demander** d'abord. Mettre à jour le manifeste en silence.
 
 ### Étape 6 — Walking skeleton + convergence (numérotation)
 Désigner le **walking skeleton définitif** (la première tranche de bout en bout qui
@@ -135,11 +173,15 @@ Produire `architecte-out/diagrams.md` (gabarit `templates/diagrams.md`) :
 C4 contexte, C4 conteneurs, flux d'un parcours critique, ERD, déploiement (Mermaid),
 avec les noms réels (pas de placeholders).
 Puis **générer les images** : lancer
-`python scripts/render_diagrams.py <projet>/architecte-out/diagrams.md` — il rend un
-**PNG par diagramme** dans **`architecte-out/diagrammes/`** (via mermaid-cli `mmdc`,
-ou `npx -y @mermaid-js/mermaid-cli` s'il n'est pas installé). Confirmer en clair les
-images produites. **Si le rendu échoue** (outil indisponible), le dire en clair et
-continuer — ne jamais bloquer la phase pour ça ; le markdown reste la source.
+`py -3 "${CLAUDE_PLUGIN_ROOT}/scripts/render_diagrams.py" <projet>/architecte-out/diagrams.md`
+(remplacer `py -3` par `python` si `py` est absent) — il rend un **PNG par diagramme** (nom
+déterministe `NN-slug.png`) dans **`architecte-out/diagrammes/`**. Le script **installe
+silencieusement ce qui manque** (mermaid-cli épinglé, **sans télécharger Chromium** — il
+réutilise le navigateur système), respecte la CA d'entreprise **sans désactiver TLS**, et
+**bascule automatiquement** entre méthodes de rendu (mermaid-cli → npx → Kroki local) — **sans
+jamais demander de permission**. Les prérequis ont normalement été pré-installés par
+`architecte-init`. Confirmer en clair les images produites. **Si tout échoue malgré les replis**,
+le dire en clair et continuer — ne jamais bloquer la phase pour ça ; le markdown reste la source.
 
 ### Étape 8 — Registre de risques
 Produire `architecte-out/risks.md` (gabarit `templates/risks.md`) : risques
@@ -150,7 +192,8 @@ techniques, mitigations, spikes/POC nécessaires. Mettre à jour le manifeste en
 Architecte → Designer (le designer ne doit pas fouiller tout le handoff ; l'architecte sait ce qui se
 voit). Produire `architecte-out/design-impact.md` (gabarit `templates/design-impact.md`), par ordre
 d'importance : **1.** stack front + approche de style (framework, lib de composants, stratégie CSS — *ce
-qui rend le design system exécutable/synchronisable*) ; **2.** contrats transverses visibles
+qui rend le design system exécutable/synchronisable* ; **repris du composant front déclaré dans
+`components.md`/`tech-stack.md`, sans le redécider**) ; **2.** contrats transverses visibles
 (multitenance/theming par tenant ; identité/rôles/autorisations : variantes par rôle, non autorisé,
 connexion, session expirée ; navigation/routage) ; **3.** conventions d'API qui décident des états d'UI
 (format d'erreur → messages par champ, asynchrone, pagination/listes, cas vides) ; **4.** NFR qui touchent
@@ -170,12 +213,23 @@ indéfini. Aucun fichier annexe.
   `components.md`, `tech-stack.md`, `standards.md`, ADR, `diagrams.md` (+ images dans
   `diagrammes/`), `risks.md`, **`design-impact.md`** produits ; conventions par langage
   installées dans `conventions/` ; walking skeleton et séquence de features figés.
-- **Contenu seul** : aucune `(src:)`, aucun horodatage, aucun nom de personne, **aucun
-  marqueur résiduel** ; tout point a été tranché en session.
+- **Composant Frontend/UI présent** dans `components.md` si le produit a des écrans ;
+  **chaque techno de `tech-stack.md` porte une version exacte** (aucun « latest » / vide) ;
+  `components.md` et `tech-stack.md` **cohérents** (mêmes technos/versions, pas de stack
+  contradictoire).
+- **Front-matter présent** en tête de chaque fichier `architecte-out/` (`version:` entier,
+  `date:` ISO `AAAA-MM-JJ`) ; ADR à `version: 1`.
+- **Contenu seul** : aucune `(src:)`, aucun horodatage dans le corps, aucun nom de personne,
+  **aucun marqueur résiduel** ; tout point a été tranché en session. (Le front-matter
+  `version`/`date` est une métadonnée de document, pas de la provenance.)
 
 ## Règles invariantes
-- **Proposer, ne pas décider.** Les ADR sont arbitrés par l'humain ; les workflows
-  composants/stack se valident en chat.
+- **Proposer, ne pas décider — jamais à la place de l'utilisateur.** Toute techno
+  structurante (langage, framework, **front**, base, **cloud**, **déploiement**…) est
+  **présentée en options + compromis**, puis **tranchée par l'humain** ; on **attend** sa
+  décision avant d'écrire. **Aucun auto-choix**, **aucun biais** vers un fournisseur (jamais
+  des options d'un seul écosystème) ; l'**expérience** de l'utilisateur avec une techno ne
+  vaut pas décision (on lui demande). Les ADR ne consignent que des décisions validées.
 - **Rien d'affiché de la mécanique.** Aucun nom de variable/clé manifeste, aucun
   identifiant codé, aucun tableau (voir `references/ux-conventions.md`). Le manifeste
   se met à jour en silence.

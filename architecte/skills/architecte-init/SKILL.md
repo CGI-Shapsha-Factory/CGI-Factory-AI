@@ -60,16 +60,26 @@ avec un bloc `architecture`.
 }
 ```
 
+5. **Provisionner le rendu des diagrammes** (silencieux, best-effort, sans prompt) : lancer
+   `py -3 "${CLAUDE_PLUGIN_ROOT}/scripts/provision_render.py" <projet>/.factory` (ou `python`
+   si `py` est absent). Il détecte un navigateur système (Edge/Chrome) et écrit
+   `.factory/puppeteer.json`, puis installe **mermaid-cli épinglé sans télécharger Chromium**
+   (la CA du système est respectée, TLS jamais désactivé). S'il ne peut rien installer (hors
+   ligne, Node absent), il le dit et **continue** — `render_diagrams.py` retentera au rendu.
+
 ## Porte de sortie
 - `conventions/` existe à la racine avec `.editorconfig`.
 - Les 8 gabarits d'architecture (dont `design-impact.md`) sont dans `.factory/templates/`.
 - `architecte-out/decisions/` existe.
 - Le manifeste contient le bloc `architecture` (`phase: "init"`), et reparse sans erreur.
+- Rendu diagrammes provisionné (best-effort) : `.factory/puppeteer.json` écrit si un
+  navigateur système est présent, mermaid-cli installé si possible — non bloquant.
 - Rien d'existant n'a été écrasé (idempotence).
 
 ## Règles invariantes
 - **Aucune décision IA.** Ce skill prépare ; il ne classe pas de drivers, ne choisit
-  pas de composants ni de stack.
+  pas de composants ni de stack. (Installer l'outillage de rendu des diagrammes est de la
+  préparation, pas une décision d'architecture.)
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
 Étape suivante : `/architecte:architecte-contrat` — construire le contrat technique (drivers, composants, stack, ADR, walking skeleton, diagrammes).

@@ -24,12 +24,17 @@ briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md` ; le manifeste.
 Ne **pas** se contenter de vérifier la présence. **Challenger** chaque contrat : ce
 qui manque, ce qui se contredit, ce qui pourrait casser. Au minimum :
 
-1. **Aucun marqueur résiduel** : aucun `[À VALIDER]` / `[À CHIFFRER]` / `[À DÉFINIR]`
-   ne subsiste dans un fichier `architecte-out/`. Chaque marqueur trouvé est un point
+1. **Aucun marqueur résiduel & front-matter valide** : aucun `[À VALIDER]` / `[À CHIFFRER]`
+   / `[À DÉFINIR]` ne subsiste dans un fichier `architecte-out/` ; **chaque fichier porte son
+   front-matter `version:` (entier) / `date:` (ISO `AAAA-MM-JJ`)**. Chaque manque est un point
    à **résoudre en session** (voir ci-dessous).
-2. **Composants ↔ stack (deux sens)** : chaque composant a une techno **définie** dans
-   la matrice (pas « à définir ») ; aucune ligne de matrice sans composant. Aucun
-   orphelin d'aucun côté.
+2. **Composants ↔ stack (deux sens, cohérence des technos)** : chaque composant a une techno
+   **définie** dans la matrice (pas « à définir ») ; aucune ligne de matrice sans composant ;
+   aucun orphelin d'aucun côté. **La stack inline d'un composant (`components.md` → Technologies)
+   doit CORRESPONDRE à `tech-stack.md`** — mêmes technos, mêmes **versions exactes**. **Échec**
+   si un composant décrit une stack que `tech-stack.md` ne retient pas (ex. un composant en .NET
+   alors que la stack retient Python), une version divergente, ou une version « latest »/vague.
+   **Un composant Frontend/UI existe** si le produit a des écrans.
 3. **Drivers/qualité → réalisés** : chaque driver et chaque attribut de qualité a une
    **cible concrète** (pas « à chiffrer ») **et** est adressé par un composant et/ou un
    ADR. Un scénario QAW dont la mesure n'est pas observable/chiffrée est un échec.
@@ -60,7 +65,9 @@ qui manque, ce qui se contredit, ce qui pourrait casser. Au minimum :
 
 Garde-fou déterministe : lancer `scripts/check_architecture.py` sur le manifeste — il
 échoue notamment s'il **reste un marqueur** dans un fichier `architecte-out/`, si un
-composant n'a pas de techno, ou si un langage retenu n'a pas son fichier de conventions.
+composant n'a pas de techno, si un langage retenu n'a pas son fichier de conventions,
+**si une techno de `tech-stack.md` n'a pas de version exacte (ou dit « latest »)**, ou
+**si un fichier `architecte-out/` n'a pas de front-matter `version`/`date` valide**.
 
 ## Résolution interactive des points (obligatoire avant d'avancer)
 Tout point relevé — **bloquant ou non** — n'est **pas seulement affiché** : on **pose
