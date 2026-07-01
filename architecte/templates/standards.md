@@ -67,18 +67,35 @@ Règles transverses :
 - Toutes les réponses HTTP doivent positionner les en-têtes de sécurité appropriés ([CSP, HSTS, X-Frame-Options, ...]).
 - [Toute règle de sécurité spécifique au projet — ex. « toutes les requêtes base de données utilisent des requêtes paramétrées »]
 
-## Exigences de test
+## Exigences de test (stratégie)
 
-| Type de test  | Périmètre                          | Couverture / règle minimale          |
-|---------------|------------------------------------|--------------------------------------|
-| Unitaire      | Fonctions pures, logique de domaine | [N] % de couverture de branches      |
-| Intégration   | Composant + infrastructure réelle  | Chaque interface publique a au moins un test de cas nominal et un test de cas d'erreur |
-| E2E           | [Parcours utilisateur critiques listés] | Doivent passer avant tout déploiement en production |
+**Écrire les tests EN MÊME TEMPS que le code.** Dès qu'une fonction est créée, son test est écrit dans
+le même changement — aucune source ne part sans son test. (Appliqué par des garde-fous déterministes :
+hooks Claude Code + pre-commit + un check CI diff-coverage requis — voir la constitution du projet.)
 
+**Tests unitaires — un par règle métier.** Chaque règle métier implémentée par une fonction a un test
+unitaire couvrant **le cas passant, le(s) cas d'échec et les cas limites** (valeurs aux bornes, entrées
+vides/nulles, erreurs attendues). La couverture chiffrée est un plancher, pas la stratégie.
+
+**Tests d'intégration — composants complets, dépendances externes MOCKÉES** (pas d'« infrastructure
+réelle » dans le test). Pour chaque composant livrable :
+- **Frontend** : tester en **simulant les interactions utilisateur** et en **mockant les appels d'API
+  externes** (le réseau ne sort jamais du test).
+- **API / pipelines / batch** : couvrir **toutes les fonctionnalités exposées** en **mockant toutes les
+  dépendances externes** (base, files, services tiers, horloge).
+
+**Frameworks & mocking par langage** (selon la stack de `tech-stack.md`) :
+- Python → pytest (+ `pytest-mock`/`monkeypatch`, `responses`/`respx` pour HTTP).
+- TS/JS → Vitest ou Jest (+ `msw` pour le réseau).
+- Angular → TestBed + `HttpTestingController` (ou Jest) ; spies pour les services.
+- .NET → xUnit + Moq/NSubstitute. Java/Spring → JUnit 5 + Mockito. Go → `testing` + `httptest`.
+
+**Hygiène :**
 - Les fichiers de test résident [à côté du code source / dans un dossier `tests/` dédié].
-- Nommage des tests : `[unité testée].[scénario].[résultat attendu]` — ex. `createOrder.withInvalidPayload.throwsValidationError`.
-- Les données de test ne doivent pas être partagées entre tests ; chaque test met en place et démonte son propre état.
-- Aucun code de production ne peut référencer des utilitaires de test ou des modules réservés aux tests.
+- Nommage : `[unité testée].[scénario].[résultat attendu]` — ex. `createOrder.withInvalidPayload.throwsValidationError`.
+- Chaque test met en place et démonte son propre état ; aucun état partagé entre tests.
+- Aucun code de production ne référence d'utilitaires ou modules réservés aux tests.
+- (Optionnel) Tests E2E des parcours critiques : [parcours listés], à passer avant tout déploiement.
 
 ## Règles de conception d'API
 

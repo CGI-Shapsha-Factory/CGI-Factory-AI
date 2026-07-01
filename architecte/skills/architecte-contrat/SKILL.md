@@ -136,7 +136,10 @@ du projet :
   alternative + saisir), écrite en place.
 Écrire/compléter `architecte-out/standards.md` (gabarit `templates/standards.md`)
 qui **pointe vers `conventions/`** + couvre les standards non-formatage (erreurs,
-logging, sécurité, tests, API, données, git, doc). Mettre à jour le manifeste en silence.
+logging, sécurité, **stratégie de test**, API, données, git, doc). La **stratégie de test**
+est concrète : unitaires par règle métier (cas passant / échec / limite) ; intégration
+API/front/batch **avec dépendances externes mockées** ; **tests écrits en même temps que le
+code**. Mettre à jour le manifeste en silence.
 
 ### Étape 5 — ADR (arbitrage humain)
 Pour chaque décision structurante (style d'archi, API, persistance, identité/authz,
@@ -208,6 +211,34 @@ l'UX (niveau d'accessibilité visé, cibles responsive/breakpoints, i18n, budget
 le back/persistance/déploiement/ADR serveur. **Contenu seul** (aucune `(src:)`) ; **ne pas inventer** ;
 **sans objet** si N/A. Mettre à jour le manifeste en silence.
 
+### Étape 10 — Initialiser les fichiers d'environnement (optionnel)
+Une fois la stack et **toutes les dépendances externes connues** (API, services, bases), **proposer** en
+clair : « Veux-tu initialiser les fichiers d'environnement pour la stack retenue ? » (oui/non). Si non,
+le noter et continuer.
+Si oui : lire la stack retenue dans `tech-stack.md`, copier le gabarit correspondant du catalogue
+`references/env-templates/` (Python/Node/Vite/Go → `.env.example`, **plus** un `.env` à remplir créé à
+la racine et gitignoré ; Angular → `src/environments/environment.ts` + `environment.prod.ts` ; .NET →
+`appsettings*.json` ; Spring → `application.yml` + `.env.example`) vers **la racine du projet**, et le
+remplir de **variables placeholder** dérivées des dépendances externes :
+- `tech-stack.md` (Stockages → `DATABASE_URL`/`REDIS_URL`… ; Infrastructure → fournisseur cloud,
+  gestion des secrets, stockage objet) ; `components.md` (Services externes → clés + endpoints des API
+  tierces et fournisseurs d'auth) ; ADR (cloud / identité-authz / observabilité).
+- **Valeurs vides ou d'exemple, jamais de secret réel.** Pour Angular/Vite (bundle client public) :
+  **URLs publiques uniquement, aucun secret**.
+- **`.gitignore`** : créer/compléter à la racine pour **ignorer** `.env` et `.env.*.local`, et
+  **committer** `.env.example`. Confirmer en clair les fichiers créés. Mettre à jour le manifeste en
+  silence (`env_files` = initialisé ou décliné).
+
+### Étape 11 — Poser l'enforcement des tests (racine, déterministe)
+Installer le garde-fou « tests écrits avec le code » à la **racine du projet** (miroir de `conventions/`),
+depuis le catalogue `references/enforcement/` : copier `.claude/settings.json` + `.claude/hooks/tests_guard.py`
+(hooks Claude Code — `Stop` bloque la fin de tour tant qu'une source modifiée n'a pas de test ;
+`PostToolUse` relance) et `lefthook.yml` (garde-fou pre-commit). Adapter la commande `python`/`py` et les
+conventions de test à la stack si besoin. Confirmer en clair. Mettre à jour le manifeste en silence
+(`test_enforcement` = installé). *(Le backstop non contournable — un check CI diff-coverage requis — est
+produit par l'assembleur dans le paquet de handoff ; la stratégie de test elle-même vit dans
+`standards.md`, étape 4.)*
+
 ## Résolution des points avant de conclure
 Avant de terminer, **balayer tous les fichiers `architecte-out/`** : pour **chaque**
 point encore à définir ou à chiffrer, **poser la question** à l'utilisateur (un par
@@ -226,6 +257,9 @@ indéfini. Aucun fichier annexe.
   contradictoire).
 - **Front-matter présent** en tête de chaque fichier `architecte-out/` (`version:` entier,
   `date:` ISO `AAAA-MM-JJ`) ; ADR à `version: 1`.
+- **`standards.md` porte la stratégie de test** (unitaires cas passant/échec/limite ; intégration
+  API/front/batch avec mocks ; tests en même temps que le code) ; **enforcement posé** à la racine
+  (`.claude/` + `lefthook.yml`) ; **fichiers d'environnement** initialisés ou explicitement déclinés.
 - **Contenu seul** : aucune `(src:)`, aucun horodatage dans le corps, aucun nom de personne,
   **aucun marqueur résiduel** ; tout point a été tranché en session. (Le front-matter
   `version`/`date` est une métadonnée de document, pas de la provenance.)

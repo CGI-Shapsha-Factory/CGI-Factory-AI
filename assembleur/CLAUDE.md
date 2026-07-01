@@ -8,8 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 (fonctionnel = cadrage, technique = architecte, design = designer), les **converge**, et
 **produit un paquet de handoff** que l'équipe donne à SpecKit. **Il n'écrit jamais dans un
 repo cible** : tout sort dans **`assembleur-out/`**. Pas de constitution dans `.specify/`,
-pas de `specs/NNN/spec.md`, pas de GLOSSARY.md, **pas de Linear ni de CI**. Ce sont des
-**skills Markdown** ; pas de build/test.
+pas de `specs/NNN/spec.md`, pas de GLOSSARY.md, **pas de Linear** ; le seul CI produit est un
+**garde-fou de test** (`ci/tests.yml`) livré **dans le paquet** (jamais posé dans le repo cible — c'est
+l'équipe qui le pose en *required status check*). Ce sont des **skills Markdown** ; pas de build/test.
 
 ## Langue & invocation
 - **Tout en français** (skills, templates, artefacts, interaction). Seuls les
@@ -33,6 +34,7 @@ assembleur-out/
 ├── feature-map.md             # séquence + couplage/dépendances + walking skeleton
 ├── technical-context.md       # Technical Context (→ /speckit.plan)
 ├── CLAUDE.md                  # CLAUDE.md projet (< 200 lignes, @imports memory/)
+├── ci/tests.yml               # backstop CI diff-coverage (required status check ; non contournable)
 ├── memory/{MEMORY,domain,architecture,design,features}.md
 ├── coherence-report.md
 └── attack-plan.md
@@ -50,7 +52,8 @@ Voir `references/speckit-mapping.md`. **Clé de jointure = le use case** (regist
 `architecture.feature_sequence` = objets `{id, ucs, name}`). Fonctionnel + technique joints **par use
 case** ; design **global** (système synchronisé via `/design-sync` + guidelines). La pré-constitution
 converge les **principes non négociables** des 3 contrats (dont la règle design-sync : tout écran
-dérive du design system synchronisé, aucune valeur de style en dur, états couverts, contrat d'erreur).
+dérive du design system synchronisé, aucune valeur de style en dur, états couverts, contrat d'erreur ;
+et le **principe de test** : tests écrits avec le code, intégration mockée, **backstop CI diff-coverage requis**).
 
 ## Conventions partagées
 `references/interactive-loop.md`, `references/ux-conventions.md`, `references/speckit-mapping.md`.

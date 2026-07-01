@@ -32,6 +32,9 @@ Voir `attack-plan.md` : `specify init` → `/speckit.constitution` (depuis `pre-
 - [ex. règle technique : filtrage par droits, requêtes paramétrées]
 - **aucune valeur de style en dur** (tokens uniquement) ; états couverts ; erreurs selon le contrat ;
   accessibilité au niveau visé.
+- **Tests écrits en même temps que le code** : toute fonction métier a son test (cas passant / échec /
+  limite) dans le même changement ; intégration API/front/batch avec dépendances **mockées**. Garde-fous :
+  hooks `.claude/` + pre-commit + **check CI diff-coverage requis**.
 
 ## Commandes
 [Build / test / lint, dérivées de la stack — ex. `uv run pytest`, `npm test`.]

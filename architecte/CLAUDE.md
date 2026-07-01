@@ -28,7 +28,7 @@ porter le même nom que le plugin.)*
 Écrit ses propres sorties dans `architecte-out/` (à côté de `cadrage-out/`). Le
 manifeste `.factory/manifest.json` reçoit un bloc **`architecture`** (drivers,
 quality_attributes, components, stack, conventions_installed, adrs, walking_skeleton,
-feature_sequence, risks, **design_impact**, coherence_validated). `conventions/` est créé à la **racine
+feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**, coherence_validated). `conventions/` est créé à la **racine
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
 **Handoff designer** : le skill `architecte-contrat` produit `design-impact.md` (section « Décisions à
 impact design ») — la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer-atelier` ;
@@ -53,7 +53,7 @@ non ; l'ordre est purement technique (dépendances).
 
 ## Ordre de remplissage (dépendances)
 drivers/qualité → composants → stack → conventions → ADR → walking skeleton+numérotation
-→ diagrammes → risques → validation de cohérence.
+→ diagrammes → risques → **fichiers d'environnement (optionnel) → enforcement des tests** → validation de cohérence.
 **Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
 risques** (le pourquoi / les limites) ; les attributs de qualité sont les **-ilités mesurées qui en
 découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `templates/drivers-quality.md`).
@@ -64,10 +64,14 @@ découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `tem
 Agent de lecture : `agents/architecte-reader.md` (lecture complète + sortie structurée,
 dispatché en parallèle par `architecte-contrat`).
 Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exactes** de
-`tech-stack.md`, **front-matter `version`/`date`** de chaque doc, marqueurs résiduels) ;
+`tech-stack.md`, **front-matter `version`/`date`** de chaque doc, **stratégie de test** de
+`standards.md`, flags `env_files`/`test_enforcement`, marqueurs résiduels) ;
 `scripts/render_diagrams.py` (rendu Mermaid robuste, auto-install, replis, sans prompt) ;
 `scripts/provision_render.py` (pré-installe le rendu à l'init) ; `scripts/bump_doc_version.py`
 (incrément du compteur de version des documents).
+Catalogues copiés à la racine du projet : `references/conventions/` (linters par langage, Étape 4),
+`references/env-templates/` (fichiers d'env par stack, Étape 10), `references/enforcement/`
+(hooks Claude Code `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code », Étape 11).
 
 ## Vérifications
 ```bash

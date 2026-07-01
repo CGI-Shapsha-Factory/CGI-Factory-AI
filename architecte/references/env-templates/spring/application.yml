@@ -1,0 +1,10 @@
+# Aucun secret en dur : les valeurs sensibles viennent des variables d'environnement.
+# Syntaxe ${VAR:defaut} — la partie ':defaut' sert de repli en développement.
+# DB_PASSWORD n'a PAS de valeur par défaut : elle doit être fournie via l'environnement.
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/app}
+    username: ${DB_USER:app}
+    password: ${DB_PASSWORD}
+server:
+  port: ${PORT:8080}
