@@ -1,3 +1,9 @@
+---
+version: 1
+date: AAAA-MM-JJ
+---
+<!-- version : compteur d'itération de ce document (entier, +1 à chaque régénération). date : jour de génération (format AAAA-MM-JJ, à remplacer par la date réelle). -->
+
 # Drivers d'architecture & attributs de qualité
 
 <!-- Public visé : architectes + humains qui tranchent ; sert de socle aux ADR et au

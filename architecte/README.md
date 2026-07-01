@@ -16,7 +16,7 @@ cadrage depuis `cadrage-out/` et écrit ses propres sorties dans `architecte-out
 | # | Skill | Rôle | Porte d'entrée |
 |---|-------|------|----------------|
 | 0 | `architecte-init` | Installe les gabarits d'archi, crée `conventions/` (`.editorconfig`), étend le manifeste (bloc `architecture`) | cadrage prêt |
-| 1 | `architecte` | Vérifie les réponses (depuis cadrage) → drivers & attributs de qualité → **composants** (interactif) → **stack** (interactif) → conventions → **ADR** (arbitrage) → walking skeleton + numérotation → diagrammes → risques | init faite |
+| 1 | `architecte-contrat` | Vérifie les réponses (depuis cadrage) → drivers & attributs de qualité → **composants** (dont le **frontend**, interactif) → **stack** (interactif : **options + compromis + arbitrage humain**, **versions exactes**) → conventions → **ADR** (arbitrage, consigné après décision) → walking skeleton + numérotation → diagrammes (rendu robuste) → risques | init faite |
 | 2 | `architecte-coherence` | **Validation de cohérence** (composants↔stack↔ADR↔diagrammes↔features) + rapport + garde-fou déterministe | contrat produit |
 
 ## Entrées (depuis `cadrage`)
@@ -26,9 +26,22 @@ cadrage depuis `cadrage-out/` et écrit ses propres sorties dans `architecte-out
 
 ## Sorties (dans `architecte-out/`)
 `drivers-quality.md`, `components.md`, `tech-stack.md`, `standards.md`,
-`decisions/ADR-*.md`, `diagrams.md`, `risks.md`, `coherence-report.md` ; + le dossier
-`conventions/` (à la racine du projet) avec les **vrais fichiers de config** par
-langage ; + la **séquence de features numérotée** (convergence des deux découpages).
+`decisions/ADR-*.md`, `diagrams.md` (+ images PNG dans `diagrammes/`), `risks.md`,
+`design-impact.md`, `coherence-report.md` ; + le dossier `conventions/` (à la racine du
+projet) avec les **vrais fichiers de config** par langage ; + la **séquence de features
+numérotée** (convergence des deux découpages). Chaque document porte un **front-matter
+`version`/`date`** (compteur d'itération ; les ADR restent en version 1, immuables).
+
+## Garanties (retours de test)
+- **Frontend porté par l'architecte** : dès qu'il y a des écrans, `components.md` contient un
+  composant Frontend/UI avec sa stack ; le designer garde le design system **visuel**.
+- **Aucune décision à ta place** : chaque techno (langage, framework, **front**, base,
+  **cloud**, **déploiement**) est présentée en options + compromis, **tu tranches** ; pas de
+  biais fournisseur, et l'expérience avec une techno ne vaut pas décision.
+- **Versions exactes** : toute techno de `tech-stack.md` porte une version épinglée (jamais
+  « latest ») — vérifié par le garde-fou déterministe.
+- **Diagrammes fiables sans intervention** : rendu auto-installé (mermaid-cli + navigateur
+  système, CA d'entreprise respectée **sans** désactiver TLS), replis automatiques, zéro prompt.
 
 ## Conventions de code (vrais fichiers)
 Catalogue dans `references/conventions/` : Python → `ruff.toml` ; TS/JS → `biome.json`
@@ -46,8 +59,8 @@ cadrage : ~16/17 sont déjà répondues ; seul le **profil d'équipe** est deman
 architecte/
 ├── .claude-plugin/plugin.json
 ├── skills/{architecte-init, architecte-contrat, architecte-coherence}/SKILL.md
-├── templates/   # drivers-quality, components, tech-stack, standards, diagrams, adr, risks
+├── templates/   # drivers-quality, components, tech-stack, standards, diagrams, adr, risks, design-impact
 ├── references/  # interactive-loop, ux-conventions, question-map, conventions/ (catalogue)
-├── scripts/check_architecture.py · render_diagrams.py
+├── scripts/     # check_architecture · render_diagrams · provision_render · bump_doc_version
 └── README.md
 ```

@@ -1,10 +1,22 @@
+---
+version: 1
+date: AAAA-MM-JJ
+---
+<!-- version : compteur d'itération de ce document (entier, +1 à chaque régénération). date : jour de génération (format AAAA-MM-JJ, à remplacer par la date réelle). -->
+
 # Stack technique
 
 <!-- Public visé : Claude Code + humains. -->
 <!-- Remplir chaque [placeholder]. La matrice composant × techno doit lister CHAQUE
      composant de components.md — garder les deux fichiers synchronisés. -->
-<!-- Utiliser les marqueurs [À VALIDER] / [À CHIFFRER] là où une valeur manque.
-      pour tracer l'origine d'un choix. -->
+<!-- VERSION EXACTE OBLIGATOIRE : chaque ligne d'une table à colonne « Version » porte
+     une version exacte et épinglée (ex. « Python 3.12.10 », « PostgreSQL 17.2 »,
+     « React 19.1.0 »). INTERDIT : vide, « latest », « stable », « current »,
+     « nightly », « dernière version », « — ». Pour un service managé sans numéro de
+     version (ex. Azure Container Apps), inscrire le SKU / palier ou
+     « service managé (pas de version épinglée) » — jamais « latest ». -->
+<!-- Une version encore inconnue se tranche EN SESSION (on demande la version exacte à
+     l'utilisateur, on l'écrit en place) — jamais laissée en marqueur dans le fichier final. -->
 
 ## Langages & runtimes
 
@@ -61,14 +73,17 @@
 
 ## Politique de versions
 
-<!-- Comment les versions de dépendances sont gérées sur l'ensemble du projet. Exemples :
-- Toutes les dépendances directes sont épinglées à une version exacte ; mises à jour via PR automatisées.
-- Les versions de runtime suivent le fichier `.tool-versions` / `.nvmrc` du projet.
-- Les correctifs de sécurité sont appliqués dans les 72 h suivant la divulgation. -->
+<!-- Règle par défaut REQUISE (pas un simple exemple) : toutes les dépendances directes
+     sont épinglées à une version EXACTE (pyproject.toml / package.json), et les tables
+     ci-dessus reflètent ces versions exactes. Compléter les points spécifiques au projet :
+     cadence de mise à jour, source des versions de runtime (.tool-versions / .nvmrc),
+     délai d'application des correctifs de sécurité. -->
 
-[À VALIDER]
+- Toutes les dépendances directes sont épinglées à une version exacte ; ces versions exactes figurent dans les tables ci-dessus.
+- [cadence de mise à jour — ex. via PR automatisées]
+- [délai d'application des correctifs de sécurité — ex. 72 h après divulgation]
 
 ## Justification des décisions
 
 Toutes les décisions techniques majeures — y compris les options considérées et la
-justification de chaque choix — sont consignées dans `architecture/decisions/`.
+justification de chaque choix — sont consignées dans `architecte-out/decisions/` (ADR).
