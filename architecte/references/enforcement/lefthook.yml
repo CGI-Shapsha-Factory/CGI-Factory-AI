@@ -1,0 +1,10 @@
+# Garde-fou local (pre-commit) : bloque un commit qui ajoute de la source sans test associe.
+# Installer une fois : `lefthook install`  (https://github.com/evilmartians/lefthook)
+# lefthook = binaire unique, polyglotte. Alternatives : husky (projet JS pur), pre-commit (Python).
+# Note : contournable avec `git commit --no-verify` — le backstop non contournable est le check CI
+# diff-coverage requis (produit par l'assembleur).
+pre-commit:
+  parallel: true
+  commands:
+    tests-accompany-source:
+      run: python .claude/hooks/tests_guard.py check {staged_files}

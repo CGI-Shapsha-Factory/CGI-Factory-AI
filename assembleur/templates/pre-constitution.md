@@ -29,7 +29,15 @@
   patterns définis.
 - Accessibilité au **niveau visé** (ex. WCAG 2.2 AA).
 
-<!-- Ajouter P4.. selon les contrats. Chaque principe : énoncé APPLICABLE (pas une intention). -->
+### P4 — Tests écrits avec le code (non négociable)
+- **Tout code métier a son test dans le même changement** : dès qu'une fonction est écrite, son test
+  l'est aussi (**cas passant / échec / limite**). Aucune source ne part sans test.
+- **Intégration des composants** (API, front, batch) avec **dépendances externes mockées** ; le front
+  simule les interactions utilisateur et mocke les appels d'API.
+- **Appliqué de façon déterministe** : hooks Claude Code (`Stop`/`PostToolUse`) + pre-commit + **un check
+  CI diff-coverage requis** (couverture des lignes modifiées) — *required status check* non contournable.
+
+<!-- Ajouter P5.. selon les contrats. Chaque principe : énoncé APPLICABLE (pas une intention). -->
 
 ## Contraintes techniques & réglementaires
 [Déploiement, authentification, intégrations, contraintes légales…]

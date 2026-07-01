@@ -18,6 +18,7 @@ assembleur-out/
 ├── feature-map.md            -> ordre + couplage des /speckit.specify
 ├── technical-context.md      -> matière du Technical Context de /speckit.plan
 ├── CLAUDE.md                 -> CLAUDE.md projet (instructions de fabrication)
+├── ci/tests.yml              -> backstop CI diff-coverage (required status check)
 ├── memory/{MEMORY,domain,architecture,design,features}.md
 ├── coherence-report.md
 └── attack-plan.md
@@ -40,6 +41,8 @@ assembleur-out/
   qualité, conventions, walking-skeleton-first.
 - **Design** (designer) : tout écran dérive du design system synchronisé, aucune valeur de style
   en dur, états couverts, contrat d'erreur, accessibilité au niveau visé.
+- **Tests** (architecte + enforcement) : tests écrits avec le code ; unitaires par règle métier
+  (passant/échec/limite) ; intégration mockée ; appliqué par hooks + pre-commit + **CI diff-coverage requis**.
 - **Gouvernance** : procédure d'amendement, versioning (1.0.0 à la ratification), revue de conformité.
 
 ## Jointure des 3 faces — clé = use case (`uc`)

@@ -1,0 +1,34 @@
+# Backstop NON CONTOURNABLE de la regle « tests ecrits avec le code ».
+# Produit par l'assembleur dans le paquet (assembleur-out/ci/tests.yml) ; l'equipe le place en
+# .github/workflows/tests.yml et le declare *required status check* sur la branche protegee
+# (ni `--no-verify`, ni hook desactive ne peuvent le contourner). Adapter les commandes a la
+# stack (voir technical-context.md). Exemple : Python (dé-commenter le bloc JS/TS si besoin).
+name: tests
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # requis pour la couverture des lignes MODIFIEES (diff-coverage)
+
+      # --- Python (pytest + couverture) — adapter a la stack ---
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt pytest pytest-cov diff-cover
+      - run: pytest --cov --cov-report=xml --cov-report=term
+      # GATE : couverture des LIGNES MODIFIEES >= seuil = le vrai « tests avec le code ».
+      - run: diff-cover coverage.xml --compare-branch=origin/${{ github.base_ref || 'main' }} --fail-under=90
+
+      # --- ou JS/TS (Vitest/Jest) ---
+      # - uses: actions/setup-node@v4
+      #   with: { node-version: '22' }
+      # - run: npm ci && npm test -- --coverage
+      # - run: npx diff-cover coverage/cobertura-coverage.xml --compare-branch=origin/${{ github.base_ref || 'main' }} --fail-under=90
+      #   (ou Codecov avec un `patch` target requis)

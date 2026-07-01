@@ -56,6 +56,8 @@ avec un bloc `architecture`.
   "feature_sequence": [],
   "risks": [],
   "design_impact": false,
+  "env_files": null,
+  "test_enforcement": null,
   "coherence_validated": false
 }
 ```

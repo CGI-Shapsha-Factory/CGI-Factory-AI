@@ -16,7 +16,7 @@ cadrage depuis `cadrage-out/` et écrit ses propres sorties dans `architecte-out
 | # | Skill | Rôle | Porte d'entrée |
 |---|-------|------|----------------|
 | 0 | `architecte-init` | Installe les gabarits d'archi, crée `conventions/` (`.editorconfig`), étend le manifeste (bloc `architecture`) | cadrage prêt |
-| 1 | `architecte-contrat` | Vérifie les réponses (depuis cadrage) → drivers & attributs de qualité → **composants** (dont le **frontend**, interactif) → **stack** (interactif : **options + compromis + arbitrage humain**, **versions exactes**) → conventions → **ADR** (arbitrage, consigné après décision) → walking skeleton + numérotation → diagrammes (rendu robuste) → risques | init faite |
+| 1 | `architecte-contrat` | Vérifie les réponses (depuis cadrage) → drivers & attributs de qualité → **composants** (dont le **frontend**, interactif) → **stack** (interactif : **options + compromis + arbitrage humain**, **versions exactes**) → conventions → **ADR** (arbitrage, consigné après décision) → walking skeleton + numérotation → diagrammes (rendu robuste) → risques → **fichiers d'env (optionnel)** → **enforcement des tests** | init faite |
 | 2 | `architecte-coherence` | **Validation de cohérence** (composants↔stack↔ADR↔diagrammes↔features) + rapport + garde-fou déterministe | contrat produit |
 
 ## Entrées (depuis `cadrage`)
@@ -45,6 +45,10 @@ numérotée** (convergence des deux découpages). Chaque document porte un **fro
 - **Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
   risques** ; les attributs de qualité sont les **-ilités mesurées qui en découlent** (cible +
   scénario) — pas de doublon entre les deux.
+- **Tests & environnement** : stratégie de test concrète dans `standards.md` (unitaires
+  passant/échec/limite, intégration **mockée**, **tests écrits avec le code**), **posée en dur** par
+  des hooks Claude Code + pre-commit à la racine ; fichiers d'environnement **optionnels** selon la
+  stack (placeholders `.env`/Angular/…). Le **backstop CI** (diff-coverage requis) est produit par l'assembleur.
 
 ## Conventions de code (vrais fichiers)
 Catalogue dans `references/conventions/` : Python → `ruff.toml` ; TS/JS → `biome.json`
@@ -63,7 +67,7 @@ architecte/
 ├── .claude-plugin/plugin.json
 ├── skills/{architecte-init, architecte-contrat, architecte-coherence}/SKILL.md
 ├── templates/   # drivers-quality, components, tech-stack, standards, diagrams, adr, risks, design-impact
-├── references/  # interactive-loop, ux-conventions, question-map, conventions/ (catalogue)
+├── references/  # interactive-loop, ux-conventions, question-map, conventions/, env-templates/, enforcement/ (catalogues)
 ├── scripts/     # check_architecture · render_diagrams · provision_render · bump_doc_version
 └── README.md
 ```

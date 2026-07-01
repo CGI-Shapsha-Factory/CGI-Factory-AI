@@ -36,7 +36,7 @@ jamais dans un repo SpecKit.
    le plugin `templates/` : `pre-constitution.md`, `spec-seed.md`, `feature-map.md`,
    `technical-context.md`, `project-claude-md.md`, `memory-index.md`, `memory-domain.md`,
    `memory-architecture.md`, `memory-design.md`, `memory-features.md`,
-   `coherence-report.md`, `attack-plan.md`.
+   `coherence-report.md`, `attack-plan.md`, `ci-tests.yml`.
 2. **Créer le dossier de sortie** `assembleur-out/` avec ses sous-dossiers `features/`
    et `memory/` (vides).
 3. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `assembly`

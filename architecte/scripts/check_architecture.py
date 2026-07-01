@@ -14,7 +14,11 @@ echoue si le contrat technique est incomplet :
   - un marqueur residuel ([A VALIDER]/[A CHIFFRER]/[A DEFINIR]) subsiste dans un
     fichier de `architecte-out/` (tout point doit etre tranche en session) ;
   - une techno de `tech-stack.md` n'a pas de version exacte (vide / 'latest' / ...) ;
-  - un fichier de `architecte-out/` n'a pas de front-matter version(entier)/date(ISO).
+  - un fichier de `architecte-out/` n'a pas de front-matter version(entier)/date(ISO) ;
+  - la strategie de test de `standards.md` est incomplete (unit cas passant/echec/limite,
+    integration avec mocks, tests en meme temps que le code) ;
+  - les fichiers d'environnement n'ont pas ete proposes (etape 10), ou l'enforcement des
+    tests n'est pas pose (etape 11).
 
 Exit 0 si tout est present et coherent, sinon 1. Reutilisable a la main, en hook
 git, ou en CI (socle deterministe de la factory).
@@ -27,6 +31,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 
 MARKER_RE = re.compile(r"\[\s*(?:À|A)\s+(?:VALIDER|CHIFFRER|D[ÉE]FINIR)\s*\]", re.IGNORECASE)
 
@@ -37,6 +42,35 @@ FORBIDDEN_VERSION_RE = re.compile(
     re.IGNORECASE,
 )
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def _fold(s):
+    """minuscule + sans accents (comparaisons robustes)."""
+    return "".join(c for c in unicodedata.normalize("NFD", s.lower())
+                   if unicodedata.category(c) != "Mn")
+
+
+def testing_strategy_issues(manifest_path):
+    """standards.md doit porter une vraie strategie de test (pas un tableau mince)."""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
+    std = os.path.join(root, "architecte-out", "standards.md")
+    if not os.path.isfile(std):
+        return []
+    try:
+        folded = _fold(open(std, encoding="utf-8").read())
+    except OSError:
+        return []
+    if "exigences de test" not in folded:
+        return ["section 'Exigences de test' absente de standards.md"]
+    checks = [
+        ("meme temps", "regle 'tests en meme temps que le code' absente"),
+        ("cas passant", "cas passant non exige"),
+        ("echec", "cas d'echec non exige"),
+        ("limite", "cas limite non exige"),
+        ("integration", "tests d'integration non decrits"),
+        ("mock", "integration avec mocks non exigee"),
+    ]
+    return [msg for needle, msg in checks if needle not in folded]
 
 
 def residual_markers(manifest_path):
@@ -209,6 +243,14 @@ def main(argv):
 
     for issue in frontmatter_issues(path):
         problems.append(f"versionnage doc - {issue}")
+
+    for issue in testing_strategy_issues(path):
+        problems.append(f"strategie de test - {issue}")
+
+    if arch.get("env_files") is None:
+        problems.append("fichiers d'environnement non proposes (etape 10 : initialiser ou decliner)")
+    if not arch.get("test_enforcement"):
+        problems.append("enforcement des tests non pose (etape 11 : hooks + pre-commit a la racine)")
 
     if problems:
         print("ARCHITECTURE INCOMPLETE - points bloquants :", file=sys.stderr)
