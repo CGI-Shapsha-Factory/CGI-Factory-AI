@@ -6,7 +6,8 @@
 ## 0. Mettre le paquet en place
 - Copier le contenu de `assembleur-out/` à la racine du repo de fabrication (constitution, graines,
   carte des features, contexte technique, `CLAUDE.md`, `memory/`).
-- Initialiser SpecKit : `specify init --ai claude` dans le repo.
+- Initialiser SpecKit : `specify init --here --integration claude` dans le repo (automatisable via
+  `/assembleur:install-speckit` — installe `uv`/le CLI et joue `specify init` sans manip).
 
 ## 1. Constitution
 `/speckit.constitution` en fournissant `pre-constitution.md` — les principes non négociables sont déjà

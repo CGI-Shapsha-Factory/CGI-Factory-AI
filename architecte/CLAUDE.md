@@ -53,7 +53,7 @@ non ; l'ordre est purement technique (dépendances).
 
 ## Ordre de remplissage (dépendances)
 drivers/qualité → composants → stack → conventions → ADR → walking skeleton+numérotation
-→ diagrammes → risques → **fichiers d'environnement (optionnel) → enforcement des tests** → validation de cohérence.
+→ diagrammes → risques → **fichiers d'environnement (automatique : `.env`+`.env.example` générés dès que la stack a des dépendances) → enforcement des tests** → validation de cohérence.
 **Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
 risques** (le pourquoi / les limites) ; les attributs de qualité sont les **-ilités mesurées qui en
 découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `templates/drivers-quality.md`).
@@ -65,7 +65,7 @@ Agent de lecture : `agents/architecte-reader.md` (lecture complète + sortie str
 dispatché en parallèle par `architecte-contrat`).
 Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exactes** de
 `tech-stack.md`, **front-matter `version`/`date`** de chaque doc, **stratégie de test** de
-`standards.md`, flags `env_files`/`test_enforcement`, marqueurs résiduels) ;
+`standards.md`, **existence réelle des fichiers d'env à la racine** (`env_files.files` + `.env` gitignoré) / flag `test_enforcement`, marqueurs résiduels) ;
 `scripts/render_diagrams.py` (rendu Mermaid robuste, auto-install, replis, sans prompt) ;
 `scripts/provision_render.py` (pré-installe le rendu à l'init) ; `scripts/bump_doc_version.py`
 (incrément du compteur de version des documents).

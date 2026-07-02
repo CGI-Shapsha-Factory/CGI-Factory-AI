@@ -8,9 +8,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 (fonctionnel = cadrage, technique = architecte, design = designer), les **converge**, et
 **produit un paquet de handoff** que l'équipe donne à SpecKit. **Il n'écrit jamais dans un
 repo cible** : tout sort dans **`assembleur-out/`**. Pas de constitution dans `.specify/`,
-pas de `specs/NNN/spec.md`, pas de GLOSSARY.md, **pas de Linear** ; le seul CI produit est un
+pas de `specs/NNN/spec.md`, pas de GLOSSARY.md ; le seul CI produit est un
 **garde-fou de test** (`ci/tests.yml`) livré **dans le paquet** (jamais posé dans le repo cible — c'est
 l'équipe qui le pose en *required status check*). Ce sont des **skills Markdown** ; pas de build/test.
+**Deux exceptions bornées** à « ne rien écrire hors du paquet » : `init-issues-linear` crée des tickets
+**Linear** (système externe, pas le repo cible) et `install-speckit` invoque `specify init` (c'est
+SpecKit qui génère `.specify/`).
 
 ## Langue & invocation
 - **Tout en français** (skills, templates, artefacts, interaction). Seuls les
@@ -18,13 +21,24 @@ l'équipe qui le pose en *required status check*). Ce sont des **skills Markdown
   SpecKit, `/design-sync`) restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/assembleur:<skill>` + auto par le modèle.
 
-## Les 2 skills
+## Les 4 skills
 - `assembleur-init` — setup (zéro décision) : pré-requis = **les 3 contrats validés** ; installe
   les gabarits ; crée `assembleur-out/` ; étend le manifeste (bloc `assembly` allégé). **Aucun
   repo cible à capturer.**
 - `assembleur-convergence` — **lit les 3 contrats en parallèle** (5 sous-agents `contract-reader`,
   map-reduce), converge, **produit le paquet** dans `assembleur-out/`, **résout les marqueurs en
   session**, et fait la cohérence (porte humaine : *garant de cohérence*).
+- `init-issues-linear` — **pont vers Linear** : lit les features approuvées, les présente en tableau,
+  puis crée **un ticket Linear par feature** (via le MCP **`linear-prism`**, confirmation ticket par
+  ticket, **liste de contrôle** dans la description pour les grosses features, `blockedBy` pour les
+  dépendances), bloc manifeste `linear`. **Exception bornée** à « pas de Linear » (Linear est
+  externe). Repli **brouillon** (`assembleur-out/linear-drafts.md`) si le MCP est absent. Voir
+  `references/linear-guide.md`.
+- `install-speckit` — **pont vers SpecKit** : pose SpecKit dans le repo cible via
+  `scripts/install_speckit.py` (auto-install `uv` sans admin, introspection des flags de `specify
+  init`, `specify init` non-interactif, test de fumée, bloc manifeste `speckit`). **Seule exception
+  bornée** à « n'écrit jamais dans le repo cible » : c'est `specify init` qui génère `.specify/`,
+  jamais ce skill.
 
 ## Le paquet `assembleur-out/`
 ```
@@ -56,9 +70,14 @@ dérive du design system synchronisé, aucune valeur de style en dur, états cou
 et le **principe de test** : tests écrits avec le code, intégration mockée, **backstop CI diff-coverage requis**).
 
 ## Conventions partagées
-`references/interactive-loop.md`, `references/ux-conventions.md`, `references/speckit-mapping.md`.
-Garde-fou déterministe : `scripts/check_assembly.py` (présence du paquet + aucun marqueur résiduel +
-couverture des features). Agent : `agents/contract-reader.md`.
+`references/interactive-loop.md`, `references/ux-conventions.md`, `references/speckit-mapping.md`,
+`references/linear-guide.md` (usage du MCP linear-prism : détection, `save_issue`, sous-issues,
+`blockedBy`, mode brouillon).
+Garde-fous déterministes : `scripts/check_assembly.py` (présence du paquet + aucun marqueur résiduel +
+couverture des features) et `scripts/check_linear.py` (une feature = un ticket ou une décision
+explicite, tickets créés porteurs d'identifiant). Installeur : `scripts/install_speckit.py` (pose
+SpecKit dans le repo, best-effort, timeouts, PATH rafraîchi en cours de processus, flags version-proof
+par introspection). Agent : `agents/contract-reader.md`.
 
 ## Vérifications (à la place des tests)
 ```bash
@@ -68,7 +87,9 @@ python scripts/check_assembly.py <projet>/.factory/manifest.json
 ```
 
 ## Invariants
-**Paquet seul** (n'écrit que dans `assembleur-out/`, jamais un fichier que SpecKit génère) ;
-proposer/pas décider (cohérence validée par l'humain) ; **rien laissé indéfini** (tout marqueur
+**Paquet seul** (n'écrit que dans `assembleur-out/`, jamais un fichier que SpecKit génère — **deux
+exceptions bornées : `init-issues-linear`, qui crée des tickets Linear (système externe, jamais le repo
+cible) ; et `install-speckit`, qui invoque `specify init` pour que SpecKit génère lui-même `.specify/`,
+sans jamais le rédiger à la main**) ; proposer/pas décider (cohérence validée par l'humain) ; **rien laissé indéfini** (tout marqueur
 résolu en session, en place) ; **contenu seul** (aucune `(src:)`, horodatage, nom de personne) ;
 restitutions en prose, manifeste mis à jour en silence.

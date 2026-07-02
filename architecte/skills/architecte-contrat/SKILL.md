@@ -211,23 +211,37 @@ l'UX (niveau d'accessibilité visé, cibles responsive/breakpoints, i18n, budget
 le back/persistance/déploiement/ADR serveur. **Contenu seul** (aucune `(src:)`) ; **ne pas inventer** ;
 **sans objet** si N/A. Mettre à jour le manifeste en silence.
 
-### Étape 10 — Initialiser les fichiers d'environnement (optionnel)
-Une fois la stack et **toutes les dépendances externes connues** (API, services, bases), **proposer** en
-clair : « Veux-tu initialiser les fichiers d'environnement pour la stack retenue ? » (oui/non). Si non,
-le noter et continuer.
-Si oui : lire la stack retenue dans `tech-stack.md`, copier le gabarit correspondant du catalogue
-`references/env-templates/` (Python/Node/Vite/Go → `.env.example`, **plus** un `.env` à remplir créé à
-la racine et gitignoré ; Angular → `src/environments/environment.ts` + `environment.prod.ts` ; .NET →
-`appsettings*.json` ; Spring → `application.yml` + `.env.example`) vers **la racine du projet**, et le
-remplir de **variables placeholder** dérivées des dépendances externes :
-- `tech-stack.md` (Stockages → `DATABASE_URL`/`REDIS_URL`… ; Infrastructure → fournisseur cloud,
-  gestion des secrets, stockage objet) ; `components.md` (Services externes → clés + endpoints des API
-  tierces et fournisseurs d'auth) ; ADR (cloud / identité-authz / observabilité).
-- **Valeurs vides ou d'exemple, jamais de secret réel.** Pour Angular/Vite (bundle client public) :
-  **URLs publiques uniquement, aucun secret**.
+### Étape 10 — Générer les fichiers d'environnement (automatique)
+Une fois la stack et **toutes les dépendances externes connues** (API, services, bases, secrets),
+**générer directement** les fichiers d'environnement — **sans demander** : à ce stade tout est
+spécifié, on sait exactement quelles variables sont nécessaires. **Ne rien générer uniquement** s'il
+n'y a **vraiment aucune** dépendance nécessitant une variable (ni base, ni service externe, ni secret
+d'infra) — auquel cas le noter en clair.
+
+**Déterminer les variables** depuis les artefacts (l'inventaire est déjà fait) :
+- `tech-stack.md` — **Stockages** (chaque base/cache → `DATABASE_URL`/`REDIS_URL`/…) et
+  **Infrastructure** (fournisseur cloud, gestion des secrets, stockage objet) ;
+- `components.md` — **Services externes** : pour **chaque** API tierce / fournisseur d'auth, ajouter un
+  **slot dédié** (`<SERVICE>_API_KEY` / `<SERVICE>_URL`) — pas seulement les variables génériques du
+  gabarit ;
+- ADR — cloud / identité-authz / observabilité.
+
+**Écrire, à la racine du projet**, en partant du gabarit de la stack (`references/env-templates/` :
+Python/Node/Vite/Go, Angular, .NET, Spring), **enrichi d'un slot par dépendance identifiée** ci-dessus :
+- **`.env.example`** — **committé**, la référence documentée (chaque variable + un commentaire court) ;
+- **`.env`** — **à remplir**, créé à la racine et **gitignoré** (Python/Node/Vite/Go ; Angular →
+  `src/environments/environment.ts` + `environment.prod.ts` ; .NET → `appsettings*.json` ; Spring →
+  `application.yml` + `.env.example`).
+- **Valeurs vides ou d'exemple, jamais de secret réel.** Angular/Vite (bundle client **public**) :
+  **URLs publiques uniquement, aucun secret** (les secrets restent côté serveur).
 - **`.gitignore`** : créer/compléter à la racine pour **ignorer** `.env` et `.env.*.local`, et
-  **committer** `.env.example`. Confirmer en clair les fichiers créés. Mettre à jour le manifeste en
-  silence (`env_files` = initialisé ou décliné).
+  **committer** `.env.example`.
+
+Confirmer en clair les fichiers créés. Mettre à jour le manifeste **en silence** — `env_files` porte la
+**liste des fichiers écrits** (le garde-fou vérifie qu'ils existent) :
+`{ "initialized": true, "stack": "<stack>", "files": [".env.example", ".env", …], "gitignored": true }`
+— ou, si vraiment aucune variable n'est nécessaire :
+`{ "initialized": false, "reason": "aucune dépendance nécessitant des variables d'environnement" }`.
 
 ### Étape 11 — Poser l'enforcement des tests (racine, déterministe)
 Installer le garde-fou « tests écrits avec le code » à la **racine du projet** (miroir de `conventions/`),

@@ -4,7 +4,12 @@
 
 **Fabrique logicielle spec-driven pour Claude Code — l'IA propose et structure, l'humain décide.**
 
-Quatre plugins qui transforment un atelier (transcripts, docs) en un projet prêt à fabriquer avec SpecKit — sans jamais laisser l'IA franchir une décision structurante.
+| Plugin | Contrat | État |
+|--------|---------|------|
+| **cadrage** | Fonctionnel — captation du besoin, vision, glossaire, découpage en features (sorties dans `cadrage-out/`) | 🟢 construit |
+| **architecte** | Technique — drivers, attributs de qualité, composants, stack, ADR transverses, walking skeleton, conventions/linters, diagrammes (rendus en images PNG) | 🟢 construit |
+| **designer** | Design — **atelier de couverture** : ne génère pas le design system ; il garantit que rien n'est oublié et produit le **prompt Claude Design** + le rapport de couverture + le handoff. Le design system naît dans **Claude Design** et passe au code via **`/design-sync`** | 🟢 construit |
+| **assembleur** | Convergence — coud les 3 contrats par feature, vérifie la cohérence, crée un **ticket Linear par feature** (via le MCP linear-prism, confirmation ticket par ticket), pose SpecKit (`specify init`) et produit le paquet de handoff (constitution, CLAUDE.md, briefs 3-faces, glossaire, seeds spec.md, CI) | 🟢 construit |
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-plugins-8A2BE2)
 ![Plugins](https://img.shields.io/badge/plugins-4-1f6feb)
