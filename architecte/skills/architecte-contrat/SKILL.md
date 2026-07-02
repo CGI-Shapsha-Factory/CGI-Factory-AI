@@ -231,10 +231,12 @@ remplir de **variables placeholder** dérivées des dépendances externes :
 
 ### Étape 11 — Poser l'enforcement des tests (racine, déterministe)
 Installer le garde-fou « tests écrits avec le code » à la **racine du projet** (miroir de `conventions/`),
-depuis le catalogue `references/enforcement/` : copier `.claude/settings.json` + `.claude/hooks/tests_guard.py`
-(hooks Claude Code — `Stop` bloque la fin de tour tant qu'une source modifiée n'a pas de test ;
-`PostToolUse` relance) et `lefthook.yml` (garde-fou pre-commit). Adapter la commande `python`/`py` et les
-conventions de test à la stack si besoin. Confirmer en clair. Mettre à jour le manifeste en silence
+depuis le catalogue `references/enforcement/` : copier `.claude/hooks/tests_guard.py` + `lefthook.yml`
+(garde-fou pre-commit), puis **fusionner** les hooks Claude Code dans `.claude/settings.json` via
+`python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_test_hooks.py" <racine>` — il ajoute `Stop`
+(bloque la fin de tour tant qu'une source modifiée n'a pas de test) + `PostToolUse` (relance) **sans
+écraser** un éventuel hook `SessionEnd` du compteur de coûts (plugin `couts`). Adapter la commande
+`python`/`py` et les conventions de test à la stack si besoin. Confirmer en clair. Mettre à jour le manifeste en silence
 (`test_enforcement` = installé). *(Le backstop non contournable — un check CI diff-coverage requis — est
 produit par l'assembleur dans le paquet de handoff ; la stratégie de test elle-même vit dans
 `standards.md`, étape 4.)*

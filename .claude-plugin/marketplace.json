@@ -49,6 +49,17 @@
       "category": "Convergence (SpecKit/Linear)",
       "tags": ["lead", "convergence", "speckit", "linear", "handoff"],
       "description": "Coud les 3 contrats -> repo SpecKit + Linear."
+    },
+    {
+      "name": "couts",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
+        "path": "couts"
+      },
+      "category": "Couts (transversal)",
+      "tags": ["couts", "cost", "tokens", "pilotage", "observabilite"],
+      "description": "Mesure des couts de fabrication : reel vs simulation, par phase/feature."
     }
   ]
 }
