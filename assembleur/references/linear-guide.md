@@ -1,9 +1,10 @@
-# Guide Linear — création des tickets via le MCP linear-prism (assembleur)
+# Guide Linear — création et mise à jour des tickets via le MCP linear-prism (assembleur)
 
-Référence d'usage pour `init-issues-linear`. La création passe par le **MCP du plugin
-`linear-prism`** (serveur hébergé `https://mcp.linear.app/mcp`, authentifié en OAuth via `/mcp` —
-**aucune clé API** à gérer). Ce plugin est **externe à la Factory** : le skill le détecte et,
-s'il est absent, bascule en **mode brouillon**.
+Référence d'usage pour `init-issues-linear` (création) et `update-issue-linear` (mise à jour). Le
+dialogue passe par le **MCP du plugin `linear-prism`** (serveur hébergé `https://mcp.linear.app/mcp`,
+authentifié en OAuth via `/mcp` — **aucune clé API** à gérer). Ce plugin est **externe à la Factory**
+(voir « Installation » ci-dessous) : les skills le détectent et, s'il est absent, la création bascule
+en **mode brouillon** (la mise à jour, elle, a besoin du MCP).
 
 ## Détection (avant tout)
 Sonder `mcp__plugin_linear-prism_linear__list_teams`.
@@ -12,6 +13,24 @@ Sonder `mcp__plugin_linear-prism_linear__list_teams`.
   `linear-prism` et d'une authentification (`/mcp`). Installe-le puis relance — ou je te prépare
   les tickets en **brouillon** (`assembleur-out/linear-drafts.md`) à coller à la main. » **Ne
   jamais bloquer** : proposer le mode brouillon.
+
+## Installation du plugin linear-prism (si le MCP est absent)
+`linear-prism` est un **plugin tiers** (externe à la Factory) qui **empaquette la configuration du
+serveur MCP Linear hébergé** (`https://mcp.linear.app/mcp`, **OAuth — aucune clé API**). S'il n'est
+pas détecté, guider l'utilisateur pas-à-pas :
+
+1. **Ajouter la marketplace** : `/plugin marketplace add shinpr/linear-prism`
+   (variante « bundle » si l'équipe le distribue ainsi : `/plugin marketplace add shinpr/claude-code-workflows`).
+2. **Installer le plugin** : `/plugin install linear-prism@linear-prism`
+   (ou `/plugin install linear-prism@claude-code-workflows` pour la variante bundle — le suffixe
+   `@<marketplace>` doit correspondre à la marketplace ajoutée).
+3. **Redémarrer Claude Code** (pour charger le serveur MCP du plugin).
+4. **S'authentifier** : lancer **`/mcp`**, choisir le serveur `linear`, terminer le login OAuth dans
+   le navigateur.
+
+Revalider ensuite avec la **détection** ci-dessus (`list_teams` répond). Tant que ce n'est pas fait,
+la **création** bascule en mode brouillon ; la **mise à jour** a besoin du MCP (relancer une fois
+installé).
 
 ## Cible (une seule fois, avant la boucle)
 - **Équipe** (obligatoire pour créer) : `list_teams` → présenter en 3 options (recommandée =
@@ -58,6 +77,27 @@ traitées **dans l'ordre** (001, 002, …) ; une dépendance pointe vers une fea
 donc **déjà créée**. Sur le ticket parent de la feature dépendante, poser :
 `save_issue({id: "<identifier de la feature>", blockedBy: ["<identifier de la dépendance>"]})`
 (ou passer `blockedBy` dès la création). `blocks`/`blockedBy` sont **append-only**.
+
+## Mettre à jour un ticket (statut / cases à cocher)
+Pour `update-issue-linear`. Un seul outil `save_issue` **crée ou met à jour** : passer un **`id`**
+(l'`identifier`, ex. `LIN-123`) déclenche la **mise à jour** (le `team` n'est requis qu'à la création).
+
+- **Trouver le ticket** : `list_issues({query: "<mots-clés du titre>", team})` (la recherche porte sur
+  titre + description) ; ou `get_issue({id})` si l'`identifier` est déjà connu (retourne aussi l'état
+  courant, la `description`, et le `branchName` git — utile pour recouper avec la branche courante).
+- **Résoudre l'état** : `list_issue_statuses({team})` renvoie les états de l'équipe avec leur **type**
+  (`backlog` / `unstarted` / `started` / `completed` / `canceled` / `triage`). Pour « terminé », viser
+  le type **`completed`** ; « en cours » → `started`.
+- **Changer l'état** : `save_issue({id, state})` — `state` accepte le **nom** (`"Done"`), le **type**
+  (`completed`) ou l'**UUID** de l'état. Ex. : `save_issue({id: "LIN-123", state: "Done"})`.
+- **Cocher une case** (sous-partie d'une grosse feature) : lire la `description` via `get_issue`,
+  passer la ligne `- [ ] …` visée à `- [x] …`, puis `save_issue({id, description: "<MAJ>"})`.
+- **Idempotence** : lire l'état courant (`get_issue`) **avant** d'écrire ; s'il est déjà celui visé,
+  ne rien faire. Consigner le dernier état posé dans `linear.issues[]` via un champ **`workflow_state`**
+  (distinct de `status`, qui reste l'action Factory `created/skipped/merged/draft` — `check_linear.py`
+  n'y touche pas et ignore `workflow_state`).
+- **Pas de commentaire** par défaut (on ne change que l'état / la case). `save_comment({issueId, body})`
+  existe mais n'est pas utilisé ici.
 
 ## Idempotence (bloc manifeste `linear`)
 Avant de créer, lire `linear.issues` : une feature déjà consignée avec un `issue_id` est **déjà

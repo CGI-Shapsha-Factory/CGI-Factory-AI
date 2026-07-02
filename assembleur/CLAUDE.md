@@ -11,9 +11,9 @@ repo cible** : tout sort dans **`assembleur-out/`**. Pas de constitution dans `.
 pas de `specs/NNN/spec.md`, pas de GLOSSARY.md ; le seul CI produit est un
 **garde-fou de test** (`ci/tests.yml`) livré **dans le paquet** (jamais posé dans le repo cible — c'est
 l'équipe qui le pose en *required status check*). Ce sont des **skills Markdown** ; pas de build/test.
-**Deux exceptions bornées** à « ne rien écrire hors du paquet » : `init-issues-linear` crée des tickets
-**Linear** (système externe, pas le repo cible) et `install-speckit` invoque `specify init` (c'est
-SpecKit qui génère `.specify/`).
+**Deux exceptions bornées** à « ne rien écrire hors du paquet » : `init-issues-linear` **et
+`update-issue-linear`** créent et mettent à jour des tickets **Linear** (système externe, pas le repo
+cible) et `install-speckit` invoque `specify init` (c'est SpecKit qui génère `.specify/`).
 
 ## Langue & invocation
 - **Tout en français** (skills, templates, artefacts, interaction). Seuls les
@@ -21,7 +21,7 @@ SpecKit qui génère `.specify/`).
   SpecKit, `/design-sync`) restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/assembleur:<skill>` + auto par le modèle.
 
-## Les 4 skills
+## Les 5 skills
 - `assembleur-init` — setup (zéro décision) : pré-requis = **les 3 contrats validés** ; installe
   les gabarits ; crée `assembleur-out/` ; étend le manifeste (bloc `assembly` allégé). **Aucun
   repo cible à capturer.**
@@ -34,6 +34,11 @@ SpecKit qui génère `.specify/`).
   dépendances), bloc manifeste `linear`. **Exception bornée** à « pas de Linear » (Linear est
   externe). Repli **brouillon** (`assembleur-out/linear-drafts.md`) si le MCP est absent. Voir
   `references/linear-guide.md`.
+- `update-issue-linear` — **mise à jour Linear** : à partir du message de l'utilisateur (« j'ai
+  terminé la tâche … »), retrouve le ticket (par nom, ou **déduit des derniers changements de code**)
+  et **met à jour son état** (terminé / en cours ; ou **coche une case** d'une grosse feature), après
+  confirmation, via le MCP **`linear-prism`**. **Non gaté**, invoqué à la demande pendant la
+  fabrication ; champ manifeste silencieux `workflow_state`. Voir `references/linear-guide.md`.
 - `install-speckit` — **pont vers SpecKit** : pose SpecKit dans le repo cible via
   `scripts/install_speckit.py` (auto-install `uv` sans admin, introspection des flags de `specify
   init`, `specify init` non-interactif, test de fumée, bloc manifeste `speckit`). **Seule exception
@@ -71,8 +76,8 @@ et le **principe de test** : tests écrits avec le code, intégration mockée, *
 
 ## Conventions partagées
 `references/interactive-loop.md`, `references/ux-conventions.md`, `references/speckit-mapping.md`,
-`references/linear-guide.md` (usage du MCP linear-prism : détection, `save_issue`, sous-issues,
-`blockedBy`, mode brouillon).
+`references/linear-guide.md` (usage du MCP linear-prism : détection, installation, `save_issue`
+création **et mise à jour d'état**, `list_issue_statuses`, `blockedBy`, mode brouillon).
 Garde-fous déterministes : `scripts/check_assembly.py` (présence du paquet + aucun marqueur résiduel +
 couverture des features) et `scripts/check_linear.py` (une feature = un ticket ou une décision
 explicite, tickets créés porteurs d'identifiant). Installeur : `scripts/install_speckit.py` (pose
@@ -88,8 +93,8 @@ python scripts/check_assembly.py <projet>/.factory/manifest.json
 
 ## Invariants
 **Paquet seul** (n'écrit que dans `assembleur-out/`, jamais un fichier que SpecKit génère — **deux
-exceptions bornées : `init-issues-linear`, qui crée des tickets Linear (système externe, jamais le repo
-cible) ; et `install-speckit`, qui invoque `specify init` pour que SpecKit génère lui-même `.specify/`,
-sans jamais le rédiger à la main**) ; proposer/pas décider (cohérence validée par l'humain) ; **rien laissé indéfini** (tout marqueur
+exceptions bornées : `init-issues-linear` et `update-issue-linear`, qui créent et mettent à jour des
+tickets Linear (système externe, jamais le repo cible) ; et `install-speckit`, qui invoque `specify
+init` pour que SpecKit génère lui-même `.specify/`, sans jamais le rédiger à la main**) ; proposer/pas décider (cohérence validée par l'humain) ; **rien laissé indéfini** (tout marqueur
 résolu en session, en place) ; **contenu seul** (aucune `(src:)`, horodatage, nom de personne) ;
 restitutions en prose, manifeste mis à jour en silence.
