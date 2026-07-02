@@ -59,6 +59,14 @@ Lit les 3 contrats en parallèle, les converge, et produit un **paquet de handof
 | `assembleur-init` | vérifie les 3 contrats validés + installe les gabarits + crée `assembleur-out/` | 3 contrats validés |
 | `assembleur-convergence` | lit les 3 contrats **en parallèle** + converge + produit le paquet (pré-constitution, graines spec, carte des features, contexte technique, CLAUDE.md, mémoire) + résout les points en session | **garant de cohérence** (humain) |
 
+### Transversal — `couts` (mesure des coûts)
+Pas une phase : mesure **ce que coûte la fabrication** (coût réel vs coût de simulation, ventilé par phase amont / feature + ligne Cowork). À installer **tôt** pour tout capter.
+
+| skill | rôle | porte / ordre |
+|-------|------|---------------|
+| `couts-init` | pose le compteur (hook `SessionEnd` + lecteur + table de prix datée + config) à la racine, sans écraser les hooks de test | **juste après `cadrage-init`** |
+| `couts-rapport` | restitue les 2 vues (réel vs simulation ventilée) | à tout moment |
+
 **Handoff final** : l'équipe prend le paquet de `assembleur-out/` → `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) → les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 
 **Repère** : pour savoir où tu en es dans une phase, lance son skill de bilan/cohérence

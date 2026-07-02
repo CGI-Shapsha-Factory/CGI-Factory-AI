@@ -1,0 +1,17 @@
+{
+  "name": "couts",
+  "version": "0.1.0",
+  "description": "Mesure des coûts de fabrication de la Factory. Deux chiffres jamais mélangés : le coût RÉEL (abonnements Max fixes + usages clé API + Cowork, saisis depuis la Console) et le coût de SIMULATION (les tokens des sessions valorisés au tarif API — le chiffre commercialement défendable). Un hook Claude Code SessionEnd lit le transcript de chaque session, extrait les 4 catégories de tokens (entrée/sortie/lecture cache/écriture cache 5min+1h), déduplique par (message.id, requestId) en gardant la dernière valeur, valorise via une table de prix datée (LiteLLM), attribue à la phase amont OU à la feature (branche NNN-, jamais les deux), et journalise un fichier par session dans .factory/costs/ (sans conflit multi-développeurs). couts-rapport restitue les deux vues, ventilées par phase/feature + ligne Cowork globale. 2 skills interactifs (couts-init, couts-rapport), tout en français.",
+  "author": {
+    "name": "IA Factory"
+  },
+  "keywords": [
+    "couts",
+    "cost",
+    "tokens",
+    "pricing",
+    "observability",
+    "spec-driven",
+    "factory"
+  ]
+}

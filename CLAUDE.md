@@ -10,13 +10,14 @@ Ce dépôt n'est **pas un projet applicatif** : c'est une **collection de plugin
 - Installation : **uniquement via la marketplace** (`.claude-plugin/marketplace.json` → Shapsha-Factory). Côté utilisateur : `/plugin marketplace add` puis `/plugin install <plugin>@Shapsha-Factory`. La marketplace expose aussi `category`/`tags` par plugin (groupement par rôle dans `/plugin` Discover). *(L'ancien installeur façon BMAD — `install.py` / wrapper npx / `INSTALL.md` — a été retiré : la marketplace suffit.)*
 - Git : branche `main`, email `naifsaleem20@gmail.com`. Commit/push uniquement sur demande.
 
-## Les plugins (phase amont = 4 contrats)
+## Les plugins (4 contrats amont + 1 transversal)
 | Dossier | Rôle | État | Détail |
 |---------|------|------|--------|
 | `cadrage/` | Contrat **fonctionnel** (captation → pack repris par l'architecte) | **construit** | voir `cadrage/CLAUDE.md` |
 | `architecte/` | Contrat **technique** (drivers, attributs qualité, composants, stack, ADR, walking skeleton, conventions/linters, diagrammes) | **construit** | voir `architecte/CLAUDE.md` |
 | `designer/` | Contrat **design** — **atelier de couverture** (checklist fondation/expérience/technique pré-remplie par les handoffs) qui produit le **prompt Claude Design** + rapport de couverture + handoff ; le design system naît dans **Claude Design** (`/design-sync`), pas généré par le plugin | **construit** | voir `designer/CLAUDE.md` |
 | `assembleur/` | Convergence des 3 contrats par feature + amorçage repo SpecKit (constitution, CLAUDE.md, briefs 3-faces, glossaire consolidé, MEMORY.md, seeds spec.md, CI, Linear) | **construit** | voir `assembleur/CLAUDE.md` |
+| `couts/` | **Transversal** (pas une phase) — mesure des coûts : coût réel vs coût de simulation, ventilé par phase amont / feature + ligne Cowork ; hook `SessionEnd` qui lit les transcripts (4 catégories, dédup) | **construit** | voir `couts/CLAUDE.md` |
 
 Chaque plugin a (ou aura) son propre **`<plugin>/CLAUDE.md`** détaillé. Pour travailler sur `cadrage`, lire **`cadrage/CLAUDE.md`** en premier.
 
@@ -43,5 +44,6 @@ La **mécanique partagée** vit dans `.factory/{manifest.json, templates/}` (dos
 | **architecte** | `cadrage-out/`: product-brief, glossaire, spec-index, project-frame, briefs | `architecte-out/`: drivers-quality, components, tech-stack, standards, diagrams (+ `diagrammes/*.png`), risks, **design-impact**, `decisions/ADR-*.md` ; `conventions/` + `.env*`/`.claude/`/`lefthook.yml`/`.gitignore` (racine, optionnels) | `architecture` |
 | **designer** | `cadrage-out/` (product-brief, glossaire, spec-index, démonstrateur) **+** `architecte-out/design-impact.md` | `designer-out/`: coverage-report, design-guidelines ; `prompts/designer/<NNN>-<JJ-MM>-claude-design.md` | `design` |
 | **assembleur** | `cadrage-out/` + `architecte-out/` (tech-stack, components, standards, decisions/, drivers-quality) + `designer-out/` (design-guidelines, coverage-report) | `assembleur-out/` (paquet de handoff, **rien dans le repo cible**) : `pre-constitution.md`, `features/<id>-*.spec-seed.md`, `feature-map.md`, `technical-context.md`, `CLAUDE.md`, `ci/tests.yml`, `memory/{MEMORY,domain,architecture,design,features}.md`, `coherence-report.md`, `attack-plan.md` | `assembly` |
+| **couts** (transversal) | transcripts de session Claude Code (`SessionEnd`) + `manifest.feature_sequence` + `.factory/cost/{price-table,cost-config}.json` | `.factory/costs/<aaaa-mm>/<session-id>.jsonl` (un fichier/session) ; `.factory/cost/rapport-couts.md` ; hook dans `.claude/` (racine) | `costs` |
 
 **Enforcement** (3 couches, déjà en place) : (1) **portes d'entrée** de chaque `-init` (refusent si la phase amont n'est pas validée + vérifient la présence des fichiers attendus dans les `-out/` amont) ; (2) **garde-fous déterministes** `check_discovery`/`check_ready`/`check_architecture`/`check_design`/`check_assembly` (défaut `.factory/manifest.json`) ; (3) **manifeste** (jointure par use case). **Frontière SpecKit** : l'assembleur produit un **paquet** dans `assembleur-out/` (pré-constitution, graines spec, carte des features, contexte technique, CLAUDE.md, mémoire) ; **c'est l'équipe** qui lance `specify init` puis `/speckit.constitution` (depuis `pre-constitution.md`) et les `/speckit.specify`. L'assembleur **n'écrit jamais** `.specify/`, `specs/NNN/spec.md`, ni aucun fichier que SpecKit génère.

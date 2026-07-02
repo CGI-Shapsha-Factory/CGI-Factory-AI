@@ -1,0 +1,15 @@
+{
+  "_comment": "Config du cout REEL (v0 : saisie manuelle depuis la Console Anthropic) + taux de change. Le cout de SIMULATION, lui, se calcule tout seul depuis le journal .factory/costs/. Dater chaque saisie.",
+  "subscriptions": [
+    { "plan": "Max 5x", "price_usd_month": 100, "count": 0, "_note": "count = nombre de devs sous ce forfait" },
+    { "plan": "Max 20x", "price_usd_month": 200, "count": 0 }
+  ],
+  "fx_usd_eur": { "rate": 0.92, "date": "2026-07-02", "_note": "1 USD = rate EUR" },
+  "platform_real": {
+    "_note": "Lu manuellement sur la Console Anthropic (usages cle API + Cowork). Automatisable plus tard via Admin Cost API.",
+    "api_cost_usd": null,
+    "cowork_cost_usd": null,
+    "period": null,
+    "read_on": null
+  }
+}
