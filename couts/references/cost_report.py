@@ -35,7 +35,8 @@ def project_root(hint):
 
 
 def load_journal(root):
-    records, seen = {}, set()
+    # une ligne PAR TOUR ; dedup par (session_id, turn) au cas ou un fichier serait relu.
+    records = {}
     for path in glob.glob(os.path.join(root, ".factory", "costs", "**", "*.jsonl"), recursive=True):
         try:
             for line in open(path, encoding="utf-8"):
@@ -43,11 +44,7 @@ def load_journal(root):
                 if not line:
                     continue
                 rec = json.loads(line)
-                sid = rec.get("session_id")
-                # dedup par session_id : garder le plus recent (ts)
-                if sid in records and (rec.get("ts") or "") <= (records[sid].get("ts") or ""):
-                    continue
-                records[sid] = rec
+                records[(rec.get("session_id"), rec.get("turn"))] = rec
         except (OSError, ValueError):
             continue
     return list(records.values())
@@ -70,10 +67,11 @@ def price_table_date(root):
 
 def aggregate(records):
     phases = {k: 0.0 for k in PLUGIN_LABELS}
-    features, autre, total = {}, 0.0, 0.0
+    features, tiers, autre, total = {}, {}, 0.0, 0.0
     for r in records:
         c = r.get("sim_cost_usd") or 0.0
         total += c
+        tiers[r.get("tier") or "?"] = tiers.get(r.get("tier") or "?", 0.0) + c
         attr = r.get("attribution") or {}
         kind = attr.get("kind")
         if kind == "phase" and attr.get("label") in phases:
@@ -84,7 +82,7 @@ def aggregate(records):
             f["cost"] += c
         else:
             autre += c
-    return phases, features, autre, total
+    return phases, features, tiers, autre, total
 
 
 def eur(usd, rate):
@@ -104,7 +102,7 @@ def build_report(root):
     fx = (cfg.get("fx_usd_eur") or {})
     rate = fx.get("rate")
     pdate = price_table_date(root)
-    phases, features, autre, sim_total = aggregate(records)
+    phases, features, tiers, autre, sim_total = aggregate(records)
 
     subs = cfg.get("subscriptions") or []
     subs_total = sum((s.get("price_usd_month") or 0) * (s.get("count") or 0) for s in subs)
@@ -144,16 +142,25 @@ def build_report(root):
     lines.append("")
     lines.append(f"- Autre (non attribue) : {money(autre, rate)}")
     lines.append(f"- Cowork (global, lu plateforme) : {money(cowork_real, rate)}")
-    lines.append(f"- **Total simulation (sessions)** : {money(sim_total, rate)}")
+    lines.append(f"- **Total simulation** : {money(sim_total, rate)}")
     lines.append("")
-    lines.append(f"_Sessions mesurees : {len(records)}. Taux de change : "
+    lines.append("**Par tier de modele :**")
+    for t in ("haiku", "sonnet", "opus", "fable"):
+        if tiers.get(t):
+            lines.append(f"- {t.capitalize()} : {money(tiers[t], rate)}")
+    for k, v in sorted((k, v) for k, v in tiers.items()
+                       if k not in ("haiku", "sonnet", "opus", "fable") and v):
+        lines.append(f"- {k} : {money(v, rate)}")
+    lines.append("")
+    n_sessions = len({r.get("session_id") for r in records})
+    lines.append(f"_Tours mesures : {len(records)} ({n_sessions} session(s)). Taux de change : "
                  f"{rate if rate is not None else '?'} ({fx.get('date','?')}). Devise native USD._")
     return "\n".join(lines), {
         "real": {"subscriptions_usd_month": subs_total, "api_cost_usd": api_real,
                  "cowork_cost_usd": cowork_real},
-        "simulation_usd": {"phases": phases, "features": features, "autre": autre,
-                           "cowork": cowork_real, "total_sessions": round(sim_total, 6)},
-        "sessions": len(records), "price_table_date": pdate, "fx": fx,
+        "simulation_usd": {"phases": phases, "features": features, "tiers": tiers,
+                           "autre": autre, "cowork": cowork_real, "total": round(sim_total, 6)},
+        "turns": len(records), "price_table_date": pdate, "fx": fx,
     }
 
 

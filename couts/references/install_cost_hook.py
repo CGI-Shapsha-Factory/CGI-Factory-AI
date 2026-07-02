@@ -1,8 +1,12 @@
 #!/usr/bin/env python
-"""Installe (par FUSION) le hook SessionEnd du compteur de cout dans .claude/settings.json.
+"""Installe (par FUSION) les hooks du compteur de cout dans .claude/settings.json.
 
-Ne JAMAIS ecraser les hooks existants (ex. Stop/PostToolUse poses par l'architecte) : on lit le
-fichier, on ajoute l'evenement SessionEnd s'il manque, on reecrit. Idempotent.
+- `Stop`       -> `turn_cost.py turn`      : mesure EN TEMPS REEL, une ligne par tour.
+- `SessionEnd` -> `turn_cost.py reconcile` : backstop (rattrape un tour rate).
+
+Ne JAMAIS ecraser les hooks existants (ex. `Stop`/`PostToolUse` de test poses par l'architecte) :
+on lit le fichier, on ajoute les evenements manquants, on reecrit. Idempotent, ordre-independant.
+Notre hook `Stop` NE BLOQUE JAMAIS (exit 0) : il coexiste avec le `Stop` de test qui, lui, peut bloquer.
 
 Usage : python install_cost_hook.py [racine_projet]   (defaut : cwd)
 """
@@ -10,8 +14,13 @@ import json
 import os
 import sys
 
-COMMAND = "python .claude/hooks/session_cost.py"
-MARKER = "session_cost.py"
+MARKER = "turn_cost.py"
+ENTRIES = {
+    "Stop": {"hooks": [{"type": "command",
+                        "command": "python .claude/hooks/turn_cost.py turn", "timeout": 30}]},
+    "SessionEnd": {"hooks": [{"type": "command",
+                              "command": "python .claude/hooks/turn_cost.py reconcile", "timeout": 30}]},
+}
 
 
 def main(argv):
@@ -25,27 +34,22 @@ def main(argv):
         try:
             data = json.load(open(settings, encoding="utf-8")) or {}
         except ValueError:
-            print(f"ERREUR: {settings} n'est pas un JSON valide — abandon (pas d'ecrasement).",
-                  file=sys.stderr)
+            print(f"ERREUR: {settings} JSON invalide — abandon (pas d'ecrasement).", file=sys.stderr)
             return 1
 
     hooks = data.setdefault("hooks", {})
-    session_end = hooks.setdefault("SessionEnd", [])
-
-    # deja installe ?
-    for group in session_end:
-        for h in group.get("hooks", []):
-            if MARKER in (h.get("command") or ""):
-                print("SessionEnd (cout) deja present — rien a faire.")
-                return 0
-
-    session_end.append({"hooks": [{"type": "command", "command": COMMAND, "timeout": 30}]})
+    added = []
+    for event, entry in ENTRIES.items():
+        arr = hooks.setdefault(event, [])
+        if any(MARKER in (h.get("command") or "") for g in arr for h in g.get("hooks", [])):
+            continue
+        arr.append(entry)
+        added.append(event)
     with open(settings, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
         f.write("\n")
-    others = [e for e in hooks if e != "SessionEnd"]
-    print(f"SessionEnd (cout) ajoute a {settings}"
-          + (f" ; evenements preserves : {', '.join(others)}" if others else ""))
+    print(f"compteur de cout : {('ajoute ' + ', '.join(added)) if added else 'deja present'}"
+          f" ; evenements presents : {', '.join(sorted(hooks))}")
     return 0
 
 

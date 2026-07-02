@@ -2,10 +2,10 @@
 """Garde-fou deterministe du dispositif de couts.
 
 Verifie que le compteur est correctement pose et que le journal est exploitable :
-  - `.factory/cost/price-table.json` present, valide, date + modeles ;
+  - `.factory/cost/price-table.json` present, valide, date + tiers ;
   - `.factory/cost/cost-config.json` present et valide ;
-  - `.claude/hooks/session_cost.py` present et hook SessionEnd enregistre ;
-  - chaque ligne du journal `.factory/costs/**/*.jsonl` parse et porte les champs attendus.
+  - `.claude/hooks/turn_cost.py` present et hook Stop (compteur) enregistre ;
+  - chaque ligne-tour du journal `.factory/costs/**/*.jsonl` parse et porte les champs attendus.
 
 Usage : python check_costs.py [chemin/vers/.factory/manifest.json]   (defaut : .factory/manifest.json)
 Exit 0 si OK, 1 sinon.
@@ -30,8 +30,8 @@ def main(argv):
             d = json.load(open(pt, encoding="utf-8"))
             if not d.get("date"):
                 problems.append("price-table.json sans 'date' (piege #2 : table datee)")
-            if not d.get("models"):
-                problems.append("price-table.json sans 'models'")
+            if not d.get("tiers"):
+                problems.append("price-table.json sans 'tiers' (haiku/sonnet/opus/fable)")
         except ValueError:
             problems.append("price-table.json JSON invalide")
 
@@ -44,16 +44,16 @@ def main(argv):
         except ValueError:
             problems.append("cost-config.json JSON invalide")
 
-    if not os.path.isfile(os.path.join(root, ".claude", "hooks", "session_cost.py")):
-        problems.append(".claude/hooks/session_cost.py absent (hook non pose)")
+    if not os.path.isfile(os.path.join(root, ".claude", "hooks", "turn_cost.py")):
+        problems.append(".claude/hooks/turn_cost.py absent (hook non pose)")
     se = os.path.join(root, ".claude", "settings.json")
     if os.path.isfile(se):
         try:
             hooks = (json.load(open(se, encoding="utf-8")) or {}).get("hooks", {})
-            found = any("session_cost.py" in (h.get("command") or "")
-                        for g in hooks.get("SessionEnd", []) for h in g.get("hooks", []))
+            found = any("turn_cost.py" in (h.get("command") or "")
+                        for g in hooks.get("Stop", []) for h in g.get("hooks", []))
             if not found:
-                problems.append("hook SessionEnd du compteur non enregistre dans .claude/settings.json")
+                problems.append("hook Stop du compteur (turn_cost.py) non enregistre dans .claude/settings.json")
         except ValueError:
             problems.append(".claude/settings.json JSON invalide")
     else:

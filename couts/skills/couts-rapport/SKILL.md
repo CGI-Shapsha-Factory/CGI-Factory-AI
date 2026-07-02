@@ -20,9 +20,10 @@ Produit les **deux restitutions** de coût à partir du journal (`.factory/costs
    séparés et étiquetés** :
    - **Coût réel (comptable)** : abonnements Max fixes + usages API réels + Cowork (les montants
      plateforme viennent de la config, saisis depuis la Console). C'est la vérité comptable.
-   - **Coût de simulation (estimation)** : « combien la fabrication coûterait en API » — ventilé par
-     **phase amont** (cadrage, architecture, design, assemblage), **par feature**, ligne **autre**, et
-     **ligne Cowork globale**. C'est le chiffre commercialement défendable.
+   - **Coût de simulation (estimation)** : « combien la fabrication coûterait en API » — agrégé depuis les
+     **lignes-tours** (mesurées en temps réel, une par tour) et ventilé par **phase amont** (cadrage,
+     architecture, design, assemblage), **par feature**, ligne **autre**, **ligne Cowork globale**, et
+     **par tier de modèle** (Haiku/Sonnet/Opus/Fable). C'est le chiffre commercialement défendable.
 3. Donner les montants en **euros** (et USD entre parenthèses), avec les **dates** (table de prix, taux
    de change). Signaler si le coût réel est incomplet (montants plateforme non renseignés dans la config).
 

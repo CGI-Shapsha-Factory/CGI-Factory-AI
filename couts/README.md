@@ -9,16 +9,19 @@ Plugin Claude qui mesure **ce que coûte la fabrication d'un logiciel par la Fac
   fabrication coûterait en API ». Le chiffre **commercialement défendable**, ventilé par phase et par feature.
 
 ## Principe
-Un hook **`SessionEnd`** lit le transcript à la fin de chaque session, extrait les **4 catégories de
-tokens** (entrée, sortie, lecture cache, écriture cache 5min/1h), **déduplique**, valorise via une **table
-de prix datée**, **attribue** la session à la **phase amont** (le plugin qui tourne) **ou** à la **feature**
-(la branche `NNN-`), et écrit **un fichier par session** dans `.factory/costs/`. Aucune saisie humaine :
-l'attribution se lit dans le contexte (skill invoqué, branche git).
+Un hook **`Stop`** relève, **à chaque tour** (prompt → réponse), les tokens de ce tour et les journalise
+**immédiatement** : les **4 catégories** (entrée, sortie, lecture cache, écriture cache **5min + 1h**),
+**dédupliquées** (le streaming réécrit le même message → on garde la dernière valeur), valorisées via une
+**table de prix datée par tier**, **attribuées** à la **phase amont** (plugin qui tourne) **ou** à la
+**feature** (branche `NNN-`). Il écrit **une ligne par tour** dans `.factory/costs/` (un fichier par
+session). Un hook **`SessionEnd`** réconcilie en fin de session (rattrape un tour raté). Aucune saisie
+humaine : l'attribution se lit dans le contexte. *(Le compte exact d'entrée — historique + cache — n'étant
+connu qu'à la réponse côté serveur, chaque tour est mesuré juste après sa réponse.)*
 
 ## Les 2 skills
 | # | Skill | Rôle | Quand |
 |---|-------|------|-------|
-| 0 | `couts-init` | Pose le compteur à la racine (hook `SessionEnd` + lecteur + table de prix + config), sans écraser les hooks de test | **tôt**, juste après `cadrage-init` |
+| 0 | `couts-init` | Pose le compteur à la racine (hooks `Stop` temps réel + `SessionEnd` backstop + lecteur + table de prix par tier + config), sans écraser les hooks de test | **tôt**, juste après `cadrage-init` |
 | 1 | `couts-rapport` | Restitue les 2 vues (réel vs simulation ventilée par phase/feature + ligne Cowork) | à tout moment |
 
 ## Attribution (deux familles + une ligne à part)
@@ -44,12 +47,12 @@ disponibles) les montants réels **API** + **Cowork** lus sur la Console (avec l
 couts/
 ├── .claude-plugin/plugin.json
 ├── skills/{couts-init, couts-rapport}/SKILL.md
-├── references/   # session_cost.py (hook) · cost_report.py · install_cost_hook.py · price-table.json · cost-config.json
+├── references/   # turn_cost.py (hooks Stop+SessionEnd) · cost_report.py · install_cost_hook.py · price-table.json · cost-config.json
 ├── scripts/check_costs.py
 └── README.md
 ```
 
 ## Portée v0
-Mesure à la **fin de session** (pas en temps réel). Cowork = ligne globale (pas d'attribution fine). On
-s'arrête à la **feature** (pas par tâche/fichier). Coût réel plateforme = saisie manuelle (l'auto-pull via
-l'Admin Cost API Anthropic viendra ensuite).
+Mesure **en temps réel, par tour** (hook `Stop`), + réconciliation en fin de session (`SessionEnd`). Cowork
+= ligne globale (pas d'attribution fine). On s'arrête à la **feature** (pas par tâche/fichier). Coût réel
+plateforme = saisie manuelle (l'auto-pull via l'Admin Cost API Anthropic viendra ensuite).
