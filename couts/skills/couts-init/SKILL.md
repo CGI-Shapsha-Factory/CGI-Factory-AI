@@ -57,7 +57,8 @@ globalement** (chaque requête comptée une seule fois).
   (les autres hooks préservés).
 - `.factory/couts/{price-table.json, cost-config.json}` présents ; `.factory/couts/` existe.
 - `.gitignore` contient `.factory/couts/` (données individuelles, jamais poussées) ; manifeste avec le bloc `costs`.
-- Vérifier : `python scripts/check_costs.py <racine>/.factory/manifest.json`.
+- Vérifier : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_costs.py" <racine>/.factory/manifest.json`
+  (s'il est **introuvable** ou renvoie **exit 1**, le dire en clair — ne pas conclure « posé » sans cette vérif).
 
 ## Règles invariantes
 - **Fin de session, pas par tour.** Le journal est écrit au `SessionEnd` → aucune latence pendant les tours ;

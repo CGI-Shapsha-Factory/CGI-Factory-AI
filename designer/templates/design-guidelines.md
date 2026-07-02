@@ -1,11 +1,14 @@
 # Guidelines de design — handoff pour l'Assembleur
 
 > Les **règles à graver dans le projet** pour rendre le contrat de design **opposable en fabrication**.
-> Consommées par l'Assembleur (constitution + `claude.md` + CI). Le design system lui-même vit dans Claude
-> Design et est matérialisé par **`/design-sync`** ; ces guidelines l'encadrent.
+> Consommées par l'Assembleur (constitution + `claude.md` + CI). Le design system vit dans Claude Design
+> **ou** dans un export committé au repo, et est matérialisé en code par **`/design-sync`** (depuis l'export
+> committé s'il est présent, sinon la réf. Claude Design) ; ces guidelines l'encadrent.
 
-## Référence du design system
-- Design system **validé + synchronisé** : réf. … (Claude Design) — pont vers le code : **`/design-sync`**.
+## Source du design system
+- Design system **validé** : <réf. Claude Design **ou** export committé au repo (zip/dossier, ex. `tokens.css`)>
+  — pont vers le code : **`/design-sync`** (depuis l'export committé s'il est présent, sinon la réf. Claude Design).
+- Nature de la source : `<claude_design_ref | committed_export>` — un export committé rend la fabrication auto-portable.
 - Stack front cible : … `(src: design-impact §1)`
 
 ## Règles d'états (par écran)

@@ -21,6 +21,12 @@ Vérifier sans l'annoncer ; sinon, orienter en clair vers `/assembleur:assembleu
 
 ## Étape 1 — Lecture parallèle des 3 contrats (map-reduce)
 
+**Toujours (re)lire les 3 contrats depuis les fichiers committés** via les agents, **même si tu crois
+les avoir déjà lus plus tôt dans cette session**. **Ne jamais** t'appuyer sur la mémoire du chat ni
+prendre le raccourci « déjà en contexte » : le skill doit produire **le même paquet quel que soit
+l'historique de conversation** (exécution **indépendante et reproductible** — autre personne, autre
+session, même repo).
+
 Pour aller vite et ne pas saturer le contexte, **dispatcher en parallèle** des
 sous-agents lecteurs (`agentType: "contract-reader"`), **un par lot**, chacun avec un
 **schéma de sortie structuré**. Lancer les **5 lots en un seul message** (appels
@@ -106,8 +112,10 @@ chaque feature a sa graine) ; non-contradiction (design system couvre les états
 pas de parcours sans FR ni de FR sans parcours ; pas de terme de glossaire en conflit ;
 les cibles qualité/perf sont tenables par la stack/déploiement). Écrire
 `assembleur-out/coherence-report.md` (prose, sans marqueur résiduel). Lancer le garde-fou
-`scripts/check_assembly.py`. **Restituer en prose** ; l'humain valide. Ne **jamais**
-valider la cohérence de soi-même.
+(**obligatoire**) : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_assembly.py" <racine>/.factory/manifest.json`.
+S'il est **introuvable** (chemin plugin non résolu) ou renvoie **exit 1**, **s'arrêter** et **dire en
+clair** ce qui manque — **jamais** de vérification « à la main » silencieuse. **Restituer en prose** ;
+l'humain valide. Ne **jamais** valider la cohérence de soi-même.
 
 ## Étape 4 — Résolution interactive des points (obligatoire avant de conclure)
 Balayer **tout le paquet** : pour **chaque** marqueur `[À VALIDER]` / `[À CHIFFRER]` /
@@ -130,7 +138,13 @@ concerné. **Aucun fichier annexe.** **Ne pas conclure** tant qu'un marqueur sub
 - **Rien laissé indéfini.** Tout marqueur se résout en session, en place, avant d'avancer.
 - **Rien de la mécanique affiché.** Aucun nom de variable/clé manifeste, aucun tableau ;
   manifeste mis à jour en silence (voir `references/ux-conventions.md`).
+- **Lecture depuis les fichiers, jamais depuis la session.** Les 3 contrats sont **toujours** (re)lus
+  depuis les fichiers committés via les 5 agents, indépendamment de ce qui est déjà en contexte — pas
+  de raccourci « déjà lu en session » (exécution reproductible par n'importe qui).
 
 À la fin, dire en clair **ce qui a été produit** (en prose) et **la prochaine étape**.
+
+**Handoff (avant de passer la main).** Committer `.factory/manifest.json` **et** `assembleur-out/` (le
+paquet) — l'équipe qui lance SpecKit part du **repo committé**, pas de ta session.
 
 Étape suivante : `/assembleur:init-issues-linear` crée un ticket Linear par feature (confirmation ticket par ticket) ; puis `/assembleur:install-speckit` pose SpecKit dans le repo (`specify init`, sans manip). Ensuite l'équipe fabrique feature par feature : `/speckit.constitution` depuis `pre-constitution.md`, puis les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord).

@@ -204,8 +204,9 @@ def env_files_issues(manifest_path, arch):
 
     - `env_files` absent (None) -> etape non faite (echec).
     - dict {initialized:false, ...} -> cas explicite « aucune variable necessaire » (OK).
-    - dict {initialized:true, files:[...]} -> chaque fichier doit exister a la racine ; si `.env`
-      est ecrit, il doit etre gitignore.
+    - dict {initialized:true, files:[...]} -> chaque fichier NON-`.env` doit exister a la racine.
+      `.env` est gitignore (propre a chaque machine, absent d'un clone frais) : on n'exige PAS sa
+      presence, seulement qu'il soit gitignore ET que `.env.example` (reference committee) existe.
     - valeur historique non structuree (chaine) -> toleree, non verifiable.
     """
     env = arch.get("env_files")
@@ -220,10 +221,16 @@ def env_files_issues(manifest_path, arch):
     files = env.get("files") or []
     if not files:
         issues.append("env_files initialise mais aucun fichier liste (champ `files` vide)")
+    declares_dotenv = any(os.path.basename(str(f)) == ".env" for f in files)
     for rel in files:
+        # `.env` est gitignore et propre a chaque machine : absent d'un clone frais -> pas exige.
+        if os.path.basename(str(rel)) == ".env":
+            continue
         if not os.path.isfile(os.path.join(root, str(rel))):
             issues.append(f"fichier d'environnement manquant a la racine : {rel}")
-    if any(os.path.basename(str(f)) == ".env" for f in files) and not _dotenv_gitignored(root):
+    if declares_dotenv and not os.path.isfile(os.path.join(root, ".env.example")):
+        issues.append("`.env.example` (reference committee) manquant a la racine")
+    if declares_dotenv and not _dotenv_gitignored(root):
         issues.append(".env non gitignore (completer le .gitignore de la racine)")
     return issues
 
@@ -231,7 +238,7 @@ def env_files_issues(manifest_path, arch):
 def main(argv):
     path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
     try:
-        with open(path, encoding="utf-8") as f:
+        with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)
     except FileNotFoundError:
         print(f"ERREUR: manifeste introuvable: {path}", file=sys.stderr)

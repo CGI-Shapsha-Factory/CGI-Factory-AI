@@ -20,7 +20,7 @@ import sys
 def main(argv):
     path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
     try:
-        with open(path, encoding="utf-8") as f:
+        with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)
     except FileNotFoundError:
         print(f"ERREUR: manifeste introuvable: {path}", file=sys.stderr)

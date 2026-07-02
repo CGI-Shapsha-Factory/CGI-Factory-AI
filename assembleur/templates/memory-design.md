@@ -4,7 +4,8 @@
      design pour la fabrication. Contenu seul. -->
 
 ## Design system (opposable)
-- **Référence** : le design system **synchronisé depuis Claude Design** via `/design-sync`.
+- **Source** : le design system **synchronisé via `/design-sync`** — depuis un **export committé** au repo
+  s'il est présent (auto-portable), sinon la **réf. Claude Design**.
 - **Règle non négociable** : tout écran dérive du design system synchronisé ; **aucune valeur de
   style en dur** — on utilise les **tokens et composants**.
 
