@@ -26,6 +26,12 @@ avec un bloc `design` orienté **couverture** (checklist pré-remplie par les ha
 - Vérifier les artefacts : côté cadrage `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`,
   `cadrage-out/spec-index.md` (parcours + entités affichées) ; côté architecte `architecte-out/design-impact.md`.
 
+**Refus précis (fichier réellement manquant).** Nommer en clair **ce qui bloque** : soit un **flag
+manifeste à `false`** + le **skill amont** à relancer (maquette → `/cadrage:cadrage-retour-demonstrateur` ;
+cohérence archi → `/architecte:architecte-coherence`), **puis committer `.factory/manifest.json`** ; soit un
+**fichier `cadrage-out/…` / `architecte-out/…` absent, par chemin**. Rappel : `.factory/manifest.json` + les
+dossiers `-out/` amont doivent avoir été **committés** — s'ils manquent du clone, c'est un fichier réellement absent.
+
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
 ## Procédure

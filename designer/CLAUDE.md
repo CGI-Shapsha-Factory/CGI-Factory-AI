@@ -43,7 +43,7 @@ plat** ; dossier créé par `designer-init`). Le manifeste et les gabarits viven
 **Ne crée plus** `design-system/`. Le manifeste reçoit un bloc **`design`** orienté **couverture** :
 `{phase, inputs{cadrage_ok, design_impact_ok}, checklist{foundation[], experience[], technical[]} (items
 {id,label,origin,status,note}), coverage_sufficient(H), prompt_path, coverage_report_path,
-design_system_ref, design_validated(H), guidelines_path}`. Écriture = read-modify-write + revalidation JSON.
+design_system_ref, design_system_kind (`claude_design_ref` | `committed_export`), design_validated(H), guidelines_path}`. Écriture = read-modify-write + revalidation JSON.
 
 ## Intégration (entrées) — lecture parallèle exhaustive
 `designer-atelier` lit les handoffs **en parallèle** (fan-out de sous-agents `designer-reader`,

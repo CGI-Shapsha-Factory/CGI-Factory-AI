@@ -22,8 +22,9 @@
 [Règle dérivée de la stack / d'un ADR / d'une cible de qualité.]
 
 ### P3 — Design system opposable (design, non négociable)
-- **Tout écran dérive du design system synchronisé** (`/design-sync`) ; **aucune valeur de style en
-  dur** → on utilise les **tokens et composants**.
+- **Tout écran dérive du design system synchronisé** (`/design-sync` — depuis l'**export committé** du
+  design system s'il est présent, sinon la **réf. Claude Design**) ; **aucune valeur de style en dur** →
+  on utilise les **tokens et composants**.
 - **Chaque écran couvre ses états** : chargement, vide, erreur, succès.
 - **Les erreurs suivent le contrat** : le format d'erreur de l'API se projette en affichage selon les
   patterns définis.

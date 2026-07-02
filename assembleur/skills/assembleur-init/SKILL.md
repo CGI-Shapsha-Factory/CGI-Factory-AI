@@ -29,6 +29,12 @@ jamais dans un repo SpecKit.
   (`architecte-out/tech-stack.md`, `components.md`, `decisions/`, `design-impact.md`),
   designer (`designer-out/design-guidelines.md`).
 
+**Refus précis (fichier réellement manquant).** Nommer en clair **ce qui manque** : soit un **flag
+manifeste à `false`** + le **skill amont** à relancer (cadrage → `/cadrage:cadrage-completude` ; archi →
+`/architecte:architecte-coherence` ; design → `/designer:designer-coherence`), **puis committer
+`.factory/manifest.json`** ; soit un **fichier `-out/…` absent, par chemin**. Rappel :
+`.factory/manifest.json` + les 3 dossiers `-out/` doivent avoir été **committés** par les phases précédentes.
+
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
 ## Procédure

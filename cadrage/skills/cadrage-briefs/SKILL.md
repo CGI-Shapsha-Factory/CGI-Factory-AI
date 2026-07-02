@@ -42,12 +42,13 @@ orienter. Message cible :
 > « Avant de rédiger les briefs, il reste à faire la revue de couplage et à valider
 > le prototype — on s'en occupe d'abord ? »
 
-**Garde-fou déterministe (anti-contournement).** Avant toute génération, lancer
-`python scripts/check_ready.py <projet>/.factory/manifest.json` : il échoue (exit 1)
-si la revue de couplage ou la convergence du démonstrateur n'est pas faite. **Ne jamais
-contourner** : en cas d'échec, le dire en clair et orienter vers la revue de
-couplage (`/cadrage:cadrage-decoupage`) puis la boucle démonstrateur
-(`/cadrage:cadrage-demonstrateur-brief`).
+**Garde-fou déterministe (anti-contournement, obligatoire).** Avant toute génération, lancer
+`python "${CLAUDE_PLUGIN_ROOT}/scripts/check_ready.py" <projet>/.factory/manifest.json` : il échoue
+(exit 1) si la revue de couplage ou la convergence du démonstrateur n'est pas faite. **Ne jamais
+contourner** : en cas d'échec — ou si le script est **introuvable** (chemin plugin non résolu) —
+**s'arrêter**, le dire en clair et orienter vers la revue de couplage (`/cadrage:cadrage-decoupage`)
+puis la boucle démonstrateur (`/cadrage:cadrage-demonstrateur-brief`). **Jamais** de vérification « à
+la main » à la place du script.
 
 Adapter selon ce qui manque (en restant en clair) : si le prototype n'est pas
 encore validé, renvoyer vers la boucle (clarification → retour-démonstrateur →

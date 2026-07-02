@@ -179,7 +179,8 @@ Avant d'écrire le manifeste, vérifier :
 - Les **sept sections sont présentes** (vides autorisées, avec une courte mention « non abordé »).
 - **Aucune invention** (auto-contrôle passé), **aucune `(src:)` ni horodatage** dans l'artefact.
 - **Chaque question de découverte tranchée est écrite** ; les questions laissées de côté sont
-  simplement absentes. Vérifiable par `scripts/check_discovery.py`.
+  simplement absentes. Vérifiable par
+  `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" <racine>/.factory/manifest.json`.
 
 Si une de ces conditions échoue, corriger avant d'écrire.
 

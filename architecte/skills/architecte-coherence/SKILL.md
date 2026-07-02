@@ -69,11 +69,14 @@ qui manque, ce qui se contredit, ce qui pourrait casser. Au minimum :
 13. **Passe « ce qui manque / ce qui peut casser »** : une lecture critique finale, pas
     une checklist de présence.
 
-Garde-fou déterministe : lancer `scripts/check_architecture.py` sur le manifeste — il
+Garde-fou déterministe (**obligatoire, jamais sauté**) : lancer
+`python "${CLAUDE_PLUGIN_ROOT}/scripts/check_architecture.py" <racine>/.factory/manifest.json` — il
 échoue notamment s'il **reste un marqueur** dans un fichier `architecte-out/`, si un
 composant n'a pas de techno, si un langage retenu n'a pas son fichier de conventions,
 **si une techno de `tech-stack.md` n'a pas de version exacte (ou dit « latest »)**, ou
-**si un fichier `architecte-out/` n'a pas de front-matter `version`/`date` valide**.
+**si un fichier `architecte-out/` n'a pas de front-matter `version`/`date` valide**. Si le
+script est **introuvable** (chemin plugin non résolu) ou renvoie **exit 1**, **s'arrêter** et
+**rapporter en clair** ce qui manque — **ne jamais** basculer en vérification « à la main ».
 
 ## Résolution interactive des points (obligatoire avant d'avancer)
 Tout point relevé — **bloquant ou non** — n'est **pas seulement affiché** : on **pose
@@ -111,5 +114,9 @@ contrats par feature, une fois le contrat de design figé.)
 - **Rien de la mécanique affiché.** Aucun nom de variable/clé manifeste, aucun
   identifiant codé, aucun tableau (voir `references/ux-conventions.md`). Manifeste
   mis à jour en silence ; à l'utilisateur, seulement le bilan en clair et la suite.
+
+**Handoff (avant de passer la main).** Committer `.factory/manifest.json` (avec la cohérence **scellée**)
+**et** `architecte-out/` — la phase suivante lit le **repo committé**, pas ta session ni ta machine. Un
+manifeste non re-committé après la validation ferait échouer `designer-init` (flag à `false`) sur un autre poste.
 
 Étape suivante : `/designer:designer-init` — démarrer le contrat de design (la phase design exige le cadrage ET l'architecture validés). Ou corriger d'abord les points signalés via `/architecte:architecte-contrat`.

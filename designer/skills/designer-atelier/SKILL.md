@@ -38,7 +38,9 @@ Les phrases complètes de référence sont dans `templates/coverage-checklist.md
 ## Procédure (= déroulé de l'atelier)
 
 ### Étape 1 — Ingestion des handoffs (lecture parallèle) & pré-remplissage
-**Lire tous les handoffs pertinents, en parallèle, pour ne rien manquer.** Dispatcher des sous-agents
+**Toujours (re)lire les handoffs depuis les fichiers committés**, même si tu crois les avoir déjà lus plus
+tôt dans cette session — **ne jamais** t'appuyer sur la mémoire du chat (exécution reproductible par
+n'importe qui). **Lire tous les handoffs pertinents, en parallèle, pour ne rien manquer.** Dispatcher des sous-agents
 lecteurs (`agentType: "designer-reader"`), **un par lot**, chacun avec un **schéma de sortie structuré**,
 en **un seul message** (appels parallèles), puis synthétiser. Lots :
 1. **Cadrage** — `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`.

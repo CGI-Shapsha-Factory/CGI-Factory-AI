@@ -26,6 +26,12 @@ avec un bloc `architecture`.
   `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
   et les briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md`.
 
+**Refus précis (fichier réellement manquant).** Nommer en clair **ce qui manque** : soit le(s)
+**fichier(s) `cadrage-out/…` absent(s), par chemin**, soit le fait que le **verdict cadrage n'est pas
+scellé dans le manifeste** (côté amont : relancer `/cadrage:cadrage-completude`, **puis committer
+`.factory/manifest.json`**). Rappel : `.factory/manifest.json` **et** `cadrage-out/` doivent avoir été
+**committés** par la phase précédente — s'ils manquent du clone, c'est un fichier réellement absent, le dire.
+
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
 ## Procédure

@@ -38,9 +38,10 @@ Le registre des features est `architecture.feature_sequence` (`{id, ucs, name}` 
 ## Étape 1 — Détecter Linear (MCP linear-prism)
 Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-guide.md`).
 - Disponible → continuer.
-- Indisponible → **ne pas bloquer** : expliquer en clair (installer `linear-prism` + `/mcp`), et
-  **proposer le mode brouillon** — préparer les tickets dans `assembleur-out/linear-drafts.md`
-  (titre + description + checklist en cases Markdown) à créer plus tard.
+- Indisponible → **ne pas bloquer** : afficher les **instructions d'installation** (section
+  « Installation du plugin linear-prism » de `references/linear-guide.md` : marketplace, `/plugin
+  install`, redémarrage, `/mcp`), et **proposer le mode brouillon** — préparer les tickets dans
+  `assembleur-out/linear-drafts.md` (titre + description + checklist en cases Markdown) à créer plus tard.
 
 ## Étape 2 — Charger et présenter les features (tableau de revue)
 Lire `architecture.feature_sequence`, `assembleur-out/feature-map.md` (ordre, couplage, **Dépend

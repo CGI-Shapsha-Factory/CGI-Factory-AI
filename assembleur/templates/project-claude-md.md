@@ -21,7 +21,8 @@ Voir `attack-plan.md` : `specify init` → `/speckit.constitution` (depuis `pre-
 `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 
 ## Design (design-sync) — non négociable
-- **Exécuter `/design-sync`** ; ne construire qu'à partir des **tokens et composants synchronisés** —
+- **Exécuter `/design-sync`** (depuis l'**export committé** du design system s'il est présent, sinon la
+  **réf. Claude Design**) ; ne construire qu'à partir des **tokens et composants synchronisés** —
   **aucune valeur de style en dur**.
 - **États par écran** : chargement, vide, erreur, succès.
 - **Patterns d'erreur** : le format d'erreur de l'API se projette en messages par champ.

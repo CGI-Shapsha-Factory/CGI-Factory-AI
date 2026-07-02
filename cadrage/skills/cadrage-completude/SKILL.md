@@ -37,9 +37,10 @@ Calculer les booléens à partir de l'état réel des artefacts et du manifeste 
 - **`decoupage_arbitrated`** — la revue de couplage a été tranchée en session (drapeau vrai).
 - **`all_briefs_complete`** — tous les briefs au statut `complete`.
 - **`no_blocking_gaps`** — **toute question de découverte `pending`/`deferred`**
-  (bloc `discovery` du manifeste) maintient le verdict au rouge — vérifiable par
-  `scripts/check_discovery.py`. Une capacité du périmètre IN non couverte se
-  **tranche en session**.
+  (bloc `discovery` du manifeste) maintient le verdict au rouge — **vérifié (obligatoire)** par
+  `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" <racine>/.factory/manifest.json` (s'il est
+  **introuvable** ou renvoie **exit 1**, **s'arrêter** et le dire en clair — jamais de vérification « à
+  la main »). Une capacité du périmètre IN non couverte se **tranche en session**.
 - **`demonstrateur_converged`** — **calculé** : `aucun validation_point bloquant
   ouvert` **ET** `demonstrateur.client_validated == true`. Le skill **lit**
   `client_validated` (geste humain à l'étape 10), il ne le force jamais. Un projet
@@ -160,5 +161,8 @@ bloc de code du gabarit), sans titre/date/mode/version (cf. `references/ux-conve
 - **Rien d'ouvert persisté.** Aucune liste de trous écrite ; ce qui reste se tranche
   en session, et les réponses sont appliquées **en place** dans `cadrage-out/`.
 - **Skill indépendant.** Lit et écrit le manifeste, sans orchestrateur.
+
+**Handoff (avant de passer la main).** Committer `.factory/manifest.json` (verdict cadrage **scellé**)
+**et** `cadrage-out/` — l'architecte lit le **repo committé**, pas ta session ni ta machine.
 
 Étape suivante : `/architecte:architecte-init` — une fois le cadrage terminé, l'architecte lit directement les fichiers de `cadrage-out/` pour bâtir le contrat technique.
