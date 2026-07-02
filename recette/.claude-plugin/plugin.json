@@ -1,0 +1,20 @@
+{
+  "name": "recette",
+  "version": "0.1.0",
+  "description": "Phase de recette (après livraison) d'un projet spec-driven : couvre les écarts constatés une fois une feature livrée et mise à l'épreuve par le PO. Quatre skills symétriques — le PO crée et qualifie dans Linear, le développeur récupère et réalise — pour deux natures d'écart. Une ANOMALIE : le logiciel ne respecte pas sa spécification (le code est en faute, on répare le code pour rejoindre la spécification inchangée). Une ÉVOLUTION : le logiciel respecte sa spécification mais la spécification doit changer (on change d'abord la spec, le code suit). Frontière : avant livraison (la PR / le merge au code de référence) rien ne se trace ; après, tout écart devient un objet suivi dans Linear. Quatre règles d'or : ne jamais écraser le travail d'autrui (rouvrir une feature livrée est un geste volontaire et tracé) ; ne pas régler une vérité partagée dans le coin d'une feature (elle remonte aux documents centraux : constitution, glossaire, décisions, règles de design) ; ne jamais refermer sans avoir mis la trace à jour (spécification + tâches + Linear) ; la spécification commande, le plan et les tâches se régénèrent (jamais modifiés à la main). Les skills orchestrent les commandes SpecKit existantes au bon moment (clarify / plan / tasks / implement) sans jamais devenir des commandes SpecKit : c'est l'équipe qui lance les /speckit.* (handoff guidé). Le comportement chirurgical de l'évolution est le point sensible : borner le changement dans la spec, valider le plan avant le code, cadrer l'implémentation au périmètre, prouver la non-régression (tests existants + backstop CI diff-coverage de l'architecte). N'introduit AUCUN hook nouveau : la non-régression réutilise l'enforcement de test de l'architecte. Le lien d'un objet à sa feature passe par le label Linear feature:<id> et le champ feature du manifeste (registre canonique architecture.feature_sequence), pas par un identifiant maison. Dialogue Linear via le MCP linear-prism (externe). 4 skills (anomalie-creer, anomalie-corriger, evolution-creer, evolution-realiser), tout en français.",
+  "author": {
+    "name": "IA Factory"
+  },
+  "keywords": [
+    "recette",
+    "anomalie",
+    "evolution",
+    "bug",
+    "spec-driven",
+    "speckit",
+    "linear",
+    "post-livraison",
+    "non-regression",
+    "qa"
+  ]
+}
