@@ -17,8 +17,9 @@ echoue si le contrat technique est incomplet :
   - un fichier de `architecte-out/` n'a pas de front-matter version(entier)/date(ISO) ;
   - la strategie de test de `standards.md` est incomplete (unit cas passant/echec/limite,
     integration avec mocks, tests en meme temps que le code) ;
-  - les fichiers d'environnement n'ont pas ete proposes (etape 10), ou l'enforcement des
-    tests n'est pas pose (etape 11).
+  - les fichiers d'environnement ne sont pas generes (etape 10 : `env_files` absent, ou fichiers
+    declares manquants a la racine, ou `.env` non gitignore), ou l'enforcement des tests n'est pas
+    pose (etape 11).
 
 Exit 0 si tout est present et coherent, sinon 1. Reutilisable a la main, en hook
 git, ou en CI (socle deterministe de la factory).
@@ -182,6 +183,51 @@ def tech_stack_versions(manifest_path):
     return issues
 
 
+def _dotenv_gitignored(root):
+    """.env doit etre ignore par le .gitignore de la racine."""
+    gi = os.path.join(root, ".gitignore")
+    if not os.path.isfile(gi):
+        return False
+    try:
+        for line in open(gi, encoding="utf-8"):
+            s = line.strip().rstrip("/")
+            # patterns qui ignorent VRAIMENT le fichier `.env` (pas `.env.*.local` seul).
+            if s in (".env", ".env*", "*.env", "**/.env") or s.endswith("/.env"):
+                return True
+    except OSError:
+        return False
+    return False
+
+
+def env_files_issues(manifest_path, arch):
+    """Etape 10 : verifie que les fichiers d'environnement declares existent vraiment a la racine.
+
+    - `env_files` absent (None) -> etape non faite (echec).
+    - dict {initialized:false, ...} -> cas explicite « aucune variable necessaire » (OK).
+    - dict {initialized:true, files:[...]} -> chaque fichier doit exister a la racine ; si `.env`
+      est ecrit, il doit etre gitignore.
+    - valeur historique non structuree (chaine) -> toleree, non verifiable.
+    """
+    env = arch.get("env_files")
+    if env is None:
+        return ["fichiers d'environnement non generes (etape 10 : generer, ou noter l'absence de besoin)"]
+    if not isinstance(env, dict):
+        return []  # valeur historique non structuree : toleree
+    if not env.get("initialized"):
+        return []  # cas explicite « aucune dependance necessitant des variables »
+    root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
+    issues = []
+    files = env.get("files") or []
+    if not files:
+        issues.append("env_files initialise mais aucun fichier liste (champ `files` vide)")
+    for rel in files:
+        if not os.path.isfile(os.path.join(root, str(rel))):
+            issues.append(f"fichier d'environnement manquant a la racine : {rel}")
+    if any(os.path.basename(str(f)) == ".env" for f in files) and not _dotenv_gitignored(root):
+        issues.append(".env non gitignore (completer le .gitignore de la racine)")
+    return issues
+
+
 def main(argv):
     path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
     try:
@@ -247,8 +293,8 @@ def main(argv):
     for issue in testing_strategy_issues(path):
         problems.append(f"strategie de test - {issue}")
 
-    if arch.get("env_files") is None:
-        problems.append("fichiers d'environnement non proposes (etape 10 : initialiser ou decliner)")
+    for issue in env_files_issues(path, arch):
+        problems.append(f"env - {issue}")
     if not arch.get("test_enforcement"):
         problems.append("enforcement des tests non pose (etape 11 : hooks + pre-commit a la racine)")
 

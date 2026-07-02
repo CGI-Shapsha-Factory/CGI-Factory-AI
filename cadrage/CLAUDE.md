@@ -27,7 +27,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 - Le **workspace + manifeste** = créés **dans le projet client** par `cadrage-init`.
   Le plugin lit/écrit ces fichiers ; il ne les contient pas.
 
-## Les skills (11 du pipeline + `help-factory`)
+## Les skills (10 du pipeline + `help-factory`)
 `help-factory` (hors pipeline) est l'**aide unique** de la Factory : elle affiche, de façon **statique** (rendu immédiat), la **carte des 4 plugins** (cadrage → architecte → designer → assembleur → SpecKit) avec **un tableau par plugin** (rôle de chaque skill, ordre, portes humaines). C'est la seule aide — il n'y a plus de `help-cadrage` (son détail est absorbé dans le tableau cadrage).
 
 | # | skill | rôle | porte |

@@ -133,4 +133,4 @@ concerné. **Aucun fichier annexe.** **Ne pas conclure** tant qu'un marqueur sub
 
 À la fin, dire en clair **ce qui a été produit** (en prose) et **la prochaine étape**.
 
-Étape suivante : l'équipe lance SpecKit avec le paquet de `assembleur-out/` — `specify init`, puis `/speckit.constitution` depuis `pre-constitution.md`, puis les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord).
+Étape suivante : `/assembleur:init-issues-linear` crée un ticket Linear par feature (confirmation ticket par ticket) ; puis `/assembleur:install-speckit` pose SpecKit dans le repo (`specify init`, sans manip). Ensuite l'équipe fabrique feature par feature : `/speckit.constitution` depuis `pre-constitution.md`, puis les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord).
