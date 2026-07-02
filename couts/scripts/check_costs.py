@@ -2,10 +2,10 @@
 """Garde-fou deterministe du dispositif de couts.
 
 Verifie que le compteur est correctement pose et que le journal est exploitable :
-  - `.factory/cost/price-table.json` present, valide, date + tiers ;
-  - `.factory/cost/cost-config.json` present et valide ;
-  - `.claude/hooks/turn_cost.py` present et hook Stop (compteur) enregistre ;
-  - chaque ligne-tour du journal `.factory/costs/**/*.jsonl` parse et porte les champs attendus.
+  - `.factory/couts/price-table.json` present, valide, date + tiers ;
+  - `.factory/couts/cost-config.json` present et valide ;
+  - `.claude/hooks/turn_cost.py` present et hook SessionEnd (compteur) enregistre ;
+  - chaque enregistrement du journal `.factory/couts/**/*.jsonl` parse et porte les champs attendus.
 
 Usage : python check_costs.py [chemin/vers/.factory/manifest.json]   (defaut : .factory/manifest.json)
 Exit 0 si OK, 1 sinon.
@@ -21,7 +21,7 @@ def main(argv):
     root = os.path.dirname(os.path.dirname(os.path.abspath(manifest)))
     problems = []
 
-    cost_dir = os.path.join(root, ".factory", "cost")
+    cost_dir = os.path.join(root, ".factory", "couts")
     pt = os.path.join(cost_dir, "price-table.json")
     if not os.path.isfile(pt):
         problems.append("price-table.json absent (lancer couts-init)")
@@ -51,16 +51,34 @@ def main(argv):
         try:
             hooks = (json.load(open(se, encoding="utf-8")) or {}).get("hooks", {})
             found = any("turn_cost.py" in (h.get("command") or "")
-                        for g in hooks.get("Stop", []) for h in g.get("hooks", []))
+                        for g in hooks.get("SessionEnd", []) for h in g.get("hooks", []))
             if not found:
-                problems.append("hook Stop du compteur (turn_cost.py) non enregistre dans .claude/settings.json")
+                problems.append("hook SessionEnd du compteur (turn_cost.py) non enregistre dans .claude/settings.json")
         except ValueError:
             problems.append(".claude/settings.json JSON invalide")
     else:
         problems.append(".claude/settings.json absent (hook non pose)")
 
-    required = {"session_id", "tokens", "attribution"}
-    for jf in glob.glob(os.path.join(root, ".factory", "costs", "**", "*.jsonl"), recursive=True):
+    # .gitignore doit couvrir .factory/couts/ (donnees individuelles, jamais poussees)
+    gitignore = os.path.join(root, ".gitignore")
+    if not os.path.isfile(gitignore):
+        problems.append(".gitignore absent — .factory/couts/ non git-ignore (lancer couts-init)")
+    else:
+        try:
+            lines_gi = open(gitignore, encoding="utf-8").read().splitlines()
+            covered = any(
+                line.strip() in (".factory/couts/", ".factory/couts", ".factory/")
+                for line in lines_gi
+            )
+            if not covered:
+                problems.append(
+                    ".factory/couts/ non git-ignore — ajouter la ligne dans .gitignore (lancer couts-init)"
+                )
+        except OSError:
+            problems.append(".gitignore illisible")
+
+    required = {"session_id", "key", "tokens", "attribution"}
+    for jf in glob.glob(os.path.join(root, ".factory", "couts", "**", "*.jsonl"), recursive=True):
         try:
             for i, line in enumerate(open(jf, encoding="utf-8"), 1):
                 line = line.strip()

@@ -1,5 +1,5 @@
 {
-  "_comment": "Config du cout REEL (v0 : saisie manuelle depuis la Console Anthropic) + taux de change. Le cout de SIMULATION, lui, se calcule tout seul depuis le journal .factory/costs/. Dater chaque saisie.",
+  "_comment": "Config du cout REEL (v0 : saisie manuelle depuis la Console Anthropic) + taux de change. Le cout de SIMULATION, lui, se calcule tout seul depuis le journal .factory/couts/. Dater chaque saisie.",
   "subscriptions": [
     { "plan": "Max 5x", "price_usd_month": 100, "count": 0, "_note": "count = nombre de devs sous ce forfait" },
     { "plan": "Max 20x", "price_usd_month": 200, "count": 0 }

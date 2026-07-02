@@ -3,14 +3,14 @@
 
 - COUT REEL (comptable) : abonnements Max fixes (config) + usages API reels + Cowork (config, lus
   Console). C'est la verite comptable.
-- COUT DE SIMULATION (estimation) : les tokens du journal .factory/costs/ valorises au tarif API,
+- COUT DE SIMULATION (estimation) : les tokens du journal .factory/couts/ valorises au tarif API,
   VENTILES par phase amont, par feature, ligne 'autre', + ligne Cowork globale.
 
 Ne JAMAIS presenter la simulation comme du reel. Chaque montant est date (table de prix, taux de change).
 USD natif ; conversion EUR via le taux de la config.
 
 Usage : python cost_report.py [racine_projet] [--json]
-Ecrit aussi .factory/cost/rapport-couts.md
+Ecrit aussi .factory/couts/rapport-couts.md
 """
 import glob
 import json
@@ -35,16 +35,18 @@ def project_root(hint):
 
 
 def load_journal(root):
-    # une ligne PAR TOUR ; dedup par (session_id, turn) au cas ou un fichier serait relu.
+    # un enregistrement PAR MESSAGE ; dedup GLOBALE par 'key' (message.id:requestId)
+    # -> gere reprise / fork / replay (chaque requete comptee une seule fois).
     records = {}
-    for path in glob.glob(os.path.join(root, ".factory", "costs", "**", "*.jsonl"), recursive=True):
+    for path in glob.glob(os.path.join(root, ".factory", "couts", "**", "*.jsonl"), recursive=True):
         try:
             for line in open(path, encoding="utf-8"):
                 line = line.strip()
                 if not line:
                     continue
                 rec = json.loads(line)
-                records[(rec.get("session_id"), rec.get("turn"))] = rec
+                key = rec.get("key")
+                records[key if key else f"_nokey{len(records)}"] = rec
         except (OSError, ValueError):
             continue
     return list(records.values())
@@ -52,14 +54,14 @@ def load_journal(root):
 
 def load_config(root):
     try:
-        return json.load(open(os.path.join(root, ".factory", "cost", "cost-config.json"), encoding="utf-8"))
+        return json.load(open(os.path.join(root, ".factory", "couts", "cost-config.json"), encoding="utf-8"))
     except (OSError, ValueError):
         return {}
 
 
 def price_table_date(root):
     try:
-        return json.load(open(os.path.join(root, ".factory", "cost", "price-table.json"),
+        return json.load(open(os.path.join(root, ".factory", "couts", "price-table.json"),
                               encoding="utf-8")).get("date")
     except (OSError, ValueError):
         return None
@@ -153,14 +155,14 @@ def build_report(root):
         lines.append(f"- {k} : {money(v, rate)}")
     lines.append("")
     n_sessions = len({r.get("session_id") for r in records})
-    lines.append(f"_Tours mesures : {len(records)} ({n_sessions} session(s)). Taux de change : "
+    lines.append(f"_Requetes mesurees : {len(records)} ({n_sessions} session(s)). Taux de change : "
                  f"{rate if rate is not None else '?'} ({fx.get('date','?')}). Devise native USD._")
     return "\n".join(lines), {
         "real": {"subscriptions_usd_month": subs_total, "api_cost_usd": api_real,
                  "cowork_cost_usd": cowork_real},
         "simulation_usd": {"phases": phases, "features": features, "tiers": tiers,
                            "autre": autre, "cowork": cowork_real, "total": round(sim_total, 6)},
-        "turns": len(records), "price_table_date": pdate, "fx": fx,
+        "records": len(records), "sessions": n_sessions, "price_table_date": pdate, "fx": fx,
     }
 
 
@@ -173,7 +175,7 @@ def main(argv):
     else:
         print(md)
     try:
-        outdir = os.path.join(root, ".factory", "cost")
+        outdir = os.path.join(root, ".factory", "couts")
         os.makedirs(outdir, exist_ok=True)
         open(os.path.join(outdir, "rapport-couts.md"), "w", encoding="utf-8").write(md + "\n")
     except OSError:

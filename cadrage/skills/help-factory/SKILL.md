@@ -64,8 +64,9 @@ Pas une phase : mesure **ce que coûte la fabrication** (coût réel vs coût de
 
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
-| `couts-init` | pose le compteur **temps réel** (hooks `Stop` par tour + `SessionEnd` backstop + lecteur + table de prix par tier + config) à la racine, sans écraser les hooks de test | **juste après `cadrage-init`** |
-| `couts-rapport` | restitue les 2 vues (réel vs simulation ventilée) | à tout moment |
+| `couts-init` | pose le compteur (hook `SessionEnd` **en fin de session, sans latence par tour** + lecteur + table de prix par tier + config) à la racine, sans écraser les hooks de test | **juste après `cadrage-init`** |
+| `couts-rapport` | restitue les 2 vues (réel vs simulation ventilée par phase/feature/tier) | à tout moment |
+| `couts-total` | produit un **bilan unique partageable** (total tokens + coût estimé + nb sessions) pour le chef d'équipe ; écrit `.factory/couts/bilan-couts.md` | à la demande |
 
 **Handoff final** : l'équipe prend le paquet de `assembleur-out/` → `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) → les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 
