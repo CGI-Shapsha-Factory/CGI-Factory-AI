@@ -60,6 +60,17 @@
       "category": "Couts (transversal)",
       "tags": ["couts", "cost", "tokens", "pilotage", "observabilite"],
       "description": "Mesure des couts de fabrication : reel vs simulation, par phase/feature."
+    },
+    {
+      "name": "recette",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
+        "path": "recette"
+      },
+      "category": "Recette (apres livraison)",
+      "tags": ["recette", "anomalie", "evolution", "qa", "speckit", "linear"],
+      "description": "Anomalies & evolutions post-livraison -> Linear + SpecKit guide."
     }
   ]
 }
