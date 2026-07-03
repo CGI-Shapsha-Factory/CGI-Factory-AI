@@ -9,6 +9,24 @@ limite), en **défense en profondeur**.
   l'équipe, distinct d'un `settings.local.json` personnel).
 - `.claude/hooks/tests_guard.py` — la logique multi-langage (pur Python + git, sans dépendance).
 - `lefthook.yml` — garde-fou pre-commit git.
+- `.githooks/` — **protection de branche locale** (`branch_guard.py` + `pre-push` + `pre-commit`),
+  posée par `install_branch_protection.py`.
+
+## Protection de branche locale (`.githooks/` + `core.hooksPath`)
+Garde-fou git **pur (git + Python, sans dépendance)** qui applique la règle « Aucun push direct sur
+`main` » de `standards.md` :
+- `pre-push` — **refuse** un push (normal, force-push ou suppression) vers une branche protégée
+  (`main`/`master`/`develop` par défaut ; override via `.githooks/protected-branches`).
+- `pre-commit` — **refuse** un commit fait *sur* une branche protégée, puis **relaie** l'enforcement
+  de tests (`.claude/hooks/tests_guard.py`) s'il est présent (comportement préservé sans dépendre de lefthook).
+- **Activation** : `install_branch_protection.py` pose `git config core.hooksPath .githooks` pour le
+  clone courant. **Par-clone** : chaque collaborateur doit lancer une fois `git config core.hooksPath
+  .githooks` (git n'active pas `core.hooksPath` depuis une config commitée).
+- **Interaction lefthook** : poser `core.hooksPath` fait de `.githooks/` le système de hooks git ; le
+  `pre-commit` ci-dessus rappelle donc lui-même le tests-guard (pas besoin de `lefthook install`).
+- **Limite** : **local et contournable** (`--no-verify`), par-clone, sans effet sur un autre clone/CI.
+  La vraie protection multi-personnes est un **ruleset serveur GitHub** (require PR + review + check
+  CI, block force-push/delete) — **hors** de ce garde-fou local.
 
 ## Les couches (du plus faible au non contournable)
 1. **Hooks Claude Code** (en session) : `PostToolUse` relance dès qu'une source est éditée sans test ;
