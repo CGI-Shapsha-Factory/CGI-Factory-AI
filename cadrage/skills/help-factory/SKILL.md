@@ -68,7 +68,7 @@ Pas une phase : mesure **ce que coûte la fabrication** (coût réel vs coût de
 | `couts-rapport` | restitue les 2 vues (réel vs simulation ventilée par phase/feature/tier) | à tout moment |
 | `couts-total` | produit un **bilan unique partageable** (total tokens + coût estimé + nb sessions) pour le chef d'équipe ; écrit `.factory/couts/bilan-couts.md` | à la demande |
 
-**Handoff final** : l'équipe prend le paquet de `assembleur-out/` → `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) → les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
+**Handoff final** : l'équipe prend le paquet de `assembleur-out/` → `/assembleur:premier-alimente-linear` (un ticket Linear `Feature` par feature) → `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) → les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks` → `/assembleur:creation-task-linear` (un sous-ticket `Task` par phase) → `/speckit.implement` (état des tickets via `/assembleur:update-issue-linear`).
 
 **Repère** : pour savoir où tu en es dans une phase, lance son skill de bilan/cohérence
 (`cadrage-completude`, `architecte-coherence`, `designer-coherence`, ou le rapport de cohérence de l'assembleur).

@@ -24,4 +24,5 @@ rédigés ; il ne reste qu'à les graver.
 ## 3. Par feature (sur la branche `NNN-feature`)
 La graine `features/<id>-…spec-seed.md` fournit la matière. Enchaîner :
 `/speckit.specify` (compléter à partir de la graine) → `/speckit.plan` (Technical Context dans
-`technical-context.md`) → `/speckit.tasks` → `/speckit.implement`.
+`technical-context.md`) → `/speckit.tasks` → **`/assembleur:creation-task-linear`** (crée un sous-ticket
+Linear `Task` par phase du `tasks.md`, rattaché au ticket `Feature`) → `/speckit.implement`.

@@ -34,13 +34,13 @@
 
 <!-- Si le projet Linear n'est pas détecté (MCP absent, ou tickets pas encore créés) : mettre
      `<à renseigner>` + la note d'installation (section « Accès Linear pour Quark » ci-dessous),
-     et — si aucun ticket n'existe — orienter vers `/assembleur:init-issues-linear`. -->
+     et — si aucun ticket n'existe — orienter vers `/assembleur:premier-alimente-linear`. -->
 
 ## Périmètre & features
 
 <!-- Depuis `architecture.feature_sequence` + `assembleur-out/feature-map.md`. La colonne « Ticket
-     Linear » n'est remplie que si `init-issues-linear` a déjà tourné (bloc manifeste `linear`) ;
-     sinon indiquer « à créer via init-issues-linear ». -->
+     Linear » n'est remplie que si `premier-alimente-linear` a déjà tourné (bloc manifeste `linear`) ;
+     sinon indiquer « à créer via premier-alimente-linear ». -->
 
 | Feature | Intitulé | Ticket Linear | Lien |
 |---------|----------|---------------|------|

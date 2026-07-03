@@ -20,7 +20,7 @@ si le ticket est déjà dans l'état visé, on ne réécrit rien.
 
 ## Frontière (exception assumée)
 L'assembleur **n'écrit jamais dans le repo cible** : tout sort dans `assembleur-out/`. Mettre à jour
-un ticket Linear est la **même exception bornée** que `init-issues-linear` : Linear est un **système
+un ticket Linear est la **même exception bornée** que `premier-alimente-linear` : Linear est un **système
 externe** (pas le repo cible, pas un fichier que SpecKit génère). La seule écriture propre à la
 Factory est le bloc `linear` du manifeste. Le dialogue passe par le **MCP du plugin `linear-prism`**
 (externe à la Factory) — voir `references/linear-guide.md`.
@@ -31,7 +31,7 @@ Lire `.factory/manifest.json` **sans l'annoncer** : le bloc `linear` liste les t
 - **Des tickets existent** → s'en servir comme index (résolution rapide et précise).
 - **Aucun ticket / pas de bloc `linear`** → **ne pas bloquer** : on peut chercher directement dans
   Linear ; mais si l'équipe n'a jamais créé de tickets, l'orienter en clair vers
-  `/assembleur:init-issues-linear` (« il n'y a pas encore de tickets à mettre à jour »).
+  `/assembleur:premier-alimente-linear` (« il n'y a pas encore de tickets à mettre à jour »).
 
 ## Étape 1 — Détecter Linear (MCP linear-prism)
 Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-guide.md`).
@@ -54,8 +54,10 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
 
 ## Étape 3 — Identifier le ticket
 - **Tâche nommée** → chercher d'abord dans `linear.issues[]` (par `identifier`, `id` de feature, ou
-  mot-clé du `name`) ; sinon interroger Linear : `list_issues({query: "<mots-clés>", team})` (la
-  recherche porte sur titre + description).
+  mot-clé du `name`) ; **et aussi dans les sous-tickets** `linear.issues[].sub_issues[]` (par
+  `identifier`, `phase`/`phase_name`, ou mot-clé du `title`) quand l'indice vise une **phase**
+  (« phase 2 », « la partie tests », un titre de phase) ; sinon interroger Linear :
+  `list_issues({query: "<mots-clés>", team})` (la recherche porte sur titre + description).
 - **Tâche non nommée** → **déduire des derniers changements de code** (le repo cible est souvent un
   dépôt git), best-effort :
   - **branche courante** `git rev-parse --abbrev-ref HEAD` — les branches Linear encodent souvent

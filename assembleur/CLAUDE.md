@@ -11,7 +11,7 @@ repo cible** : tout sort dans **`assembleur-out/`**. Pas de constitution dans `.
 pas de `specs/NNN/spec.md`, pas de GLOSSARY.md ; le seul CI produit est un
 **garde-fou de test** (`ci/tests.yml`) livré **dans le paquet** (jamais posé dans le repo cible — c'est
 l'équipe qui le pose en *required status check*). Ce sont des **skills Markdown** ; pas de build/test.
-**Trois exceptions bornées** à « ne rien écrire hors du paquet » : `init-issues-linear` **et
+**Trois exceptions bornées** à « ne rien écrire hors du paquet » : `premier-alimente-linear` **et
 `update-issue-linear`** créent et mettent à jour des tickets **Linear** (système externe, pas le repo
 cible) ; `install-speckit` invoque `specify init` (c'est SpecKit qui génère `.specify/`) ; et
 `create-cowork-md` écrit **`init-cowork.md` à la racine** (document de contexte de supervision pour
@@ -23,18 +23,26 @@ le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
   SpecKit, `/design-sync`) restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/assembleur:<skill>` + auto par le modèle.
 
-## Les 6 skills
+## Les 7 skills
 - `assembleur-init` — setup (zéro décision) : pré-requis = **les 3 contrats validés** ; installe
   les gabarits ; crée `assembleur-out/` ; étend le manifeste (bloc `assembly` allégé). **Aucun
   repo cible à capturer.**
 - `assembleur-convergence` — **lit les 3 contrats en parallèle** (5 sous-agents `contract-reader`,
   map-reduce), converge, **produit le paquet** dans `assembleur-out/`, **résout les marqueurs en
   session**, et fait la cohérence (porte humaine : *garant de cohérence*).
-- `init-issues-linear` — **pont vers Linear** : lit les features approuvées, les présente en tableau,
-  puis crée **un ticket Linear par feature** (via le MCP **`linear-prism`**, confirmation ticket par
-  ticket, **liste de contrôle** dans la description pour les grosses features, `blockedBy` pour les
+- `premier-alimente-linear` — **première alimentation de Linear** : lit les features approuvées, les
+  présente en tableau, puis crée **un ticket Linear par feature** (label **`Feature`** résolu par nom
+  + `feature:<id>` clé de jointure ; via le MCP **`linear-prism`**, confirmation ticket par ticket,
+  **liste de contrôle** dans la description pour les grosses features, `blockedBy` pour les
   dépendances), bloc manifeste `linear`. **Exception bornée** à « pas de Linear » (Linear est
   externe). Repli **brouillon** (`assembleur-out/linear-drafts.md`) si le MCP est absent. Voir
+  `references/linear-guide.md`.
+- `creation-task-linear` — **sous-tickets par phase** : à lancer **après `/speckit.tasks`** (quand
+  `specs/<feature>/tasks.md` existe). Pour chaque feature, parse les phases (`## Phase N:`) de son
+  `tasks.md` et crée **un sous-ticket Linear par phase** (label **`Task`**, `parentId` = ticket
+  `Feature`, **titre descriptif** généré — jamais le nom générique brut « Setup »), après
+  confirmation. Labels `Feature`/`Task` **résolus par nom** (`list_issue_labels`), jamais créés. Bloc
+  manifeste `linear.issues[].sub_issues[]`. Repli **brouillon** si le MCP est absent. Voir
   `references/linear-guide.md`.
 - `update-issue-linear` — **mise à jour Linear** : à partir du message de l'utilisateur (« j'ai
   terminé la tâche … »), retrouve le ticket (par nom, ou **déduit des derniers changements de code**)
@@ -48,7 +56,7 @@ le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
   workflow SpecKit / fabrication / avancement : ils n'existent pas encore) ; seuls les **liens**
   GitHub/Linear renvoient à l'état vivant. **3ᵉ exception bornée** à « paquet seul » (écrit à la
   racine — fichier de supervision, pas un artefact SpecKit). Bloc manifeste `cowork`. Non gaté,
-  à la demande (idéalement après `init-issues-linear`). Voir `references/linear-guide.md`.
+  à la demande (idéalement après `premier-alimente-linear`). Voir `references/linear-guide.md`.
 - `install-speckit` — **pont vers SpecKit** : pose SpecKit dans le repo cible via
   `scripts/install_speckit.py` (auto-install `uv` sans admin, introspection des flags de `specify
   init`, `specify init` non-interactif, test de fumée, bloc manifeste `speckit`). **Seule exception
@@ -105,7 +113,7 @@ python scripts/check_assembly.py <projet>/.factory/manifest.json
 
 ## Invariants
 **Paquet seul** (n'écrit que dans `assembleur-out/`, jamais un fichier que SpecKit génère — **trois
-exceptions bornées : `init-issues-linear` et `update-issue-linear`, qui créent et mettent à jour des
+exceptions bornées : `premier-alimente-linear` et `update-issue-linear`, qui créent et mettent à jour des
 tickets Linear (système externe, jamais le repo cible) ; `install-speckit`, qui invoque `specify
 init` pour que SpecKit génère lui-même `.specify/`, sans jamais le rédiger à la main ; et
 `create-cowork-md`, qui écrit `init-cowork.md` à la racine (contexte de supervision PO/Quark, pas un

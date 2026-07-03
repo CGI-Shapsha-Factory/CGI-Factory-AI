@@ -6,7 +6,7 @@ description: Installe et initialise GitHub Spec Kit (specify) dans le repo cible
 # install-speckit
 
 **Pont vers la phase SpecKit.** À lancer **après `assembleur-convergence`** (et, si l'équipe crée des
-tickets, après `init-issues-linear`), quand le paquet de handoff (`assembleur-out/`) est prêt et que
+tickets, après `premier-alimente-linear`), quand le paquet de handoff (`assembleur-out/`) est prêt et que
 l'équipe s'apprête à fabriquer. Ce skill **automatise l'étape `specify init`** du `attack-plan.md` : il vérifie si SpecKit est déjà posé dans le repo et,
 sinon, l'installe **complètement et sans aucune manip** — pour que les commandes `/speckit.*`
 soient disponibles **immédiatement**. Principe directeur : **rien ne doit bloquer l'installation**.

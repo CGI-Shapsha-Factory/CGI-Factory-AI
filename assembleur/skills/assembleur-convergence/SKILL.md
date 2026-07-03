@@ -147,4 +147,4 @@ concerné. **Aucun fichier annexe.** **Ne pas conclure** tant qu'un marqueur sub
 **Handoff (avant de passer la main).** Committer `.factory/manifest.json` **et** `assembleur-out/` (le
 paquet) — l'équipe qui lance SpecKit part du **repo committé**, pas de ta session.
 
-Étape suivante : `/assembleur:init-issues-linear` crée un ticket Linear par feature (confirmation ticket par ticket) ; puis `/assembleur:install-speckit` pose SpecKit dans le repo (`specify init`, sans manip). Ensuite l'équipe fabrique feature par feature : `/speckit.constitution` depuis `pre-constitution.md`, puis les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord).
+Étape suivante : `/assembleur:premier-alimente-linear` crée un ticket Linear par feature (confirmation ticket par ticket) ; puis `/assembleur:install-speckit` pose SpecKit dans le repo (`specify init`, sans manip). Ensuite l'équipe fabrique feature par feature : `/speckit.constitution` depuis `pre-constitution.md`, puis les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord).

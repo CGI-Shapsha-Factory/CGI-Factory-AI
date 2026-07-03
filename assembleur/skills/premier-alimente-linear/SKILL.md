@@ -1,9 +1,9 @@
 ---
-name: init-issues-linear
-description: Transforme les features approuvées en tickets Linear (un par feature, liste de contrôle pour les grosses), avec confirmation ticket par ticket, via le MCP linear-prism — juste avant install-speckit.
+name: premier-alimente-linear
+description: Première alimentation de Linear — transforme les features approuvées en tickets Linear (un par feature, label Feature), avec confirmation ticket par ticket, via le MCP linear-prism — juste avant install-speckit. Les sous-tickets par phase (label Task) sont créés plus tard par creation-task-linear, après /speckit.tasks.
 ---
 
-# init-issues-linear
+# premier-alimente-linear
 
 **Pont vers Linear.** À lancer **après `assembleur-convergence`** (le paquet est produit, la
 cohérence validée, les features **déjà approuvées**) et **avant `install-speckit`**. Ce skill lit
@@ -78,8 +78,10 @@ Pour **chaque** feature retenue, **dans l'ordre** :
 3. **Créer** (cf. `references/linear-guide.md`) : `save_issue({team, title, description: <1 ligne
    + '\n\n**Checklist :**\n- [ ] item…'>, labels, state})` → récupérer `identifier`/`url`. La
    liste de contrôle est dans la `description` (Markdown `- [ ] item` — Linear les rend
-   interactifs, pas de sous-ticket). Poser les **relations bloquantes** (`blockedBy`) d'après
-   « Dépend de ». Label `feature:<id>` (+ `walking-skeleton` si concerné) — **jamais `MVP`**.
+   interactifs, pas de sous-ticket ici — les vrais sous-tickets par phase viennent plus tard, via
+   `creation-task-linear`). Poser les **relations bloquantes** (`blockedBy`) d'après « Dépend de ».
+   Labels : **`Feature`** (label plat de taxonomie, **résolu par nom** via `list_issue_labels`, jamais
+   créé ici) + `feature:<id>` (clé de jointure) (+ `walking-skeleton` si concerné) — **jamais `MVP`**.
 4. **Consigner** dans `linear.issues[]` (en silence), puis **passer à la feature suivante**.
    **Répéter jusqu'à ce que toutes soient traitées.**
 
@@ -103,4 +105,4 @@ Pour **chaque** feature retenue, **dans l'ordre** :
 - **Rien d'inventé.** Seulement les features approuvées par la convergence.
 - **Manifeste en silence.** Aucun nom de clé à l'écran ; restitution en prose.
 
-Étape suivante : `/assembleur:install-speckit` — poser SpecKit dans le repo, puis fabriquer feature par feature (chaque ticket Linear pilote un cycle `/speckit.specify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`).
+Étape suivante : `/assembleur:install-speckit` — poser SpecKit dans le repo, puis fabriquer feature par feature (chaque ticket Linear pilote un cycle `/speckit.specify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`). **Après `/speckit.tasks`** (une fois `specs/<feature>/tasks.md` produit), lancer `/assembleur:creation-task-linear` pour créer un **sous-ticket par phase** (label `Task`) rattaché au ticket `Feature` de chaque feature.

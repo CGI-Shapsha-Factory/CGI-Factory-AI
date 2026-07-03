@@ -1,6 +1,6 @@
 # Guide Linear — création et mise à jour des tickets via le MCP linear-prism (assembleur)
 
-Référence d'usage pour `init-issues-linear` (création) et `update-issue-linear` (mise à jour). Le
+Référence d'usage pour `premier-alimente-linear` (création) et `update-issue-linear` (mise à jour). Le
 dialogue passe par le **MCP du plugin `linear-prism`** (serveur hébergé `https://mcp.linear.app/mcp`,
 authentifié en OAuth via `/mcp` — **aucune clé API** à gérer). Ce plugin est **externe à la Factory**
 (voir « Installation » ci-dessous) : les skills le détectent et, s'il est absent, la création bascule
@@ -64,9 +64,13 @@ reprend dans `init-cowork.md` (« Accès Linear pour Quark »).
   ligne + un court contexte (parcours principal, critère de succès clé). Voir la face fonctionnelle
   de la graine `assembleur-out/features/<id>-*.spec-seed.md`.
 - **`project`** — si retenu. **`state`** — Todo/unstarted si résolu.
-- **`labels`** — `feature:<id>` (toujours) + `walking-skeleton` (si la feature 001 / le walking
-  skeleton). **Jamais de label `MVP`** — l'architecture n'a **aucune notion de MVP**. Si un label
-  n'existe pas, le créer via `create_issue_label` ou l'omettre (best-effort, ne pas bloquer).
+- **`labels`** — le label plat **`Feature`** (taxonomie) + `feature:<id>` (clé de jointure) +
+  `walking-skeleton` (si la feature 001 / le walking skeleton). **Jamais de label `MVP`** —
+  l'architecture n'a **aucune notion de MVP**. Les labels plats **`Feature`** / **`Task`**
+  **préexistent** dans l'espace de travail : les **résoudre par nom** via `list_issue_labels`
+  (comparaison **insensible à la casse**) et passer leurs **UUID** dans `labelIds` — **ne pas les
+  créer**. Un label absent : le créer via `create_issue_label` ou l'omettre (best-effort, ne pas
+  bloquer). Note : `save_issue` prend `labelIds` (UUID), pas des noms — d'où la résolution préalable.
 - Récupérer dans la réponse : l'**id interne**, l'**identifier** (ex. `ENG-123`) et l'**url**.
 
 ## Liste de contrôle d'une grosse feature → checkboxes dans la description
@@ -91,6 +95,25 @@ traitées **dans l'ordre** (001, 002, …) ; une dépendance pointe vers une fea
 donc **déjà créée**. Sur le ticket parent de la feature dépendante, poser :
 `save_issue({id: "<identifier de la feature>", blockedBy: ["<identifier de la dépendance>"]})`
 (ou passer `blockedBy` dès la création). `blocks`/`blockedBy` sont **append-only**.
+
+## Sous-tickets par phase (`tasks.md`) → pour `creation-task-linear`
+Après `/speckit.tasks`, chaque feature a un `specs/<feature>/tasks.md`. On crée **un vrai sous-ticket
+par phase** (contrairement à la checklist-dans-la-description du ticket de feature).
+
+- **Parser `tasks.md`** (lecture seule) : phases = lignes `^## Phase (\d+): (.+)$` ; tâches d'une
+  phase = lignes `^- \[[ xX]\] (T\d{3})(?: \[P\])?(?: \[US\d+\])? (.+)$`. Les phases sont
+  **séquentielles** (Setup, Foundational, une par User Story avec sa priorité `P1/P2/P3`, Polish) et
+  peuvent contenir des **emoji** (🎯 ⚠️) à retirer des titres.
+- **Titre descriptif** (obligatoire) : jamais le nom générique brut (« Setup »). Enrichir depuis les
+  tâches de la phase ; pour une phase « User Story N — <titre> », reprendre l'intitulé de la story.
+- **Créer le sous-ticket** :
+  `save_issue({team, title, parentId: "<issue_id UUID du ticket Feature>", labelIds: ["<UUID Task>"],
+  description: "<résumé 1 ligne>", state})`. Le **`parentId` est l'UUID interne** (`issue_id`) du
+  ticket `Feature`, **pas** l'`identifier` (`ENG-123`). La **description est un résumé d'une ligne**
+  (pas d'énumération des `Txxx`).
+- **Rattraper le label `Feature`** sur le ticket de feature sans écraser ses labels : `get_issue({id})`
+  → union des `labelIds` existants + `Feature` → `save_issue({id, labelIds: <union>})`.
+- Récupérer `issue_id` / `identifier` / `url` et consigner dans `linear.issues[].sub_issues[]`.
 
 ## Mettre à jour un ticket (statut / cases à cocher)
 Pour `update-issue-linear`. Un seul outil `save_issue` **crée ou met à jour** : passer un **`id`**
@@ -123,17 +146,25 @@ Bloc :
   "issues": [
     { "id": "001", "ucs": ["UC2"], "name": "…",
       "issue_id": "…", "identifier": "ENG-123", "url": "https://linear.app/…",
-      "status": "created" }
+      "status": "created",
+      "sub_issues": [
+        { "phase": 1, "phase_name": "Setup", "title": "Mise en place : scaffolding & outillage (Ingestion)",
+          "issue_id": "…", "identifier": "ENG-131", "url": "https://linear.app/…", "status": "created" }
+      ]
+    }
   ],
-  "all_issues_created": false
+  "all_issues_created": false, "all_sub_issues_created": false
 }
 ```
-Statuts : `created` (ticket posé, exige `issue_id`), `skipped` (écartée en session), `merged`
-(fusionnée dans une autre feature), `draft` (mode brouillon). Écriture **silencieuse**
-(read-modify-write + revalidation JSON), jamais narrée.
+Statuts (ticket **et** sous-ticket) : `created` (posé, exige `issue_id`), `skipped` (écarté en
+session), `merged` (fusionné), `draft` (mode brouillon). `sub_issues[]` (posé par `creation-task-linear`)
+: **une entrée par phase** du `tasks.md`, clé stable = `id` de feature + `phase`. Écriture
+**silencieuse** (read-modify-write + revalidation JSON), jamais narrée.
 
 ## Mode brouillon (repli, MCP absent)
 Écrire `assembleur-out/linear-drafts.md` : une section par feature avec **titre**, **description
 (1 ligne)**, et — si volumineuse — la **checklist** en cases Markdown `- [ ]` (les futurs
 sous-tickets). L'équipe les crée ensuite à la main (ou relance quand `linear-prism` est prêt).
-Consigner ces features avec `status: "draft"` dans le manifeste.
+Consigner ces features avec `status: "draft"` dans le manifeste. Pour `creation-task-linear`, ajouter
+sous chaque feature la **liste des phases** (titre descriptif + résumé d'une ligne), consignées en
+`sub_issues[]` avec `status: "draft"`.

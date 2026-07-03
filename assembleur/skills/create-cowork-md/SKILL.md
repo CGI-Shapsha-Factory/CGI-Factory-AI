@@ -6,7 +6,7 @@ description: Génère init-cowork.md à la racine — le contexte unique du PO q
 # create-cowork-md
 
 **Document de supervision pour Quark.** À lancer **pendant la phase assembleur** (après la
-convergence ; idéalement après `init-issues-linear` pour que les tickets soient déjà liés). Ce
+convergence ; idéalement après `premier-alimente-linear` pour que les tickets soient déjà liés). Ce
 skill **détecte** le dépôt GitHub et le projet Linear, rassemble le **contexte figé par les 3
 contrats** (cadrage / architecte / designer), et **génère `init-cowork.md` à la racine** du projet
 — le document unique que le PO donne à **Quark** pour superviser sans setup supplémentaire.
@@ -64,14 +64,14 @@ Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-gui
 - **Indisponible** → **ne pas bloquer** : mettre `<à renseigner>` dans la section Linear + embarquer
   les **instructions d'installation** (section « Installation du plugin linear-prism » de
   `references/linear-guide.md`). Si **aucun ticket** n'existe encore, ajouter la note « tickets à
-  créer via `/assembleur:init-issues-linear` ».
+  créer via `/assembleur:premier-alimente-linear` ».
 
 ## Étape 3 — Rassembler le contexte des 3 contrats (silencieux, best-effort)
 Sources = **sorties amont uniquement**, en synthèse (pas de copie) :
 - **Projet** : nom + résumé une ligne (`manifest.project` + `cadrage-out/product-brief*`).
 - **Périmètre & features** : `architecture.feature_sequence` (`{id, name}`) + `assembleur-out/feature-map.md`
   → tableau feature ; colonne **Ticket Linear** = `identifier` + `url` depuis `linear.issues[]` **si
-  créés**, sinon « à créer via init-issues-linear ».
+  créés**, sinon « à créer via premier-alimente-linear ».
 - **Contexte technique** : synthèse de la stack (`architecte-out/tech-stack*`), en bref.
 - **Contexte design** : référence du design system (`designer-out/design-guidelines*` / système
   synchronisé Claude Design).
