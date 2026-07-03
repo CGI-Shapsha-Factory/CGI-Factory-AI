@@ -255,6 +255,16 @@ depuis le catalogue `references/enforcement/` : copier `.claude/hooks/tests_guar
 produit par l'assembleur dans le paquet de handoff ; la stratégie de test elle-même vit dans
 `standards.md`, étape 4.)*
 
+**Poser aussi la protection de branche locale** (même catalogue) : un garde-fou git qui **refuse le
+push direct sur `main`** (et le commit *sur* `main`), pour un projet travaillé à plusieurs. Lancer
+`python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_branch_protection.py" <racine>` — il copie
+`.githooks/` (pur git+Python, sans dépendance) à la racine et pose `git config core.hooksPath .githooks`
+pour ce clone (le `pre-commit` relaie l'enforcement de tests s'il est présent). **Confirmer en clair**,
+manifeste en silence (`architecture.branch_protection`). **Rappeler** que chaque collaborateur doit
+lancer une fois `git config core.hooksPath .githooks` (git n'active pas `core.hooksPath` depuis une
+config commitée). *(Garde-fou **local** — contournable `--no-verify`, par-clone ; la vraie protection
+multi-personnes est un **ruleset serveur GitHub**, hors de ce garde-fou.)*
+
 ## Résolution des points avant de conclure
 Avant de terminer, **balayer tous les fichiers `architecte-out/`** : pour **chaque**
 point encore à définir ou à chiffrer, **poser la question** à l'utilisateur (un par

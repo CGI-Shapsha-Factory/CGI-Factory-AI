@@ -28,7 +28,7 @@ porter le même nom que le plugin.)*
 Écrit ses propres sorties dans `architecte-out/` (à côté de `cadrage-out/`). Le
 manifeste `.factory/manifest.json` reçoit un bloc **`architecture`** (drivers,
 quality_attributes, components, stack, conventions_installed, adrs, walking_skeleton,
-feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**, coherence_validated). `conventions/` est créé à la **racine
+feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**, **branch_protection**, coherence_validated). `conventions/` est créé à la **racine
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
 **Handoff designer** : le skill `architecte-contrat` produit `design-impact.md` (section « Décisions à
 impact design ») — la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer-atelier` ;
@@ -71,7 +71,9 @@ Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exa
 (incrément du compteur de version des documents).
 Catalogues copiés à la racine du projet : `references/conventions/` (linters par langage, Étape 4),
 `references/env-templates/` (fichiers d'env par stack, Étape 10), `references/enforcement/`
-(hooks Claude Code `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code », Étape 11).
+(hooks Claude Code `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code » — **et
+`.githooks/` + `install_branch_protection.py` : protection de branche locale (refus push/commit sur
+`main`, via `core.hooksPath`) — Étape 11**).
 
 ## Vérifications
 ```bash
