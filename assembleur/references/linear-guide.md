@@ -32,6 +32,20 @@ Revalider ensuite avec la **détection** ci-dessus (`list_teams` répond). Tant 
 la **création** bascule en mode brouillon ; la **mise à jour** a besoin du MCP (relancer une fois
 installé).
 
+## Accès par clé API (Quark / environnement sans OAuth)
+Le serveur MCP Linear s'authentifie en **OAuth** (défaut, ci-dessus) **ou** par **clé API**. Dans un
+environnement où le flux OAuth `/mcp` n'est pas disponible (ex. le PO qui pilote depuis **Quark** et
+demande une action en **écriture**), utiliser une **clé API personnelle** :
+1. Linear → **Settings → Security & access → Personal API keys → New API key**.
+2. Nommer la clé, lui donner un **accès en écriture** (*Write* / *Create issues* selon le besoin), la
+   **restreindre à l'équipe** du projet, puis **Create**. La clé n'est **affichée qu'une fois** — la
+   copier immédiatement (format `lin_api_…`).
+3. La stocker dans un fichier **`.env`** (jamais commité, ajouté au `.gitignore`) : `LINEAR_API_KEY=lin_api_…`.
+4. Le MCP `linear-prism` lit alors `LINEAR_API_KEY` pour s'authentifier (pas de login OAuth).
+
+**Ne jamais** afficher, loguer ni committer la clé. C'est cette section que `create-cowork-md`
+reprend dans `init-cowork.md` (« Accès Linear pour Quark »).
+
 ## Cible (une seule fois, avant la boucle)
 - **Équipe** (obligatoire pour créer) : `list_teams` → présenter en 3 options (recommandée =
   celle qui correspond au projet / à l'organisation, alternative(s), « saisir »). Retenir le

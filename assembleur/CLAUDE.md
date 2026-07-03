@@ -11,9 +11,11 @@ repo cible** : tout sort dans **`assembleur-out/`**. Pas de constitution dans `.
 pas de `specs/NNN/spec.md`, pas de GLOSSARY.md ; le seul CI produit est un
 **garde-fou de test** (`ci/tests.yml`) livré **dans le paquet** (jamais posé dans le repo cible — c'est
 l'équipe qui le pose en *required status check*). Ce sont des **skills Markdown** ; pas de build/test.
-**Deux exceptions bornées** à « ne rien écrire hors du paquet » : `init-issues-linear` **et
+**Trois exceptions bornées** à « ne rien écrire hors du paquet » : `init-issues-linear` **et
 `update-issue-linear`** créent et mettent à jour des tickets **Linear** (système externe, pas le repo
-cible) et `install-speckit` invoque `specify init` (c'est SpecKit qui génère `.specify/`).
+cible) ; `install-speckit` invoque `specify init` (c'est SpecKit qui génère `.specify/`) ; et
+`create-cowork-md` écrit **`init-cowork.md` à la racine** (document de contexte de supervision pour
+le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
 
 ## Langue & invocation
 - **Tout en français** (skills, templates, artefacts, interaction). Seuls les
@@ -21,7 +23,7 @@ cible) et `install-speckit` invoque `specify init` (c'est SpecKit qui génère `
   SpecKit, `/design-sync`) restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/assembleur:<skill>` + auto par le modèle.
 
-## Les 5 skills
+## Les 6 skills
 - `assembleur-init` — setup (zéro décision) : pré-requis = **les 3 contrats validés** ; installe
   les gabarits ; crée `assembleur-out/` ; étend le manifeste (bloc `assembly` allégé). **Aucun
   repo cible à capturer.**
@@ -39,6 +41,14 @@ cible) et `install-speckit` invoque `specify init` (c'est SpecKit qui génère `
   et **met à jour son état** (terminé / en cours ; ou **coche une case** d'une grosse feature), après
   confirmation, via le MCP **`linear-prism`**. **Non gaté**, invoqué à la demande pendant la
   fabrication ; champ manifeste silencieux `workflow_state`. Voir `references/linear-guide.md`.
+- `create-cowork-md` — **contexte de supervision (Quark)** : détecte le **dépôt GitHub**
+  (`git remote get-url origin`, repli `gh repo view`) et le **projet Linear** (MCP `linear-prism`
+  + bloc `linear`), rassemble le contexte des **3 contrats**, et génère **`init-cowork.md` à la
+  racine** — le document unique que le PO donne à Quark. **Ne contient rien d'aval** (pas de
+  workflow SpecKit / fabrication / avancement : ils n'existent pas encore) ; seuls les **liens**
+  GitHub/Linear renvoient à l'état vivant. **3ᵉ exception bornée** à « paquet seul » (écrit à la
+  racine — fichier de supervision, pas un artefact SpecKit). Bloc manifeste `cowork`. Non gaté,
+  à la demande (idéalement après `init-issues-linear`). Voir `references/linear-guide.md`.
 - `install-speckit` — **pont vers SpecKit** : pose SpecKit dans le repo cible via
   `scripts/install_speckit.py` (auto-install `uv` sans admin, introspection des flags de `specify
   init`, `specify init` non-interactif, test de fumée, bloc manifeste `speckit`). **Seule exception
@@ -79,8 +89,10 @@ et le **principe de test** : tests écrits avec le code, intégration mockée, *
 `references/linear-guide.md` (usage du MCP linear-prism : détection, installation, `save_issue`
 création **et mise à jour d'état**, `list_issue_statuses`, `blockedBy`, mode brouillon).
 Garde-fous déterministes : `scripts/check_assembly.py` (présence du paquet + aucun marqueur résiduel +
-couverture des features) et `scripts/check_linear.py` (une feature = un ticket ou une décision
-explicite, tickets créés porteurs d'identifiant). Installeur : `scripts/install_speckit.py` (pose
+couverture des features), `scripts/check_linear.py` (une feature = un ticket ou une décision
+explicite, tickets créés porteurs d'identifiant) et `scripts/check_cowork.py` (bloc `cowork` +
+`init-cowork.md` à la racine exposant une section GitHub et une section Linear). Gabarit :
+`templates/init-cowork.md`. Installeur : `scripts/install_speckit.py` (pose
 SpecKit dans le repo, best-effort, timeouts, PATH rafraîchi en cours de processus, flags version-proof
 par introspection). Agent : `agents/contract-reader.md`.
 
@@ -92,9 +104,11 @@ python scripts/check_assembly.py <projet>/.factory/manifest.json
 ```
 
 ## Invariants
-**Paquet seul** (n'écrit que dans `assembleur-out/`, jamais un fichier que SpecKit génère — **deux
+**Paquet seul** (n'écrit que dans `assembleur-out/`, jamais un fichier que SpecKit génère — **trois
 exceptions bornées : `init-issues-linear` et `update-issue-linear`, qui créent et mettent à jour des
-tickets Linear (système externe, jamais le repo cible) ; et `install-speckit`, qui invoque `specify
-init` pour que SpecKit génère lui-même `.specify/`, sans jamais le rédiger à la main**) ; proposer/pas décider (cohérence validée par l'humain) ; **rien laissé indéfini** (tout marqueur
+tickets Linear (système externe, jamais le repo cible) ; `install-speckit`, qui invoque `specify
+init` pour que SpecKit génère lui-même `.specify/`, sans jamais le rédiger à la main ; et
+`create-cowork-md`, qui écrit `init-cowork.md` à la racine (contexte de supervision PO/Quark, pas un
+artefact SpecKit)**) ; proposer/pas décider (cohérence validée par l'humain) ; **rien laissé indéfini** (tout marqueur
 résolu en session, en place) ; **contenu seul** (aucune `(src:)`, horodatage, nom de personne) ;
 restitutions en prose, manifeste mis à jour en silence.
