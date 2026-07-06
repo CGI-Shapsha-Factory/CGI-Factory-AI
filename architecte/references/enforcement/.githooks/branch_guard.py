@@ -56,10 +56,9 @@ def pre_commit():
     branch = current_branch()
     if branch in protected:
         return _fail(
-            f"Commit direct sur '{branch}' interdit (branche protegee).\n"
+            f"Commit direct sur '{branch}' bloque.\n"
             f"Cree une branche de travail puis recommite :\n"
-            f"    git switch -c feat/ma-modif\n"
-            f"(contournement d'urgence : git commit --no-verify)"
+            f"    git switch -c feat/ma-modif"
         )
 
     # Preserver l'enforcement de tests de l'architecte (comportement inchange) s'il est present.
@@ -91,9 +90,8 @@ def pre_push(stream):
         name = remote_ref[len("refs/heads/"):] if remote_ref.startswith("refs/heads/") else remote_ref
         if name in protected:
             return _fail(
-                f"Push direct sur '{name}' interdit (branche protegee).\n"
-                f"Pousse ta branche de travail et ouvre une Pull Request :\n"
-                f"    git push origin HEAD:feat/ma-modif\n"
-                f"(contournement d'urgence : git push --no-verify)"
+                f"Push direct sur '{name}' bloque.\n"
+                f"Pousse une branche de travail et ouvre une Pull Request :\n"
+                f"    git push origin HEAD:feat/ma-modif"
             )
     return 0
