@@ -14,6 +14,15 @@ qu'il a tourné. **Le plugin ne génère pas le design system** (il naît dans C
 Rendre un projet **prêt pour l'atelier design** : installer les gabarits et étendre le manifeste partagé
 avec un bloc `design` orienté **couverture** (checklist pré-remplie par les handoffs).
 
+## Ancrage du répertoire (impératif)
+**La racine du projet est le dossier courant** — celui où la session est lancée (le cwd) — **jamais** un
+dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé plus haut. Tous les chemins de
+ce skill (`.factory/manifest.json`, `.factory/templates/`, `designer-out/`, `prompts/designer/`) se
+résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** pour trouver le manifeste ou les
+dossiers `-out/` amont : un `.factory/manifest.json` (ou un `cadrage-out/` / `architecte-out/`) situé dans
+un dossier **parent** n'appartient **pas** à ce projet — le traiter comme **absent** (donc refuser via la
+porte d'entrée ci-dessous). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
+
 ## Porte d'entrée
 **Cadrage prêt + maquette validée + architecture validée + Décisions à impact design présentes.** Lire
 `.factory/manifest.json` ; **refuser en clair** si :

@@ -18,6 +18,16 @@ les fichiers attendus et non vides**, installer les gabarits, créer le dossier 
 aucun repo cible à capturer** : l'assembleur produit un **paquet** dans `assembleur-out/`,
 il n'écrit jamais dans un repo SpecKit.
 
+## Ancrage du répertoire (impératif)
+**La racine du projet est le dossier courant** — celui où la session est lancée (le cwd) —
+**jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé
+plus haut. Tous les chemins de ce skill (`.factory/manifest.json`, `.factory/templates/`,
+`assembleur-out/`, et les 3 dossiers amont lus `cadrage-out/` / `architecte-out/` /
+`designer-out/`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** :
+un `.factory/` ou un dossier `-out/` situé dans un dossier **parent** n'appartient **pas** à
+ce projet — le traiter comme **absent** (donc refuser via les pré-requis ci-dessous, sans le
+lire). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
+
 ## Pré-requis (vérification silencieuse)
 **Vérifier uniquement la présence et la complétude des 3 dossiers de sortie amont — PAS
 leur statut de validation.** Que le cadrage, l'architecture ou le design aient été validés

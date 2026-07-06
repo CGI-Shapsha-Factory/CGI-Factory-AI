@@ -16,6 +16,15 @@ Rendre un projet client **prêt à être cadré** : un dossier caché **`.factor
 à la racine pour les documents générés, un dossier `prompts/cadrage/` pour les
 prompts générés, et un manifeste initialisé.
 
+## Ancrage du répertoire (impératif)
+**La racine du projet est le dossier courant** — celui où la session est lancée (le
+cwd) — **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` /
+`*-out/` situé plus haut. Tout ce que ce skill installe (`.factory/`, `cadrage-out/`,
+`prompts/cadrage/`) est créé **sous ce dossier**. **Ne jamais remonter l'arborescence**
+pour trouver un workspace existant : un `.factory/` (ou `factory-docs/`) trouvé dans un
+dossier **parent** n'appartient **pas** à ce projet — l'ignorer et créer le workspace
+dans le cwd. En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
+
 ## Pré-requis (vérification silencieuse)
 
 **Aucun.** Invocable sur un projet vierge. **Idempotent** : si un fichier existe

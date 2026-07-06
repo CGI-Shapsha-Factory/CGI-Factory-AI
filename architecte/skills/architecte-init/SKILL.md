@@ -16,6 +16,17 @@ d'architecture, créer le dossier `conventions/`, **poser tous les hooks de l'ar
 (enforcement des tests + protection de branche, déterministe) et étendre le manifeste
 partagé avec un bloc `architecture`.
 
+## Ancrage du répertoire (impératif)
+**La racine du projet est le dossier courant** — celui où la session est lancée (le
+cwd) — **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` /
+`*-out/` situé plus haut. Tous les chemins de ce skill (`.factory/manifest.json`,
+`.factory/templates/`, `conventions/`, `architecte-out/`, `.claude/`, `.githooks/`,
+`lefthook.yml`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence**
+pour trouver le manifeste du cadrage : un `.factory/manifest.json` situé dans un dossier
+**parent** n'appartient **pas** à ce projet — le traiter comme **absent** (donc refuser
+via la porte d'entrée ci-dessous, sans jamais le lire ni l'étendre). En cas de doute sur
+un chemin relatif, l'écrire en **absolu à partir du cwd**.
+
 ## Porte d'entrée
 **Le cadrage doit être prêt.** Lire `.factory/manifest.json` :
 - s'il est absent, ou si la phase amont n'est pas prête (le verdict « cadrage
