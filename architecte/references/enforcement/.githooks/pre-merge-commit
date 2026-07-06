@@ -1,0 +1,11 @@
+#!/usr/bin/env python
+"""Hook git pre-merge-commit : refuse un merge commit sur une branche protegee (voir branch_guard.py).
+
+`git merge` ne declenche pas `pre-commit` ; ce hook ferme cette faille cote merge."""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from branch_guard import pre_merge_commit
+
+sys.exit(pre_merge_commit())

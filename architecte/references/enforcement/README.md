@@ -19,6 +19,10 @@ Garde-fou git **pur (git + Python, sans dépendance)** qui applique la règle «
   (`main`/`master` par défaut ; override via `.githooks/protected-branches`).
 - `pre-commit` — **refuse** un commit fait *sur* une branche protégée, puis **relaie** l'enforcement
   de tests (`.claude/hooks/tests_guard.py`) s'il est présent (comportement préservé sans dépendre de lefthook).
+- `pre-merge-commit` — **refuse** un **merge commit** créé sur une branche protégée. Nécessaire car
+  `git merge` ne déclenche **pas** `pre-commit` : sans ce hook, un `git merge feat/x` sur `main` ferait
+  atterrir des changements sur `main` sans passer par la protection. *(Limite : un merge **fast-forward**
+  ne crée pas de commit → aucun hook local ne peut l'intercepter ; barrière ultime = ruleset serveur GitHub.)*
 - **Activation automatique** : `install_branch_protection.py` pose `git config core.hooksPath .githooks`
   pour le clone courant **et** fusionne un hook **`SessionStart`** dans `.claude/settings.json` qui
   relance cette commande à chaque ouverture de session → **réactivation automatique** pour quiconque
