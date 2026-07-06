@@ -13,8 +13,10 @@ facturé. Tout en **français**.
 `couts-init` a tourné (`.factory/couts/` existe). Sinon, orienter en clair vers `/couts:couts-init`.
 
 ## Procédure
-1. Lancer `python "${CLAUDE_PLUGIN_ROOT}/references/cost_report.py" <dossier courant>` (adapter `py -3`
-   si besoin). Le script lit le journal, **déduplique globalement par clé `(message.id, requestId)`**
+1. Lancer `python "${CLAUDE_PLUGIN_ROOT}/references/cost_report.py"` **sans argument de racine** (adapter
+   `py -3` si besoin) — le script **localise tout seul** le journal (`.factory/couts/` contenant les
+   `.jsonl`) depuis le dossier courant, en descendant au besoin ; **ne pas** passer le git root. Le
+   script lit le journal, **déduplique globalement par clé `(message.id, requestId)`**
    (reprise/fork comptés une seule fois), agrège **par session**, valorise via la table de prix datée,
    convertit en euros avec le taux figé dans le script, et écrit `.factory/couts/rapport-couts.md`.
 2. **Restituer le tableau** (une ligne par session) :

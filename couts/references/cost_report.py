@@ -22,17 +22,51 @@ USD_EUR = 0.92
 RATE_DATE = "2026-07-06"
 
 
+_SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "__pycache__", "dist", "build", ".factory"}
+
+
+def _has_journal(d):
+    return bool(glob.glob(os.path.join(d, ".factory", "couts", "**", "*.jsonl"), recursive=True))
+
+
 def project_root(hint):
-    root = hint or os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd()
-    cur = os.path.abspath(root)
-    for _ in range(6):
+    """Localise le dossier dont .factory/couts/ contient REELLEMENT le journal (la ou le hook ecrit).
+
+    On IGNORE `CLAUDE_PROJECT_DIR` (= git root), qui peut differer du dossier d'install couts : le hook
+    est ancre sur son emplacement, le rapport doit lire ce meme emplacement, pas le git root parent.
+    """
+    start = os.path.abspath(hint or os.getcwd())
+
+    # 1. Remonter : 1er ancetre dont .factory/couts/ contient des .jsonl.
+    cur = start
+    for _ in range(8):
+        if _has_journal(cur):
+            return cur
+        parent = os.path.dirname(cur)
+        if parent == cur:
+            break
+        cur = parent
+
+    # 2. Descendre (profondeur <= 3) : 1er sous-dossier avec un journal (cas « lance depuis le git
+    #    root, journal dans un sous-dossier »). On saute les dossiers lourds.
+    base = start.rstrip(os.sep).count(os.sep)
+    for dirpath, dirnames, _ in os.walk(start):
+        dirnames[:] = [d for d in dirnames if d not in _SKIP_DIRS]
+        if dirpath.rstrip(os.sep).count(os.sep) - base >= 3:
+            dirnames[:] = []
+        if _has_journal(dirpath):
+            return dirpath
+
+    # 3. Repli : 1er ancetre qui a un .factory/ (install sans journal encore), sinon le depart.
+    cur = start
+    for _ in range(8):
         if os.path.isdir(os.path.join(cur, ".factory")):
             return cur
         parent = os.path.dirname(cur)
         if parent == cur:
             break
         cur = parent
-    return os.path.abspath(root)
+    return start
 
 
 def load_journal(root):

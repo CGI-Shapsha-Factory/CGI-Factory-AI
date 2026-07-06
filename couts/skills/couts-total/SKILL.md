@@ -20,11 +20,13 @@ coût estimé € (USD) daté, disclaimer estimation.
 
 ## Procédure
 
-1. Lancer le script de bilan :
+1. Lancer le script de bilan **sans argument de racine** — il localise tout seul le journal
+   (`.factory/couts/` contenant les `.jsonl`) depuis le dossier courant, en descendant au besoin :
    ```
-   python "${CLAUDE_PLUGIN_ROOT}/references/cost_total.py" <racine-projet>
+   python "${CLAUDE_PLUGIN_ROOT}/references/cost_total.py"
    ```
-   (Adapter `python` → `py -3` si besoin sur Windows.)
+   (Adapter `python` → `py -3` si besoin sur Windows.) **Ne pas** passer le git root : le script
+   trouve le dossier d'install couts, même s'il est un sous-dossier du dépôt git.
 
 2. Afficher en chat le contenu produit (sessions, total tokens + split, coût estimé).
 
