@@ -1,7 +1,7 @@
 {
   "name": "designer",
   "version": "0.3.1",
-  "description": "Phase design d'un projet spec-driven : atelier de conception dirigé. Une checklist de couverture (fondation / expérience / technique-qui-se-voit) pré-remplie par les handoffs Cadrage et Architecte, co-construite avec l'humain, garantit que rien d'important n'est oublié avant Claude Design. Produit le prompt Claude Design, le rapport de couverture et le handoff design. Le design system naît dans Claude Design et est matérialisé en code par /design-sync — le plugin ne le génère pas. 3 skills interactifs, tout en français.",
+  "description": "Phase design d'un projet spec-driven : atelier de couverture (checklist fondation/expérience/technique pré-remplie par les handoffs cadrage+architecte) qui produit le prompt Claude Design, le rapport de couverture et le handoff. Le design system naît dans Claude Design et passe au code via /design-sync, le plugin ne le génère pas. 3 skills interactifs, tout en français.",
   "author": {
     "name": "IA Factory"
   },
