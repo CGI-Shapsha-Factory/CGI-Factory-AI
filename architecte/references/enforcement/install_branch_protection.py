@@ -6,9 +6,10 @@ Idempotent. Modele : `install_test_hooks.py`. Etapes :
      du repo cible (dossier `.githooks/`, commite -> partage par l'equipe) ;
   2. rend `pre-push`/`pre-commit` executables (best-effort ; no-op sous Windows) ;
   3. active les hooks pour CE clone : `git -C <racine> config core.hooksPath .githooks` ;
-  4. consigne dans le manifeste : `architecture.branch_protection` (read-modify-write) ;
-  5. rappelle que chaque collaborateur doit lancer une fois `git config core.hooksPath .githooks`
-     (git n'active pas core.hooksPath depuis une config commitee -> limite de l'approche locale).
+  4. pose (par FUSION) un hook `SessionStart` dans `.claude/settings.json` qui relance
+     `git config core.hooksPath .githooks` a chaque ouverture de session -> reactivation AUTOMATIQUE
+     pour quiconque ouvre le repo dans Claude Code (plus besoin de le lancer a la main) ;
+  5. consigne dans le manifeste : `architecture.branch_protection` (read-modify-write).
 
 Usage : python install_branch_protection.py <racine-du-repo-cible>
 """
@@ -20,7 +21,9 @@ import sys
 
 HOOK_FILES = ("branch_guard.py", "pre-push", "pre-commit")
 EXEC_FILES = ("pre-push", "pre-commit")
-PROTECTED_DEFAULT = ["main", "master", "develop"]
+PROTECTED_DEFAULT = ["main", "master"]
+HOOKS_PATH_CMD = "git config core.hooksPath .githooks"
+SESSIONSTART = {"hooks": [{"type": "command", "command": HOOKS_PATH_CMD, "timeout": 5}]}
 
 
 def _load_manifest(path):
@@ -31,6 +34,36 @@ def _load_manifest(path):
             return json.load(f)
     except (OSError, ValueError):
         return None
+
+
+def _install_session_hook(root, notes):
+    """Fusionne un hook SessionStart qui reactive core.hooksPath a chaque session (pattern couts).
+
+    Ne JAMAIS ecraser un evenement existant (ex. SessionEnd du compteur de couts). Idempotent.
+    """
+    settings = os.path.join(root, ".claude", "settings.json")
+    os.makedirs(os.path.dirname(settings), exist_ok=True)
+    data = {}
+    if os.path.isfile(settings):
+        try:
+            data = json.load(open(settings, encoding="utf-8")) or {}
+        except ValueError:
+            print(f"ATTENTION: {settings} JSON invalide — hook SessionStart non pose (pas d'ecrasement).",
+                  file=sys.stderr)
+            return
+    hooks = data.setdefault("hooks", {})
+    ss = hooks.setdefault("SessionStart", [])
+    if any("core.hooksPath" in (h.get("command") or "") for g in ss for h in g.get("hooks", [])):
+        notes.append("SessionStart deja present")
+    else:
+        ss.append(SESSIONSTART)
+        notes.append("SessionStart ajoute (reactive core.hooksPath a chaque session)")
+    try:
+        with open(settings, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+    except OSError as exc:
+        print(f"ATTENTION: settings.json non ecrit ({exc}).", file=sys.stderr)
 
 
 def main(argv):
@@ -79,7 +112,10 @@ def main(argv):
         print(f"ATTENTION: impossible de poser core.hooksPath ({exc}). "
               f"Lance manuellement: git config core.hooksPath .githooks", file=sys.stderr)
 
-    # 4. Manifeste (best-effort, silencieux si absent).
+    # 4. Hook SessionStart : reactive core.hooksPath a chaque session (auto pour toute l'equipe).
+    _install_session_hook(root, notes)
+
+    # 5. Manifeste (best-effort, silencieux si absent).
     manifest_path = os.path.join(root, ".factory", "manifest.json")
     manifest = _load_manifest(manifest_path)
     if manifest is not None:
@@ -98,8 +134,9 @@ def main(argv):
             print(f"ATTENTION: manifeste non mis a jour ({exc}).", file=sys.stderr)
 
     print("PROTECTION DE BRANCHE OK - " + " ; ".join(notes))
-    print("Rappel (par-clone) : chaque collaborateur lance une fois, a la racine du repo :")
-    print("    git config core.hooksPath .githooks")
+    print("Reactivation AUTOMATIQUE a chaque session (hook SessionStart). Limites : la 1re session "
+          "Claude Code demande la confiance des hooks (un 'oui' par personne) ; un dev hors Claude "
+          "Code ou un '--no-verify' contourne — seule barriere non contournable : ruleset serveur GitHub + CI.")
     return 0
 
 

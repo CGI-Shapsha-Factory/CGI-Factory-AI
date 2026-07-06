@@ -16,12 +16,14 @@ limite), en **défense en profondeur**.
 Garde-fou git **pur (git + Python, sans dépendance)** qui applique la règle « Aucun push direct sur
 `main` » de `standards.md` :
 - `pre-push` — **refuse** un push (normal, force-push ou suppression) vers une branche protégée
-  (`main`/`master`/`develop` par défaut ; override via `.githooks/protected-branches`).
+  (`main`/`master` par défaut ; override via `.githooks/protected-branches`).
 - `pre-commit` — **refuse** un commit fait *sur* une branche protégée, puis **relaie** l'enforcement
   de tests (`.claude/hooks/tests_guard.py`) s'il est présent (comportement préservé sans dépendre de lefthook).
-- **Activation** : `install_branch_protection.py` pose `git config core.hooksPath .githooks` pour le
-  clone courant. **Par-clone** : chaque collaborateur doit lancer une fois `git config core.hooksPath
-  .githooks` (git n'active pas `core.hooksPath` depuis une config commitée).
+- **Activation automatique** : `install_branch_protection.py` pose `git config core.hooksPath .githooks`
+  pour le clone courant **et** fusionne un hook **`SessionStart`** dans `.claude/settings.json` qui
+  relance cette commande à chaque ouverture de session → **réactivation automatique** pour quiconque
+  ouvre le repo dans Claude Code (plus besoin de le lancer à la main). Caveat : la 1ʳᵉ session, Claude
+  Code demande la confiance des hooks (un « oui » par personne, une fois).
 - **Interaction lefthook** : poser `core.hooksPath` fait de `.githooks/` le système de hooks git ; le
   `pre-commit` ci-dessus rappelle donc lui-même le tests-guard (pas besoin de `lefthook install`).
 - **Limite** : **local et contournable** (`--no-verify`), par-clone, sans effet sur un autre clone/CI.
@@ -29,9 +31,8 @@ Garde-fou git **pur (git + Python, sans dépendance)** qui applique la règle «
   CI, block force-push/delete) — **hors** de ce garde-fou local.
 
 ## Les couches (du plus faible au non contournable)
-1. **Hooks Claude Code** (en session) : `PostToolUse` relance dès qu'une source est éditée sans test ;
-   **`Stop` bloque la fin de tour** (exit 2) tant qu'une source modifiée n'a pas de test. Actifs dès
-   que le fichier `.claude/settings.json` est présent.
+1. **Hook Claude Code** (en session) : `PostToolUse` relance dès qu'une source est éditée sans test.
+   Actif dès que le fichier `.claude/settings.json` est présent.
 2. **Pre-commit git** (`lefthook install`) : rejette un commit ajoutant de la source sans test.
    Contournable avec `--no-verify`.
 3. **CI diff-coverage requis** (produit par l'**assembleur** dans le paquet) : **la seule couche non

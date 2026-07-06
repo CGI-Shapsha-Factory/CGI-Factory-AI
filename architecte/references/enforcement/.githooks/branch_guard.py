@@ -6,7 +6,7 @@ Deux protections, appelees par les hooks `pre-push` et `pre-commit` (via `core.h
   - `pre_commit()`     : refuse un commit fait DIRECTEMENT sur une branche protegee, puis enchaine
                          l'enforcement de tests existant (`.claude/hooks/tests_guard.py`) s'il est la.
 
-Branches protegees : `main`, `master`, `develop` par defaut ; surchargeables via un fichier
+Branches protegees : `main`, `master` par defaut ; surchargeables via un fichier
 `.githooks/protected-branches` (une branche par ligne, `#` = commentaire).
 
 LIMITES (assumees) : local + par-clone + contournable (`--no-verify`). La vraie protection
@@ -16,7 +16,7 @@ import os
 import subprocess
 import sys
 
-DEFAULT_PROTECTED = ("main", "master", "develop")
+DEFAULT_PROTECTED = ("main", "master")
 HOOK_DIR = os.path.dirname(os.path.abspath(__file__))
 
 

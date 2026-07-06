@@ -2,8 +2,6 @@
 """Garde-fou "tests ecrits avec le code" — hook Claude Code + pre-commit (multi-langage).
 
 Sous-commandes :
-  stop         : (hook Stop) echoue (exit 2) si un fichier source MODIFIE (git) n'a pas de
-                 test associe — empeche de terminer le tour tant que le test manque.
   posttooluse  : (hook PostToolUse) lit le JSON stdin ; si la source editee n'a pas de test,
                  imprime {"decision":"block","reason":...} pour relancer Claude (exit 0).
   check [files]: (pre-commit) echoue (exit 1) si un des fichiers donnes (ou l'index git) est
@@ -102,27 +100,6 @@ def missing_tests(root, source_paths):
     return [s for s in source_paths if is_gated_source(s) and not (candidate_test_names(s) & have)]
 
 
-def changed_files(root):
-    files = []
-    for line in _git(root, ["status", "--porcelain", "--untracked-files=all"]):
-        path = line[3:]
-        if " -> " in path:            # renommage
-            path = path.split(" -> ", 1)[1]
-        files.append(path.strip().strip('"'))
-    return files
-
-
-def cmd_stop():
-    root = git_root()
-    miss = missing_tests(root, changed_files(root))
-    if miss:
-        sys.stderr.write("Tests manquants pour :\n  - " + "\n  - ".join(miss) +
-                         "\nEcris le(s) test(s) correspondant(s) (cas passant / echec / limite) "
-                         "avant de terminer — les tests s'ecrivent en meme temps que le code.\n")
-        return 2
-    return 0
-
-
 def cmd_posttooluse():
     try:
         data = json.load(sys.stdin)
@@ -152,14 +129,12 @@ def cmd_check(files):
 
 
 def main(argv):
-    mode = argv[1] if len(argv) > 1 else "stop"
-    if mode == "stop":
-        return cmd_stop()
+    mode = argv[1] if len(argv) > 1 else "posttooluse"
     if mode == "posttooluse":
         return cmd_posttooluse()
     if mode == "check":
         return cmd_check(argv[2:])
-    sys.stderr.write("usage: tests_guard.py [stop|posttooluse|check <files...>]\n")
+    sys.stderr.write("usage: tests_guard.py [posttooluse|check <files...>]\n")
     return 0
 
 

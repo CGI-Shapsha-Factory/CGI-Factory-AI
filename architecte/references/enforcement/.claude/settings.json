@@ -12,14 +12,13 @@
         ]
       }
     ],
-    "Stop": [
+    "SessionStart": [
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/tests_guard.py stop",
-            "timeout": 60
+            "command": "git config core.hooksPath .githooks",
+            "timeout": 5
           }
         ]
       }

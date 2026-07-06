@@ -71,9 +71,10 @@ Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exa
 (incrément du compteur de version des documents).
 Catalogues copiés à la racine du projet : `references/conventions/` (linters par langage, Étape 4),
 `references/env-templates/` (fichiers d'env par stack, Étape 10), `references/enforcement/`
-(hooks Claude Code `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code » — **et
+(hook Claude Code `PostToolUse` `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code » — **et
 `.githooks/` + `install_branch_protection.py` : protection de branche locale (refus push/commit sur
-`main`, via `core.hooksPath`) — Étape 11**).
+`main`/`master`, via `core.hooksPath` **réactivé automatiquement par un hook `SessionStart`**) —
+Étape 11**). *(Le hook `Stop` bloquant a été retiré : seul `PostToolUse` reste côté session.)*
 
 ## Vérifications
 ```bash

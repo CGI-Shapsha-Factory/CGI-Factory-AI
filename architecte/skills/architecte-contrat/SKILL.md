@@ -247,23 +247,25 @@ Confirmer en clair les fichiers créés. Mettre à jour le manifeste **en silenc
 Installer le garde-fou « tests écrits avec le code » à la **racine du projet** (miroir de `conventions/`),
 depuis le catalogue `references/enforcement/` : copier `.claude/hooks/tests_guard.py` + `lefthook.yml`
 (garde-fou pre-commit), puis **fusionner** les hooks Claude Code dans `.claude/settings.json` via
-`python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_test_hooks.py" <racine>` — il ajoute `Stop`
-(bloque la fin de tour tant qu'une source modifiée n'a pas de test) + `PostToolUse` (relance) **sans
-écraser** un éventuel hook `SessionEnd` du compteur de coûts (plugin `couts`). Adapter la commande
+`python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_test_hooks.py" <racine>` — il ajoute
+`PostToolUse` (relance dès qu'une source est éditée sans test) **sans écraser** un éventuel hook
+`SessionEnd` du compteur de coûts (plugin `couts`). Adapter la commande
 `python`/`py` et les conventions de test à la stack si besoin. Confirmer en clair. Mettre à jour le manifeste en silence
 (`test_enforcement` = installé). *(Le backstop non contournable — un check CI diff-coverage requis — est
 produit par l'assembleur dans le paquet de handoff ; la stratégie de test elle-même vit dans
 `standards.md`, étape 4.)*
 
 **Poser aussi la protection de branche locale** (même catalogue) : un garde-fou git qui **refuse le
-push direct sur `main`** (et le commit *sur* `main`), pour un projet travaillé à plusieurs. Lancer
-`python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_branch_protection.py" <racine>` — il copie
-`.githooks/` (pur git+Python, sans dépendance) à la racine et pose `git config core.hooksPath .githooks`
-pour ce clone (le `pre-commit` relaie l'enforcement de tests s'il est présent). **Confirmer en clair**,
-manifeste en silence (`architecture.branch_protection`). **Rappeler** que chaque collaborateur doit
-lancer une fois `git config core.hooksPath .githooks` (git n'active pas `core.hooksPath` depuis une
-config commitée). *(Garde-fou **local** — contournable `--no-verify`, par-clone ; la vraie protection
-multi-personnes est un **ruleset serveur GitHub**, hors de ce garde-fou.)*
+push direct sur `main`/`master`** (et le commit *sur* ces branches), pour un projet travaillé à
+plusieurs. Lancer `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_branch_protection.py"
+<racine>` — il copie `.githooks/` (pur git+Python, sans dépendance) à la racine, pose `git config
+core.hooksPath .githooks` pour ce clone, **et fusionne un hook `SessionStart`** dans `.claude/settings.json`
+qui relance cette commande à chaque ouverture de session → **réactivation automatique** pour quiconque
+ouvre le repo dans Claude Code (le `pre-commit` relaie l'enforcement de tests s'il est présent).
+**Confirmer en clair**, manifeste en silence (`architecture.branch_protection`). *(Caveats honnêtes : la
+1ʳᵉ session, Claude Code demande la confiance des hooks — un « oui » par personne, une fois ; un dev
+hors Claude Code ou un `--no-verify` contourne ; la seule barrière non contournable multi-personnes est
+un **ruleset serveur GitHub** + check CI, hors de ce garde-fou local.)*
 
 ## Résolution des points avant de conclure
 Avant de terminer, **balayer tous les fichiers `architecte-out/`** : pour **chaque**

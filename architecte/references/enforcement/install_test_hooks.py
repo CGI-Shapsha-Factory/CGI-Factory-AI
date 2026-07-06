@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-"""Installe (par FUSION) les hooks de test (Stop + PostToolUse) dans .claude/settings.json.
+"""Installe (par FUSION) le hook de test PostToolUse dans .claude/settings.json.
 
 Ne JAMAIS ecraser un evenement existant (ex. le hook `SessionEnd` du compteur de couts) : on lit
-le fichier, on ajoute Stop/PostToolUse s'ils manquent, on reecrit. Idempotent, ordre-independant.
+le fichier, on ajoute PostToolUse s'il manque, on reecrit. Idempotent, ordre-independant.
 
 Usage : python install_test_hooks.py [racine_projet]   (defaut : cwd)
 """
@@ -16,10 +16,6 @@ ENTRIES = {
                     "hooks": [{"type": "command",
                                "command": "python .claude/hooks/tests_guard.py posttooluse",
                                "timeout": 30}]},
-    "Stop": {"matcher": "*",
-             "hooks": [{"type": "command",
-                        "command": "python .claude/hooks/tests_guard.py stop",
-                        "timeout": 60}]},
 }
 
 
