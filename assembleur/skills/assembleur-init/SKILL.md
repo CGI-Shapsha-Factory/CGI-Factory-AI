@@ -1,39 +1,46 @@
 ---
 name: assembleur-init
-description: Amorce la phase de convergence : vérifie les 3 contrats validés, installe les gabarits, crée assembleur-out/ et étend le manifeste.
+description: Amorce la phase de convergence : vérifie que les 3 dossiers de sortie amont (cadrage-out, architecte-out, designer-out) existent, sont complets et non vides, installe les gabarits, crée assembleur-out/ et étend le manifeste.
 ---
 
 # assembleur-init
 
-Skill d'amorçage de la phase **convergence** : **tout premier skill** à lancer après
-que les trois contrats (cadrage, architecte, designer) ont été validés. Il prépare le
-terrain (zéro décision de convergence) ; `assembleur-convergence` suppose qu'il a tourné.
+Skill d'amorçage de la phase **convergence** : **tout premier skill** à lancer une fois
+que les trois phases amont (cadrage, architecte, designer) ont produit leurs dossiers de
+sortie. Il prépare le terrain (zéro décision de convergence) ; `assembleur-convergence`
+suppose qu'il a tourné.
 
 ## Objectif
-Rendre un projet **prêt pour la convergence** : confirmer que les 3 contrats sont
-validés, installer les gabarits, créer le dossier de sortie `assembleur-out/`, et
-étendre le manifeste partagé avec un bloc `assembly`. **Il n'y a aucun repo cible à
-capturer** : l'assembleur produit un **paquet** dans `assembleur-out/`, il n'écrit
-jamais dans un repo SpecKit.
+Rendre un projet **prêt pour la convergence** : **vérifier que les 3 dossiers de sortie
+amont** (`cadrage-out/`, `architecte-out/`, `designer-out/`) **existent, contiennent tous
+les fichiers attendus et non vides**, installer les gabarits, créer le dossier de sortie
+`assembleur-out/`, et étendre le manifeste partagé avec un bloc `assembly`. **Il n'y a
+aucun repo cible à capturer** : l'assembleur produit un **paquet** dans `assembleur-out/`,
+il n'écrit jamais dans un repo SpecKit.
 
 ## Pré-requis (vérification silencieuse)
-**Les 3 contrats doivent être validés.** Lire `.factory/manifest.json` sans l'annoncer :
-- si le cadrage n'est pas terminé, **ou** l'architecture pas validée, **ou** le design
-  pas validé → **le dire en clair** :
-  > « La convergence ne peut pas démarrer : il faut les trois contrats validés — le
-  > cadrage, l'architecture (cohérence validée) et le design (système validé). Termine
-  > d'abord la phase qui manque. »
-- Vérifier la présence des artefacts attendus : cadrage
-  (`cadrage-out/product-brief.md`, `glossaire.md`, `spec-index.md`,
-  `features-fonctionnels-brief/*.brief.md`), architecte
-  (`architecte-out/tech-stack.md`, `components.md`, `decisions/`, `design-impact.md`),
-  designer (`designer-out/design-guidelines.md`).
+**Vérifier uniquement la présence et la complétude des 3 dossiers de sortie amont — PAS
+leur statut de validation.** Que le cadrage, l'architecture ou le design aient été validés
+ou non **n'est pas le problème de l'assembleur** : ne lire **aucun flag de validation** du
+manifeste (`cadrage_complete`, `coherence_validated`, design validé…) et ne pas bloquer
+dessus. Contrôler seulement, **sur le disque**, que chaque fichier attendu **existe et
+n'est pas vide** :
+- **cadrage** : `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`,
+  `cadrage-out/spec-index.md`, et **au moins un** brief sous
+  `cadrage-out/features-fonctionnels-brief/*.brief.md`.
+- **architecte** : `architecte-out/tech-stack.md`, `architecte-out/components.md`,
+  `architecte-out/design-impact.md`, et le dossier `architecte-out/decisions/`.
+- **designer** : `designer-out/design-guidelines.md`.
 
-**Refus précis (fichier réellement manquant).** Nommer en clair **ce qui manque** : soit un **flag
-manifeste à `false`** + le **skill amont** à relancer (cadrage → `/cadrage:cadrage-completude` ; archi →
-`/architecte:architecte-coherence` ; design → `/designer:designer-coherence`), **puis committer
-`.factory/manifest.json`** ; soit un **fichier `-out/…` absent, par chemin**. Rappel :
-`.factory/manifest.json` + les 3 dossiers `-out/` doivent avoir été **committés** par les phases précédentes.
+Un dossier `-out/` **absent ou vide**, ou un fichier attendu **manquant / vide**, est le
+**seul** motif de refus.
+
+**Refus précis (fichier réellement manquant ou vide).** Nommer en clair **ce qui manque ou
+est vide**, **par chemin**, et indiquer la **phase amont** qui doit le produire/compléter
+(cadrage / architecte / designer). Rappel : `.factory/manifest.json` + les 3 dossiers
+`-out/` doivent avoir été **committés** par les phases précédentes — s'ils manquent du
+clone, c'est un fichier réellement absent, le dire. **Ne jamais bloquer sur un statut de
+validation** ; seule l'absence ou la vacuité d'un fichier bloque.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
@@ -66,6 +73,13 @@ manifeste à `false`** + le **skill amont** à relancer (cadrage → `/cadrage:c
 
 ## Règles invariantes
 - **Aucune décision de convergence.** Ce skill prépare ; il ne converge rien.
+- **Vérification, pas validation.** L'assembleur ne juge pas si l'amont est « validé » : il
+  vérifie seulement que les fichiers de sortie sont **là et non vides**. Aucun flag de
+  validation lu ni exigé.
+- **Aucun hook à poser.** L'assembleur n'a **pas de hook ni d'enforcement propre** à installer :
+  l'enforcement (hook de test `PostToolUse` + protection de branche `SessionStart`/`.githooks/`)
+  est posé **en amont par `architecte-init`** et déjà committé dans le repo ; l'assembleur ne
+  fait que **livrer le backstop CI** (`ci/tests.yml`) **dans le paquet** (posé par l'équipe).
 - **Paquet seul.** Aucun repo cible ; tout ira dans `assembleur-out/`.
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 

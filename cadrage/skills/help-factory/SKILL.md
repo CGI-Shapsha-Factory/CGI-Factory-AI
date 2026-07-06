@@ -56,7 +56,7 @@ Lit les 3 contrats en parallèle, les converge, et produit un **paquet de handof
 
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
-| `assembleur-init` | vérifie les 3 contrats validés + installe les gabarits + crée `assembleur-out/` | 3 contrats validés |
+| `assembleur-init` | vérifie que les 3 dossiers de sortie amont (`cadrage-out/`, `architecte-out/`, `designer-out/`) existent et sont complets (pas de statut de validation exigé) + installe les gabarits + crée `assembleur-out/` | 3 dossiers de sortie amont présents |
 | `assembleur-convergence` | lit les 3 contrats **en parallèle** + converge + produit le paquet (pré-constitution, graines spec, carte des features, contexte technique, CLAUDE.md, mémoire) + résout les points en session | **garant de cohérence** (humain) |
 
 ### Transversal — `couts` (mesure du coût de simulation)
