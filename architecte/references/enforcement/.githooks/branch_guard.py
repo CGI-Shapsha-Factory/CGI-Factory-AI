@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 """Garde-fou local de branche (deterministe, pur git+Python, sans dependance).
 
-Trois protections, appelees par les hooks `pre-push`, `pre-commit` et `pre-merge-commit`
-(via `core.hooksPath .githooks`) :
-  - `pre_push(stdin)`      : refuse un push (normal, force ou suppression) vers une branche protegee.
-  - `pre_commit()`         : refuse un commit fait DIRECTEMENT sur une branche protegee, puis enchaine
-                             l'enforcement de tests existant (`.claude/hooks/tests_guard.py`) s'il est la.
-  - `pre_merge_commit()`   : refuse un merge commit sur une branche protegee (`git merge` ne declenche
-                             pas `pre-commit` — sans ce hook, un merge sur `main` passerait).
+Deux protections, appelees par les hooks `pre-push` et `pre-commit` (via `core.hooksPath .githooks`) :
+  - `pre_push(stdin)`  : refuse un push (normal, force ou suppression) vers une branche protegee.
+  - `pre_commit()`     : refuse un commit fait DIRECTEMENT sur une branche protegee, puis enchaine
+                         l'enforcement de tests existant (`.claude/hooks/tests_guard.py`) s'il est la.
+
+Note (best practice) : on ne bloque PAS le `merge` en local (un `pre-merge-commit` casserait `git pull`
+sur `main` et ne serait pas idiomatique). Le vrai verrou anti-merge multi-personnes est un ruleset
+serveur (require PR + review + CI), hors perimetre de ce garde-fou local.
 
 Branches protegees : `main`, `master` par defaut ; surchargeables via un fichier
 `.githooks/protected-branches` (une branche par ligne, `#` = commentaire).
@@ -75,23 +76,6 @@ def pre_commit():
             [sys.executable, tests_guard, "check", *staged]
         ).returncode
         return rc
-    return 0
-
-
-def pre_merge_commit():
-    """Bloque un merge commit cree DIRECTEMENT sur une branche protegee.
-
-    `git merge` ne declenche PAS `pre-commit` : sans ce hook, un `git merge feat/x` sur `main`
-    ferait atterrir des changements sur `main` sans passer par la protection. On refuse donc le
-    merge quand HEAD est sur une branche protegee.
-    """
-    branch = current_branch()
-    if branch in protected_branches():
-        return _fail(
-            f"Merge direct sur '{branch}' bloque.\n"
-            f"Ouvre une Pull Request depuis ta branche de travail plutot que de merger en local :\n"
-            f"    git push origin HEAD:feat/ma-modif"
-        )
     return 0
 
 

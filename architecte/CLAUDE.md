@@ -72,9 +72,10 @@ Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exa
 Catalogues copiés à la racine du projet : `references/conventions/` (linters par langage, Étape 4),
 `references/env-templates/` (fichiers d'env par stack, Étape 10), `references/enforcement/`
 (hook Claude Code `PostToolUse` `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code » — **et
-`.githooks/` + `install_branch_protection.py` : protection de branche locale (refus push/commit/**merge**
-sur `main`/`master` — hooks `pre-push`/`pre-commit`/`pre-merge-commit`, via `core.hooksPath`
-**réactivé automatiquement par un hook `SessionStart`**) —
+`.githooks/` + `install_branch_protection.py` : protection de branche locale (refus push/commit
+sur `main`/`master` — hooks `pre-push`/`pre-commit`, **posés à la racine du dépôt git**, via
+`core.hooksPath` **réactivé automatiquement par un hook `SessionStart`** ; **pas** de blocage du
+merge en local — best practice, cf. enforcement/README) —
 **tout posé par `architecte-init`**, plus par le contrat**). *(Le hook `Stop` bloquant a été retiré : seul `PostToolUse` reste côté session.)*
 
 ## Vérifications

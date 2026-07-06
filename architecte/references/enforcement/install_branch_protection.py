@@ -2,9 +2,9 @@
 """Installe la protection de branche LOCALE (garde-fous git) dans le repo cible.
 
 Idempotent. Modele : `install_test_hooks.py`. Etapes :
-  1. copie `.githooks/{branch_guard.py, pre-push, pre-commit, pre-merge-commit, protected-branches?}`
-     a la racine du repo cible (dossier `.githooks/`, commite -> partage par l'equipe) ;
-  2. rend `pre-push`/`pre-commit`/`pre-merge-commit` executables (best-effort ; no-op sous Windows) ;
+  1. copie `.githooks/{branch_guard.py, pre-push, pre-commit, protected-branches?}` a la racine du
+     depot git (dossier `.githooks/`, commite -> partage par l'equipe) ;
+  2. rend `pre-push`/`pre-commit` executables (best-effort ; no-op sous Windows) ;
   3. active les hooks pour CE clone : `git -C <racine> config core.hooksPath .githooks` ;
   4. pose (par FUSION) un hook `SessionStart` dans `.claude/settings.json` qui relance
      `git config core.hooksPath .githooks` a chaque ouverture de session -> reactivation AUTOMATIQUE
@@ -19,8 +19,8 @@ import stat
 import subprocess
 import sys
 
-HOOK_FILES = ("branch_guard.py", "pre-push", "pre-commit", "pre-merge-commit")
-EXEC_FILES = ("pre-push", "pre-commit", "pre-merge-commit")
+HOOK_FILES = ("branch_guard.py", "pre-push", "pre-commit")
+EXEC_FILES = ("pre-push", "pre-commit")
 PROTECTED_DEFAULT = ["main", "master"]
 HOOKS_PATH_CMD = "git config core.hooksPath .githooks"
 SESSIONSTART = {"hooks": [{"type": "command", "command": HOOKS_PATH_CMD, "timeout": 5}]}
