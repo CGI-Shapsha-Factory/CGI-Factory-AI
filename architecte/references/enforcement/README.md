@@ -8,6 +8,11 @@ limite), en **défense en profondeur**.
 - `.claude/settings.json` — hooks Claude Code (partagés, **commités** : c'est l'enforcement de
   l'équipe, distinct d'un `settings.local.json` personnel).
 - `.claude/hooks/tests_guard.py` — la logique multi-langage (pur Python + git, sans dépendance).
+- `.claude/hooks/format_guard.py` — hook `PostToolUse` de **formatage** : à chaque `Write`/`Edit` d'un
+  fichier **Python** (`.py`/`.pyi`), lit le `.editorconfig` applicable (line-length, indent, fins de
+  ligne) et le traduit en `ruff format --config`. Comble le fait que Claude Code (et ruff) ne lisent
+  pas `.editorconfig`. Pur Python, **non bloquant** (si `ruff` absent → ignoré). Posé par
+  `install_format_hook.py`. *(Portée : Python ; extensible.)*
 - `lefthook.yml` — garde-fou pre-commit git.
 - `.githooks/` — **protection de branche locale** (`branch_guard.py` + `pre-push` + `pre-commit`),
   posée par `install_branch_protection.py`.

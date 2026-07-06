@@ -71,7 +71,10 @@ Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exa
 (incrément du compteur de version des documents).
 Catalogues copiés à la racine du projet : `references/conventions/` (linters par langage, Étape 4),
 `references/env-templates/` (fichiers d'env par stack, Étape 10), `references/enforcement/`
-(hook Claude Code `PostToolUse` `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code » — **et
+(hook Claude Code `PostToolUse` `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code » —
+**+ hook `PostToolUse` `format_guard.py`** : formatage à l'édition (Python : lit `.editorconfig` →
+`ruff format --config` ; comble le fait que Claude Code/ruff ne lisent pas `.editorconfig` ; posé par
+`install_format_hook.py`, non bloquant) — **et
 `.githooks/` + `install_branch_protection.py` : protection de branche locale (refus push/commit
 sur `main`/`master` — hooks `pre-push`/`pre-commit`, **posés à la racine du dépôt git**, via
 `core.hooksPath` **réactivé automatiquement par un hook `SessionStart`** ; **pas** de blocage du

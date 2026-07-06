@@ -108,6 +108,15 @@ l'utilisateur décider de la suite.
      compteur de coûts). **Ne jamais copier ces fichiers à la main** : le script est la source
      déterministe — sinon le hook enregistré pointerait vers un script absent (hook mort). Puis mettre
      `architecture.test_enforcement = true` dans le manifeste (en silence).
+   - **Hook de formatage** : lancer **une seule commande**
+     `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_format_hook.py" <racine>` — elle
+     **copie** `format_guard.py` → `<racine>/.claude/hooks/` (sans écraser) **puis fusionne** un
+     second hook `PostToolUse` dans `.claude/settings.json` (**sans écraser** les hooks existants —
+     tests_guard, SessionEnd coûts). À chaque `Write`/`Edit` d'un fichier **Python** (`.py`/`.pyi`),
+     il applique le formatage : il **lit le `.editorconfig`** applicable (line-length, indent, fins de
+     ligne) et le traduit en options `ruff format --config`. Claude Code ne lit pas `.editorconfig`
+     lui-même — ce hook fait le pont. Best-effort et **non bloquant** : si `ruff` est absent, il
+     l'indique et n'échoue pas. *(Portée actuelle : Python. Extensible à d'autres langages/formateurs.)*
    - **Protection de branche** :
      `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_branch_protection.py" <racine>` — il
      copie `.githooks/` (pur git+Python), pose `git config core.hooksPath .githooks` pour ce clone **et
@@ -127,9 +136,9 @@ l'utilisateur décider de la suite.
 - Le manifeste contient le bloc `architecture` (`phase: "init"`), et reparse sans erreur.
 - Rendu diagrammes provisionné (best-effort) : `.factory/puppeteer.json` écrit si un
   navigateur système est présent, mermaid-cli installé si possible — non bloquant.
-- **Enforcement posé** : `.claude/hooks/tests_guard.py` + hook `PostToolUse` dans
-  `.claude/settings.json` ; `.githooks/` + `core.hooksPath` + hook `SessionStart` ; manifeste
-  `test_enforcement: true` + bloc `branch_protection`.
+- **Enforcement posé** : `.claude/hooks/tests_guard.py` + `.claude/hooks/format_guard.py` + **deux**
+  hooks `PostToolUse` (test + formatage) dans `.claude/settings.json` ; `.githooks/` + `core.hooksPath`
+  + hook `SessionStart` ; manifeste `test_enforcement: true` + bloc `branch_protection`.
 - **État du cadrage signalé** : si `cadrage-out/` manque, l'utilisateur a été **averti** (pas
   bloqué) que la construction du contrat a besoin du cadrage.
 - Rien d'existant n'a été écrasé (idempotence).
