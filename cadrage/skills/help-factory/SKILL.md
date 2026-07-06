@@ -66,8 +66,7 @@ Pas une phase : mesure **ce que coûterait la fabrication au tarif API** (estima
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
 | `couts-init` | pose le compteur (hook `SessionEnd` **en fin de session, sans latence par tour** + table de prix par tier) **dans le dossier courant**, sans question, sans écraser les hooks existants | **tôt** |
-| `couts-rapport` | restitue un **tableau par session** (tokens input/output + coût en euros) | à tout moment |
-| `couts-total` | produit un **bilan unique partageable** (total tokens + coût estimé + nb sessions) pour le chef d'équipe ; écrit `.factory/couts/bilan-couts.md` | à la demande |
+| `couts-rapport` | restitue un **tableau par session** (tokens input/output + coût en euros) ; écrit un rapport **versionné** (`rapport-couts.md`, puis `-2`, `-3`… — jamais d'écrasement) | à tout moment |
 
 **Handoff final** : l'équipe prend le paquet de `assembleur-out/` → `/assembleur:premier-alimente-linear` (un ticket Linear `Feature` par feature) → `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) → les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks` → `/assembleur:creation-task-linear` (un sous-ticket `Task` par phase) → `/speckit.implement` (état des tickets via `/assembleur:update-issue-linear`).
 

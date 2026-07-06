@@ -18,7 +18,8 @@ facturé. Tout en **français**.
    `.jsonl`) depuis le dossier courant, en descendant au besoin ; **ne pas** passer le git root. Le
    script lit le journal, **déduplique globalement par clé `(message.id, requestId)`**
    (reprise/fork comptés une seule fois), agrège **par session**, valorise via la table de prix datée,
-   convertit en euros avec le taux figé dans le script, et écrit `.factory/couts/rapport-couts.md`.
+   convertit en euros avec le taux figé dans le script, et écrit un **nouveau fichier versionné**
+   dans `.factory/couts/` (`rapport-couts.md`, puis `rapport-couts-2.md`, … — jamais d'écrasement).
 2. **Restituer le tableau** (une ligne par session) :
 
    | Session (début → fin) | Tokens input | Tokens output | Coût (€) |
@@ -38,5 +39,8 @@ facturé. Tout en **français**.
 - **Par session.** Pas de ventilation par phase, feature, ou tier — seulement le total par session.
 - **Rien de la mécanique affiché.** Restitution en clair, en français.
 
-Étape suivante : relancer ce rapport quand voulu ; `/couts:couts-total` produit un bilan unique
-partageable.
+**Versionnage** : chaque exécution écrit un **nouveau fichier**, jamais un écrasement —
+`rapport-couts.md` au 1ᵉʳ run, puis `rapport-couts-2.md`, `rapport-couts-3.md`, … Indiquer en clair
+**le chemin du fichier écrit** (le script le renvoie).
+
+Étape suivante : relancer ce rapport quand voulu (un nouveau fichier numéroté sera créé à chaque fois).

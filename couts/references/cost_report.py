@@ -175,6 +175,19 @@ def build_report(root):
     return "\n".join(lines), data
 
 
+def _next_report_path(outdir):
+    """Versionnage : ne JAMAIS ecraser. rapport-couts.md, puis rapport-couts-2.md, -3.md, ..."""
+    base = os.path.join(outdir, "rapport-couts.md")
+    if not os.path.exists(base):
+        return base
+    n = 2
+    while True:
+        p = os.path.join(outdir, f"rapport-couts-{n}.md")
+        if not os.path.exists(p):
+            return p
+        n += 1
+
+
 def main(argv):
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -184,14 +197,23 @@ def main(argv):
     root = project_root(args[0] if args else None)
     md, data = build_report(root)
     # Ecrire le livrable d'abord (UTF-8) : garanti meme si la console plante a l'affichage.
+    # VERSIONNAGE : chaque execution ecrit un NOUVEAU fichier numerote, jamais un ecrasement.
+    report_path = None
     try:
         outdir = os.path.join(root, ".factory", "couts")
         os.makedirs(outdir, exist_ok=True)
-        open(os.path.join(outdir, "rapport-couts.md"), "w", encoding="utf-8").write(md + "\n")
+        report_path = _next_report_path(outdir)
+        open(report_path, "w", encoding="utf-8").write(md + "\n")
     except OSError:
         pass
+    data["report_path"] = report_path
     try:
-        print(json.dumps(data, ensure_ascii=False, indent=2) if "--json" in argv else md)
+        if "--json" in argv:
+            print(json.dumps(data, ensure_ascii=False, indent=2))
+        else:
+            print(md)
+            if report_path:
+                print(f"\n_Rapport écrit : {report_path}_")
     except Exception:
         pass
     return 0

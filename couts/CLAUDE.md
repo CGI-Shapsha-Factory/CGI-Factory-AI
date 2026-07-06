@@ -13,15 +13,15 @@ Python ; pas de build/test. **Pas de coût réel, pas de saisie manuelle, pas de
 - **Tout en français** ; identifiants machine et noms d'outils/formats restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/couts:<skill>` + auto par le modèle.
 
-## Les 3 skills
+## Les 2 skills
 - `couts-init` — pose le compteur **dans le dossier courant** (à lancer tôt, autonome — pas de
   pré-requis, **aucune question**) : copie `turn_cost.py` en `.claude/hooks/`, **fusionne** le hook
   `SessionEnd` dans `.claude/settings.json` (sans écraser les hooks existants), installe la table de
   prix datée dans `.factory/couts/`, crée `.factory/couts/` + **`.gitignore`**. Interaction **en
   français, sans exposer la mécanique**.
-- `couts-rapport` — restitue un **tableau par session** (tokens input/output + coût en euros).
-- `couts-total` — produit un **bilan unique partageable** (total tokens, coût estimé, sessions) ; écrit
-  `.factory/couts/bilan-couts.md`.
+- `couts-rapport` — restitue un **tableau par session** (tokens input/output + coût en euros) et écrit
+  un rapport **versionné** dans `.factory/couts/` (`rapport-couts.md`, puis `-2`, `-3`… — **jamais
+  d'écrasement**).
 
 ## Le compteur (`references/turn_cost.py`) — hook `SessionEnd` (écriture en fin de session)
 Best-effort (ne bloque jamais, exit 0). **Un seul comportement**, déclenché par `SessionEnd` : lit
@@ -52,7 +52,7 @@ la voie pour le rollup cross-dev.
 **Un fichier par session** `.factory/couts/<aaaa-mm>/<session-id>.jsonl`, **réécrit à chaque `SessionEnd`**
 depuis le transcript complet. **Pas d'état/curseur** (on réécrit tout à chaque fois). Tout `.factory/couts/`
 est **git-ignoré** (données individuelles, jamais poussées au repo). Table de prix dans
-`.factory/couts/`. **Partage au chef d'équipe** via `couts-total` (un seul fichier, remis à la main) ou
+`.factory/couts/`. **Partage au chef d'équipe** : remettre un `rapport-couts.md` (fichier versionné) ou
 rollup org via OTel.
 
 **Reprise de session** : (1) **même id** → réécriture idempotente du fichier depuis le transcript complet
@@ -64,11 +64,13 @@ Structurée par **tier** : `{ tiers:{haiku,sonnet,opus,fable}, overrides:{<model
 Résolveur `model-id → tier` dans `turn_cost.py` (sous-chaîne + `overrides` pour les versions au prix
 différent, ex. Opus 4.1 = 3×). Externe et **datée** (jamais en dur).
 
-## Rapport (par session)
+## Rapport (par session, versionné)
 `cost_report.py` agrège le journal **par session** : début/fin (`ts` min/max, format `JJ-MM`), tokens
 **input** (bruts, hors cache), tokens **output**, et **coût complet** (5 catégories au tarif par tier)
 converti en euros via un **taux figé** (`USD_EUR`/`RATE_DATE` en tête du script). Un tableau + une ligne
-Total. Aucune ventilation par phase/feature/tier. **Simulation seule.**
+Total. Aucune ventilation par phase/feature/tier. **Simulation seule.** **Versionnage** (`_next_report_path`) :
+chaque run écrit un **nouveau fichier** (`rapport-couts.md`, puis `rapport-couts-2.md`, `-3.md`…) —
+**jamais d'écrasement** ; le chemin écrit est renvoyé (stdout + champ `report_path` en `--json`).
 
 ## Manifeste (optionnel)
 Si un `.factory/manifest.json` existe, `couts-init` y ajoute le bloc `costs` :
@@ -77,16 +79,16 @@ garde-fou n'ouvre pas le manifeste).
 
 ## Scripts
 `references/turn_cost.py` (compteur, hook `SessionEnd`, racine ancrée `__file__`),
-`references/cost_report.py` (rapport **par session** + taux figé, dédup globale par `key`),
-`references/cost_total.py` (bilan unique partageable), `references/install_cost_hook.py` (fusion hook
-SessionEnd, cible le dossier courant), `references/price-table.json`, `references/OTEL.md` (rollup org).
-Garde-fou : `scripts/check_costs.py`.
+`references/cost_report.py` (rapport **par session** versionné + taux figé, dédup globale par `key`,
+localise le journal `.factory/couts/` avec journal, pas le git root), `references/install_cost_hook.py`
+(fusion hook SessionEnd, cible le dossier courant), `references/price-table.json`,
+`references/OTEL.md` (rollup org). Garde-fou : `scripts/check_costs.py`.
 
 ## Vérifications (à la place des tests)
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python -m py_compile references/turn_cost.py references/cost_report.py references/cost_total.py references/install_cost_hook.py scripts/check_costs.py
+python -m py_compile references/turn_cost.py references/cost_report.py references/install_cost_hook.py scripts/check_costs.py
 python scripts/check_costs.py <projet>/.factory/manifest.json
 ```
 

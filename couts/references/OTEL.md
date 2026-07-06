@@ -56,7 +56,7 @@ peuvent pas être surchargées par l'utilisateur.
 ventilation par équipe côté dashboard.
 
 ## Ce qu'OTel fait / ne fait pas (vs le journal `.factory/couts/`)
-| Besoin | OTel natif | Journal local git-ignoré (`couts-init`/`couts-rapport`/`couts-total`) |
+| Besoin | OTel natif | Journal local git-ignoré (`couts-init` / `couts-rapport`) |
 |---|---|---|
 | Rollup org, dashboards temps réel | **oui** (par user/modèle/équipe, hookless) | non (par projet) |
 | Coût en USD sans table de prix | **oui** (`cost.usage`) | calculé via table de prix datée |
@@ -68,7 +68,8 @@ ventilation par équipe côté dashboard.
 ## Recommandation
 - **Journal local git-ignoré** (défaut du plugin) : suivi **par session**, données individuelles
   (jamais poussées), fonctionne hors-ligne — **coût de simulation** (estimation au tarif API). Partage
-  au chef d'équipe via `couts-total`. C'est le livrable « coût de fabrication d'un projet ».
+  au chef d'équipe en remettant un `rapport-couts.md` (fichier versionné). C'est le livrable « coût de
+  fabrication d'un projet ».
 - **OTel** (ce guide) : suivi **transversal org**, dashboards temps réel, coût USD natif — à activer par
   l'admin quand on veut agréger tous les développeurs/projets (les journaux locaux étant git-ignorés, OTel
   est la voie d'agrégation cross-dev).
