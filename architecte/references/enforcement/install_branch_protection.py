@@ -75,10 +75,27 @@ def main(argv):
         print(f"ERREUR: racine introuvable: {root}", file=sys.stderr)
         return 1
 
+    # Les hooks git ne fonctionnent qu'a la RACINE DU DEPOT git : `core.hooksPath` (meme relatif)
+    # est resolu par git relativement au toplevel, pas au sous-dossier courant. Si le cwd est un
+    # sous-dossier du depot, poser `.githooks/` dans le cwd serait IGNORE par git. On installe donc
+    # toujours a la racine du depot.
+    try:
+        top = subprocess.run(
+            ["git", "-C", root, "rev-parse", "--show-toplevel"],
+            check=True, capture_output=True, text=True,
+        ).stdout.strip()
+        git_root = os.path.abspath(top) if top else root
+    except (OSError, subprocess.CalledProcessError):
+        print("ATTENTION: pas un depot git — protection de branche non posee. "
+              "Initialise un depot (git init) puis relance.", file=sys.stderr)
+        return 0  # non bloquant : sans git, pas de protection possible
+
     src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".githooks")
-    dst_dir = os.path.join(root, ".githooks")
+    dst_dir = os.path.join(git_root, ".githooks")
     os.makedirs(dst_dir, exist_ok=True)
     notes = []
+    if os.path.normcase(git_root) != os.path.normcase(root):
+        notes.append(f"hooks poses a la racine du depot ({git_root}), pas dans le sous-dossier courant")
 
     # 1-2. Copier les hooks + rendre executables.
     # Normaliser en fins de ligne LF : `pre-push`/`pre-commit` sont execute's via leur shebang par
@@ -101,10 +118,10 @@ def main(argv):
                 pass
     notes.append(f"hooks copies: {', '.join(HOOK_FILES)}")
 
-    # 3. Activer pour ce clone.
+    # 3. Activer pour ce clone (config posee sur le depot, hooksPath relatif a sa racine).
     try:
         subprocess.run(
-            ["git", "-C", root, "config", "core.hooksPath", ".githooks"],
+            ["git", "-C", git_root, "config", "core.hooksPath", ".githooks"],
             check=True, capture_output=True, text=True,
         )
         notes.append("core.hooksPath = .githooks (ce clone)")
