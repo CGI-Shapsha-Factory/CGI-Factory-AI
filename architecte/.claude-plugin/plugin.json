@@ -1,6 +1,6 @@
 {
   "name": "architecte",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Phase architecture d'un projet spec-driven : transforme le pack fonctionnel (cadrage-out) en cadre technique (drivers & attributs qualité, composants dont le frontend, stack à versions épinglées, ADR arbitrés par l'humain, walking skeleton, conventions/linters, diagrammes PNG, cohérence). L'IA ne choisit jamais la stack à la place de l'utilisateur ; architecte-init pose l'enforcement (hook de test PostToolUse + protection de branche main/master). 3 skills, en français, sans MVP.",
   "author": {
     "name": "IA Factory"

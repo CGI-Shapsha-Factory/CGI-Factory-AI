@@ -100,12 +100,14 @@ l'utilisateur décider de la suite.
    ligne, Node absent), il le dit et **continue** — `render_diagrams.py` retentera au rendu.
 6. **Poser l'enforcement (déterministe — TOUS les hooks de l'architecte, dès l'init)** depuis le
    catalogue `references/enforcement/` :
-   - **Hook de test** : copier `references/enforcement/.claude/hooks/tests_guard.py` →
-     `<racine>/.claude/hooks/tests_guard.py` et `references/enforcement/lefthook.yml` → `<racine>/`,
-     puis **fusionner** le hook `PostToolUse` dans `.claude/settings.json` via
-     `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_test_hooks.py" <racine>` (relance
-     dès qu'une source est éditée sans test ; **sans écraser** un hook `SessionEnd` du compteur de
-     coûts). Puis mettre `architecture.test_enforcement = true` dans le manifeste (en silence).
+   - **Hook de test** : lancer **une seule commande**
+     `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_test_hooks.py" <racine>` — elle
+     **copie elle-même** `tests_guard.py` → `<racine>/.claude/hooks/` **et** `lefthook.yml` →
+     `<racine>/` (sans écraser), **puis fusionne** le hook `PostToolUse` dans `.claude/settings.json`
+     (relance dès qu'une source est éditée sans test ; **sans écraser** un hook `SessionEnd` du
+     compteur de coûts). **Ne jamais copier ces fichiers à la main** : le script est la source
+     déterministe — sinon le hook enregistré pointerait vers un script absent (hook mort). Puis mettre
+     `architecture.test_enforcement = true` dans le manifeste (en silence).
    - **Protection de branche** :
      `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_branch_protection.py" <racine>` — il
      copie `.githooks/` (pur git+Python), pose `git config core.hooksPath .githooks` pour ce clone **et
