@@ -1,6 +1,6 @@
 {
   "name": "assembleur",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Phase de convergence d'un projet spec-driven : lit les 3 contrats (fonctionnel, technique, design) et produit un paquet de handoff prêt pour SpecKit dans assembleur-out/ (pré-constitution, graines spec, carte des features, contexte technique, CLAUDE.md, mémoire, backstop CI), sans jamais écrire dans le repo cible. Alimente Linear (tickets Feature/Task, MAJ d'état), génère init-cowork.md et pose SpecKit via specify init. 7 skills, en français.",
   "author": {
     "name": "IA Factory"
