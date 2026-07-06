@@ -57,15 +57,20 @@ def _is_root_editorconfig(path):
 
 
 def _editorconfig_chain(start_dir):
-    """Liste des `.editorconfig` du plus HAUT au plus PROCHE (le proche override), arret sur root."""
+    """Liste des `.editorconfig` du plus HAUT au plus PROCHE (le proche override), arret sur root.
+
+    A chaque niveau on regarde `<dir>/.editorconfig` (emplacement standard) ET
+    `<dir>/conventions/.editorconfig` (emplacement de la Factory — `architecte-init` y range le socle,
+    or la decouverte editorconfig ne fouille QUE les dossiers ancetres, pas un sous-dossier).
+    """
     chain = []
     d = os.path.abspath(start_dir)
     while True:
-        p = os.path.join(d, ".editorconfig")
-        if os.path.isfile(p):
-            chain.append(p)
-            if _is_root_editorconfig(p):
-                break
+        for p in (os.path.join(d, ".editorconfig"), os.path.join(d, "conventions", ".editorconfig")):
+            if os.path.isfile(p):
+                chain.append(p)
+                if _is_root_editorconfig(p):
+                    return list(reversed(chain))
         parent = os.path.dirname(d)
         if parent == d:
             break
