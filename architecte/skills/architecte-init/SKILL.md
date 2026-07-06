@@ -58,11 +58,17 @@ l'utilisateur décider de la suite.
    des gabarits de cadrage) : copier depuis le plugin `templates/` :
    `drivers-quality.md`, `components.md`, `tech-stack.md`, `standards.md`,
    `diagrams.md`, `adr.md`, `risks.md`, `design-impact.md`.
-2. **Créer le dossier `conventions/`** à la **racine du projet** et y déposer le
-   socle universel `.editorconfig` (copie de
-   `references/conventions/.editorconfig`). **Les fichiers de conventions par
-   langage ne sont PAS installés ici** : le langage n'est connu qu'après le workflow
-   stack — c'est le skill `architecte` qui les déposera (voir son étape conventions).
+2. **Créer le dossier `conventions/`** à la **racine du projet** et y déposer :
+   - le socle universel `.editorconfig` (copie de `references/conventions/.editorconfig`) ;
+   - **la config du formateur Python** `conventions/python/ruff.toml` (copie de
+     `references/conventions/python/ruff.toml`) — c'est le fichier que le **hook de formatage**
+     (étape 6) passe à `ruff format --config` (préférences complètes, alignées sur `.editorconfig`).
+     On l'installe dès l'init car le hook de formatage est **centré Python**. *(Extensible : d'autres
+     formateurs viendront avec leur langage.)*
+
+   **Les autres configs de conventions par langage** (biome/eslint pour TS-JS, clang pour C…) **ne
+   sont PAS installées ici** : la stack n'est connue qu'après le workflow stack — c'est
+   `architecte-contrat` qui les déposera (voir son étape conventions).
 3. **Créer `architecte-out/decisions/`** (dossier des ADR, vide).
 4. **Manifeste** `.factory/manifest.json` **du dossier courant** :
    - **S'il existe** → ajouter le bloc `architecture` ci-dessous s'il est absent (read-modify-write

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-"""Hook Claude Code PostToolUse : formate un fichier Python edite en appliquant les reglages de
-`.editorconfig` via `ruff format`.
+"""Hook Claude Code PostToolUse : formate un fichier Python edite via `ruff format`.
 
 Pourquoi ce hook : Claude Code (Write/Edit) ne lit PAS `.editorconfig` ; et `ruff` non plus. Ce hook
-fait le pont : il lit le `.editorconfig` applicable au fichier (recherche ascendante, arret sur
-`root = true`, sections en glob), traduit ses reglages en options `ruff format --config`, puis formate.
+fait le pont. Deux sources de preferences, dans l'ordre :
+  1. **Fichier de config ruff dedie** s'il existe (`ruff.toml`/`.ruff.toml`, ou l'emplacement Factory
+     `conventions/ruff.toml` / `conventions/python/ruff.toml`) -> `ruff format --config <fichier>`.
+     C'est la source COMPLETE des preferences du formateur (quote-style, line-ending, magic comma…).
+  2. **Sinon**, `.editorconfig` applicable (recherche ascendante + fallback `conventions/`, arret sur
+     `root = true`, sections en glob) traduit en options `ruff format --config` (les 4 reglages de base).
 
 Focus Python (`.py`/`.pyi`) pour l'instant (extensible : ajouter d'autres extensions + formateurs).
 
@@ -136,6 +139,30 @@ def _ruff_config_args(props):
     return args
 
 
+def _find_ruff_config(start_dir):
+    """Cherche un fichier de config ruff dans les dossiers ancetres.
+
+    Priorite (par dossier, du plus proche au plus haut) : `ruff.toml` / `.ruff.toml` (config du
+    projet, auto-decouverte par ruff) puis `conventions/ruff.toml` / `conventions/python/ruff.toml`
+    (emplacement de la Factory, que ruff ne trouve PAS seul). Renvoie le chemin, ou None.
+
+    Ce fichier porte les preferences COMPLETES du formateur (quote-style, magic trailing comma,
+    line-ending, docstring, etc.) — bien plus riches que les 4 reglages de `.editorconfig`.
+    """
+    d = os.path.abspath(start_dir)
+    while True:
+        for cand in ("ruff.toml", ".ruff.toml",
+                     os.path.join("conventions", "ruff.toml"),
+                     os.path.join("conventions", "python", "ruff.toml")):
+            p = os.path.join(d, cand)
+            if os.path.isfile(p):
+                return p
+        parent = os.path.dirname(d)
+        if parent == d:
+            return None
+        d = parent
+
+
 def _ruff_candidates():
     cands = []
     if shutil.which("ruff"):
@@ -159,10 +186,14 @@ def main():
     if not os.path.isfile(path):
         return 0
 
-    args = _ruff_config_args(_editorconfig_props(path))
+    # 1) Config ruff dediee si presente (preferences completes) ; 2) sinon, derive de `.editorconfig`.
+    cfg = _find_ruff_config(os.path.dirname(path))
+    args = ["--config", cfg] if cfg else _ruff_config_args(_editorconfig_props(path))
     for cand in _ruff_candidates():
         try:
-            r = subprocess.run(cand + ["format", *args, path], capture_output=True, text=True)
+            # --no-cache : ne pas polluer le projet avec un dossier `.ruff_cache`.
+            r = subprocess.run(cand + ["format", "--no-cache", *args, path],
+                               capture_output=True, text=True)
         except OSError:
             continue
         # ruff a tourne (succes OU erreur de syntaxe) -> on ne bloque pas, on ne reessaie pas.
