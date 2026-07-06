@@ -134,6 +134,27 @@ l'utilisateur décider de la suite.
   bloqué) que la construction du contrat a besoin du cadrage.
 - Rien d'existant n'a été écrasé (idempotence).
 
+## Message de fin (ordre imposé)
+Après le setup, afficher **dans cet ordre exact** :
+
+1. le **récapitulatif** du socle installé (table courte) ;
+2. **AVANT toute autre chose**, et **en gras, bien visible**, l'**avertissement de redémarrage de
+   session** — les hooks Claude Code (`PostToolUse` de test + `SessionStart` de protection de branche)
+   ne deviennent actifs qu'au **démarrage** d'une session ; ceux qu'on vient d'installer **ne le sont
+   pas encore** dans la session courante. Afficher exactement, en gras :
+
+   > **⚠️ REDÉMARRE LA SESSION pour que les hooks prennent effet.**
+   >
+   > **1. `/exit`**
+   > **2. relance `claude` dans le terminal**
+   > **3. reprends la session (`claude --resume`, puis choisis cette session)**
+
+3. **seulement après** ce bloc de redémarrage, **si le cadrage manque**, l'avertissement « Cadrage
+   absent » et la marche à suivre (`/cadrage:cadrage-init` → … → `/cadrage:cadrage-completude`).
+
+**Ne jamais** afficher l'avertissement « Cadrage absent » avant le bloc de redémarrage : le
+redémarrage est prioritaire (sans lui, l'enforcement ne tourne pas).
+
 ## Règles invariantes
 - **Aucune décision IA.** Ce skill prépare ; il ne classe pas de drivers, ne choisit
   pas de composants ni de stack. (Installer l'outillage de rendu des diagrammes **et
