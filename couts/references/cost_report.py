@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-"""Rapport de couts — les 2 restitutions, a partir du journal + de la config.
+"""Rapport de couts — cout de SIMULATION seul, un tableau PAR SESSION.
 
-- COUT REEL (comptable) : abonnements Max fixes (config) + usages API reels + Cowork (config, lus
-  Console). C'est la verite comptable.
-- COUT DE SIMULATION (estimation) : les tokens du journal .factory/couts/ valorises au tarif API,
-  VENTILES par phase amont, par feature, ligne 'autre', + ligne Cowork globale.
+Les tokens du journal .factory/couts/ sont valorises au tarif API (table de prix datee), puis
+convertis en EUR via un taux FIGE dans ce script. Ce n'est PAS un montant facture : c'est une
+estimation « combien cette fabrication couterait au tarif API ».
 
-Ne JAMAIS presenter la simulation comme du reel. Chaque montant est date (table de prix, taux de change).
-USD natif ; conversion EUR via le taux de la config.
+Le tableau donne, par session : date de debut -> date de fin (JJ-MM), tokens d'entree (bruts, hors
+cache), tokens de sortie, et le cout en euros (cout complet : input + output + cache lu + cache ecrit,
+au tarif par tier). Une ligne Total agrege les trois colonnes.
 
 Usage : python cost_report.py [racine_projet] [--json]
 Ecrit aussi .factory/couts/rapport-couts.md
@@ -17,8 +17,9 @@ import json
 import os
 import sys
 
-PLUGIN_LABELS = {"cadrage": "Cadrage", "architecte": "Architecture",
-                 "designer": "Design", "assembleur": "Assemblage"}
+# Taux de change USD -> EUR fige (1 USD = USD_EUR EUR). A mettre a jour a la main avec sa date.
+USD_EUR = 0.92
+RATE_DATE = "2026-07-06"
 
 
 def project_root(hint):
@@ -52,13 +53,6 @@ def load_journal(root):
     return list(records.values())
 
 
-def load_config(root):
-    try:
-        return json.load(open(os.path.join(root, ".factory", "couts", "cost-config.json"), encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
-
-
 def price_table_date(root):
     try:
         return json.load(open(os.path.join(root, ".factory", "couts", "price-table.json"),
@@ -67,118 +61,104 @@ def price_table_date(root):
         return None
 
 
-def aggregate(records):
-    phases = {k: 0.0 for k in PLUGIN_LABELS}
-    features, tiers, autre, total = {}, {}, 0.0, 0.0
+def eur(usd):
+    return None if usd is None else round(usd * USD_EUR, 2)
+
+
+def _int(n):
+    # separateur de milliers par espace : 12 345
+    return f"{int(n or 0):,}".replace(",", " ")
+
+
+def _jjmm(ts):
+    # ISO 'AAAA-MM-JJThh:mm:...' -> 'JJ-MM' ; '?' si absent.
+    return f"{ts[8:10]}-{ts[5:7]}" if (ts and len(ts) >= 10) else "?"
+
+
+def sessions_of(records):
+    """Agrege le journal PAR session : debut/fin (ts min/max), tokens input/output, cout USD."""
+    sess = {}
     for r in records:
-        c = r.get("sim_cost_usd") or 0.0
-        total += c
-        tiers[r.get("tier") or "?"] = tiers.get(r.get("tier") or "?", 0.0) + c
-        attr = r.get("attribution") or {}
-        kind = attr.get("kind")
-        if kind == "phase" and attr.get("label") in phases:
-            phases[attr["label"]] += c
-        elif kind == "feature":
-            fid = attr.get("id") or attr.get("label")
-            f = features.setdefault(fid, {"name": attr.get("label"), "cost": 0.0})
-            f["cost"] += c
-        else:
-            autre += c
-    return phases, features, tiers, autre, total
-
-
-def eur(usd, rate):
-    return None if (usd is None or rate is None) else round(usd * rate, 2)
-
-
-def money(usd, rate):
-    if usd is None:
-        return "— (à compléter)"
-    e = eur(usd, rate)
-    return f"{e:.2f} € ({usd:.2f} $)" if e is not None else f"{usd:.2f} $"
+        sid = r.get("session_id") or "?"
+        s = sess.setdefault(sid, {"start": None, "end": None, "input": 0, "output": 0, "usd": 0.0})
+        ts = r.get("ts")
+        if ts:
+            if s["start"] is None or ts < s["start"]:
+                s["start"] = ts
+            if s["end"] is None or ts > s["end"]:
+                s["end"] = ts
+        tok = r.get("tokens") or {}
+        s["input"] += tok.get("input", 0) or 0
+        s["output"] += tok.get("output", 0) or 0
+        s["usd"] += r.get("sim_cost_usd") or 0.0
+    return sess
 
 
 def build_report(root):
     records = load_journal(root)
-    cfg = load_config(root)
-    fx = (cfg.get("fx_usd_eur") or {})
-    rate = fx.get("rate")
     pdate = price_table_date(root)
-    phases, features, tiers, autre, sim_total = aggregate(records)
+    sess = sessions_of(records)
+    order = sorted(sess, key=lambda sid: sess[sid]["start"] or "")
 
-    subs = cfg.get("subscriptions") or []
-    subs_total = sum((s.get("price_usd_month") or 0) * (s.get("count") or 0) for s in subs)
-    plat = cfg.get("platform_real") or {}
-    api_real = plat.get("api_cost_usd")
-    cowork_real = plat.get("cowork_cost_usd")
+    lines = ["# Rapport de coûts — Factory", ""]
+    lines.append(f"## Coût de simulation (estimation, tarif API — table du {pdate or '?'})")
+    lines.append("")
+    lines.append("| Session (début → fin) | Tokens input | Tokens output | Coût (€) |")
+    lines.append("|---|---|---|---|")
 
-    lines = []
-    lines.append("# Rapport de couts — Factory")
+    tot_in = tot_out = 0
+    tot_usd = 0.0
+    for sid in order:
+        s = sess[sid]
+        label = f"{_jjmm(s['start'])} → {_jjmm(s['end'])}"
+        e = eur(s["usd"])
+        cout = f"{e:.2f} €" if e is not None else "—"
+        lines.append(f"| {label} | {_int(s['input'])} | {_int(s['output'])} | {cout} |")
+        tot_in += s["input"]
+        tot_out += s["output"]
+        tot_usd += s["usd"]
+
+    te = eur(tot_usd)
+    tot_cout = f"{te:.2f} €" if te is not None else "—"
+    lines.append(f"| **Total** | **{_int(tot_in)}** | **{_int(tot_out)}** | **{tot_cout}** |")
     lines.append("")
-    lines.append("## Cout REEL (comptable)")
-    subs_detail = ", ".join(f"{s.get('plan', '?')}x{s.get('count', 0)}"
-                            for s in subs if s.get("count"))
-    lines.append(f"- Abonnements Max (fixe/mois) : {money(subs_total, rate)}"
-                 + (f" — {subs_detail}" if subs_detail else " — aucun forfait renseigne"))
-    lines.append(f"- Usages API reels (Console) : {money(api_real, rate)}")
-    lines.append(f"- Cowork (Console) : {money(cowork_real, rate)}")
-    real_known = [x for x in (subs_total, api_real, cowork_real) if x]
-    lines.append(f"- **Total reel connu** : {money(sum(real_known), rate) if real_known else '—'}"
-                 + ("  _(compléter les montants plateforme dans cost-config.json)_" if api_real is None or cowork_real is None else ""))
-    lines.append("")
-    lines.append(f"## Cout de SIMULATION (estimation, tarif API — table du {pdate or '?'})")
-    lines.append("_« Combien cette fabrication couterait en API. » Ce n'est PAS le cout reel._")
-    lines.append("")
-    lines.append("**Phases amont :**")
-    for key, label in PLUGIN_LABELS.items():
-        lines.append(f"- {label} : {money(phases[key], rate)}")
-    lines.append("")
-    lines.append("**Features :**")
-    if features:
-        for fid in sorted(features):
-            f = features[fid]
-            nm = f["name"] if f["name"] and f["name"] != fid else ""
-            lines.append(f"- {fid}{(' — ' + nm) if nm else ''} : {money(f['cost'], rate)}")
-    else:
-        lines.append("- (aucune feature mesuree pour l'instant)")
-    lines.append("")
-    lines.append(f"- Autre (non attribue) : {money(autre, rate)}")
-    lines.append(f"- Cowork (global, lu plateforme) : {money(cowork_real, rate)}")
-    lines.append(f"- **Total simulation** : {money(sim_total, rate)}")
-    lines.append("")
-    lines.append("**Par tier de modele :**")
-    for t in ("haiku", "sonnet", "opus", "fable"):
-        if tiers.get(t):
-            lines.append(f"- {t.capitalize()} : {money(tiers[t], rate)}")
-    for k, v in sorted((k, v) for k, v in tiers.items()
-                       if k not in ("haiku", "sonnet", "opus", "fable") and v):
-        lines.append(f"- {k} : {money(v, rate)}")
-    lines.append("")
-    n_sessions = len({r.get("session_id") for r in records})
-    lines.append(f"_Requetes mesurees : {len(records)} ({n_sessions} session(s)). Taux de change : "
-                 f"{rate if rate is not None else '?'} ({fx.get('date','?')}). Devise native USD._")
-    return "\n".join(lines), {
-        "real": {"subscriptions_usd_month": subs_total, "api_cost_usd": api_real,
-                 "cowork_cost_usd": cowork_real},
-        "simulation_usd": {"phases": phases, "features": features, "tiers": tiers,
-                           "autre": autre, "cowork": cowork_real, "total": round(sim_total, 6)},
-        "records": len(records), "sessions": n_sessions, "price_table_date": pdate, "fx": fx,
+    lines.append(f"_{len(sess)} session(s). Input = tokens d'entrée hors cache ; le coût inclut le "
+                 f"cache (lecture + écriture). Taux {USD_EUR} €/$ au {RATE_DATE}. "
+                 f"Devise native USD, estimation au tarif API — pas un montant facturé._")
+
+    data = {
+        "sessions": [
+            {"session_id": sid, "start": sess[sid]["start"], "end": sess[sid]["end"],
+             "input": sess[sid]["input"], "output": sess[sid]["output"],
+             "sim_cost_usd": round(sess[sid]["usd"], 6), "sim_cost_eur": eur(sess[sid]["usd"])}
+            for sid in order
+        ],
+        "total": {"input": tot_in, "output": tot_out,
+                  "sim_cost_usd": round(tot_usd, 6), "sim_cost_eur": eur(tot_usd)},
+        "records": len(records), "price_table_date": pdate,
+        "fx": {"usd_eur": USD_EUR, "date": RATE_DATE},
     }
+    return "\n".join(lines), data
 
 
 def main(argv):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
     args = [a for a in argv[1:] if not a.startswith("--")]
     root = project_root(args[0] if args else None)
     md, data = build_report(root)
-    if "--json" in argv:
-        print(json.dumps(data, ensure_ascii=False, indent=2))
-    else:
-        print(md)
+    # Ecrire le livrable d'abord (UTF-8) : garanti meme si la console plante a l'affichage.
     try:
         outdir = os.path.join(root, ".factory", "couts")
         os.makedirs(outdir, exist_ok=True)
         open(os.path.join(outdir, "rapport-couts.md"), "w", encoding="utf-8").write(md + "\n")
     except OSError:
+        pass
+    try:
+        print(json.dumps(data, ensure_ascii=False, indent=2) if "--json" in argv else md)
+    except Exception:
         pass
     return 0
 

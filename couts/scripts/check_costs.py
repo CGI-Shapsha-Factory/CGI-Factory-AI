@@ -3,7 +3,6 @@
 
 Verifie que le compteur est correctement pose et que le journal est exploitable :
   - `.factory/couts/price-table.json` present, valide, date + tiers ;
-  - `.factory/couts/cost-config.json` present et valide ;
   - `.claude/hooks/turn_cost.py` present et hook SessionEnd (compteur) enregistre ;
   - chaque enregistrement du journal `.factory/couts/**/*.jsonl` parse et porte les champs attendus.
 
@@ -34,15 +33,6 @@ def main(argv):
                 problems.append("price-table.json sans 'tiers' (haiku/sonnet/opus/fable)")
         except ValueError:
             problems.append("price-table.json JSON invalide")
-
-    cfg = os.path.join(cost_dir, "cost-config.json")
-    if not os.path.isfile(cfg):
-        problems.append("cost-config.json absent (lancer couts-init)")
-    else:
-        try:
-            json.load(open(cfg, encoding="utf-8"))
-        except ValueError:
-            problems.append("cost-config.json JSON invalide")
 
     if not os.path.isfile(os.path.join(root, ".claude", "hooks", "turn_cost.py")):
         problems.append(".claude/hooks/turn_cost.py absent (hook non pose)")

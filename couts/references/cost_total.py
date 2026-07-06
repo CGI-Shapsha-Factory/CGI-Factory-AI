@@ -44,10 +44,7 @@ def main(argv):
     outdir = os.path.join(root, ".factory", "couts")
     os.makedirs(outdir, exist_ok=True)
     records = cost_report.load_journal(root)   # deja deduplique par key
-    cfg = cost_report.load_config(root)
     pdate = cost_report.price_table_date(root)
-    fx = cfg.get("fx_usd_eur") or {}
-    rate = fx.get("rate")
 
     # Total tokens (5 categories — net-new, cost_report.py ne somme que sim_cost_usd)
     tok = {"input": 0, "output": 0, "cache_read": 0, "cache_write_5m": 0, "cache_write_1h": 0}
@@ -80,14 +77,14 @@ def main(argv):
         f"cache 5m {_fmt_token(tok['cache_write_5m'])} · "
         f"cache 1h {_fmt_token(tok['cache_write_1h'])}"
     )
-    lines.append(f"- **Coût estimé (simulation)** : {cost_report.money(sim_usd, rate)}")
+    sim_eur = cost_report.eur(sim_usd)
+    lines.append(f"- **Coût estimé (simulation)** : {sim_eur:.2f} € ({sim_usd:.2f} $)")
     lines.append("")
     parts = []
     if pdate:
         parts.append(f"table {pdate}")
-    if rate is not None:
-        parts.append(f"FX {rate}")
-    dline = ", ".join(parts) if parts else "table de prix locale"
+    parts.append(f"FX {cost_report.USD_EUR} €/$ au {cost_report.RATE_DATE}")
+    dline = ", ".join(parts)
     lines.append(f"_Estimation au tarif API ({dline}) — pas un montant facturé._")
     if not records:
         lines.append("")

@@ -1,69 +1,78 @@
 ---
 name: couts-init
-description: Pose le compteur de coûts (hook SessionEnd qui journalise à la fin de session, sans latence par tour + table de prix + config), à lancer tôt après cadrage-init.
+description: Pose le compteur de coûts de SIMULATION (hook SessionEnd + table de prix) directement dans le dossier courant. Aucune question, aucun pré-requis : installe et confirme, en français.
 ---
 
 # couts-init
 
-Installe le **dispositif de mesure des coûts** à la racine du projet. À lancer **tôt** — juste après
-`/cadrage:cadrage-init` — pour que **toutes les sessions** (chaque prompt → réponse, du cadrage au build
-SpecKit) soient mesurées. Ce qui n'est pas installé avant une session n'est journalisé qu'a posteriori si le
-transcript existe encore : ne pas tarder.
+Installe le **dispositif de mesure du coût de simulation** dans le **dossier où la session est
+lancée** (le dossier courant). Autonome : ne dépend d'aucune autre phase, fonctionne même dans un
+dossier vide. À lancer une fois, tôt, pour que **toutes les sessions lancées dans ce dossier** soient
+mesurées.
 
-## Pré-requis (vérification silencieuse)
-`.factory/` existe (cadrage-init a tourné). Sinon, orienter en clair vers `/cadrage:cadrage-init`.
-**Idempotent** : n'installe que le manquant, ne réécrit rien.
+## Règles d'interaction (impératif)
+- **Tout en français** avec l'utilisateur.
+- **Ne jamais poser de question** d'emplacement ni proposer d'options : installer **directement**.
+- **Ne jamais décrire la mécanique interne** (scripts, hooks, versions, chemins, éventuels
+  décalages de nommage). Pas de liste de fichiers, pas de note technique, pas d'exposé de « blocage ».
+- **Confirmation finale courte**, en français, sans détail.
 
-## Ce que ça mesure (contexte)
-Le compteur produit **un enregistrement par message** (= une requête/réponse API) : entrée + sortie +
-**cache lu** + **cache écrit (5 min et 1 h, séparés)**, tarifés par **tier** (Haiku/Sonnet/Opus/Fable).
-C'est le **coût de simulation** (estimation). Le **coût réel** (abonnements Max fixes + usages clé API +
-Cowork) se saisit à la main dans la config. **Ne jamais confondre.**
+## Ce que ça mesure
+Le compteur produit **un enregistrement par message** (une requête/réponse API) et l'estime au **tarif
+API** (table de prix datée), converti en euros. C'est le **coût de simulation** (« combien cette
+fabrication coûterait au tarif API »), **pas** un montant facturé. Rien n'est jamais saisi à la main.
 
-**Pourquoi à la fin de session, pas par tour** : les hooks Claude Code sont **bloquants** — un hook lancé à
-chaque tour rallonge chaque interaction (des retours réels rapportent +13-16 s/tour). Le hook `SessionEnd`
-tire **une seule fois, à la fin** → **zéro latence pendant le dev**, tout en gardant la **granularité par
-message** (relue du transcript complet).
+**Pourquoi à la fin de session, pas par tour** : les hooks Claude Code sont **bloquants** — un hook par
+tour rallonge chaque interaction. Le hook `SessionEnd` tire **une seule fois, à la fin** → **zéro
+latence pendant le dev**, tout en gardant la granularité par message (relue du transcript).
 
-## Procédure
-1. **Copier le script** dans `.claude/hooks/` (créer les dossiers) :
-   `references/turn_cost.py` → **`.claude/hooks/turn_cost.py`**.
-2. **Enregistrer le hook (par fusion)** : lancer
-   `python "${CLAUDE_PLUGIN_ROOT}/references/install_cost_hook.py" <racine-projet>` — il ajoute le hook
-   **`SessionEnd`** dans `.claude/settings.json` **sans écraser** les hooks existants (ex.
-   `Stop`/`PostToolUse` de test de l'architecte). Adapter `python` → `py -3` si besoin sur Windows.
-3. **Table de prix datée** : `references/price-table.json` → `.factory/couts/price-table.json` (si absent).
-   Structurée par **tier** (+ overrides de version) ; à mettre à jour à la main — chaque coût porte sa date.
-4. **Config** : `references/cost-config.json` → `.factory/couts/cost-config.json` (si absent).
-5. **Journal** : créer `.factory/couts/` (un fichier par session, réécrit à chaque fin de session).
-   **Git-ignorer** en complétant le `.gitignore` à la racine (créer si absent) : ajouter la ligne
-   `.factory/couts/` (données individuelles, jamais poussées). Confirmer en clair.
-6. **Manifeste** (en silence) : bloc `costs` : `{ "installed": true, "hook": "SessionEnd",
-   "price_table_date": "<date>", "gitignored": true }`.
+## Emplacement d'installation (impératif)
+**La racine d'installation est le dossier courant** (celui où tourne la session) — **jamais** un
+dossier parent, **jamais** un `.factory/` / `factory-docs/` situé plus haut. Tout est posé sous ce
+dossier :
+- `.claude/hooks/turn_cost.py`
+- `.claude/settings.json` (hook `SessionEnd`, par fusion)
+- `.factory/couts/price-table.json`
+- `.factory/couts/` (le journal — un `.jsonl` par session)
+- `.gitignore` (pour ignorer `.factory/couts/`)
 
-## Après l'installation
-Dire en clair ce qui a été posé, puis **rappeler de renseigner `.factory/couts/cost-config.json`** :
-développeurs par forfait Max, taux de change, et (quand disponibles) montants réels API + Cowork lus sur la
-Console. Sans ça, seul le coût de **simulation** sera chiffré.
+Le compteur est **ancré sur son propre emplacement** : il n'écrit que dans le `.factory/couts/` du
+dossier où il est posé, et ne mesure **que** les sessions lancées dans ce dossier.
+
+## Procédure (idempotent : n'installe que le manquant)
+1. **Copier le compteur** : `references/turn_cost.py` → `<dossier courant>/.claude/hooks/turn_cost.py`
+   (créer les dossiers).
+2. **Enregistrer le hook (par fusion, sans écraser l'existant)** : lancer
+   `python "${CLAUDE_PLUGIN_ROOT}/references/install_cost_hook.py"` **sans argument** (il cible le
+   dossier courant) — ajoute le hook `SessionEnd` dans `.claude/settings.json`. Adapter `python` →
+   `py -3` si besoin sur Windows.
+3. **Table de prix datée** : `references/price-table.json` → `.factory/couts/price-table.json`
+   (si absent).
+4. **Journal** : créer `.factory/couts/` ; **git-ignorer** en ajoutant la ligne `.factory/couts/`
+   au `.gitignore` du dossier courant (le créer si absent).
+5. **Manifeste (optionnel, silencieux)** : si `<dossier courant>/.factory/manifest.json` existe, y
+   ajouter le bloc `costs` `{ "installed": true, "hook": "SessionEnd", "price_table_date": "<date>",
+   "gitignored": true }`. **S'il n'existe pas, ne rien créer** — l'outil fonctionne sans.
 
 ## Reprise de session (gérée)
-Si le développeur **reprend** une session : à la fin, le fichier de session est **réécrit** depuis le
-transcript complet (même id → mise à jour, pas de doublon). Si la reprise crée un **nouvel id qui rejoue**
-l'historique, chaque enregistrement porte sa clé `(message.id, requestId)` → `couts-rapport` **déduplique
-globalement** (chaque requête comptée une seule fois).
+À chaque fin de session, le fichier de la session est **réécrit** depuis le transcript complet (même id
+→ mise à jour, pas de doublon). Un nouvel id qui rejoue l'historique est **dédupliqué globalement** au
+rapport (chaque requête comptée une seule fois).
 
-## Porte de sortie
-- `.claude/hooks/turn_cost.py` présent ; `.claude/settings.json` contient le hook `SessionEnd` du compteur
-  (les autres hooks préservés).
-- `.factory/couts/{price-table.json, cost-config.json}` présents ; `.factory/couts/` existe.
-- `.gitignore` contient `.factory/couts/` (données individuelles, jamais poussées) ; manifeste avec le bloc `costs`.
-- Vérifier : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_costs.py" <racine>/.factory/manifest.json`
-  (s'il est **introuvable** ou renvoie **exit 1**, le dire en clair — ne pas conclure « posé » sans cette vérif).
+## Porte de sortie (vérification silencieuse)
+- `.claude/hooks/turn_cost.py` présent ; `.claude/settings.json` contient le hook `SessionEnd` du
+  compteur (les autres hooks préservés).
+- `.factory/couts/price-table.json` présent ; `.factory/couts/` existe ; `.gitignore` couvre
+  `.factory/couts/`.
+- Vérifier : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_costs.py" <dossier courant>/.factory/manifest.json`
+  (exit 0 attendu ; s'il renvoie exit 1, corriger le manquant sans l'exposer en détail).
 
 ## Règles invariantes
-- **Fin de session, pas par tour.** Le journal est écrit au `SessionEnd` → aucune latence pendant les tours ;
-  la granularité par message est conservée (relue du transcript).
-- **Estimation ≠ réel.** Le journal produit une estimation (simulation) ; « réel » = abonnements + plateforme.
-- **Ne rien écraser.** L'installation du hook est une **fusion** dans `.claude/settings.json`.
+- **Simulation seule.** Aucun coût réel, aucune saisie manuelle, aucun fichier de config.
+- **Dossier courant.** Installation et mesure sont confinées au dossier où la session est lancée.
+- **Fin de session, pas par tour.** Zéro latence pendant les tours ; granularité par message conservée.
+- **Ne rien écraser.** L'enregistrement du hook est une **fusion** dans `.claude/settings.json`.
+- **Interaction en français, sans mécanique exposée.**
 
-Étape suivante : continuer le cadrage (`/cadrage:cadrage-extraction`). Le rapport est disponible à tout moment via `/couts:couts-rapport`. Pour produire un bilan partageable pour le chef d'équipe : `/couts:couts-total`.
+Confirmation à donner (courte, français) : « Dispositif de mesure des coûts installé dans ce dossier.
+Rapport disponible via `/couts:couts-rapport`. »

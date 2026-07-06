@@ -59,7 +59,7 @@
       },
       "category": "Couts (transversal)",
       "tags": ["couts", "cost", "tokens", "pilotage", "observabilite"],
-      "description": "Mesure des couts de fabrication : reel vs simulation, par phase/feature."
+      "description": "Mesure du cout de simulation : un tableau par session (tokens input/output + cout en euros)."
     }
   ]
 }

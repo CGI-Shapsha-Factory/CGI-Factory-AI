@@ -35,6 +35,13 @@ def _log(msg):
 
 
 def project_root(cwd_hint):
+    # La copie installee du hook vit a <racine>/.claude/hooks/turn_cost.py : on ANCRE la racine sur
+    # cet emplacement et on ne remonte JAMAIS. Ainsi le hook n'ecrit que dans le .factory/couts/ du
+    # dossier ou il a ete installe, et ne mesure que les sessions lancees dans ce dossier.
+    d = os.path.dirname(os.path.abspath(__file__))
+    if os.path.basename(d) == "hooks" and os.path.basename(os.path.dirname(d)) == ".claude":
+        return os.path.dirname(os.path.dirname(d))
+    # Repli (execution hors installation, ex. tests depuis le plugin) : recherche ascendante.
     cur = os.path.abspath(os.environ.get("CLAUDE_PROJECT_DIR") or cwd_hint or os.getcwd())
     for _ in range(6):
         if os.path.isdir(os.path.join(cur, ".factory")):

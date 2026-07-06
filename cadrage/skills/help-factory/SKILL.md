@@ -59,13 +59,14 @@ Lit les 3 contrats en parallèle, les converge, et produit un **paquet de handof
 | `assembleur-init` | vérifie les 3 contrats validés + installe les gabarits + crée `assembleur-out/` | 3 contrats validés |
 | `assembleur-convergence` | lit les 3 contrats **en parallèle** + converge + produit le paquet (pré-constitution, graines spec, carte des features, contexte technique, CLAUDE.md, mémoire) + résout les points en session | **garant de cohérence** (humain) |
 
-### Transversal — `couts` (mesure des coûts)
-Pas une phase : mesure **ce que coûte la fabrication** (coût réel vs coût de simulation, ventilé par phase amont / feature + ligne Cowork). À installer **tôt** pour tout capter.
+### Transversal — `couts` (mesure du coût de simulation)
+Pas une phase : mesure **ce que coûterait la fabrication au tarif API** (estimation). À installer
+**tôt** pour tout capter. **Simulation seule** (pas de coût réel).
 
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
-| `couts-init` | pose le compteur (hook `SessionEnd` **en fin de session, sans latence par tour** + lecteur + table de prix par tier + config) à la racine, sans écraser les hooks de test | **juste après `cadrage-init`** |
-| `couts-rapport` | restitue les 2 vues (réel vs simulation ventilée par phase/feature/tier) | à tout moment |
+| `couts-init` | pose le compteur (hook `SessionEnd` **en fin de session, sans latence par tour** + table de prix par tier) **dans le dossier courant**, sans question, sans écraser les hooks existants | **tôt** |
+| `couts-rapport` | restitue un **tableau par session** (tokens input/output + coût en euros) | à tout moment |
 | `couts-total` | produit un **bilan unique partageable** (total tokens + coût estimé + nb sessions) pour le chef d'équipe ; écrit `.factory/couts/bilan-couts.md` | à la demande |
 
 **Handoff final** : l'équipe prend le paquet de `assembleur-out/` → `/assembleur:premier-alimente-linear` (un ticket Linear `Feature` par feature) → `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) → les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks` → `/assembleur:creation-task-linear` (un sous-ticket `Task` par phase) → `/speckit.implement` (état des tickets via `/assembleur:update-issue-linear`).

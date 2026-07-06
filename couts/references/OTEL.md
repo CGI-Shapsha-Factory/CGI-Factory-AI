@@ -64,12 +64,11 @@ ventilation par équipe côté dashboard.
 | Attribution par **feature** (branche `NNN-`) | non | **oui** |
 | Split cache **5 min vs 1 h** | non (`cacheCreation` groupé) | **oui** (5m et 1h séparés) |
 | Journal **local** (git-ignoré, individuel) | non (part vers un collecteur) | oui (`.factory/couts/`, non poussé) |
-| Coût **réel** abonnements + Cowork | non | via `cost-config.json` (saisie Console) |
 
 ## Recommandation
-- **Journal local git-ignoré** (défaut du plugin) : suivi **par projet et par feature**, données
-  individuelles (jamais poussées), fonctionne hors-ligne, avec la distinction simulation vs réel (Cowork +
-  abonnements). Partage au chef d'équipe via `couts-total`. C'est le livrable « coût de fabrication d'un projet ».
+- **Journal local git-ignoré** (défaut du plugin) : suivi **par session**, données individuelles
+  (jamais poussées), fonctionne hors-ligne — **coût de simulation** (estimation au tarif API). Partage
+  au chef d'équipe via `couts-total`. C'est le livrable « coût de fabrication d'un projet ».
 - **OTel** (ce guide) : suivi **transversal org**, dashboards temps réel, coût USD natif — à activer par
   l'admin quand on veut agréger tous les développeurs/projets (les journaux locaux étant git-ignorés, OTel
   est la voie d'agrégation cross-dev).
