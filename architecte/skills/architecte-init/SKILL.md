@@ -1,6 +1,6 @@
 ---
 name: architecte-init
-description: Amorce la phase architecture : crée le dossier conventions, installe les gabarits et étend le manifeste.
+description: Amorce la phase architecture : crée le dossier conventions, installe les gabarits, pose l'enforcement (hooks de test + protection de branche) et étend le manifeste.
 ---
 
 # architecte-init
@@ -12,8 +12,9 @@ d'architecture (zéro choix IA). Les autres skills (`architecte`,
 
 ## Objectif
 Rendre un projet **prêt pour la phase technique** : installer les gabarits
-d'architecture, créer le dossier `conventions/`, et étendre le manifeste partagé
-avec un bloc `architecture`.
+d'architecture, créer le dossier `conventions/`, **poser tous les hooks de l'architecte**
+(enforcement des tests + protection de branche, déterministe) et étendre le manifeste
+partagé avec un bloc `architecture`.
 
 ## Porte d'entrée
 **Le cadrage doit être prêt.** Lire `.factory/manifest.json` :
@@ -74,6 +75,25 @@ scellé dans le manifeste** (côté amont : relancer `/cadrage:cadrage-completud
    `.factory/puppeteer.json`, puis installe **mermaid-cli épinglé sans télécharger Chromium**
    (la CA du système est respectée, TLS jamais désactivé). S'il ne peut rien installer (hors
    ligne, Node absent), il le dit et **continue** — `render_diagrams.py` retentera au rendu.
+6. **Poser l'enforcement (déterministe — TOUS les hooks de l'architecte, dès l'init)** depuis le
+   catalogue `references/enforcement/` :
+   - **Hook de test** : copier `references/enforcement/.claude/hooks/tests_guard.py` →
+     `<racine>/.claude/hooks/tests_guard.py` et `references/enforcement/lefthook.yml` → `<racine>/`,
+     puis **fusionner** le hook `PostToolUse` dans `.claude/settings.json` via
+     `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_test_hooks.py" <racine>` (relance
+     dès qu'une source est éditée sans test ; **sans écraser** un hook `SessionEnd` du compteur de
+     coûts). Puis mettre `architecture.test_enforcement = true` dans le manifeste (en silence).
+   - **Protection de branche** :
+     `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_branch_protection.py" <racine>` — il
+     copie `.githooks/` (pur git+Python), pose `git config core.hooksPath .githooks` pour ce clone **et
+     fusionne un hook `SessionStart`** qui le réactive à chaque session (auto pour toute l'équipe) ;
+     il écrit `architecture.branch_protection` au manifeste. Refuse le push/commit direct sur
+     `main`/`master`.
+   - Adapter `python` → `py -3` si besoin. Confirmer en clair. *(Caveats honnêtes : la 1ʳᵉ session,
+     Claude Code demande la confiance des hooks — un « oui » par personne, une fois ; un dev hors
+     Claude Code ou un `--no-verify` contourne ; la seule barrière non contournable multi-personnes est
+     un **ruleset serveur GitHub** + check CI ; le backstop CI diff-coverage requis est produit par
+     l'assembleur.)*
 
 ## Porte de sortie
 - `conventions/` existe à la racine avec `.editorconfig`.
@@ -82,12 +102,16 @@ scellé dans le manifeste** (côté amont : relancer `/cadrage:cadrage-completud
 - Le manifeste contient le bloc `architecture` (`phase: "init"`), et reparse sans erreur.
 - Rendu diagrammes provisionné (best-effort) : `.factory/puppeteer.json` écrit si un
   navigateur système est présent, mermaid-cli installé si possible — non bloquant.
+- **Enforcement posé** : `.claude/hooks/tests_guard.py` + hook `PostToolUse` dans
+  `.claude/settings.json` ; `.githooks/` + `core.hooksPath` + hook `SessionStart` ; manifeste
+  `test_enforcement: true` + bloc `branch_protection`.
 - Rien d'existant n'a été écrasé (idempotence).
 
 ## Règles invariantes
 - **Aucune décision IA.** Ce skill prépare ; il ne classe pas de drivers, ne choisit
-  pas de composants ni de stack. (Installer l'outillage de rendu des diagrammes est de la
-  préparation, pas une décision d'architecture.)
+  pas de composants ni de stack. (Installer l'outillage de rendu des diagrammes **et
+  l'enforcement des tests / la protection de branche** est de la préparation déterministe,
+  pas une décision d'architecture.)
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
 Étape suivante : `/architecte:architecte-contrat` — construire le contrat technique (drivers, composants, stack, ADR, walking skeleton, diagrammes).

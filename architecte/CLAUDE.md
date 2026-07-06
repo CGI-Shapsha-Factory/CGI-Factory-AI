@@ -17,7 +17,7 @@ il discipline et grave. Ce sont des **skills Markdown** ; pas de build/test.
   Invocation : `/architecte:<skill>` (utilisateur) + auto par le modèle.
 
 ## Les 3 skills (découpage justifié)
-- `architecte-init` — setup (zéro décision IA) : gabarits + `conventions/` + bloc manifeste.
+- `architecte-init` — setup (zéro décision IA) : gabarits + `conventions/` + bloc manifeste **+ pose de tous les hooks de l'architecte** (enforcement des tests `PostToolUse` + protection de branche `.githooks/`/`SessionStart`, déterministe).
 - `architecte-contrat` — construction interactive du contrat (porte humaine : **arbitrage des ADR**).
 - `architecte-coherence` — porte humaine : **validation de cohérence** (stricte, adversariale).
 Mappe les deux portes humaines de la définition + un setup déterministe isolé.
@@ -53,7 +53,7 @@ non ; l'ordre est purement technique (dépendances).
 
 ## Ordre de remplissage (dépendances)
 drivers/qualité → composants → stack → conventions → ADR → walking skeleton+numérotation
-→ diagrammes → risques → **fichiers d'environnement (automatique : `.env`+`.env.example` générés dès que la stack a des dépendances) → enforcement des tests** → validation de cohérence.
+→ diagrammes → risques → **fichiers d'environnement (automatique : `.env`+`.env.example` générés dès que la stack a des dépendances)** → validation de cohérence. *(L'enforcement — hooks de test + protection de branche — est posé plus tôt, dès `architecte-init`, pas dans le contrat.)*
 **Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
 risques** (le pourquoi / les limites) ; les attributs de qualité sont les **-ilités mesurées qui en
 découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `templates/drivers-quality.md`).
@@ -74,7 +74,7 @@ Catalogues copiés à la racine du projet : `references/conventions/` (linters p
 (hook Claude Code `PostToolUse` `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code » — **et
 `.githooks/` + `install_branch_protection.py` : protection de branche locale (refus push/commit sur
 `main`/`master`, via `core.hooksPath` **réactivé automatiquement par un hook `SessionStart`**) —
-Étape 11**). *(Le hook `Stop` bloquant a été retiré : seul `PostToolUse` reste côté session.)*
+**tout posé par `architecte-init`**, plus par le contrat**). *(Le hook `Stop` bloquant a été retiré : seul `PostToolUse` reste côté session.)*
 
 ## Vérifications
 ```bash

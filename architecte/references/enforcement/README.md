@@ -1,6 +1,6 @@
 # Catalogue enforcement — « tests écrits avec le code »
 
-Garde-fou déterministe posé **à la racine du projet** par l'architecte (Étape 11), en miroir de
+Garde-fou déterministe posé **à la racine du projet** par `architecte-init` (dès l'amorçage de la phase), en miroir de
 `conventions/`. Objectif : garantir qu'**aucune source ne part sans son test** (cas passant / échec /
 limite), en **défense en profondeur**.
 
