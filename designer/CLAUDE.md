@@ -25,8 +25,8 @@ blanche stylistique** possible (la marque est une entrée optionnelle).
 
 ## Les 3 skills (découpage justifié)
 - `designer-init` — setup (zéro décision) : installe les 4 gabarits + sème la **checklist** dans le
-  manifeste. Porte : maquette validée **ET** architecture validée **ET** *Décisions à impact design*
-  présente.
+  manifeste. **Jamais bloquant** : amorce le socle **toujours**, puis **signale** (sans refuser) si la
+  maquette validée / l'architecture validée / les *Décisions à impact design* manquent.
 - `designer-atelier` — **l'atelier** : ingère les handoffs, pré-remplit la checklist, déroule les 3 blocs
   (chaque item : `deduced`/`decided`/`sans_objet`/`open` ; affiché **validé** / **à traiter** / **sans
   objet**), **porte humaine : arbitrage des choix d'expérience**, **résout en session tout point resté à

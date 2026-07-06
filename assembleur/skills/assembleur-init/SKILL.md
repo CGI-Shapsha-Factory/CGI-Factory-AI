@@ -25,16 +25,18 @@ plus haut. Tous les chemins de ce skill (`.factory/manifest.json`, `.factory/tem
 `assembleur-out/`, et les 3 dossiers amont lus `cadrage-out/` / `architecte-out/` /
 `designer-out/`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** :
 un `.factory/` ou un dossier `-out/` situé dans un dossier **parent** n'appartient **pas** à
-ce projet — le traiter comme **absent** (donc refuser via les pré-requis ci-dessous, sans le
-lire). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
+ce projet — le traiter comme **absent** (ne jamais le lire ; on crée/étend le manifeste **du
+cwd**). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
-## Pré-requis (vérification silencieuse)
-**Vérifier uniquement la présence et la complétude des 3 dossiers de sortie amont — PAS
-leur statut de validation.** Que le cadrage, l'architecture ou le design aient été validés
-ou non **n'est pas le problème de l'assembleur** : ne lire **aucun flag de validation** du
-manifeste (`cadrage_complete`, `coherence_validated`, design validé…) et ne pas bloquer
-dessus. Contrôler seulement, **sur le disque**, que chaque fichier attendu **existe et
-n'est pas vide** :
+## Setup inconditionnel + état de l'amont (jamais bloquant)
+**Ce skill ne bloque jamais.** L'installation des gabarits de convergence, la création de
+`assembleur-out/` (avec `features/` et `memory/`) et l'amorçage du bloc `assembly` sont
+**déterministes et sans dépendance à l'amont** : ils s'installent **toujours**, dans le dossier
+courant. **Ne jamais refuser** au motif que les dossiers `-out/` amont manquent.
+
+Après le setup, **vérifier l'état des 3 dossiers de sortie amont** — présence et complétude,
+**sur le disque**, sans lire aucun flag de validation (validé ou non n'est pas le problème de
+l'assembleur) — puis le **signaler** (sans bloquer) :
 - **cadrage** : `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`,
   `cadrage-out/spec-index.md`, et **au moins un** brief sous
   `cadrage-out/features-fonctionnels-brief/*.brief.md`.
@@ -42,17 +44,15 @@ n'est pas vide** :
   `architecte-out/design-impact.md`, et le dossier `architecte-out/decisions/`.
 - **designer** : `designer-out/design-guidelines.md`.
 
-Un dossier `-out/` **absent ou vide**, ou un fichier attendu **manquant / vide**, est le
-**seul** motif de refus.
+- **Amont complet** → rien à signaler ; enchaîner sur `/assembleur:assembleur-convergence`.
+- **Amont absent, vide ou incomplet** → **ne pas refuser**. Confirmer que le terrain de
+  convergence est posé, puis **avertir en clair** ce qui manque ou est vide (**par chemin**) et la
+  **phase amont** qui doit le produire/compléter (cadrage / architecte / designer), en indiquant
+  que **la convergence** (`/assembleur:assembleur-convergence`) a besoin de ces dossiers `-out/`.
 
-**Refus précis (fichier réellement manquant ou vide).** Nommer en clair **ce qui manque ou
-est vide**, **par chemin**, et indiquer la **phase amont** qui doit le produire/compléter
-(cadrage / architecte / designer). Rappel : `.factory/manifest.json` + les 3 dossiers
-`-out/` doivent avoir été **committés** par les phases précédentes — s'ils manquent du
-clone, c'est un fichier réellement absent, le dire. **Ne jamais bloquer sur un statut de
-validation** ; seule l'absence ou la vacuité d'un fichier bloque.
-
-**Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
+**Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si
+`.factory/manifest.json` n'existe pas encore, le **créer** comme objet JSON valide
+`{ "assembly": { … } }` (les autres phases le complètent par fusion, sans écraser le bloc `assembly`).
 
 ## Procédure
 1. **Installer les gabarits de convergence** dans `.factory/templates/` : copier depuis
@@ -79,13 +79,17 @@ validation** ; seule l'absence ou la vacuité d'un fichier bloque.
 - Les gabarits de convergence sont dans `.factory/templates/`.
 - `assembleur-out/` (avec `features/` et `memory/`) existe.
 - Le manifeste contient le bloc `assembly` (`phase: "init"`), et reparse sans erreur.
+- **État de l'amont signalé** : si un dossier `-out/` amont manque ou est vide, l'utilisateur a
+  été **averti** (pas bloqué).
 - Rien d'existant n'a été écrasé (idempotence).
 
 ## Règles invariantes
 - **Aucune décision de convergence.** Ce skill prépare ; il ne converge rien.
+- **Jamais bloquant.** Le terrain de convergence se pose toujours ; un `-out/` amont manquant
+  **avertit**, ne refuse pas.
 - **Vérification, pas validation.** L'assembleur ne juge pas si l'amont est « validé » : il
-  vérifie seulement que les fichiers de sortie sont **là et non vides**. Aucun flag de
-  validation lu ni exigé.
+  vérifie seulement que les fichiers de sortie sont **là et non vides**, et le **signale**. Aucun
+  flag de validation lu ni exigé.
 - **Aucun hook à poser.** L'assembleur n'a **pas de hook ni d'enforcement propre** à installer :
   l'enforcement (hook de test `PostToolUse` + protection de branche `SessionStart`/`.githooks/`)
   est posé **en amont par `architecte-init`** et déjà committé dans le repo ; l'assembleur ne

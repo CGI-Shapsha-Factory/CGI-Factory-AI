@@ -20,28 +20,32 @@ dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé pl
 ce skill (`.factory/manifest.json`, `.factory/templates/`, `designer-out/`, `prompts/designer/`) se
 résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** pour trouver le manifeste ou les
 dossiers `-out/` amont : un `.factory/manifest.json` (ou un `cadrage-out/` / `architecte-out/`) situé dans
-un dossier **parent** n'appartient **pas** à ce projet — le traiter comme **absent** (donc refuser via la
-porte d'entrée ci-dessous). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
+un dossier **parent** n'appartient **pas** à ce projet — le traiter comme **absent** (ne jamais le lire ;
+on crée/étend le manifeste **du cwd**). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
-## Porte d'entrée
-**Cadrage prêt + maquette validée + architecture validée + Décisions à impact design présentes.** Lire
-`.factory/manifest.json` ; **refuser en clair** si :
-- la maquette n'a pas convergé (`demonstrateur.client_validated != true`), ou
-- l'architecture n'est pas validée (`architecture.coherence_validated != true`), ou
-- la section *Décisions à impact design* manque (`architecture.design_impact != true` / pas de
-  `design-impact.md`).
-  > « L'atelier design ne peut pas démarrer : il faut une maquette validée par le client, un contrat
-  > technique validé, et la section *Décisions à impact design* de l'architecte. Termine d'abord ces phases. »
-- Vérifier les artefacts : côté cadrage `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`,
-  `cadrage-out/spec-index.md` (parcours + entités affichées) ; côté architecte `architecte-out/design-impact.md`.
+## Setup inconditionnel + état de l'amont (jamais bloquant)
+**Ce skill ne bloque jamais.** L'installation des gabarits, la création de `prompts/designer/` et
+l'amorçage du bloc `design` (checklist semée) sont **déterministes et sans dépendance à l'amont** : ils
+s'installent **toujours**, dans le dossier courant. **Ne jamais refuser** au motif que la maquette,
+l'architecture ou les *Décisions à impact design* manquent.
 
-**Refus précis (fichier réellement manquant).** Nommer en clair **ce qui bloque** : soit un **flag
-manifeste à `false`** + le **skill amont** à relancer (maquette → `/cadrage:cadrage-retour-demonstrateur` ;
-cohérence archi → `/architecte:architecte-coherence`), **puis committer `.factory/manifest.json`** ; soit un
-**fichier `cadrage-out/…` / `architecte-out/…` absent, par chemin**. Rappel : `.factory/manifest.json` + les
-dossiers `-out/` amont doivent avoir été **committés** — s'ils manquent du clone, c'est un fichier réellement absent.
+Après le setup, **vérifier l'état de l'amont** dans le cwd et le **signaler** (sans bloquer) :
+- maquette convergée (`demonstrateur.client_validated`), architecture validée
+  (`architecture.coherence_validated`), section *Décisions à impact design*
+  (`architecture.design_impact` / `architecte-out/design-impact.md`) ;
+- artefacts : `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
+  `architecte-out/design-impact.md`.
 
-**Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
+- **Amont prêt** → rien à signaler ; enchaîner sur `/designer:designer-atelier`.
+- **Amont absent ou incomplet** → **ne pas refuser**. Confirmer que l'atelier est amorcé, puis
+  **avertir en clair** ce qui manque (flag `false` + skill amont à relancer — maquette →
+  `/cadrage:cadrage-retour-demonstrateur`, cohérence archi → `/architecte:architecte-coherence` — ou
+  fichier `…-out/…` absent, par chemin) et indiquer que **l'atelier** (`/designer:designer-atelier`) a
+  besoin de ces handoffs pour pré-remplir la checklist.
+
+**Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si `.factory/manifest.json`
+n'existe pas encore, le **créer** comme objet JSON valide `{ "design": { … } }` (les autres phases le
+complètent par fusion, sans écraser le bloc `design`).
 
 ## Procédure
 1. **Installer les gabarits** dans `.factory/templates/` (copier depuis le plugin `templates/`) :
@@ -78,10 +82,13 @@ des **gestes humains** (jamais auto).*
 - Les 4 gabarits sont dans `.factory/templates/`.
 - Le dossier `prompts/designer/` existe à la racine du projet (prêt à recevoir le prompt Claude Design).
 - Le manifeste contient le bloc `design` (`phase: "init"`, checklist semée), et reparse sans erreur.
+- **État de l'amont signalé** : si maquette/architecture/*Décisions à impact design* manquent,
+  l'utilisateur a été **averti** (pas bloqué).
 - Rien d'existant n'a été écrasé (idempotence).
 
 ## Règles invariantes
 - **Aucune décision de design** ni génération de design system. Ce skill prépare l'atelier.
+- **Jamais bloquant.** Le setup s'amorce toujours ; l'amont manquant **avertit**, ne refuse pas.
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
 Étape suivante : `/designer:designer-atelier` — dérouler la checklist de couverture (fondation, expérience, technique) et produire le prompt Claude Design.

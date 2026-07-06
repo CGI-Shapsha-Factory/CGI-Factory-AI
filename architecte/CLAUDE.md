@@ -17,7 +17,7 @@ il discipline et grave. Ce sont des **skills Markdown** ; pas de build/test.
   Invocation : `/architecte:<skill>` (utilisateur) + auto par le modèle.
 
 ## Les 3 skills (découpage justifié)
-- `architecte-init` — setup (zéro décision IA) : gabarits + `conventions/` + bloc manifeste **+ pose de tous les hooks de l'architecte** (enforcement des tests `PostToolUse` + protection de branche `.githooks/`/`SessionStart`, déterministe).
+- `architecte-init` — setup (zéro décision IA) : gabarits + `conventions/` + bloc manifeste **+ pose de tous les hooks de l'architecte** (enforcement des tests `PostToolUse` + protection de branche `.githooks/`/`SessionStart`, déterministe). **Jamais bloquant** : installe le socle **toujours** (même sans cadrage), puis **avertit** (sans refuser) si `cadrage-out/` manque.
 - `architecte-contrat` — construction interactive du contrat (porte humaine : **arbitrage des ADR**).
 - `architecte-coherence` — porte humaine : **validation de cohérence** (stricte, adversariale).
 Mappe les deux portes humaines de la définition + un setup déterministe isolé.

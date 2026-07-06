@@ -5,8 +5,9 @@ description: Amorce la phase architecture : crée le dossier conventions, instal
 
 # architecte-init
 
-Skill d'amorçage de la phase **architecture** : **tout premier skill** à lancer
-après le cadrage. Il prépare le terrain technique sans prendre aucune décision
+Skill d'amorçage de la phase **architecture** : à lancer au démarrage de la phase
+technique (idéalement après le cadrage — mais le socle technique s'installe **même si le
+cadrage n'est pas encore là**). Il prépare le terrain sans prendre aucune décision
 d'architecture (zéro choix IA). Les autres skills (`architecte`,
 `architecte-coherence`) supposent qu'il a tourné.
 
@@ -23,26 +24,32 @@ cwd) — **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs
 `.factory/templates/`, `conventions/`, `architecte-out/`, `.claude/`, `.githooks/`,
 `lefthook.yml`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence**
 pour trouver le manifeste du cadrage : un `.factory/manifest.json` situé dans un dossier
-**parent** n'appartient **pas** à ce projet — le traiter comme **absent** (donc refuser
-via la porte d'entrée ci-dessous, sans jamais le lire ni l'étendre). En cas de doute sur
+**parent** n'appartient **pas** à ce projet — le traiter comme **absent** (ne jamais le lire
+ni l'étendre ; on crée/étend le manifeste **du cwd**, cf. procédure). En cas de doute sur
 un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
-## Porte d'entrée
-**Le cadrage doit être prêt.** Lire `.factory/manifest.json` :
-- s'il est absent, ou si la phase amont n'est pas prête (le verdict « cadrage
-  complet » n'est pas atteint, ou les artefacts clés manquent), **refuser** avec un
-  message en clair :
-  > « La phase technique ne peut pas démarrer : le cadrage n'est pas encore prêt.
-  > Termine d'abord la phase de cadrage (jusqu'au handoff). »
-- Vérifier la présence des artefacts cadrage attendus : `cadrage-out/project-frame.md`,
-  `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
-  et les briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md`.
+## Setup inconditionnel + état du cadrage (jamais bloquant)
+**Ce skill ne bloque jamais.** Tout le setup technique — gabarits, `conventions/`, hooks
+d'enforcement, provisionnement du rendu, bloc `architecture` du manifeste — est **déterministe et
+sans dépendance au cadrage** : il s'installe **toujours**, dans le dossier courant, que le cadrage
+soit là ou non. **Ne jamais refuser** au motif que le cadrage manque.
 
-**Refus précis (fichier réellement manquant).** Nommer en clair **ce qui manque** : soit le(s)
-**fichier(s) `cadrage-out/…` absent(s), par chemin**, soit le fait que le **verdict cadrage n'est pas
-scellé dans le manifeste** (côté amont : relancer `/cadrage:cadrage-completude`, **puis committer
-`.factory/manifest.json`**). Rappel : `.factory/manifest.json` **et** `cadrage-out/` doivent avoir été
-**committés** par la phase précédente — s'ils manquent du clone, c'est un fichier réellement absent, le dire.
+Après le setup, **vérifier l'état du cadrage** dans le cwd (présence, par chemin, de) :
+`.factory/manifest.json` (verdict cadrage scellé), `cadrage-out/project-frame.md`,
+`cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`, et les
+briefs `cadrage-out/features-fonctionnels-brief/*.brief.md`. Puis :
+
+- **Cadrage présent et prêt** → rien à signaler ; enchaîner sur `/architecte:architecte-contrat`.
+- **Cadrage absent ou incomplet** → **ne pas refuser**. Confirmer que le socle technique est posé,
+  puis **avertir en clair** ce qui manque (par chemin) et la marche à suivre :
+  > « Socle technique installé (gabarits + hooks + conventions). En revanche, le **cadrage n'est pas
+  > encore là** dans ce dossier : `cadrage-out/…` manquant(s). La **construction** du contrat technique
+  > (`/architecte:architecte-contrat`) a besoin du cadrage. Lance la phase de cadrage
+  > (`/cadrage:cadrage-init` → … → `/cadrage:cadrage-completude`), puis reviens à
+  > `/architecte:architecte-contrat`. »
+
+But : **poser tout ce qui est installable maintenant**, jamais bloquer sur le cadrage, et laisser
+l'utilisateur décider de la suite.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
@@ -57,8 +64,13 @@ scellé dans le manifeste** (côté amont : relancer `/cadrage:cadrage-completud
    langage ne sont PAS installés ici** : le langage n'est connu qu'après le workflow
    stack — c'est le skill `architecte` qui les déposera (voir son étape conventions).
 3. **Créer `architecte-out/decisions/`** (dossier des ADR, vide).
-4. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc
-   `architecture` ci-dessous s'il est absent (read-modify-write + revalidation JSON) :
+4. **Manifeste** `.factory/manifest.json` **du dossier courant** :
+   - **S'il existe** → ajouter le bloc `architecture` ci-dessous s'il est absent (read-modify-write
+     + revalidation JSON), **sans toucher aux autres blocs**.
+   - **S'il n'existe pas** (cadrage pas encore lancé ici) → **le créer** comme objet JSON valide
+     `{ "architecture": { … } }` contenant au minimum le bloc ci-dessous. **Ne pas fabriquer de faux
+     blocs de cadrage** : `cadrage-init` complétera le manifeste plus tard **par fusion** (il ajoute
+     ses clés manquantes sans écraser le bloc `architecture`).
 
 ```json
 "architecture": {
@@ -116,6 +128,8 @@ scellé dans le manifeste** (côté amont : relancer `/cadrage:cadrage-completud
 - **Enforcement posé** : `.claude/hooks/tests_guard.py` + hook `PostToolUse` dans
   `.claude/settings.json` ; `.githooks/` + `core.hooksPath` + hook `SessionStart` ; manifeste
   `test_enforcement: true` + bloc `branch_protection`.
+- **État du cadrage signalé** : si `cadrage-out/` manque, l'utilisateur a été **averti** (pas
+  bloqué) que la construction du contrat a besoin du cadrage.
 - Rien d'existant n'a été écrasé (idempotence).
 
 ## Règles invariantes
@@ -123,6 +137,7 @@ scellé dans le manifeste** (côté amont : relancer `/cadrage:cadrage-completud
   pas de composants ni de stack. (Installer l'outillage de rendu des diagrammes **et
   l'enforcement des tests / la protection de branche** est de la préparation déterministe,
   pas une décision d'architecture.)
+- **Jamais bloquant.** Le setup s'installe toujours ; l'absence de cadrage **avertit**, ne refuse pas.
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
 Étape suivante : `/architecte:architecte-contrat` — construire le contrat technique (drivers, composants, stack, ADR, walking skeleton, diagrammes).

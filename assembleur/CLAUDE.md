@@ -24,12 +24,12 @@ le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
 - **Skills uniquement, pas de `commands/`**. Invocation : `/assembleur:<skill>` + auto par le modèle.
 
 ## Les 7 skills
-- `assembleur-init` — setup (zéro décision) : pré-requis = **les 3 dossiers de sortie amont
-  (`cadrage-out/`, `architecte-out/`, `designer-out/`) existent, complets et non vides** — **pas** de
-  vérification d'un statut de validation (validé ou non n'est pas le problème de l'assembleur) ;
-  installe les gabarits ; crée `assembleur-out/` ; étend le manifeste (bloc `assembly` allégé).
-  **Aucun repo cible à capturer, aucun hook à poser** (l'enforcement est posé en amont par
-  `architecte-init`).
+- `assembleur-init` — setup (zéro décision) : installe les gabarits, crée `assembleur-out/`, étend le
+  manifeste (bloc `assembly` allégé). **Jamais bloquant** : pose le terrain de convergence **toujours**,
+  puis **signale** (sans refuser) si l'un des 3 dossiers de sortie amont (`cadrage-out/`,
+  `architecte-out/`, `designer-out/`) est **absent, vide ou incomplet** — **sans** lire de statut de
+  validation (validé ou non n'est pas le problème de l'assembleur). **Aucun repo cible à capturer, aucun
+  hook à poser** (l'enforcement est posé en amont par `architecte-init`).
 - `assembleur-convergence` — **lit les 3 contrats en parallèle** (5 sous-agents `contract-reader`,
   map-reduce), converge, **produit le paquet** dans `assembleur-out/`, **résout les marqueurs en
   session**, et fait la cohérence (porte humaine : *garant de cohérence*).

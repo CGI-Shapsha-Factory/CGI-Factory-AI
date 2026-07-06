@@ -56,6 +56,12 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 3. **Écrire le manifeste** `.factory/manifest.json` (squelette ci-dessous ;
    laisser `project` à `null` — il sera renseigné par `cadrage-extraction` ; pas de
    champ `client` ; dates en ISO 8601, laisser le reste neutre).
+   **Si le manifeste existe déjà** (par ex. un `-init` de phase aval l'a créé avec un bloc
+   `architecture`), **ne pas repartir de zéro ni écraser** : le lire et **fusionner** — ajouter
+   uniquement les clés de cadrage **manquantes** (project, dates, phase, sources, artifacts,
+   demonstrateur, validation_points, prompts, discovery, discovery_complete,
+   definition_of_ready), en **préservant** tout bloc déjà présent (dont `architecture`), puis
+   revalider le JSON.
 4. **Laisser `prompts/cadrage/` vide** : il se remplit au fil des prompts générés
    (voir `cadrage-demonstrateur-brief` et les autres skills à prompt).
 
