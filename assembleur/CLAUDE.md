@@ -73,13 +73,21 @@ assembleur-out/
 ├── features/NNN-…spec-seed.md  # une graine par feature, format spec.md (→ /speckit.specify)
 ├── feature-map.md             # séquence + couplage/dépendances + walking skeleton
 ├── technical-context.md       # Technical Context (→ /speckit.plan)
-├── CLAUDE.md                  # CLAUDE.md projet (< 200 lignes, @imports memory/)
+├── CLAUDE.md                  # CLAUDE.md projet (< 200 lignes, @import memory/MEMORY.md — jamais backtiqué)
 ├── ci/tests.yml               # backstop CI diff-coverage (required status check ; non contournable)
 ├── memory/{MEMORY,domain,architecture,design,features}.md
 ├── coherence-report.md
 └── attack-plan.md
 ```
 Le manifeste et les gabarits vivent dans `.factory/`. Écriture = read-modify-write + revalidation JSON.
+
+**Déploiement mémoire (important).** L'équipe pose `CLAUDE.md` **et** le dossier `memory/` **à la
+racine** du repo de fabrication (les `@imports` du CLAUDE.md sont relatifs à ce fichier). Le
+`CLAUDE.md` **importe l'index** via une ligne `@memory/MEMORY.md` **jamais entre backticks** (un
+`@import` backtiqué = texte littéral, non importé) ; l'index (chargé chaque session) pointe vers les
+thématiques, lues à la demande. **Ce n'est PAS l'auto-mémoire native** de Claude Code
+(`~/.claude/projects/<projet>/memory/`, machine-locale et non commitée) : ici la mémoire est
+**commitée et partagée** avec l'équipe, chargée par l'`@import`.
 
 ## Lecture parallèle (map-reduce)
 `assembleur-convergence` est l'orchestrateur ; il dispatche **5 lecteurs** (`agents/contract-reader.md`)

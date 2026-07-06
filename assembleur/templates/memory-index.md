@@ -23,3 +23,4 @@
 - `memory/architecture.md` — stack, composants, décisions, conventions, qualité.
 - `memory/design.md` — design system, états, accessibilité.
 - `memory/features.md` — séquence & 3 faces par feature.
+- `technical-context.md` (à la racine) — contexte technique SpecKit (input `/speckit.plan`).

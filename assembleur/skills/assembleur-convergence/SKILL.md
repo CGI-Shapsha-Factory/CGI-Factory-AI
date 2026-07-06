@@ -97,7 +97,10 @@ un trou ou une contradiction apparaît. Ne synthétiser que sur des retours comp
 - **`CLAUDE.md`** (gabarit `project-claude-md.md`) — instructions projet **< 200 lignes**
   pour la fabrication : identité, principes, la **règle design-sync**, où vivent
   conventions/constitution, la séquence de features, les commandes build/test (depuis la
-  stack), avec des `@imports` vers `memory/*`.
+  stack), **+ l'`@import` de l'index mémoire** : une ligne `@memory/MEMORY.md` **jamais entre
+  backticks** (un `@import` backtiqué est traité comme du texte littéral → non importé). `MEMORY.md`
+  (chargé à chaque session) pointe vers les fichiers thématiques, lus **à la demande**. `CLAUDE.md`
+  et `memory/` sont posés **à la racine** du repo de fabrication (les `@imports` sont relatifs).
 - **`attack-plan.md`** (gabarit `attack-plan.md`) — l'ordre de fabrication : `specify init`,
   puis `/speckit.constitution` (depuis `pre-constitution.md`), puis `/speckit.specify` par
   feature dans l'ordre des dépendances (walking skeleton d'abord), puis `/speckit.plan` →

@@ -6,10 +6,20 @@
 
 [Une phrase : ce que fait le produit.]
 
+<!-- NE JAMAIS mettre un @import entre backticks : Claude Code le traiterait comme du TEXTE LITTÉRAL
+     et ne l'importerait pas (cf. doc mémoire). Le dossier s'appelle `memory` ; le `@` est seulement
+     l'opérateur d'import. La ligne `@memory/MEMORY.md` ci-dessous DOIT rester sans backticks. -->
+## Mémoire projet (index chargé à chaque session)
+@memory/MEMORY.md
+
+L'index `memory/MEMORY.md` (chargé à chaque session) pointe vers les fichiers thématiques
+(`memory/domain.md`, `memory/architecture.md`, `memory/design.md`, `memory/features.md`), que Claude
+lit **à la demande**.
+
 ## Contrats (3 faces) — où regarder
-- **Fonctionnel** : les graines de feature (`features/<id>-…spec-seed.md`) ; langage = `@memory/domain.md`.
-- **Technique** : `@technical-context.md` et `@memory/architecture.md` (stack, composants, ADR, conventions).
-- **Design** : `@memory/design.md` (design system synchronisé + états + erreurs + a11y).
+- **Fonctionnel** : les graines de feature (`features/<id>-…spec-seed.md`) ; langage = `memory/domain.md`.
+- **Technique** : `technical-context.md` et `memory/architecture.md` (stack, composants, ADR, conventions).
+- **Design** : `memory/design.md` (design system synchronisé + états + erreurs + a11y).
 
 ## Constitution (opposable)
 `pre-constitution.md` porte les **principes non négociables**. À donner à `/speckit.constitution` au
