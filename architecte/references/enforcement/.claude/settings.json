@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/tests_guard.py posttooluse",
+            "command": "python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/tests_guard.py\" posttooluse",
             "timeout": 30
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python .claude/hooks/format_guard.py",
+            "command": "python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/format_guard.py\"",
             "timeout": 30
           }
         ]

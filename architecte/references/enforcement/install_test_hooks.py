@@ -16,11 +16,13 @@ import shutil
 import sys
 
 MARKER = "tests_guard.py"
+# Chemin ANCRE sur la racine du projet via ${CLAUDE_PROJECT_DIR} : un chemin relatif nu
+# (.claude/hooks/...) se resout contre le cwd du hook — casse des qu'un Write cible un
+# sous-dossier (le hook ne tourne pas depuis la racine). Cf. Claude Code hooks reference.
+CMD = 'python "${CLAUDE_PROJECT_DIR}/.claude/hooks/tests_guard.py" posttooluse'
 ENTRIES = {
     "PostToolUse": {"matcher": "Write|Edit",
-                    "hooks": [{"type": "command",
-                               "command": "python .claude/hooks/tests_guard.py posttooluse",
-                               "timeout": 30}]},
+                    "hooks": [{"type": "command", "command": CMD, "timeout": 30}]},
 }
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -66,18 +68,28 @@ def main(argv):
             return 1
 
     hooks = data.setdefault("hooks", {})
-    added = []
+    added, upgraded = [], []
     for event, entry in ENTRIES.items():
         arr = hooks.setdefault(event, [])
-        if any(MARKER in (h.get("command") or "") for g in arr for h in g.get("hooks", [])):
-            continue
-        arr.append(entry)
-        added.append(event)
+        desired = entry["hooks"][0]["command"]
+        found = False
+        for g in arr:
+            for h in g.get("hooks", []):
+                if MARKER in (h.get("command") or ""):
+                    found = True
+                    if h.get("command") != desired:  # migre un ancien chemin relatif nu
+                        h["command"] = desired
+                        upgraded.append(event)
+        if not found:
+            arr.append(entry)
+            added.append(event)
     with open(settings, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
         f.write("\n")
-    print(f"hooks de test : {('ajoutes ' + ', '.join(added)) if added else 'deja presents'}"
-          f" ; evenements presents : {', '.join(sorted(hooks))}")
+    state = (("ajoutes " + ", ".join(added)) if added else "deja presents")
+    if upgraded:
+        state += f" ; chemins migres -> CLAUDE_PROJECT_DIR ({', '.join(upgraded)})"
+    print(f"hooks de test : {state} ; evenements presents : {', '.join(sorted(hooks))}")
     return 0
 
 

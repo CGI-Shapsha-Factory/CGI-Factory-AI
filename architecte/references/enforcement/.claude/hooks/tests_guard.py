@@ -110,8 +110,9 @@ def cmd_posttooluse():
         return 0
     if candidate_test_names(path) & repo_test_basenames(git_root()):
         return 0
-    reason = (f"Aucun test trouve pour {os.path.basename(path)}. Ajoute le test correspondant "
-              "(cas passant / echec / limite) : les tests s'ecrivent en meme temps que le code.")
+    reason = (f"Aucun test trouve pour {os.path.basename(path)}. "
+              f"Lance /architecte:gen-tests pour generer le test automatiquement, "
+              f"ou ecris-le manuellement (cas passant / echec / limite).")
     print(json.dumps({"decision": "block", "reason": reason}))
     return 0
 

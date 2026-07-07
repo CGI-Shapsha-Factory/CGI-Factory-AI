@@ -18,9 +18,12 @@ import shutil
 import sys
 
 MARKER = "format_guard.py"
+# Chemin ANCRE sur la racine via ${CLAUDE_PROJECT_DIR} (un chemin relatif nu casse quand le
+# hook tourne depuis un sous-dossier). Cf. install_test_hooks.py.
+CMD = 'python "${CLAUDE_PROJECT_DIR}/.claude/hooks/format_guard.py"'
 ENTRY = {
     "matcher": "Write|Edit",
-    "hooks": [{"type": "command", "command": "python .claude/hooks/format_guard.py", "timeout": 30}],
+    "hooks": [{"type": "command", "command": CMD, "timeout": 30}],
 }
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, ".claude", "hooks", "format_guard.py")
@@ -66,15 +69,22 @@ def main(argv):
             return 1
 
     arr = data.setdefault("hooks", {}).setdefault("PostToolUse", [])
-    present = any(MARKER in (h.get("command") or "") for g in arr for h in g.get("hooks", []))
+    present, upgraded = False, False
+    for g in arr:
+        for h in g.get("hooks", []):
+            if MARKER in (h.get("command") or ""):
+                present = True
+                if h.get("command") != CMD:  # migre un ancien chemin relatif nu
+                    h["command"] = CMD
+                    upgraded = True
     if not present:
         arr.append(ENTRY)
     with open(settings, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
         f.write("\n")
 
-    print(f"hook de formatage : script {copied} ; ruff.toml {ruff_state} ; "
-          f"PostToolUse {'deja present' if present else 'ajoute'}")
+    posttooluse = "migre -> CLAUDE_PROJECT_DIR" if upgraded else ("deja present" if present else "ajoute")
+    print(f"hook de formatage : script {copied} ; ruff.toml {ruff_state} ; PostToolUse {posttooluse}")
     return 0
 
 
