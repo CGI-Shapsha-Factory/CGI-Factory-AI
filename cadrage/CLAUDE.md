@@ -53,7 +53,7 @@ jusqu'à convergence → **revue de couplage humaine** → `briefs` → `complet
 ```
 .factory/                          # caché — la mécanique interne
 ├── manifest.json                  # état machine du projet
-└── templates/                     # gabarits FR installés (copies projet)
+└── cadrage/                       # gabarits FR du cadrage (copies projet)
 cadrage-out/                       # documents générés par le cadrage (à la racine)
 ├── capture-brute, project-frame, product-brief, glossaire,
 │   spec-index, coupling-map, completude-report

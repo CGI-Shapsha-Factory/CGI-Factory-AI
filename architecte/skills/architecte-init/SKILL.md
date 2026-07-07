@@ -21,7 +21,7 @@ partagé avec un bloc `architecture`.
 **La racine du projet est le dossier courant** — celui où la session est lancée (le
 cwd) — **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` /
 `*-out/` situé plus haut. Tous les chemins de ce skill (`.factory/manifest.json`,
-`.factory/templates/`, `conventions/`, `architecte-out/`, `.claude/`, `.githooks/`,
+`.factory/architecte/`, `conventions/`, `architecte-out/`, `.claude/`, `.githooks/`,
 `lefthook.yml`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence**
 pour trouver le manifeste du cadrage : un `.factory/manifest.json` situé dans un dossier
 **parent** n'appartient **pas** à ce projet — le traiter comme **absent** (ne jamais le lire
@@ -54,8 +54,7 @@ l'utilisateur décider de la suite.
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant.
 
 ## Procédure
-1. **Installer les gabarits d'architecture** dans `.factory/templates/` (à côté
-   des gabarits de cadrage) : copier depuis le plugin `templates/` :
+1. **Installer les gabarits d'architecture** dans `.factory/architecte/` : copier depuis le plugin `templates/` :
    `drivers-quality.md`, `components.md`, `tech-stack.md`, `standards.md`,
    `diagrams.md`, `adr.md`, `risks.md`, `design-impact.md`.
 2. **Créer le dossier `conventions/`** à la **racine du projet** et y déposer :
@@ -134,10 +133,13 @@ l'utilisateur décider de la suite.
      Claude Code ou un `--no-verify` contourne ; la seule barrière non contournable multi-personnes est
      un **ruleset serveur GitHub** + check CI ; le backstop CI diff-coverage requis est produit par
      l'assembleur.)*
+7. **Git-ignore `.factory/`** : s'assurer que le `.gitignore` du dossier courant contient la ligne
+   `.factory/` (le créer si absent ; ne pas dupliquer). Tout `.factory/` est local, non versionné.
 
 ## Porte de sortie
 - `conventions/` existe à la racine avec `.editorconfig`.
-- Les 8 gabarits d'architecture (dont `design-impact.md`) sont dans `.factory/templates/`.
+- Les 8 gabarits d'architecture (dont `design-impact.md`) sont dans `.factory/architecte/`.
+- `.gitignore` contient la ligne `.factory/`.
 - `architecte-out/decisions/` existe.
 - Le manifeste contient le bloc `architecture` (`phase: "init"`), et reparse sans erreur.
 - Rendu diagrammes provisionné (best-effort) : `.factory/puppeteer.json` écrit si un

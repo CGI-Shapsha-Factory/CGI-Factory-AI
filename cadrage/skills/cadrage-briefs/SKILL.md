@@ -25,7 +25,7 @@ capte le **cœur fonctionnel** de la feature, pas qui l'a dite ni quand.
 - `cadrage-out/product-brief.md`
 - `cadrage-out/glossaire.md`
 
-Gabarit de sortie : `.factory/templates/feature-brief.md` (le **contrat
+Gabarit de sortie : `.factory/cadrage/feature-brief.md` (le **contrat
 central**, copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)

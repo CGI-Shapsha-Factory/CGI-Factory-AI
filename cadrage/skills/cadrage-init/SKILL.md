@@ -41,16 +41,16 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
    ```
    .factory/                (caché — la mécanique interne)
    ├── manifest.json        (fichier — contrat machine)
-   └── templates/           (copies blanches des gabarits installés)
+   └── cadrage/             (gabarits du cadrage — copies blanches installées)
    cadrage-out/             (documents générés par le cadrage, à la racine)
    └── features-fonctionnels-brief/   (un brief par feature)
    prompts/cadrage/         (prompts générés)
    ```
-2. **Installer les gabarits** dans `.factory/templates/` : copier les gabarits
+2. **Installer les gabarits** dans `.factory/cadrage/` : copier les gabarits
    du plugin (`project-frame.md`, `product-brief.md`, `feature-brief.md`,
    `spec-index.md`, `coupling-map.md`, `glossaire.md`). Ce sont les copies de
    travail du projet — les skills les lisent depuis là. Copier aussi la référence
-   des questions de découverte (`discovery-questions.md`) dans `.factory/templates/`.
+   des questions de découverte (`discovery-questions.md`) dans `.factory/cadrage/`.
    Puis **créer `cadrage-out/` (avec son sous-dossier `features-fonctionnels-brief/`)
    vide** ; les artefacts s'y déposeront au fil des skills.
 3. **Écrire le manifeste** `.factory/manifest.json` (squelette ci-dessous ;
@@ -64,6 +64,9 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
    revalider le JSON.
 4. **Laisser `prompts/cadrage/` vide** : il se remplit au fil des prompts générés
    (voir `cadrage-demonstrateur-brief` et les autres skills à prompt).
+5. **Git-ignore `.factory/`** : s'assurer que le `.gitignore` du dossier courant
+   contient la ligne `.factory/` (le créer si absent ; ne pas dupliquer si déjà
+   présent). Tout `.factory/` est local, non versionné.
 
 ```json
 {
@@ -130,10 +133,11 @@ création/mise à jour du manifeste, pas la date d'une source.
 
 ## Résultat attendu
 
-- `.factory/` (avec `manifest.json` et `templates/`), `cadrage-out/` (avec
+- `.factory/` (avec `manifest.json` et `cadrage/`), `cadrage-out/` (avec
   `features-fonctionnels-brief/`) et `prompts/cadrage/` existent ; `cadrage-out/`
   est créé et vide.
-- `.factory/templates/` contient les 6 gabarits installés.
+- `.factory/cadrage/` contient les 6 gabarits installés.
+- `.gitignore` contient la ligne `.factory/`.
 - `.factory/manifest.json` reparse sans erreur, `phase = "init"`.
 - `project` est à `null` (il sera renseigné par `cadrage-extraction`) ; pas de champ `client`.
 - Rien d'existant n'a été écrasé (idempotence).

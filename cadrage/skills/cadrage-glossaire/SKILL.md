@@ -34,7 +34,7 @@ référence au développement.
   vision).
 - `cadrage-out/glossaire.md` existant, pour le mode **incrémental**.
 
-Gabarit de sortie : `.factory/templates/glossaire.md` (copie installée par cadrage-init).
+Gabarit de sortie : `.factory/cadrage/glossaire.md` (copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)
 
@@ -75,7 +75,7 @@ faut d'abord faire l'extraction, sans afficher de « porte ».
 
 ### Structure de `glossaire.md`
 
-Conforme à `.factory/templates/glossaire.md` : table (terme, définition dans les
+Conforme à `.factory/cadrage/glossaire.md` : table (terme, définition dans les
 mots du client, statut). **Pas de colonne source ni `structurant`**, pas de section
 « oui/non ». Une ambiguïté de sens se tranche en session, elle n'est pas persistée
 comme conflit ouvert.

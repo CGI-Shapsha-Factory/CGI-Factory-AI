@@ -21,7 +21,7 @@ il n'écrit jamais dans un repo SpecKit.
 ## Ancrage du répertoire (impératif)
 **La racine du projet est le dossier courant** — celui où la session est lancée (le cwd) —
 **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé
-plus haut. Tous les chemins de ce skill (`.factory/manifest.json`, `.factory/templates/`,
+plus haut. Tous les chemins de ce skill (`.factory/manifest.json`, `.factory/assembleur/`,
 `assembleur-out/`, et les 3 dossiers amont lus `cadrage-out/` / `architecte-out/` /
 `designer-out/`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** :
 un `.factory/` ou un dossier `-out/` situé dans un dossier **parent** n'appartient **pas** à
@@ -55,14 +55,17 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
 `{ "assembly": { … } }` (les autres phases le complètent par fusion, sans écraser le bloc `assembly`).
 
 ## Procédure
-1. **Installer les gabarits de convergence** dans `.factory/templates/` : copier depuis
+1. **Installer les gabarits de convergence** dans `.factory/assembleur/` : copier depuis
    le plugin `templates/` : `pre-constitution.md`, `spec-seed.md`, `feature-map.md`,
    `technical-context.md`, `project-claude-md.md`, `memory-index.md`, `memory-domain.md`,
    `memory-architecture.md`, `memory-design.md`, `memory-features.md`,
    `coherence-report.md`, `attack-plan.md`, `ci-tests.yml`, `init-cowork.md`.
-2. **Créer le dossier de sortie** `assembleur-out/` avec ses sous-dossiers `features/`
+2. **Git-ignore `.factory/`** : s'assurer que le `.gitignore` du dossier courant contient
+   la ligne `.factory/` (le créer si absent ; ne pas dupliquer). Tout `.factory/` est local,
+   non versionné.
+3. **Créer le dossier de sortie** `assembleur-out/` avec ses sous-dossiers `features/`
    et `memory/` (vides).
-3. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `assembly`
+4. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `assembly`
    ci-dessous s'il est absent (read-modify-write + revalidation JSON) :
 
 ```json
@@ -76,7 +79,8 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
 ```
 
 ## Vérification avant de conclure
-- Les gabarits de convergence sont dans `.factory/templates/`.
+- Les gabarits de convergence sont dans `.factory/assembleur/`.
+- `.gitignore` contient la ligne `.factory/`.
 - `assembleur-out/` (avec `features/` et `memory/`) existe.
 - Le manifeste contient le bloc `assembly` (`phase: "init"`), et reparse sans erreur.
 - **État de l'amont signalé** : si un dossier `-out/` amont manque ou est vide, l'utilisateur a

@@ -17,8 +17,8 @@ Python ; pas de build/test. **Pas de coût réel, pas de saisie manuelle, pas de
 - `couts-init` — pose le compteur **dans le dossier courant** (à lancer tôt, autonome — pas de
   pré-requis, **aucune question**) : copie `turn_cost.py` en `.claude/hooks/`, **fusionne** le hook
   `SessionEnd` dans `.claude/settings.json` (sans écraser les hooks existants), installe la table de
-  prix datée dans `.factory/couts/`, crée `.factory/couts/` + **`.gitignore`**. Interaction **en
-  français, sans exposer la mécanique**.
+  prix datée dans `.factory/couts/`, crée `.factory/couts/` + **`.gitignore`** (ligne `.factory/` —
+  tout `.factory/` est git-ignoré). Interaction **en français, sans exposer la mécanique**.
 - `couts-rapport` — restitue un **tableau par session** (tokens input/output + coût en euros) et écrit
   un rapport **versionné** dans `.factory/couts/` (`rapport-couts.md`, puis `-2`, `-3`… — **jamais
   d'écrasement**).

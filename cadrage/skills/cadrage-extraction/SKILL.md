@@ -131,7 +131,7 @@ Les outcomes et buts cités.
 
 En plus de la capture, exécuter la **passe découverte** sur les 13 questions de
 `references/discovery-questions.md` (Q1–Q13). Elle remplit
-`cadrage-out/project-frame.md` (gabarit `.factory/templates/project-frame.md`)
+`cadrage-out/project-frame.md` (gabarit `.factory/cadrage/project-frame.md`)
 et le bloc `discovery` du manifeste.
 
 > ⚠️ **Workflow OBLIGATOIRE, jamais en lot.** On **déroule les 13 questions une par une**, même

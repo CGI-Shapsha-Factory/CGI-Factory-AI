@@ -96,7 +96,7 @@ true`, **geste humain**) :
   > gabarit) : **pas de titre H1, pas de note en blockquote, pas de métadonnée, pas de pied de page**. La
   > métadonnée (sujet, date, version) vit dans l'entrée `prompts[]` du manifeste, **jamais** dans le
   > fichier. Voir `references/ux-conventions.md` §3bis.
-- **Rapport de couverture** → `designer-out/coverage-report.md` (gabarit `.factory/templates/coverage-report.md`).
+- **Rapport de couverture** → `designer-out/coverage-report.md` (gabarit `.factory/designer/coverage-report.md`).
 - MAJ `design.prompt_path`, `design.coverage_report_path`, `design.phase = "atelier"` **en silence** (ne pas
   narrer la mise à jour du manifeste ; dire à l'utilisateur **ce qui a été produit** et **la suite**).
 

@@ -30,8 +30,8 @@ de couplage, jamais une décision.
 - `cadrage-out/product-brief.md`
 - `cadrage-out/glossaire.md`
 
-Gabarits de sortie : `.factory/templates/spec-index.md` et
-`.factory/templates/coupling-map.md` (copie installée par cadrage-init).
+Gabarits de sortie : `.factory/cadrage/spec-index.md` et
+`.factory/cadrage/coupling-map.md` (copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)
 

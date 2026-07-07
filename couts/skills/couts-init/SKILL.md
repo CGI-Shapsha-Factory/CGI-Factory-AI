@@ -34,7 +34,7 @@ dossier :
 - `.claude/settings.json` (hook `SessionEnd`, par fusion)
 - `.factory/couts/price-table.json`
 - `.factory/couts/` (le journal — un `.jsonl` par session)
-- `.gitignore` (pour ignorer `.factory/couts/`)
+- `.gitignore` (pour ignorer tout `.factory/`)
 
 Le compteur est **ancré sur son propre emplacement** : il n'écrit que dans le `.factory/couts/` du
 dossier où il est posé, et ne mesure **que** les sessions lancées dans ce dossier.
@@ -48,8 +48,9 @@ dossier où il est posé, et ne mesure **que** les sessions lancées dans ce dos
    `py -3` si besoin sur Windows.
 3. **Table de prix datée** : `references/price-table.json` → `.factory/couts/price-table.json`
    (si absent).
-4. **Journal** : créer `.factory/couts/` ; **git-ignorer** en ajoutant la ligne `.factory/couts/`
-   au `.gitignore` du dossier courant (le créer si absent).
+4. **Journal** : créer `.factory/couts/` ; **git-ignorer tout `.factory/`** en ajoutant la ligne
+   `.factory/` au `.gitignore` du dossier courant (le créer si absent ; ne pas dupliquer si déjà
+   présent). Tout `.factory/` est local, non versionné.
 5. **Manifeste (optionnel, silencieux)** : si `<dossier courant>/.factory/manifest.json` existe, y
    ajouter le bloc `costs` `{ "installed": true, "hook": "SessionEnd", "price_table_date": "<date>",
    "gitignored": true }`. **S'il n'existe pas, ne rien créer** — l'outil fonctionne sans.
@@ -63,7 +64,7 @@ rapport (chaque requête comptée une seule fois).
 - `.claude/hooks/turn_cost.py` présent ; `.claude/settings.json` contient le hook `SessionEnd` du
   compteur (les autres hooks préservés).
 - `.factory/couts/price-table.json` présent ; `.factory/couts/` existe ; `.gitignore` couvre
-  `.factory/couts/`.
+  `.factory/` (donc `.factory/couts/`).
 - Vérifier : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_costs.py" <dossier courant>/.factory/manifest.json`
   (exit 0 attendu ; s'il renvoie exit 1, corriger le manquant sans l'exposer en détail).
 

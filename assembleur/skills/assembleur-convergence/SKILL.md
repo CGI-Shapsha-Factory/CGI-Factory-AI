@@ -65,7 +65,7 @@ un trou ou une contradiction apparaît. Ne synthétiser que sur des retours comp
 
 ## Étape 2 — Produire le paquet `assembleur-out/`
 
-À partir des extractions, écrire (gabarits dans `.factory/templates/`) :
+À partir des extractions, écrire (gabarits dans `.factory/assembleur/`) :
 
 - **`pre-constitution.md`** (gabarit `pre-constitution.md`) — **mappe 1:1 le
   `constitution.md` SpecKit** : principes non négociables P1..Pn (fonctionnel : identité,

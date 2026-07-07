@@ -19,7 +19,7 @@ dans la matière.
 
 `cadrage-out/capture-brute.md` et `cadrage-out/project-frame.md`
 (pour reprendre Q1 qui utilise, Q3 rôles, Q9 type de projet). Le gabarit de sortie
-est `.factory/templates/product-brief.md` (copie installée par cadrage-init).
+est `.factory/cadrage/product-brief.md` (copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)
 
@@ -50,7 +50,7 @@ afficher de « porte ».
 
 ### Sections du product brief
 
-Conformes à `.factory/templates/product-brief.md` : Problème, Objectif business,
+Conformes à `.factory/cadrage/product-brief.md` : Problème, Objectif business,
 Parties prenantes et rôles, Périmètre IN, Non-périmètre OUT (non vide),
 Contraintes, Critères de succès produit, Hypothèse produit initiale.
 

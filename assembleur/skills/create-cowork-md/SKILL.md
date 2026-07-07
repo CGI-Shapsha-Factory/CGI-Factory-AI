@@ -77,7 +77,7 @@ Sources = **sorties amont uniquement**, en synthèse (pas de copie) :
   synchronisé Claude Design).
 
 ## Étape 4 — Générer `init-cowork.md` (racine) + confirmer
-1. Partir du gabarit `.factory/templates/init-cowork.md` (installé par `assembleur-init`) et le
+1. Partir du gabarit `.factory/assembleur/init-cowork.md` (installé par `assembleur-init`) et le
    **remplir** avec les infos détectées (Étapes 1–3). Inclure la section **« Accès Linear pour
    Quark »** (setup MCP + clé API — cf. `references/linear-guide.md`, sous-section « Accès par clé
    API »).

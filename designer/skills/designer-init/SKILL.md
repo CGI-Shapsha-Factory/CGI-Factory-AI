@@ -18,7 +18,7 @@ avec un bloc `design` orienté **couverture** (checklist pré-remplie par les ha
 ## Ancrage du répertoire (impératif)
 **La racine du projet est le dossier courant** — celui où la session est lancée (le cwd) — **jamais** un
 dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé plus haut. Tous les chemins de
-ce skill (`.factory/manifest.json`, `.factory/templates/`, `designer-out/`, `designer-out/prompts/`,
+ce skill (`.factory/manifest.json`, `.factory/designer/`, `designer-out/`, `designer-out/prompts/`,
 `designer-out/maquette-de-claude-design/`) se
 résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** pour trouver le manifeste ou les
 dossiers `-out/` amont : un `.factory/manifest.json` (ou un `cadrage-out/` / `architecte-out/`) situé dans
@@ -51,7 +51,7 @@ n'existe pas encore, le **créer** comme objet JSON valide `{ "design": { … } 
 complètent par fusion, sans écraser le bloc `design`).
 
 ## Procédure
-1. **Installer les gabarits** dans `.factory/templates/` (copier depuis le plugin `templates/`) :
+1. **Installer les gabarits** dans `.factory/designer/` (copier depuis le plugin `templates/`) :
    `coverage-checklist.md`, `coverage-report.md`, `claude-design-prompt.md`, `design-guidelines.md`.
    **Créer le dossier de sortie `designer-out/`** à la racine du projet, avec ses deux sous-dossiers :
    - `designer-out/prompts/` — recevra le prompt Claude Design (fichier plat) ;
@@ -92,9 +92,12 @@ par `designer-coherence`. Source unique désormais : plus de distinction `claude
 *Statut de chaque item : `open` → `deduced` (rempli depuis un handoff) | `decided` (tranché par l'humain) |
 `sans_objet` (sans objet, marqué pas forcé). Les portes `coverage_sufficient` et `design_validated` sont
 des **gestes humains** (jamais auto).*
+3. **Git-ignore `.factory/`** : s'assurer que le `.gitignore` du dossier courant contient la ligne
+   `.factory/` (le créer si absent ; ne pas dupliquer). Tout `.factory/` est local, non versionné.
 
 ## Porte de sortie
-- Les 4 gabarits sont dans `.factory/templates/`.
+- Les 4 gabarits sont dans `.factory/designer/`.
+- `.gitignore` contient la ligne `.factory/`.
 - Le dossier `designer-out/` existe à la racine, avec `designer-out/prompts/` (prêt à recevoir le prompt
   Claude Design) et `designer-out/maquette-de-claude-design/` (vide, prêt à recevoir l'export du design
   system) ; la phrase de dépôt de la maquette a été affichée à l'utilisateur.

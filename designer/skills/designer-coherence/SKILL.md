@@ -42,7 +42,7 @@ travaille à plusieurs et ne partage pas l'accès aux comptes ; tout vit dans le
    `designer-out/maquette-de-claude-design/`. Le skill ne passe **jamais** `design.design_validated` à vrai
    de lui-même ; il le propose, l'humain confirme.
 3. **Produire le handoff design** → `designer-out/design-guidelines.md` (gabarit
-   `.factory/templates/design-guidelines.md`) : **source du design system validé** = l'export committé dans
+   `.factory/designer/design-guidelines.md`) : **source du design system validé** = l'export committé dans
    `designer-out/maquette-de-claude-design/`, **règles d'états** (par écran), **patterns d'erreur**
    (validation à la sortie du champ, format API → messages par champ), **socle d'accessibilité** (niveau
    visé), et la règle **tout écran dérive de l'export committé, aucune valeur de style en dur**. MAJ
