@@ -4,9 +4,9 @@
      design pour la fabrication. Contenu seul. -->
 
 ## Design system (opposable)
-- **Source** : le design system **synchronisé via `/design-sync`** — depuis un **export committé** au repo
-  s'il est présent (auto-portable), sinon la **réf. Claude Design**.
-- **Règle non négociable** : tout écran dérive du design system synchronisé ; **aucune valeur de
+- **Source** : le design system = l'**export committé** dans `designer-out/maquette-de-claude-design/`
+  (dossier ou ZIP), auto-portable — tout vit dans le repo.
+- **Règle non négociable** : tout écran dérive de l'export committé du design system ; **aucune valeur de
   style en dur** — on utilise les **tokens et composants**.
 
 ## États par écran

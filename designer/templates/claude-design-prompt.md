@@ -2,7 +2,7 @@
 
 > Gabarit statique lu par `/designer:designer-atelier` une fois la **couverture jugée
 > suffisante**. **Cet en-tête reste dans le plugin** ; le fichier sauvegardé sous
-> `prompts/designer/<NNN>-<JJ-MM>-claude-design.md` ne contient **que le corps du prompt**
+> `designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md` ne contient **que le corps du prompt**
 > (le bloc de code ci-dessous, rempli), **sans titre, sans note, sans métadonnée, sans pied
 > de page** — cf. `references/ux-conventions.md` §3bis.
 >
@@ -16,8 +16,8 @@
 
 ```
 Conçois et produis le design system de <produit en 1 phrase>, puis applique-le à tous les
-écrans. Objectif : un système cohérent, accessible et exécutable, prêt à être synchronisé en
-code. Ne copie pas la maquette existante : elle est une inspiration, pas une cible. Marque ce
+écrans. Objectif : un système cohérent, accessible et exécutable, prêt à être exporté et
+implémenté en code. Ne copie pas la maquette existante : elle est une inspiration, pas une cible. Marque ce
 qui manque plutôt que de l'inventer.
 
 Contexte produit

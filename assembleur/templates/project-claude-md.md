@@ -30,10 +30,9 @@ Voir `attack-plan.md` : `specify init` → `/speckit.constitution` (depuis `pre-
 `/speckit.specify` par feature **dans l'ordre du `feature-map.md`** (walking skeleton d'abord) →
 `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 
-## Design (design-sync) — non négociable
-- **Exécuter `/design-sync`** (depuis l'**export committé** du design system s'il est présent, sinon la
-  **réf. Claude Design**) ; ne construire qu'à partir des **tokens et composants synchronisés** —
-  **aucune valeur de style en dur**.
+## Design — non négociable
+- **Le design system committé** (`designer-out/maquette-de-claude-design/`) est la **source** ; ne
+  construire qu'à partir de ses **tokens et composants** — **aucune valeur de style en dur**.
 - **États par écran** : chargement, vide, erreur, succès.
 - **Patterns d'erreur** : le format d'erreur de l'API se projette en messages par champ.
 - **Accessibilité** : au niveau visé (ex. WCAG 2.2 AA) — contraste, focus visible, clavier.

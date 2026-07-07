@@ -16,7 +16,7 @@ date: AAAA-MM-JJ
 > déploiement, les ADR purement serveur.
 
 ## 1. Stack front & approche de style — (information n°1)
-*C'est ce qui rend le design system exécutable et synchronisable via `/design-sync`.*
+*C'est ce qui rend le design system exécutable et implémentable en code.*
 - **Framework front** : … (ex. React, Vue, Svelte, HTML/CSS)
 - **Bibliothèque de composants** : … (ex. maison, shadcn, MUI, aucune)
 - **Stratégie CSS / tokens** : … (ex. CSS variables, Tailwind, CSS-in-JS, Style Dictionary)

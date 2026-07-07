@@ -1,7 +1,7 @@
 {
   "name": "designer",
-  "version": "0.3.3",
-  "description": "Phase design d'un projet spec-driven : atelier de couverture (checklist fondation/expérience/technique pré-remplie par les handoffs cadrage+architecte) qui produit le prompt Claude Design, le rapport de couverture et le handoff. Le design system naît dans Claude Design et passe au code via /design-sync, le plugin ne le génère pas. 3 skills interactifs, tout en français.",
+  "version": "0.4.0",
+  "description": "Phase design d'un projet spec-driven : atelier de couverture (checklist fondation/expérience/technique pré-remplie par les handoffs cadrage+architecte) qui produit le prompt Claude Design, le rapport de couverture et le handoff. Le design system naît dans Claude Design ; son export est committé dans designer-out/maquette-de-claude-design/ et sert de source à la fabrication, le plugin ne le génère pas. Toutes les sorties sont sous designer-out/. 3 skills interactifs, tout en français.",
   "author": {
     "name": "IA Factory"
   },
@@ -10,7 +10,6 @@
     "design-system",
     "coverage-checklist",
     "claude-design",
-    "design-sync",
     "ux-ui",
     "accessibility",
     "spec-driven",

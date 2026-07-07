@@ -15,7 +15,7 @@ Il **n'écrit aucun fichier** et ne modifie aucun manifeste.
 qui produit un *contrat* validé par un humain, puis passe le relais :
 **`cadrage → architecte → designer → assembleur → SpecKit`**.
 Chaque skill se termine par une ligne « **Étape suivante** » qui indique quoi lancer ensuite — tu avances
-de proche en proche. Le design system naît dans **Claude Design** et passe au code via **`/design-sync`**.
+de proche en proche. Le design system naît dans **Claude Design** ; son export est committé dans `designer-out/maquette-de-claude-design/` et sert de source à la fabrication.
 
 ### Phase 1 — `cadrage` (contrat fonctionnel)
 De la matière brute (transcripts, docs) au pack fonctionnel repris par l'architecte.
@@ -47,9 +47,9 @@ Transforme le besoin fonctionnel en cadre technique et fige la séquence numéro
 
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
-| `designer-init` | installe les gabarits + sème la checklist de couverture + crée `prompts/designer/` | maquette validée + architecture validée + *Décisions à impact design* |
-| `designer-atelier` | atelier de couverture (fondation / expérience / technique) → **prompt Claude Design** (corps seul, dans `prompts/designer/`) + rapport de couverture | **arbitrage des choix d'expérience** (humain) |
-| `designer-coherence` | valide le design system généré par Claude Design + produit le handoff design (réf. + guidelines) | **validation du système généré** (humain) |
+| `designer-init` | installe les gabarits + sème la checklist de couverture + crée `designer-out/` (`prompts/`, `maquette-de-claude-design/`) | maquette validée + architecture validée + *Décisions à impact design* |
+| `designer-atelier` | atelier de couverture (fondation / expérience / technique) → **prompt Claude Design** (corps seul, dans `designer-out/prompts/`) + rapport de couverture | **arbitrage des choix d'expérience** (humain) |
+| `designer-coherence` | valide le design system (export committé dans `designer-out/maquette-de-claude-design/`) + produit le handoff design (réf. + guidelines) | **validation du système généré** (humain) |
 
 ### Phase 4 — `assembleur` (convergence → paquet SpecKit)
 Lit les 3 contrats en parallèle, les converge, et produit un **paquet de handoff** dans `assembleur-out/` (il n'écrit jamais dans le repo cible).

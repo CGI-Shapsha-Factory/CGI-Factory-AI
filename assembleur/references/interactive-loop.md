@@ -30,4 +30,4 @@ l'humain tranche.
 
 ## Langue
 Tout en **français** (questions, options, restitutions, artefacts). Seuls les identifiants/valeurs
-machine et noms de format (SpecKit, `spec.md`, `/design-sync`) restent tels quels.
+machine et noms de format (SpecKit, `spec.md`) restent tels quels.

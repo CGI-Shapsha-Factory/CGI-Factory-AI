@@ -35,4 +35,4 @@ Terminer chaque exécution par exactement une phrase en clair sur la suite.
 
 ## 6. Langue
 **Tout en français** (interaction + artefacts). Seuls les identifiants/valeurs machine et les
-noms d'outils/formats (`spec.md`, `constitution.md`, SpecKit, `/design-sync`) restent tels quels.
+noms d'outils/formats (`spec.md`, `constitution.md`, SpecKit) restent tels quels.

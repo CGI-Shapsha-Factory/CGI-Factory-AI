@@ -20,7 +20,7 @@ le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
 ## Langue & invocation
 - **Tout en français** (skills, templates, artefacts, interaction). Seuls les
   identifiants/valeurs machine et noms d'outils/formats (`spec.md`, `constitution.md`,
-  SpecKit, `/design-sync`) restent tels quels.
+  SpecKit) restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/assembleur:<skill>` + auto par le modèle.
 
 ## Les 7 skills
@@ -98,9 +98,9 @@ extraits → on utilise un agent dédié à lecture complète).
 ## Convergence (mapping 3 faces → SpecKit)
 Voir `references/speckit-mapping.md`. **Clé de jointure = le use case** (registre canonique
 `architecture.feature_sequence` = objets `{id, ucs, name}`). Fonctionnel + technique joints **par use
-case** ; design **global** (système synchronisé via `/design-sync` + guidelines). La pré-constitution
-converge les **principes non négociables** des 3 contrats (dont la règle design-sync : tout écran
-dérive du design system synchronisé, aucune valeur de style en dur, états couverts, contrat d'erreur ;
+case** ; design **global** (export committé du design system + guidelines). La pré-constitution
+converge les **principes non négociables** des 3 contrats (dont la règle design : tout écran
+dérive de l'export committé du design system, aucune valeur de style en dur, états couverts, contrat d'erreur ;
 et le **principe de test** : tests écrits avec le code, intégration mockée, **backstop CI diff-coverage requis**).
 
 ## Conventions partagées

@@ -8,7 +8,8 @@ description: Amorce l'atelier design : installe les gabarits (checklist de couve
 Skill d'amorçage de la phase **design** : **tout premier skill** à lancer après que l'architecte a figé et
 validé le contrat technique **et** produit sa section *Décisions à impact design*. Il prépare l'**atelier de
 couverture** (zéro décision de design) ; les autres skills (`designer`, `designer-coherence`) supposent
-qu'il a tourné. **Le plugin ne génère pas le design system** (il naît dans Claude Design, via `/design-sync`).
+qu'il a tourné. **Le plugin ne génère pas le design system** : il naît dans Claude Design, et son export
+est **committé dans `designer-out/maquette-de-claude-design/`**.
 
 ## Objectif
 Rendre un projet **prêt pour l'atelier design** : installer les gabarits et étendre le manifeste partagé
@@ -17,14 +18,16 @@ avec un bloc `design` orienté **couverture** (checklist pré-remplie par les ha
 ## Ancrage du répertoire (impératif)
 **La racine du projet est le dossier courant** — celui où la session est lancée (le cwd) — **jamais** un
 dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé plus haut. Tous les chemins de
-ce skill (`.factory/manifest.json`, `.factory/templates/`, `designer-out/`, `prompts/designer/`) se
+ce skill (`.factory/manifest.json`, `.factory/templates/`, `designer-out/`, `designer-out/prompts/`,
+`designer-out/maquette-de-claude-design/`) se
 résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** pour trouver le manifeste ou les
 dossiers `-out/` amont : un `.factory/manifest.json` (ou un `cadrage-out/` / `architecte-out/`) situé dans
 un dossier **parent** n'appartient **pas** à ce projet — le traiter comme **absent** (ne jamais le lire ;
 on crée/étend le manifeste **du cwd**). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
 ## Setup inconditionnel + état de l'amont (jamais bloquant)
-**Ce skill ne bloque jamais.** L'installation des gabarits, la création de `prompts/designer/` et
+**Ce skill ne bloque jamais.** L'installation des gabarits, la création de `designer-out/` (avec ses
+sous-dossiers `prompts/` et `maquette-de-claude-design/`) et
 l'amorçage du bloc `design` (checklist semée) sont **déterministes et sans dépendance à l'amont** : ils
 s'installent **toujours**, dans le dossier courant. **Ne jamais refuser** au motif que la maquette,
 l'architecture ou les *Décisions à impact design* manquent.
@@ -50,9 +53,17 @@ complètent par fusion, sans écraser le bloc `design`).
 ## Procédure
 1. **Installer les gabarits** dans `.factory/templates/` (copier depuis le plugin `templates/`) :
    `coverage-checklist.md`, `coverage-report.md`, `claude-design-prompt.md`, `design-guidelines.md`.
-   **Créer le dossier des prompts** `prompts/designer/` à la racine du projet (il recevra le prompt Claude
-   Design en fichier plat). *(Le plugin ne crée plus de dossier `design-system/` ni de seed de tokens : le
-   design system naît dans Claude Design.)*
+   **Créer le dossier de sortie `designer-out/`** à la racine du projet, avec ses deux sous-dossiers :
+   - `designer-out/prompts/` — recevra le prompt Claude Design (fichier plat) ;
+   - `designer-out/maquette-de-claude-design/` — créé **vide** ; l'humain y déposera l'export du design
+     system produit par Claude Design.
+
+   Après création, **afficher à l'utilisateur cette phrase unique** : « Déposez l'export de la maquette
+   générée par Claude Design dans `designer-out/maquette-de-claude-design/` — au choix, un **dossier** ou une
+   **archive ZIP**. »
+
+   *(Le plugin ne crée plus de dossier `design-system/` ni de seed de tokens : le design system naît dans
+   Claude Design et son export est committé dans `designer-out/maquette-de-claude-design/`.)*
 2. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `design` ci-dessous s'il est
    absent (read-modify-write + revalidation JSON), en **semant la checklist** avec les items canoniques
    de `coverage-checklist.md` au statut `open` :
@@ -74,13 +85,19 @@ complètent par fusion, sans écraser le bloc `design`).
   "guidelines_path": null
 }
 ```
+*`design_system_ref` = chemin de l'export committé (`designer-out/maquette-de-claude-design/`), renseigné
+par `designer-coherence`. Source unique désormais : plus de distinction `claude_design_ref` /
+`committed_export`.*
+
 *Statut de chaque item : `open` → `deduced` (rempli depuis un handoff) | `decided` (tranché par l'humain) |
 `sans_objet` (sans objet, marqué pas forcé). Les portes `coverage_sufficient` et `design_validated` sont
 des **gestes humains** (jamais auto).*
 
 ## Porte de sortie
 - Les 4 gabarits sont dans `.factory/templates/`.
-- Le dossier `prompts/designer/` existe à la racine du projet (prêt à recevoir le prompt Claude Design).
+- Le dossier `designer-out/` existe à la racine, avec `designer-out/prompts/` (prêt à recevoir le prompt
+  Claude Design) et `designer-out/maquette-de-claude-design/` (vide, prêt à recevoir l'export du design
+  system) ; la phrase de dépôt de la maquette a été affichée à l'utilisateur.
 - Le manifeste contient le bloc `design` (`phase: "init"`, checklist semée), et reparse sans erreur.
 - **État de l'amont signalé** : si maquette/architecture/*Décisions à impact design* manquent,
   l'utilisateur a été **averti** (pas bloqué).

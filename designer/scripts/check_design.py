@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la phase design (atelier de couverture).
 
-Le plugin ne genere PAS le design system (il nait dans Claude Design, via /design-sync). Ce
-garde-fou valide la COUVERTURE de l'atelier, pas des fichiers de tokens.
+Le plugin ne genere PAS le design system (il nait dans Claude Design, son export est committe dans
+designer-out/maquette-de-claude-design/). Ce garde-fou valide la COUVERTURE de l'atelier, pas des tokens.
 
 Lit le manifeste partage d'un projet (.factory/manifest.json par defaut) et echoue si :
   - bloc `design` absent ;

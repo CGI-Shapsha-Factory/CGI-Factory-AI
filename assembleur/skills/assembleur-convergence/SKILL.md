@@ -49,7 +49,7 @@ parallèles) puis synthétiser leurs retours :
    Extraire : les principes techniques **non négociables** (issus des ADR) et les
    décisions à impact design.
 5. **Design** — lire `designer-out/design-guidelines.md`, `designer-out/coverage-report.md`.
-   Extraire : la **règle design-sync** (tout écran dérive du design system synchronisé,
+   Extraire : la **règle design** (tout écran dérive de l'export committé du design system,
    aucun style en dur), les **états** par écran, les **patterns d'erreur**, le **niveau
    d'accessibilité** visé.
 
@@ -95,7 +95,7 @@ un trou ou une contradiction apparaît. Ne synthétiser que sur des retours comp
   `design.md` (réf. design system + guidelines : états, erreurs, a11y), `features.md`
   (séquence + couplage + walking skeleton + pointeurs des 3 faces).
 - **`CLAUDE.md`** (gabarit `project-claude-md.md`) — instructions projet **< 200 lignes**
-  pour la fabrication : identité, principes, la **règle design-sync**, où vivent
+  pour la fabrication : identité, principes, la **règle design** (export committé), où vivent
   conventions/constitution, la séquence de features, les commandes build/test (depuis la
   stack), **+ l'`@import` de l'index mémoire** : une ligne `@memory/MEMORY.md` **jamais entre
   backticks** (un `@import` backtiqué est traité comme du texte littéral → non importé). `MEMORY.md`

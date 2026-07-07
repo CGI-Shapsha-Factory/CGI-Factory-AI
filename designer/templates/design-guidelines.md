@@ -1,14 +1,13 @@
 # Guidelines de design — handoff pour l'Assembleur
 
 > Les **règles à graver dans le projet** pour rendre le contrat de design **opposable en fabrication**.
-> Consommées par l'Assembleur (constitution + `claude.md` + CI). Le design system vit dans Claude Design
-> **ou** dans un export committé au repo, et est matérialisé en code par **`/design-sync`** (depuis l'export
-> committé s'il est présent, sinon la réf. Claude Design) ; ces guidelines l'encadrent.
+> Consommées par l'Assembleur (constitution + `claude.md` + CI). Le design system naît dans Claude Design ;
+> son **export est committé** dans `designer-out/maquette-de-claude-design/` et sert de **source** à la
+> fabrication ; ces guidelines l'encadrent.
 
 ## Source du design system
-- Design system **validé** : <réf. Claude Design **ou** export committé au repo (zip/dossier, ex. `tokens.css`)>
-  — pont vers le code : **`/design-sync`** (depuis l'export committé s'il est présent, sinon la réf. Claude Design).
-- Nature de la source : `<claude_design_ref | committed_export>` — un export committé rend la fabrication auto-portable.
+- Design system **validé** : **export committé** dans `designer-out/maquette-de-claude-design/`
+  (dossier ou archive ZIP, ex. `tokens.css`) — c'est la source unique, le repo est auto-portable.
 - Stack front cible : … `(src: design-impact §1)`
 
 ## Règles d'états (par écran)
@@ -25,9 +24,9 @@ aucun résultat). État vide = message clair + une action. *(NN/g)*
   **navigation clavier**, erreurs identifiées **en texte** (pas par la couleur seule). `(src: design-impact §4)`
 
 ## Discipline d'implémentation (à forcer en fabrication)
-- **Tout écran dérive du design system synchronisé** ; **aucune valeur de style en dur** → tokens et
-  composants uniquement.
-- `/design-sync` exécuté **au démarrage** ; on ne construit qu'à partir des tokens/composants synchronisés.
+- **Tout écran dérive de l'export committé du design system** (`designer-out/maquette-de-claude-design/`) ;
+  **aucune valeur de style en dur** → tokens et composants uniquement.
+- On ne construit qu'à partir des tokens/composants de l'export committé.
 
 ---
 *Sans objet sur ce projet : <lister les items marqués sans objet>.*

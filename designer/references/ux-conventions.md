@@ -53,7 +53,7 @@ contient aucun `[À VALIDER]`** : tout point est résolu en session avant la gé
 (cf. `skills/designer-atelier`).
 
 ## 3bis. Fichiers prompt sauvegardés = corps seul, prêt à coller
-Tout prompt écrit sous `prompts/designer/….md` contient **uniquement le prompt prêt à coller**
+Tout prompt écrit sous `designer-out/prompts/….md` contient **uniquement le prompt prêt à coller**
 dans Claude Design. **Interdit** dans le fichier : titre (`# Prompt Claude Design — …`), note
 en blockquote, ligne de métadonnée (`Date : … | Version : …`), `---` d'en-tête, ou tout pied
 de page. La métadonnée (sujet, date, version) vit dans l'entrée `prompts[]` du manifeste,
@@ -73,5 +73,5 @@ Terminer chaque exécution par exactement une phrase :
 
 ## 6. Langue
 **Tout en français** (interaction + artefacts). Seuls les identifiants/valeurs machine du
-manifeste et les noms d'outils/formats (`/design-sync`, Claude Design, DTCG, Style Dictionary,
+manifeste et les noms d'outils/formats (Claude Design, DTCG, Style Dictionary,
 WCAG, ARIA) restent tels quels.

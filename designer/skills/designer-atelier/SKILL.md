@@ -9,8 +9,8 @@ Cœur de la phase design : **un atelier de conception dirigé, pas un générate
 rédiger, c'est de **garantir que rien d'important n'a été oublié** avant de lancer Claude Design. Il mène
 l'humain (designer ou PO) à travers **tout ce qu'un front pertinent exige**, en s'appuyant sur les
 handoffs comme matière, et ne produit le **prompt** qu'à la fin, une fois **tout point traité** et la
-**couverture jugée suffisante**. **Le design system naît dans Claude Design** (pas ici) ; le pont vers le
-code est `/design-sync`.
+**couverture jugée suffisante**. **Le design system naît dans Claude Design** (pas ici) ; son export est
+ensuite **committé dans `designer-out/maquette-de-claude-design/`**.
 
 ## Porte d'entrée
 `designer-init` a tourné (le manifeste contient le bloc `design` avec la checklist semée). Sinon, orienter
@@ -86,7 +86,7 @@ passe à l'étape 5 que lorsque plus aucun item n'est « à traiter ».**
 ### Étape 5 — Générer les sorties (seulement quand plus rien n'est « à traiter »)
 Quand tout est traité et que l'humain juge la **couverture suffisante** (`design.coverage_sufficient =
 true`, **geste humain**) :
-- **Prompt Claude Design** → `prompts/designer/<NNN>-<JJ-MM>-claude-design.md` (fichier plat ; gabarit
+- **Prompt Claude Design** → `designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md` (fichier plat ; gabarit
   `templates/claude-design-prompt.md`) : fondation à produire, direction stylistique (maquette =
   inspiration, marque si présente sinon direction à poser), **stack cible**, et **consignes de discipline**
   (tous les états par composant, tous les parcours, erreurs + états vides, marquer ce qui manque). Les items
@@ -111,8 +111,11 @@ true`, **geste humain**) :
 - **Marquer, ne pas inventer** ; « sans objet » plutôt que forcer.
 - **Tout point se résout en session** : on ne génère pas le prompt tant qu'un item est « à traiter ».
 - **Lecture seule du cadrage** : `spec-index.md` est lu, jamais créé ni écrit (artefact du cadrage).
-- **Le plugin ne génère pas le design system** (Claude Design + `/design-sync`).
+- **Le plugin ne génère pas le design system** (il naît dans Claude Design ; son export est committé dans
+  `designer-out/maquette-de-claude-design/`).
 - **Pas de fuite de champ** ni de jargon en sortie utilisateur ; **manifeste mis à jour en silence** (voir
   `references/ux-conventions.md`).
 
-Étape suivante : lance **Claude Design** avec le prompt produit, puis `/designer:designer-coherence` — valider le système généré et préparer le handoff.
+Étape suivante : lance **Claude Design** avec le prompt produit, **dépose l'export dans
+`designer-out/maquette-de-claude-design/`** (dossier ou ZIP), puis `/designer:designer-coherence` —
+valider le système généré et préparer le handoff.
