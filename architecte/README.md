@@ -22,7 +22,7 @@ cadrage depuis `cadrage-out/` et écrit ses propres sorties dans `architecte-out
 ## Entrées (depuis `cadrage`)
 `cadrage-out/` : `project-frame.md` (Q1–Q13 + *seeds qualité*), `product-brief.md`,
 `glossaire.md`, `spec-index.md`, et les briefs sous
-`cadrage-out/features-fonctionnels-brief/*.brief.md`.
+`cadrage-out/features-fonctionnels-brief/*.md`.
 
 ## Sorties (dans `architecte-out/`)
 `drivers-quality.md`, `components.md`, `tech-stack.md`, `standards.md`,
@@ -48,7 +48,7 @@ numérotée** (convergence des deux découpages). Chaque document porte un **fro
 - **Tests & environnement** : stratégie de test concrète dans `standards.md` (unitaires
   passant/échec/limite, intégration **mockée**, **tests écrits avec le code**), **posée en dur** par
   des hooks Claude Code + pre-commit à la racine ; fichiers d'environnement **optionnels** selon la
-  stack (placeholders `.env`/Angular/…). Le **backstop CI** (diff-coverage requis) est produit par l'assembleur.
+  stack (placeholders `.env`/Angular/…).
 
 ## Conventions de code (vrais fichiers)
 Catalogue dans `references/conventions/` : Python → `ruff.toml` ; TS/JS → `biome.json`

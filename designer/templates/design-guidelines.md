@@ -1,7 +1,7 @@
 # Guidelines de design — handoff pour l'Assembleur
 
 > Les **règles à graver dans le projet** pour rendre le contrat de design **opposable en fabrication**.
-> Consommées par l'Assembleur (constitution + `claude.md` + CI). Le design system naît dans Claude Design ;
+> Consommées par l'Assembleur (constitution + `claude.md`). Le design system naît dans Claude Design ;
 > son **export est committé** dans `designer-out/maquette-de-claude-design/` et sert de **source** à la
 > fabrication ; ces guidelines l'encadrent.
 

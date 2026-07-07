@@ -46,10 +46,10 @@ Lire `.factory/manifest.json` **sans l'annoncer** :
 ## Étape 1 — Détecter Linear (MCP linear-prism)
 Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-guide.md`).
 - Disponible → continuer.
-- Indisponible → **ne pas bloquer** : afficher les **instructions d'installation** (section
-  « Installation du plugin linear-prism » de `references/linear-guide.md`) et **proposer le mode
-  brouillon** — préparer les sous-tickets dans `assembleur-out/linear-drafts.md` (sous chaque feature,
-  une liste des phases avec titre descriptif + résumé).
+- Indisponible → **ne rien créer** : refuser en clair (« Je ne peux pas créer de sous-tickets
+  Linear : le MCP `linear-prism` n'est pas disponible. ») et afficher les **instructions
+  d'installation** (section « Installation du plugin linear-prism » de `references/linear-guide.md`).
+  Installer puis **relancer** une fois authentifié.
 
 ## Étape 2 — Résoudre les labels et l'équipe (une seule fois)
 - **Équipe** : réutiliser `linear.team` du manifeste (posé par `premier-alimente-linear`). Ne pas
@@ -58,7 +58,7 @@ Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-gui
   `mcp__plugin_linear-prism_linear__list_issue_labels` (comparaison **insensible à la casse** — les
   labels s'appellent `Feature` / `Task`). Retenir leurs **UUID** pour la session. **Ne pas les créer**
   (ils préexistent dans l'espace de travail). Si l'un manque → le dire en clair et proposer soit de le
-  créer (`create_issue_label`, best-effort), soit de basculer en mode brouillon. Détails :
+  créer (`create_issue_label`, best-effort), soit de l'omettre. Détails :
   `references/linear-guide.md`.
 
 ## Étape 3 — Rattraper le label `Feature` sur les tickets de feature (additif)
@@ -102,9 +102,8 @@ Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
 `issue_id` n'est **pas recréée**.
 
 ## Vérification avant de conclure
-- Chaque feature avec un `tasks.md` a **un sous-ticket par phase** (ou une décision `skipped`, ou un
-  brouillon si MCP absent) ; chaque sous-ticket porte le label `Task` et pointe (`parentId`) vers son
-  ticket `Feature`.
+- Chaque feature avec un `tasks.md` a **un sous-ticket par phase** (ou une décision `skipped`) ;
+  chaque sous-ticket porte le label `Task` et pointe (`parentId`) vers son ticket `Feature`.
 - Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/.factory/manifest.json`.
 - Le bloc `linear` du manifeste **reparse sans erreur** ; restitution **en prose** (« j'ai créé N
   sous-tickets de phase sous M features »), manifeste mis à jour **en silence**.

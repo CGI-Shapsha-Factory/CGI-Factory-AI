@@ -71,7 +71,7 @@ Règles transverses :
 
 **Écrire les tests EN MÊME TEMPS que le code.** Dès qu'une fonction est créée, son test est écrit dans
 le même changement — aucune source ne part sans son test. (Appliqué par des garde-fous déterministes :
-hooks Claude Code + pre-commit + un check CI diff-coverage requis — voir la constitution du projet.)
+hooks Claude Code + pre-commit — voir la constitution du projet.)
 
 **Tests unitaires — un par règle métier.** Chaque règle métier implémentée par une fonction a un test
 unitaire couvrant **le cas passant, le(s) cas d'échec et les cas limites** (valeurs aux bornes, entrées

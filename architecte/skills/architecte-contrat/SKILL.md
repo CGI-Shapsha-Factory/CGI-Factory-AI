@@ -16,7 +16,7 @@ sans l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-init`.
 ## Entrées (lues depuis le cadrage)
 `cadrage-out/` : `project-frame.md`, `product-brief.md`, `glossaire.md`,
 `spec-index.md` (use cases + walking skeleton candidat + couverture), les briefs sous
-`cadrage-out/features-fonctionnels-brief/*.brief.md`. Conventions d'interaction :
+`cadrage-out/features-fonctionnels-brief/*.md`. Conventions d'interaction :
 `references/interactive-loop.md` et `references/ux-conventions.md`.
 
 > **Règles transverses (toutes les étapes).** Restituer **en prose**, jamais en
@@ -50,7 +50,7 @@ synthétiser leurs retours. Lots :
 2. **Domaine & découpage** — `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
    `cadrage-out/coupling-map.md`. Extraire : entités/langage, use cases + frontières,
    walking skeleton candidat, couplages/dépendances.
-3. **Briefs** — `cadrage-out/features-fonctionnels-brief/*.brief.md`. Extraire, par feature :
+3. **Briefs** — `cadrage-out/features-fonctionnels-brief/*.md`. Extraire, par feature :
    user stories, critères d'acceptation/succès, contraintes héritées.
 
 *(Garde simple : s'il n'y a quasiment rien à lire, un seul lecteur suffit ; au-delà,
@@ -250,8 +250,10 @@ Confirmer en clair les fichiers créés. Mettre à jour le manifeste **en silenc
 Se contenter de **vérifier** qu'ils sont bien là (manifeste `test_enforcement: true` + `branch_protection`)
 et que la **stratégie de test** de `standards.md` (Étape 4) reste cohérente avec ce qui est enforced. Si
 l'enforcement manque (init d'une version antérieure), le reposer via les deux scripts du catalogue
-`references/enforcement/` (`install_test_hooks.py`, `install_branch_protection.py`). *(Le backstop non
-contournable — un check CI diff-coverage requis — est produit par l'assembleur dans le paquet de handoff.)*
+`references/enforcement/` (`install_test_hooks.py`, `install_branch_protection.py`). *(L'enforcement est
+**au moment du dev** (hooks `PostToolUse` + pre-commit), contournable avec `--no-verify` ; la seule
+barrière non contournable multi-personnes serait un **ruleset serveur GitHub** — à la charge de
+l'équipe, **hors périmètre** de la Factory qui ne produit aucune CI.)*
 
 ## Résolution des points avant de conclure
 Avant de terminer, **balayer tous les fichiers `architecte-out/`** : pour **chaque**

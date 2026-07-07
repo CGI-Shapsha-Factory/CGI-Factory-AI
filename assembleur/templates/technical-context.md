@@ -9,7 +9,7 @@
 - **Stockage** : [base de données / fichiers / N/A]
 - **Tests** : [framework par langage] — **écrits en même temps que le code** ; unitaires par règle
   métier (cas passant/échec/limite) ; intégration API/front/batch avec dépendances **mockées** ;
-  garde-fous hooks + pre-commit + **CI diff-coverage requis**
+  garde-fous hooks + pre-commit
 - **Plateforme cible** : [OS / runtime / cloud]
 - **Type de projet** : [web / CLI / service / lib…]
 - **Objectifs de performance** : [cibles chiffrées, ex. p95 < X ms à N utilisateurs]

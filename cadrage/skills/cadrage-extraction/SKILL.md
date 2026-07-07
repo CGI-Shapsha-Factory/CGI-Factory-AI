@@ -30,8 +30,13 @@ accepter **un seul chemin de fichier**, **plusieurs chemins**, **ou un dossier**
 
 Les chemins peuvent être **passés en argument** à l'invocation
 (`/cadrage:cadrage-extraction <chemins>` → disponibles via `$ARGUMENTS`) **ou** déclarés
-dans le chat. Si `$ARGUMENTS` est non vide, l'utiliser comme sources ; s'il est vide et
-qu'aucune source n'est déclarée, **demander les sources** (ne rien inventer).
+dans le chat. Si `$ARGUMENTS` est non vide, l'utiliser comme sources.
+
+**Emplacement central par défaut** : `cadrage-out/source-contexte/` (créé par `cadrage-init`).
+Si aucune source n'est passée en argument ni déclarée dans le chat, **regarder d'abord dans
+`cadrage-out/source-contexte/`** et ingérer les fichiers de format supporté qui s'y trouvent.
+Ce dossier est **facultatif** : s'il est vide (ou absent), continuer normalement en demandant
+les sources — il n'est **jamais** obligatoire ni une porte de validation.
 
 - **Pages Notion** (hubs réunion, transcripts) — via les outils Notion
   disponibles (`notion-fetch`, `notion-search`).
@@ -59,10 +64,13 @@ poser une question en clair.
    d'abord initialiser le workspace (`cadrage-init`) et s'arrêter là.
 2. Recueille les sources que l'utilisateur déclare (id de page Notion, chemin de
    fichier, plusieurs chemins, ou un dossier). Si l'entrée est un dossier, lister
-   et ingérer tous les fichiers de format supporté qu'il contient. Enregistre
-   chaque source dans `sources[]` avec `type`, `ref`, `ingested_at`.
-3. Si aucune source n'est déclarée : demander en clair au moins une source.
-   N'invente pas de matière.
+   et ingérer tous les fichiers de format supporté qu'il contient. **À défaut de source
+   déclarée, regarder dans `cadrage-out/source-contexte/`** et ingérer les fichiers
+   supportés qui s'y trouvent. Enregistre chaque source dans `sources[]` avec `type`,
+   `ref`, `ingested_at`.
+3. Si aucune source n'est déclarée **et** que `cadrage-out/source-contexte/` est vide ou
+   absent : demander en clair au moins une source. N'invente pas de matière. (Le dossier
+   `source-contexte/` reste facultatif — son absence ne bloque jamais à elle seule.)
 
 ## Identité du projet
 

@@ -47,8 +47,11 @@ Garde-fou git **pur (git + Python, sans dépendance)** qui applique la règle «
    Actif dès que le fichier `.claude/settings.json` est présent.
 2. **Pre-commit git** (`lefthook install`) : rejette un commit ajoutant de la source sans test.
    Contournable avec `--no-verify`.
-3. **CI diff-coverage requis** (produit par l'**assembleur** dans le paquet) : **la seule couche non
-   contournable** — à poser comme *required status check* sur la branche.
+
+**Note honnête** : ces deux couches sont **au moment du dev** et donc **contournables** (`--no-verify`,
+autre clone). La seule couche **non contournable** multi-personnes serait un **ruleset serveur GitHub**
+(require PR + review + check, block force-push/delete) — **à la charge de l'équipe** et **hors périmètre**
+de la Factory, qui **ne produit aucune CI**.
 
 ## Langages couverts
 Python, TS/JS(x), Go, C#, Java. Correspondance test : `test_x.py`/`x_test.py`, `x.test.ts`/`x.spec.ts`,

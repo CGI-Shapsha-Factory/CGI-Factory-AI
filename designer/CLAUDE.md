@@ -61,7 +61,7 @@ retours structurés complets + passe de complétude) pour pré-remplir la checkl
 1. **Prompt Claude Design** (`designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md`, **fichier plat**, **corps seul prêt à coller**) — fait naître le design system.
 2. **Rapport de couverture** (`designer-out/coverage-report.md`) — la trace de la rigueur.
 3. **Handoff design** (`designer-out/design-guidelines.md`) — réf. du système synchronisé +
-   guidelines, consommé par l'Assembleur (qui grave la règle « tout écran dérive de l'export committé » en constitution/claude.md/CI).
+   guidelines, consommé par l'Assembleur (qui grave la règle « tout écran dérive de l'export committé » en constitution/claude.md).
 
 ## Portes humaines (2, jamais automatisées)
 1. **Arbitrage des choix d'expérience** (pendant l'atelier) — `coverage_sufficient`.

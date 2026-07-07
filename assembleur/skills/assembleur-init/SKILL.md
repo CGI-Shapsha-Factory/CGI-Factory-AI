@@ -39,7 +39,7 @@ Après le setup, **vérifier l'état des 3 dossiers de sortie amont** — prése
 l'assembleur) — puis le **signaler** (sans bloquer) :
 - **cadrage** : `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`,
   `cadrage-out/spec-index.md`, et **au moins un** brief sous
-  `cadrage-out/features-fonctionnels-brief/*.brief.md`.
+  `cadrage-out/features-fonctionnels-brief/*.md`.
 - **architecte** : `architecte-out/tech-stack.md`, `architecte-out/components.md`,
   `architecte-out/design-impact.md`, et le dossier `architecte-out/decisions/`.
 - **designer** : `designer-out/design-guidelines.md`.
@@ -59,7 +59,7 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
    le plugin `templates/` : `pre-constitution.md`, `spec-seed.md`, `feature-map.md`,
    `technical-context.md`, `project-claude-md.md`, `memory-index.md`, `memory-domain.md`,
    `memory-architecture.md`, `memory-design.md`, `memory-features.md`,
-   `coherence-report.md`, `attack-plan.md`, `ci-tests.yml`, `init-cowork.md`.
+   `coherence-report.md`, `attack-plan.md`, `init-cowork.md`.
 2. **Git-ignore `.factory/`** : s'assurer que le `.gitignore` du dossier courant contient
    la ligne `.factory/` (le créer si absent ; ne pas dupliquer). Tout `.factory/` est local,
    non versionné.
@@ -96,8 +96,8 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
   flag de validation lu ni exigé.
 - **Aucun hook à poser.** L'assembleur n'a **pas de hook ni d'enforcement propre** à installer :
   l'enforcement (hook de test `PostToolUse` + protection de branche `SessionStart`/`.githooks/`)
-  est posé **en amont par `architecte-init`** et déjà committé dans le repo ; l'assembleur ne
-  fait que **livrer le backstop CI** (`ci/tests.yml`) **dans le paquet** (posé par l'équipe).
+  est posé **en amont par `architecte-init`** et déjà committé dans le repo ; l'assembleur n'a
+  donc **rien à poser** de ce côté.
 - **Paquet seul.** Aucun repo cible ; tout ira dans `assembleur-out/`.
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 

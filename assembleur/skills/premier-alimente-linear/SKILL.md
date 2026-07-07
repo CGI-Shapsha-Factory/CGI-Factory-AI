@@ -27,7 +27,7 @@ propre à la Factory est le bloc `linear` du manifeste. La création passe par l
 ## Pré-requis (vérification silencieuse)
 Lire `.factory/manifest.json` **sans l'annoncer** :
 - la convergence a tourné et la **cohérence est validée**, et le paquet est présent
-  (`assembleur-out/feature-map.md` + au moins une graine `assembleur-out/features/*.spec-seed.md`) ;
+  (`assembleur-out/feature-map.md` + au moins une graine `assembleur-out/features/*.md`) ;
 - sinon → le dire en clair et orienter vers `/assembleur:assembleur-convergence` :
   > « Les tickets ne peuvent pas être créés : il faut d'abord la convergence terminée et la
   > cohérence validée (le paquet de features approuvées). »
@@ -38,14 +38,14 @@ Le registre des features est `architecture.feature_sequence` (`{id, ucs, name}` 
 ## Étape 1 — Détecter Linear (MCP linear-prism)
 Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-guide.md`).
 - Disponible → continuer.
-- Indisponible → **ne pas bloquer** : afficher les **instructions d'installation** (section
-  « Installation du plugin linear-prism » de `references/linear-guide.md` : marketplace, `/plugin
-  install`, redémarrage, `/mcp`), et **proposer le mode brouillon** — préparer les tickets dans
-  `assembleur-out/linear-drafts.md` (titre + description + checklist en cases Markdown) à créer plus tard.
+- Indisponible → **ne rien créer** : refuser en clair (« Je ne peux pas créer de tickets Linear :
+  le MCP `linear-prism` n'est pas disponible. ») et afficher les **instructions d'installation**
+  (section « Installation du plugin linear-prism » de `references/linear-guide.md` : marketplace,
+  `/plugin install`, redémarrage, `/mcp`). Installer puis **relancer** une fois authentifié.
 
 ## Étape 2 — Charger et présenter les features (tableau de revue)
 Lire `architecture.feature_sequence`, `assembleur-out/feature-map.md` (ordre, couplage, **Dépend
-de**, parallélisable) et chaque graine `assembleur-out/features/<id>-*.spec-seed.md` (User Stories,
+de**, parallélisable) et chaque graine `assembleur-out/features/<id>-*.md` (User Stories,
 `FR-xxx`, `SC-xxx`, cas limites). Afficher **un tableau de revue unique** (c'est l'exception au
 « pas de tableau » — une revue, comme `feature-map.md`) :
 
@@ -88,8 +88,8 @@ Pour **chaque** feature retenue, **dans l'ordre** :
 **Idempotence** : une feature déjà consignée avec un `issue_id` n'est **pas recréée**.
 
 ## Vérification avant de conclure
-- Chaque feature approuvée a **son ticket** (ou une décision `skipped`/`merged`, ou un brouillon si
-  MCP absent) ; les grosses features ont leur **liste de contrôle** dans la description ; les **dépendances** sont posées.
+- Chaque feature approuvée a **son ticket** (ou une décision `skipped`/`merged`) ; les grosses
+  features ont leur **liste de contrôle** dans la description ; les **dépendances** sont posées.
 - Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/.factory/manifest.json`.
 - Le bloc `linear` du manifeste **reparse sans erreur** ; restitution **en prose** (« j'ai créé N
   tickets, un par feature »), manifeste mis à jour **en silence**.

@@ -25,7 +25,7 @@ d'agir et contrôle sa sortie avant d'écrire le manifeste — sans jamais expos
 
 | # | Skill | Rôle | Pré-requis |
 |---|-------|------|----------------|
-| 0 | `cadrage-init` | Amorce `.factory/` (manifeste + gabarits) + `cadrage-out/` + `prompts/cadrage/` | aucune (projet vierge) |
+| 0 | `cadrage-init` | Amorce `.factory/` (manifeste + gabarits) + `cadrage-out/` + `cadrage-out/prompts/` | aucune (projet vierge) |
 | 1 | `cadrage-extraction` | Matière brute → `capture-brute.md` (contenu, sans horodatage ni src) + **passe découverte** (13 questions, interactif) → `project-frame.md` | manifeste existe + une source déclarée |
 | 2 | `cadrage-vision` | Capture → `product-brief.md` (le quoi, le pourquoi) | capture_brute existe |
 | 3 | `cadrage-glossaire` | Construit le langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes), validé en bloc | capture_brute existe |
@@ -132,14 +132,15 @@ le valide, l'architecte puis l'assembleur le reprennent. Il doit être auto-port
 ```
 .factory/                          # caché — la mécanique interne
 ├── manifest.json                  # état machine du projet
-└── templates/                     # copies des gabarits installées dans le projet
+└── cadrage/                       # gabarits FR du cadrage (copies projet)
 cadrage-out/                       # documents générés par le cadrage (à la racine)
+├── source-contexte/               # matière brute déposée par l'utilisateur (facultatif)
 ├── capture-brute, project-frame, product-brief, glossaire,
 │   spec-index, coupling-map, completude-report
-└── features-fonctionnels-brief/   # un brief par feature (<feature>.brief.md)
-prompts/cadrage/                   # prompts générés, en <NNN>-<JJ-MM>-<nom>.md (fichiers plats)
+└── features-fonctionnels-brief/   # un brief par feature (<feature>.md)
+cadrage-out/prompts/               # prompts générés, en <NNN>-<JJ-MM>-<nom>.md (fichiers plats)
 ```
 `cadrage-init` **ne demande aucun nom** ; c'est `cadrage-extraction` qui demande le **nom du projet** (le nom du client n'est jamais collecté).
-Le plugin est l'outil ; `.factory/`, `cadrage-out/` et `prompts/cadrage/` portent l'état
+Le plugin est l'outil ; `.factory/`, `cadrage-out/` et `cadrage-out/prompts/` portent l'état
 et les livrables d'UN projet client. La **constitution finale** convergée est produite
 plus tard par l'assembleur, pas ici.

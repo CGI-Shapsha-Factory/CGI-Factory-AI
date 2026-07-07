@@ -23,7 +23,7 @@ import json
 import sys
 
 # statuts consideres comme "traites" sans exiger d'identifiant Linear.
-NON_CREATED_STATUSES = {"skipped", "merged", "draft"}
+NON_CREATED_STATUSES = {"skipped", "merged"}
 
 
 def main(argv):

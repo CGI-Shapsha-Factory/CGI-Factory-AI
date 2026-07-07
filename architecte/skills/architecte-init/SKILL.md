@@ -37,7 +37,7 @@ soit là ou non. **Ne jamais refuser** au motif que le cadrage manque.
 Après le setup, **vérifier l'état du cadrage** dans le cwd (présence, par chemin, de) :
 `.factory/manifest.json` (verdict cadrage scellé), `cadrage-out/project-frame.md`,
 `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`, et les
-briefs `cadrage-out/features-fonctionnels-brief/*.brief.md`. Puis :
+briefs `cadrage-out/features-fonctionnels-brief/*.md`. Puis :
 
 - **Cadrage présent et prêt** → rien à signaler ; enchaîner sur `/architecte:architecte-contrat`.
 - **Cadrage absent ou incomplet** → **ne pas refuser**. Confirmer que le socle technique est posé,
@@ -131,8 +131,7 @@ l'utilisateur décider de la suite.
    - Adapter `python` → `py -3` si besoin. Confirmer en clair. *(Caveats honnêtes : la 1ʳᵉ session,
      Claude Code demande la confiance des hooks — un « oui » par personne, une fois ; un dev hors
      Claude Code ou un `--no-verify` contourne ; la seule barrière non contournable multi-personnes est
-     un **ruleset serveur GitHub** + check CI ; le backstop CI diff-coverage requis est produit par
-     l'assembleur.)*
+     un **ruleset serveur GitHub** — à la charge de l'équipe, hors périmètre de la Factory.)*
 7. **Git-ignore `.factory/`** : s'assurer que le `.gitignore` du dossier courant contient la ligne
    `.factory/` (le créer si absent ; ne pas dupliquer). Tout `.factory/` est local, non versionné.
 

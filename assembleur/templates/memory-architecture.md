@@ -17,7 +17,7 @@
 
 ## Tests
 [Stratégie : frameworks par langage ; unitaires par règle métier (passant/échec/limite) ; intégration
-avec dépendances mockées ; **tests écrits avec le code** ; garde-fous hooks + pre-commit + CI diff-coverage.]
+avec dépendances mockées ; **tests écrits avec le code** ; garde-fous hooks + pre-commit.]
 
 ## Cibles de qualité
 [Les attributs de qualité prioritaires avec leur cible chiffrée.]

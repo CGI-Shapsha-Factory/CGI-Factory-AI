@@ -145,7 +145,7 @@ Read-modify-write puis revalidation JSON :
 Le dashboard Definition of Ready (jauge de complétude, statut par critère,
 verdict maître, ce qui manque) se génère dans Claude Design. Le prompt prêt à
 coller est dans `references/dashboard-dor-prompt.md` (gabarit statique). Le prompt
-utilisé est sauvegardé sous `prompts/cadrage/<NNN>-<JJ-MM>-dashboard-dor.md` et tracé
+utilisé est sauvegardé sous `cadrage-out/prompts/<NNN>-<JJ-MM>-dashboard-dor.md` et tracé
 dans `prompts[]`. Le fichier sauvegardé ne contient **que le corps du prompt** (le
 bloc de code du gabarit), sans titre/date/mode/version (cf. `references/ux-conventions.md`).
 

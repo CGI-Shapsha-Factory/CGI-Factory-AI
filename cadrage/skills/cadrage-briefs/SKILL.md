@@ -59,7 +59,7 @@ statut de gate.
 ## Procédure
 
 Pour **chaque feature** du spec index arbitré, produire
-`cadrage-out/features-fonctionnels-brief/<feature>.brief.md` aux **10 sections du
+`cadrage-out/features-fonctionnels-brief/<feature>.md` aux **10 sections du
 contrat central** (`<feature>` = l'intitulé métier en clair, sans préfixe codé) :
 
 1. **Narratif** — 2 à 4 phrases héritées de la vision. Problème résolu, valeur.

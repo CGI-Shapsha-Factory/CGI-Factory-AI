@@ -35,7 +35,7 @@ on construit » à venir — le PO lira l'état vivant lui-même via les liens.
 ## Pré-requis (vérification silencieuse)
 Lire `.factory/manifest.json` **sans l'annoncer** :
 - la convergence a tourné et le paquet est présent (`assembleur-out/feature-map.md` + au moins une
-  graine `assembleur-out/features/*.spec-seed.md`) ;
+  graine `assembleur-out/features/*.md`) ;
 - sinon → le dire en clair et orienter vers `/assembleur:assembleur-convergence` :
   > « Le contexte de supervision ne peut pas être produit : il faut d'abord la convergence (le
   > paquet de features approuvées). »

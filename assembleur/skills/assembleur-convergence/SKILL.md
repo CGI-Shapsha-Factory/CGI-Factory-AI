@@ -33,7 +33,7 @@ sous-agents lecteurs (`agentType: "contract-reader"`), **un par lot**, chacun av
 parallèles) puis synthétiser leurs retours :
 
 1. **Fonctionnel** — lire `cadrage-out/product-brief.md`, `cadrage-out/project-frame.md`,
-   `cadrage-out/features-fonctionnels-brief/*.brief.md`. Extraire : identité produit
+   `cadrage-out/features-fonctionnels-brief/*.md`. Extraire : identité produit
    (problème + objectif), hors-périmètre global, contraintes (légales/sécurité/données),
    et **par feature** : user stories, critères d'acceptation (Given/When/Then), critères
    de succès mesurables.
@@ -73,9 +73,9 @@ un trou ou une contradiction apparaît. Ne synthétiser que sur des retours comp
   walking-skeleton-first ; **design § non négociable** : tout écran dérive du design
   system synchronisé, aucun style en dur, chaque écran couvre ses états, les erreurs
   suivent le contrat, accessibilité au niveau visé ; **tests : écrits avec le code, unitaires
-  passant/échec/limite, intégration mockée, backstop CI diff-coverage**) + gouvernance + footer
+  passant/échec/limite, intégration mockée**) + gouvernance + footer
   version/ratification. **Prêt pour `/speckit.constitution`, sans contexte supplémentaire.**
-- **`features/<id>-<feature>.spec-seed.md`** (gabarit `spec-seed.md`), une par feature de
+- **`features/<id>-<feature>.md`** (gabarit `spec-seed.md`), une par feature de
   la séquence (walking skeleton d'abord) — **mappe le `spec.md` SpecKit** : User Scenarios
   (P1/P2/P3, Given/When/Then), Functional Requirements (FR-xxx), Key Entities (← domaine),
   Success Criteria (SC-xxx mesurables ← cibles qualité + a11y), Assumptions, + annexes face
@@ -85,10 +85,6 @@ un trou ou une contradiction apparaît. Ne synthétiser que sur des retours comp
   SpecKit doit connaître pour ordonner les `/speckit.specify`.
 - **`technical-context.md`** (gabarit `technical-context.md`) — le **Technical Context**
   projet (mappe la section du `plan.md` SpecKit).
-- **`ci/tests.yml`** (gabarit `ci-tests.yml`) — workflow CI lançant les tests + un **gate
-  diff-coverage requis** (couverture des lignes modifiées) : le **backstop non contournable** de la
-  règle « tests écrits avec le code ». Produit **dans le paquet** ; l'équipe le pose comme *required
-  status check* (l'assembleur n'écrit jamais dans le repo cible).
 - **`memory/`** — contexte durable (convention `MEMORY.md`) : `MEMORY.md` (index concis,
   pointeurs), `domain.md` (langage ubiquitaire + entités — **remplace l'ancien GLOSSARY**),
   `architecture.md` (stack, composants, digest ADR, conventions, cibles qualité),
@@ -130,7 +126,7 @@ concerné. **Aucun fichier annexe.** **Ne pas conclure** tant qu'un marqueur sub
 ## Vérification avant de conclure
 - Le paquet est complet dans `assembleur-out/` : `pre-constitution.md`, `features/` (≥1
   graine, une par feature de la séquence), `feature-map.md`, `technical-context.md`,
-  `memory/` (MEMORY.md + thématiques), `CLAUDE.md`, `ci/tests.yml`, `coherence-report.md`, `attack-plan.md`.
+  `memory/` (MEMORY.md + thématiques), `CLAUDE.md`, `coherence-report.md`, `attack-plan.md`.
 - **Aucun marqueur résiduel**, aucune `(src:)`, **rien écrit hors `assembleur-out/`**.
 - Mettre à jour le manifeste **en silence**.
 

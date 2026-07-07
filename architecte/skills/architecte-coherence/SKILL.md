@@ -18,7 +18,7 @@ l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-contrat`.
 Les artefacts d'architecture dans `architecte-out/` : `drivers-quality.md`,
 `components.md`, `tech-stack.md`, `standards.md`, `decisions/ADR-*.md`,
 `diagrams.md`, `risks.md`, `design-impact.md` ; le dossier `conventions/` ; les
-briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md` ; le manifeste.
+briefs sous `cadrage-out/features-fonctionnels-brief/*.md` ; le manifeste.
 
 ## Contrôles de cohérence — stricts et adversariaux
 Ne **pas** se contenter de vérifier la présence. **Challenger** chaque contrat : ce

@@ -36,11 +36,11 @@ Lire `.factory/manifest.json` **sans l'annoncer** : le bloc `linear` liste les t
 ## Étape 1 — Détecter Linear (MCP linear-prism)
 Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-guide.md`).
 - **Disponible** → continuer.
-- **Indisponible** → **ne pas bloquer** : afficher les **instructions d'installation** (section
-  « Installation du plugin linear-prism » de `references/linear-guide.md` : ajout de la marketplace,
-  `/plugin install`, redémarrage, `/mcp` pour l'authentification OAuth). Expliquer en clair qu'une
-  **mise à jour a besoin du MCP** (contrairement à la création, il n'y a pas de mode brouillon utile
-  ici) : installer puis **relancer** la même phrase.
+- **Indisponible** → **ne rien mettre à jour** : refuser en clair (« Je ne peux pas mettre à jour
+  de ticket Linear : le MCP `linear-prism` n'est pas disponible. ») et afficher les **instructions
+  d'installation** (section « Installation du plugin linear-prism » de `references/linear-guide.md` :
+  ajout de la marketplace, `/plugin install`, redémarrage, `/mcp` pour l'authentification OAuth).
+  Installer puis **relancer** la même phrase.
 
 ## Étape 2 — Lire l'indice (le message de l'utilisateur)
 Le **message qui déclenche le skill** (et, le cas échéant, les arguments passés à

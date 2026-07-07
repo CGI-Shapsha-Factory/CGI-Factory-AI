@@ -8,9 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 (fonctionnel = cadrage, technique = architecte, design = designer), les **converge**, et
 **produit un paquet de handoff** que l'équipe donne à SpecKit. **Il n'écrit jamais dans un
 repo cible** : tout sort dans **`assembleur-out/`**. Pas de constitution dans `.specify/`,
-pas de `specs/NNN/spec.md`, pas de GLOSSARY.md ; le seul CI produit est un
-**garde-fou de test** (`ci/tests.yml`) livré **dans le paquet** (jamais posé dans le repo cible — c'est
-l'équipe qui le pose en *required status check*). Ce sont des **skills Markdown** ; pas de build/test.
+pas de `specs/NNN/spec.md`, pas de GLOSSARY.md. Ce sont des **skills Markdown** ; pas de build/test.
 **Trois exceptions bornées** à « ne rien écrire hors du paquet » : `premier-alimente-linear` **et
 `update-issue-linear`** créent et mettent à jour des tickets **Linear** (système externe, pas le repo
 cible) ; `install-speckit` invoque `specify init` (c'est SpecKit qui génère `.specify/`) ; et
@@ -38,14 +36,16 @@ le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
   + `feature:<id>` clé de jointure ; via le MCP **`linear-prism`**, confirmation ticket par ticket,
   **liste de contrôle** dans la description pour les grosses features, `blockedBy` pour les
   dépendances), bloc manifeste `linear`. **Exception bornée** à « pas de Linear » (Linear est
-  externe). Repli **brouillon** (`assembleur-out/linear-drafts.md`) si le MCP est absent. Voir
-  `references/linear-guide.md`.
+  externe). Si le MCP `linear-prism` est **absent**, **ne rien créer** : refuser en clair et
+  afficher les **instructions d'installation** (section « Installation du plugin linear-prism »).
+  Voir `references/linear-guide.md`.
 - `creation-task-linear` — **sous-tickets par phase** : à lancer **après `/speckit.tasks`** (quand
   `specs/<feature>/tasks.md` existe). Pour chaque feature, parse les phases (`## Phase N:`) de son
   `tasks.md` et crée **un sous-ticket Linear par phase** (label **`Task`**, `parentId` = ticket
   `Feature`, **titre descriptif** généré — jamais le nom générique brut « Setup »), après
   confirmation. Labels `Feature`/`Task` **résolus par nom** (`list_issue_labels`), jamais créés. Bloc
-  manifeste `linear.issues[].sub_issues[]`. Repli **brouillon** si le MCP est absent. Voir
+  manifeste `linear.issues[].sub_issues[]`. Si le MCP `linear-prism` est **absent**, **ne rien
+  créer** : refuser en clair et afficher les **instructions d'installation**. Voir
   `references/linear-guide.md`.
 - `update-issue-linear` — **mise à jour Linear** : à partir du message de l'utilisateur (« j'ai
   terminé la tâche … »), retrouve le ticket (par nom, ou **déduit des derniers changements de code**)
@@ -70,11 +70,10 @@ le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
 ```
 assembleur-out/
 ├── pre-constitution.md        # principes non négociables, format constitution.md (→ /speckit.constitution)
-├── features/NNN-…spec-seed.md  # une graine par feature, format spec.md (→ /speckit.specify)
+├── features/NNN-….md          # une graine par feature, format spec.md (→ /speckit.specify)
 ├── feature-map.md             # séquence + couplage/dépendances + walking skeleton
 ├── technical-context.md       # Technical Context (→ /speckit.plan)
 ├── CLAUDE.md                  # CLAUDE.md projet (< 200 lignes, @import memory/MEMORY.md — jamais backtiqué)
-├── ci/tests.yml               # backstop CI diff-coverage (required status check ; non contournable)
 ├── memory/{MEMORY,domain,architecture,design,features}.md
 ├── coherence-report.md
 └── attack-plan.md
@@ -101,12 +100,13 @@ Voir `references/speckit-mapping.md`. **Clé de jointure = le use case** (regist
 case** ; design **global** (export committé du design system + guidelines). La pré-constitution
 converge les **principes non négociables** des 3 contrats (dont la règle design : tout écran
 dérive de l'export committé du design system, aucune valeur de style en dur, états couverts, contrat d'erreur ;
-et le **principe de test** : tests écrits avec le code, intégration mockée, **backstop CI diff-coverage requis**).
+et le **principe de test** : tests écrits avec le code, intégration mockée).
 
 ## Conventions partagées
 `references/interactive-loop.md`, `references/ux-conventions.md`, `references/speckit-mapping.md`,
 `references/linear-guide.md` (usage du MCP linear-prism : détection, installation, `save_issue`
-création **et mise à jour d'état**, `list_issue_statuses`, `blockedBy`, mode brouillon).
+création **et mise à jour d'état**, `list_issue_statuses`, `blockedBy`, refus + instructions
+d'installation si le MCP est absent).
 Garde-fous déterministes : `scripts/check_assembly.py` (présence du paquet + aucun marqueur résiduel +
 couverture des features), `scripts/check_linear.py` (une feature = un ticket ou une décision
 explicite, tickets créés porteurs d'identifiant) et `scripts/check_cowork.py` (bloc `cowork` +

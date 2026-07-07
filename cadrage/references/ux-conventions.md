@@ -54,7 +54,7 @@ humaine). À l'oral on dit « à confirmer », « remis en cause », etc. — ja
 anglaises (`[TBD]`, `[TO CONFIRM]`…).
 
 ## 3bis. Fichiers prompt sauvegardés = corps seul, prêt à coller
-Tout prompt écrit sous `prompts/cadrage/….md` contient **uniquement le prompt
+Tout prompt écrit sous `cadrage-out/prompts/….md` contient **uniquement le prompt
 prêt à coller** dans Claude Design. **Interdit** dans le fichier : titre (`# Prompt
 Claude Design — …`), ligne `Date : … | Mode : … | Version : …`, `---` d'en-tête, ou
 toute autre métadonnée. La métadonnée (mode, version, date, sujet) vit dans l'entrée

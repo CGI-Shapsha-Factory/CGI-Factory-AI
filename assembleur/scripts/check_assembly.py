@@ -66,9 +66,9 @@ def main(argv):
         if not os.path.isfile(p):
             problems.append(f"fichier du paquet manquant: {label}")
 
-    seeds = glob.glob(rel("features", "*.spec-seed.md"))
+    seeds = glob.glob(rel("features", "*.md"))
     if not seeds:
-        problems.append("aucune graine de feature dans features/ (*.spec-seed.md)")
+        problems.append("aucune graine de feature dans features/ (*.md)")
 
     # 2. Aucun marqueur residuel dans assembleur-out/.
     for md in glob.glob(os.path.join(out, "**", "*.md"), recursive=True):

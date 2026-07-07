@@ -3,16 +3,16 @@
 Référence d'usage pour `premier-alimente-linear` (création) et `update-issue-linear` (mise à jour). Le
 dialogue passe par le **MCP du plugin `linear-prism`** (serveur hébergé `https://mcp.linear.app/mcp`,
 authentifié en OAuth via `/mcp` — **aucune clé API** à gérer). Ce plugin est **externe à la Factory**
-(voir « Installation » ci-dessous) : les skills le détectent et, s'il est absent, la création bascule
-en **mode brouillon** (la mise à jour, elle, a besoin du MCP).
+(voir « Installation » ci-dessous) : les skills le détectent et, s'il est absent, **ne créent ni ne
+mettent à jour rien** — ils refusent et renvoient aux instructions d'installation.
 
 ## Détection (avant tout)
 Sonder `mcp__plugin_linear-prism_linear__list_teams`.
 - **Répond** (liste d'équipes) → le MCP est prêt, continuer.
-- **Échoue / indisponible** → dire en clair : « La création de tickets Linear a besoin du plugin
-  `linear-prism` et d'une authentification (`/mcp`). Installe-le puis relance — ou je te prépare
-  les tickets en **brouillon** (`assembleur-out/linear-drafts.md`) à coller à la main. » **Ne
-  jamais bloquer** : proposer le mode brouillon.
+- **Échoue / indisponible** → **ne rien créer ni mettre à jour**. Refuser en clair : « Je ne peux
+  pas créer/mettre à jour de tickets Linear : le MCP `linear-prism` n'est pas disponible. » Puis
+  renvoyer à la section « Installation du plugin linear-prism » ci-dessous (ajouter la marketplace,
+  installer, redémarrer, s'authentifier via `/mcp`), et relancer une fois prêt.
 
 ## Installation du plugin linear-prism (si le MCP est absent)
 `linear-prism` est un **plugin tiers** (externe à la Factory) qui **empaquette la configuration du
@@ -29,8 +29,8 @@ pas détecté, guider l'utilisateur pas-à-pas :
    le navigateur.
 
 Revalider ensuite avec la **détection** ci-dessus (`list_teams` répond). Tant que ce n'est pas fait,
-la **création** bascule en mode brouillon ; la **mise à jour** a besoin du MCP (relancer une fois
-installé).
+**ni la création ni la mise à jour** ne sont possibles : refuser et attendre l'installation
+(relancer une fois installé).
 
 ## Accès par clé API (Quark / environnement sans OAuth)
 Le serveur MCP Linear s'authentifie en **OAuth** (défaut, ci-dessus) **ou** par **clé API**. Dans un
@@ -62,7 +62,7 @@ reprend dans `init-cowork.md` (« Accès Linear pour Quark »).
 - **`title`** (obligatoire) — l'intitulé métier en clair (ex. `001 — Recherche Q&A sourcée`).
 - **`description`** — **Markdown** (newlines littéraux, pas d'échappement) : la description d'une
   ligne + un court contexte (parcours principal, critère de succès clé). Voir la face fonctionnelle
-  de la graine `assembleur-out/features/<id>-*.spec-seed.md`.
+  de la graine `assembleur-out/features/<id>-*.md`.
 - **`project`** — si retenu. **`state`** — Todo/unstarted si résolu.
 - **`labels`** — le label plat **`Feature`** (taxonomie) + `feature:<id>` (clé de jointure) +
   `walking-skeleton` (si la feature 001 / le walking skeleton). **Jamais de label `MVP`** —
@@ -131,7 +131,7 @@ Pour `update-issue-linear`. Un seul outil `save_issue` **crée ou met à jour** 
   passer la ligne `- [ ] …` visée à `- [x] …`, puis `save_issue({id, description: "<MAJ>"})`.
 - **Idempotence** : lire l'état courant (`get_issue`) **avant** d'écrire ; s'il est déjà celui visé,
   ne rien faire. Consigner le dernier état posé dans `linear.issues[]` via un champ **`workflow_state`**
-  (distinct de `status`, qui reste l'action Factory `created/skipped/merged/draft` — `check_linear.py`
+  (distinct de `status`, qui reste l'action Factory `created/skipped/merged` — `check_linear.py`
   n'y touche pas et ignore `workflow_state`).
 - **Pas de commentaire** par défaut (on ne change que l'état / la case). `save_comment({issueId, body})`
   existe mais n'est pas utilisé ici.
@@ -157,14 +157,6 @@ Bloc :
 }
 ```
 Statuts (ticket **et** sous-ticket) : `created` (posé, exige `issue_id`), `skipped` (écarté en
-session), `merged` (fusionné), `draft` (mode brouillon). `sub_issues[]` (posé par `creation-task-linear`)
+session), `merged` (fusionné). `sub_issues[]` (posé par `creation-task-linear`)
 : **une entrée par phase** du `tasks.md`, clé stable = `id` de feature + `phase`. Écriture
 **silencieuse** (read-modify-write + revalidation JSON), jamais narrée.
-
-## Mode brouillon (repli, MCP absent)
-Écrire `assembleur-out/linear-drafts.md` : une section par feature avec **titre**, **description
-(1 ligne)**, et — si volumineuse — la **checklist** en cases Markdown `- [ ]` (les futurs
-sous-tickets). L'équipe les crée ensuite à la main (ou relance quand `linear-prism` est prêt).
-Consigner ces features avec `status: "draft"` dans le manifeste. Pour `creation-task-linear`, ajouter
-sous chaque feature la **liste des phases** (titre descriptif + résumé d'une ligne), consignées en
-`sub_issues[]` avec `status: "draft"`.

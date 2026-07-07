@@ -40,7 +40,7 @@ TLS, replis mermaid-cli → npx → Kroki local), pré-provisionné par `archite
 
 ## Intégration cadrage (entrées) — lecture parallèle exhaustive
 Lit `cadrage-out/{project-frame, product-brief, glossaire, spec-index, coupling-map}.md` et les
-briefs sous `cadrage-out/features-fonctionnels-brief/*.brief.md`. **`architecte-contrat` lit le
+briefs sous `cadrage-out/features-fonctionnels-brief/*.md`. **`architecte-contrat` lit le
 cadrage en parallèle** (fan-out de sous-agents `architecte-reader`, partitionnés par préoccupation,
 retours structurés complets + passe de complétude) — pour maximiser l'exactitude et le temps mural,
 sans rien manquer. La table `references/question-map.md` indique ensuite où chaque réponse se trouve

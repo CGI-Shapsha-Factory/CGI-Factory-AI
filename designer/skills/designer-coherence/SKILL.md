@@ -61,8 +61,7 @@ travaille à plusieurs et ne partage pas l'accès aux comptes ; tout vit dans le
 Le contrat de design prêt à transmettre = la **source du design system validé** — l'**export committé** dans
 `designer-out/maquette-de-claude-design/` (repo auto-portable) — + les **guidelines** (règles d'états,
 patterns d'erreur, socle a11y). La phase design est **auto-portable** : tout vit dans le repo committé, aucun
-accès à un compte externe n'est requis. C'est ce que l'Assembleur grave dans la constitution / le `claude.md`
-/ la CI : **tout écran dérive de l'export committé du design system**, interdire les valeurs de style en dur,
+accès à un compte externe n'est requis. C'est ce que l'Assembleur grave dans la constitution / le `claude.md` : **tout écran dérive de l'export committé du design system**, interdire les valeurs de style en dur,
 contrôler les états et patterns d'erreur.
 
 ## Règles invariantes
