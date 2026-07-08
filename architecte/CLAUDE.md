@@ -98,5 +98,5 @@ exactes épinglées** pour chaque techno (jamais « latest ») ; **documents ver
 en session, en place, avant d'avancer ; **contenu seul** dans les artefacts (aucune `(src:)`, aucun
 horodatage **dans le corps**, aucun nom de personne ; le front-matter version/date est une
 métadonnée, pas de la provenance) ; **aucune notion de MVP** ; conventions = vrais fichiers ;
-restitutions en **prose** (pas de tableau), **noms en clair** (jamais `C1`/`UC1`/`P1`),
+restitutions en **prose** (pas de tableau — **sauf les composants, restitués en tableau clair `Composant` | `Rôle`**, cf. ux-conventions §4), **noms en clair** (jamais `C1`/`UC1`/`P1`),
 **manifeste mis à jour en silence** (jamais narré).

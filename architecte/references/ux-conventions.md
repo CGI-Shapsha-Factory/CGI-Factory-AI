@@ -52,9 +52,14 @@ d'abord la phase de cadrage. » Jamais « ⛔ cadrage_complete == false ».
   technique — jamais qui l'a dit ni quand.
 
 ## 4. Langage non technique, pas de tableau imposé
-Composants, drivers, stack, vérifications restitués en **prose claire** (valeur /
-usage). **Pas de tableau** de vérification, de synthèse ou de cohérence ; pas
-d'identifiant technique. Désigner chaque chose par son **nom métier**.
+Drivers, stack, vérifications restitués en **prose claire** (valeur / usage). **Pas de
+tableau** de vérification, de synthèse ou de cohérence ; pas d'identifiant technique.
+Désigner chaque chose par son **nom métier**.
+
+**Exception — les composants.** La liste des composants (Étape 2 du contrat) se restitue **en
+tableau clair** (deux colonnes : **`Composant`** = nom métier, **`Rôle`** = ce qu'il fait en une
+phrase), **jamais en texte brut** ni avec des codes `C1`/`C2`. Un tableau rend la liste bien plus
+lisible pour l'utilisateur que la prose.
 
 ## 5. Une ligne « étape suivante » à la fin de chaque skill
 Terminer chaque exécution par exactement une phrase :

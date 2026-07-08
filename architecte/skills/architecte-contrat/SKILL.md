@@ -89,10 +89,12 @@ TOUJOURS un composant Frontend/UI** (l'application qui rend les écrans) — com
 technique à part entière, au même titre que le back, les workers, la base. L'existence
 du plugin designer **ne dispense pas** de l'architecture front : le designer produit le
 design system **visuel**, pas le **composant technique** front (porté ici + sa stack à
-l'étape 3). **Restituer la liste en prose** (nom métier + rôle en une
-phrase) — **jamais de tableau, jamais de code `C1`/`C2`**. **Demander si ça convient
-ou s'il faut modifier** ; appliquer les retours (ajout/fusion/suppression) ; **boucler
-jusqu'à validation**. Puis écrire `architecte-out/components.md` (gabarit
+l'étape 3). **Restituer la liste sous forme de TABLEAU clair** — deux colonnes : **`Composant`**
+(nom métier) et **`Rôle`** (ce qu'il fait, en une phrase) ; **jamais de texte brut en liste**,
+**jamais de code `C1`/`C2`** ni d'identifiant technique. *(Exception assumée à la règle « pas de
+tableau » — cf. `references/ux-conventions.md` §4 : les composants se lisent bien mieux en tableau.)*
+**Demander si ça convient ou s'il faut modifier** ; appliquer les retours (ajout/fusion/suppression) ;
+**boucler jusqu'à validation**. Puis écrire `architecte-out/components.md` (gabarit
 `templates/components.md`). Mettre à jour le manifeste en silence.
 
 ### Étape 3 — Workflow stack technique (interactif)
