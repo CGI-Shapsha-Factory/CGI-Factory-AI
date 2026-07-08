@@ -124,7 +124,7 @@ def collect_messages(raw_lines):
 
 def load_feature_name(root, fid):
     try:
-        man = json.load(open(os.path.join(root, ".factory", "manifest.json"), encoding="utf-8"))
+        man = json.load(open(os.path.join(root, "cadrage-out", "manifest.json"), encoding="utf-8"))
         for it in (man.get("architecture", {}) or {}).get("feature_sequence", []) or []:
             if str(it.get("id")) == fid:
                 return it.get("name")

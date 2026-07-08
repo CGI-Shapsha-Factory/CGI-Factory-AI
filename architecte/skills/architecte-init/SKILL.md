@@ -133,11 +133,14 @@ l'utilisateur décider de la suite.
      lui-même — ce hook fait le pont. Best-effort et **non bloquant** : si `ruff` est absent, il
      l'indique et n'échoue pas. *(Portée actuelle : Python. Extensible à d'autres langages/formateurs.)*
    - **Protection de branche** :
-     `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_branch_protection.py" <racine>` — il
-     copie `.githooks/` (pur git+Python), pose `git config core.hooksPath .githooks` pour ce clone **et
-     fusionne un hook `SessionStart`** qui le réactive à chaque session (auto pour toute l'équipe) ;
-     il écrit `architecture.branch_protection` au manifeste. Refuse le push/commit direct sur
-     `main`/`master`.
+     `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_branch_protection.py" <racine>` — **si
+     le dossier n'est pas encore un dépôt git, il l'initialise** (`git init -b main` — branche `main`,
+     convention GitHub ; `git init` est non destructif) pour poser la protection **tout de suite**, sans
+     attendre un `git init` manuel. Puis il copie `.githooks/` (pur git+Python), pose `git config
+     core.hooksPath .githooks` pour ce clone **et fusionne un hook `SessionStart`** qui le réactive à
+     chaque session (auto pour toute l'équipe) ; il écrit `architecture.branch_protection` au manifeste.
+     Refuse le push/commit direct sur `main`/`master`. *(Non bloquant : si git lui-même est absent, il
+     l'indique et n'échoue pas.)*
    - Adapter `python` → `py -3` si besoin. Confirmer en clair. *(Caveats honnêtes : la 1ʳᵉ session,
      Claude Code demande la confiance des hooks — un « oui » par personne, une fois ; un dev hors
      Claude Code ou un `--no-verify` contourne ; la seule barrière non contournable multi-personnes est

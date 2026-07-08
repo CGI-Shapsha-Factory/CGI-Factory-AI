@@ -2,6 +2,8 @@
 """Installe la protection de branche LOCALE (garde-fous git) dans le repo cible.
 
 Idempotent. Modele : `install_test_hooks.py`. Etapes :
+  0. si le dossier n'est PAS un depot git, on l'INITIALISE (`git init -b main`, convention GitHub) —
+     la protection est ainsi posee meme sans depot prealable (non bloquant si git est absent) ;
   1. copie `.githooks/{branch_guard.py, pre-push, pre-commit, protected-branches?}` a la racine du
      depot git (dossier `.githooks/`, commite -> partage par l'equipe) ;
   2. rend `pre-push`/`pre-commit` executables (best-effort ; no-op sous Windows) ;
@@ -75,6 +77,7 @@ def main(argv):
         print(f"ERREUR: racine introuvable: {root}", file=sys.stderr)
         return 1
 
+    notes = []
     # Les hooks git ne fonctionnent qu'a la RACINE DU DEPOT git : `core.hooksPath` (meme relatif)
     # est resolu par git relativement au toplevel, pas au sous-dossier courant. Si le cwd est un
     # sous-dossier du depot, poser `.githooks/` dans le cwd serait IGNORE par git. On installe donc
@@ -86,14 +89,29 @@ def main(argv):
         ).stdout.strip()
         git_root = os.path.abspath(top) if top else root
     except (OSError, subprocess.CalledProcessError):
-        print("ATTENTION: pas un depot git — protection de branche non posee. "
-              "Initialise un depot (git init) puis relance.", file=sys.stderr)
-        return 0  # non bloquant : sans git, pas de protection possible
+        # Pas encore un depot git : on l'INITIALISE (branche `main`, convention GitHub — le remote
+        # sera un GitHub) pour poser la protection de branche tout de suite, sans attendre un
+        # `git init` manuel. `git init` est non destructif (n'ajoute qu'un `.git/`, ne touche aucun
+        # fichier). Non bloquant : si git lui-meme est absent, on saute en silence.
+        try:
+            try:
+                subprocess.run(["git", "init", "-b", "main", root],
+                               check=True, capture_output=True, text=True)
+            except subprocess.CalledProcessError:
+                # git < 2.28 (pas de `-b`) : init puis forcer la branche initiale a `main`.
+                subprocess.run(["git", "init", root], check=True, capture_output=True, text=True)
+                subprocess.run(["git", "-C", root, "symbolic-ref", "HEAD", "refs/heads/main"],
+                               check=True, capture_output=True, text=True)
+            git_root = root
+            notes.append("depot git initialise (branche main)")
+        except (OSError, subprocess.CalledProcessError) as exc:
+            print(f"ATTENTION: git indisponible ({exc}) — protection de branche non posee. "
+                  "Installe git puis relance.", file=sys.stderr)
+            return 0  # non bloquant : sans git installe, impossible
 
     src_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".githooks")
     dst_dir = os.path.join(git_root, ".githooks")
     os.makedirs(dst_dir, exist_ok=True)
-    notes = []
     if os.path.normcase(git_root) != os.path.normcase(root):
         notes.append(f"hooks poses a la racine du depot ({git_root}), pas dans le sous-dossier courant")
 
@@ -133,7 +151,7 @@ def main(argv):
     _install_session_hook(root, notes)
 
     # 5. Manifeste (best-effort, silencieux si absent).
-    manifest_path = os.path.join(root, ".factory", "manifest.json")
+    manifest_path = os.path.join(root, "cadrage-out", "manifest.json")
     manifest = _load_manifest(manifest_path)
     if manifest is not None:
         arch = manifest.setdefault("architecture", {})

@@ -257,7 +257,7 @@ def smoke(target):
 def write_manifest(target, block, no_manifest):
     if no_manifest:
         return
-    mpath = os.path.join(target, ".factory", "manifest.json")
+    mpath = os.path.join(target, "cadrage-out", "manifest.json")
     if not os.path.isfile(mpath):  # pas un workspace Factory -> on saute en silence
         return
     try:
