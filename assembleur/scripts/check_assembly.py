@@ -2,7 +2,7 @@
 """Garde-fou deterministe (sans IA) de la phase convergence (assembleur).
 
 L'assembleur produit un PAQUET de handoff dans `assembleur-out/` (il n'ecrit jamais dans un
-repo cible). Ce garde-fou lit le manifeste (.factory/manifest.json par defaut), en deduit la
+repo cible). Ce garde-fou lit le manifeste (cadrage-out/manifest.json par defaut), en deduit la
 racine du projet, et echoue si :
   - le bloc `assembly` est absent ;
   - un fichier du paquet manque (pre-constitution, >=1 graine de feature, feature-map,
@@ -29,7 +29,7 @@ MARKER_RE = re.compile(
 
 
 def main(argv):
-    path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
+    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)

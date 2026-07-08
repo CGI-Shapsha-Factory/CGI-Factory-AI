@@ -4,7 +4,7 @@
 Le plugin ne genere PAS le design system (il nait dans Claude Design, son export est committe dans
 designer-out/maquette-de-claude-design/). Ce garde-fou valide la COUVERTURE de l'atelier, pas des tokens.
 
-Lit le manifeste partage d'un projet (.factory/manifest.json par defaut) et echoue si :
+Lit le manifeste partage d'un projet (cadrage-out/manifest.json par defaut) et echoue si :
   - bloc `design` absent ;
   - checklist absente ou un bloc vide (foundation / experience / technical) ;
   - un item de checklist au statut `open` (couverture incomplete) ;
@@ -26,7 +26,7 @@ VALID_STATUS = {"open", "deduced", "decided", "sans_objet"}
 
 
 def main(argv):
-    path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
+    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)

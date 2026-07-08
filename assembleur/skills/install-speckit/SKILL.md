@@ -21,11 +21,11 @@ scripts, templates) et les commandes `/speckit.*` existent dans le repo.
 L'assembleur **n'écrit jamais lui-même** un fichier que SpecKit génère. Ce skill **ne rédige à la
 main aucun contenu de `.specify/`** : il **invoque `specify init`**, et c'est **SpecKit** qui
 produit `.specify/` et les `/speckit.*`. La seule écriture propre à la Factory est le bloc
-`speckit` du manifeste, sous `.factory/` (mécanique Factory, comme chaque plugin écrit son bloc).
+`speckit` du **manifeste committé** `cadrage-out/manifest.json` (comme chaque plugin y écrit son bloc).
 C'est donc une exception **explicitement bornée** à l'invariant « paquet seul » — pas une violation.
 
 ## Pré-requis (vérification silencieuse)
-Lire `.factory/manifest.json` **sans l'annoncer**, uniquement pour situer la racine (dossier
+Lire `cadrage-out/manifest.json` **sans l'annoncer**, uniquement pour situer la racine (dossier
 contenant `.factory/`) et l'état d'avancement. **Aucune porte dure** ici :
 - si `.factory/` est absent : on n'est pas dans un workspace Factory ; le dire en clair, mais
   **ne pas refuser** — l'installation reste possible dans le dossier courant (best-effort) ;

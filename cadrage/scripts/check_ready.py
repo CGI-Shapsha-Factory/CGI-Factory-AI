@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la porte des briefs (cadrage).
 
-Lit le manifeste d'un projet (.factory/manifest.json par defaut) et echoue si la
+Lit le manifeste d'un projet (cadrage-out/manifest.json par defaut) et echoue si la
 porte DURE de `cadrage-briefs` n'est pas franchie :
   - `definition_of_ready.decoupage_arbitrated` != true (revue de couplage non faite) ;
   - `definition_of_ready.demonstrateur_converged` != true (maquette non validee client).
@@ -18,7 +18,7 @@ import sys
 
 
 def main(argv):
-    path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
+    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)

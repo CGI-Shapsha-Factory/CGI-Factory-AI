@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la passe decouverte.
 
-Lit le manifeste d'un projet (.factory/manifest.json par defaut) et echoue
+Lit le manifeste d'un projet (cadrage-out/manifest.json par defaut) et echoue
 si la couverture des 13 questions de cadrage est incomplete :
   - une question au statut `pending` -> non posee, trou bloquant.
 
@@ -22,7 +22,7 @@ OK_STATUSES = {"answered", "na", "deferred"}
 
 
 def main(argv):
-    path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
+    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)

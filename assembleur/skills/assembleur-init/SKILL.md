@@ -21,7 +21,7 @@ il n'écrit jamais dans un repo SpecKit.
 ## Ancrage du répertoire (impératif)
 **La racine du projet est le dossier courant** — celui où la session est lancée (le cwd) —
 **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé
-plus haut. Tous les chemins de ce skill (`.factory/manifest.json`, `.factory/assembleur/`,
+plus haut. Tous les chemins de ce skill (`cadrage-out/manifest.json`, `.factory/assembleur/`,
 `assembleur-out/`, et les 3 dossiers amont lus `cadrage-out/` / `architecte-out/` /
 `designer-out/`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** :
 un `.factory/` ou un dossier `-out/` situé dans un dossier **parent** n'appartient **pas** à
@@ -34,7 +34,7 @@ menée par **une autre personne**, sur une **autre machine**, à partir d'un **c
 `.factory/` n'existe encore**. Ce skill ne présuppose donc **jamais** un `.factory/` déjà présent :
 **avant toute autre chose**, il (re)pose dans `.factory/` **tout ce dont la convergence a besoin** — les
 gabarits de convergence (`.factory/assembleur/`) et le bloc `assembly` du manifeste
-`.factory/manifest.json` (créé s'il manque). Le **handoff** entre phases passe **uniquement** par les
+`cadrage-out/manifest.json` (créé s'il manque). Le **handoff** entre phases passe **uniquement** par les
 dossiers `-out/` committés, jamais par `.factory/` (régénérable en relançant ce `-init`).
 
 ## Setup inconditionnel + état de l'amont (jamais bloquant)
@@ -60,7 +60,8 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
   que **la convergence** (`/assembleur:assembleur-convergence`) a besoin de ces dossiers `-out/`.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si
-`.factory/manifest.json` n'existe pas encore, le **créer** comme objet JSON valide
+`cadrage-out/manifest.json` n'existe pas encore, **créer d'abord le dossier `cadrage-out/` s'il est
+absent** (même sans amont), puis y **créer** le manifeste comme objet JSON valide
 `{ "assembly": { … } }` (les autres phases le complètent par fusion, sans écraser le bloc `assembly`).
 
 ## Procédure
@@ -76,7 +77,7 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
    n'a pas tourné ici). Tout `.factory/` est local, non versionné.
 3. **Créer le dossier de sortie** `assembleur-out/` avec ses sous-dossiers `features/`
    et `memory/` (vides).
-4. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `assembly`
+4. **Étendre le manifeste** `cadrage-out/manifest.json` : ajouter le bloc `assembly`
    ci-dessous s'il est absent (read-modify-write + revalidation JSON) :
 
 ```json

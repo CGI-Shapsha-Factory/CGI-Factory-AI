@@ -3,7 +3,7 @@
 
 Le skill `create-cowork-md` genere `init-cowork.md` a la racine du projet (contexte unique pour le
 PO qui supervise depuis Quark : liens vers le depot GitHub et le projet Linear + le contexte issu
-des 3 contrats). Ce garde-fou lit le manifeste (.factory/manifest.json par defaut), en deduit la
+des 3 contrats). Ce garde-fou lit le manifeste (cadrage-out/manifest.json par defaut), en deduit la
 racine du projet, et echoue si :
   - le bloc `cowork` est absent (le skill n'a pas tourne) ;
   - `init-cowork.md` n'existe pas a la racine ;
@@ -26,7 +26,7 @@ LINEAR_RE = re.compile(r"linear", re.IGNORECASE)
 
 
 def main(argv):
-    path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
+    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)

@@ -25,7 +25,7 @@ propre à la Factory est le bloc `linear` du manifeste. La création passe par l
 `linear-prism`** (externe à la Factory) — voir `references/linear-guide.md`.
 
 ## Pré-requis (vérification silencieuse)
-Lire `.factory/manifest.json` **sans l'annoncer** :
+Lire `cadrage-out/manifest.json` **sans l'annoncer** :
 - la convergence a tourné et la **cohérence est validée**, et le paquet est présent
   (`assembleur-out/feature-map.md` + au moins une graine `assembleur-out/features/*.md`) ;
 - sinon → le dire en clair et orienter vers `/assembleur:assembleur-convergence` :
@@ -90,7 +90,7 @@ Pour **chaque** feature retenue, **dans l'ordre** :
 ## Vérification avant de conclure
 - Chaque feature approuvée a **son ticket** (ou une décision `skipped`/`merged`) ; les grosses
   features ont leur **liste de contrôle** dans la description ; les **dépendances** sont posées.
-- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/.factory/manifest.json`.
+- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/cadrage-out/manifest.json`.
 - Le bloc `linear` du manifeste **reparse sans erreur** ; restitution **en prose** (« j'ai créé N
   tickets, un par feature »), manifeste mis à jour **en silence**.
 

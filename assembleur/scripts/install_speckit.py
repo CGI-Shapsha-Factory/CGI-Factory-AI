@@ -15,7 +15,7 @@ projet a deja SpecKit, sinon il l'installe bout en bout dans UN seul processus :
      absorbe le renommage `--ai` -> `--integration` et les versions qui omettent `--script`) ;
   6. `specify init` joue en non-interactif (timeouts, messages reseau/quotas clairs) ;
   7. test de fumee (.specify/ + commandes /speckit.*) ;
-  8. bloc `speckit` ecrit dans .factory/manifest.json (lecture-modif-ecriture + revalidation JSON).
+  8. bloc `speckit` ecrit dans cadrage-out/manifest.json (lecture-modif-ecriture + revalidation JSON).
 
 Il n'ecrit JAMAIS a la main un fichier que SpecKit genere : c'est `specify init` qui cree
 `.specify/` et les commandes. La seule ecriture propre a la Factory est le bloc de manifeste.

@@ -6,7 +6,7 @@ Verifie que le compteur est correctement pose et que le journal est exploitable 
   - `.claude/hooks/turn_cost.py` present et hook SessionEnd (compteur) enregistre ;
   - chaque enregistrement du journal `.factory/couts/**/*.jsonl` parse et porte les champs attendus.
 
-Usage : python check_costs.py [chemin/vers/.factory/manifest.json]   (defaut : .factory/manifest.json)
+Usage : python check_costs.py [chemin/vers/cadrage-out/manifest.json]   (defaut : cadrage-out/manifest.json)
 Exit 0 si OK, 1 sinon.
 """
 import glob
@@ -16,7 +16,7 @@ import sys
 
 
 def main(argv):
-    manifest = argv[1] if len(argv) > 1 else ".factory/manifest.json"
+    manifest = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
     root = os.path.dirname(os.path.dirname(os.path.abspath(manifest)))
     problems = []
 

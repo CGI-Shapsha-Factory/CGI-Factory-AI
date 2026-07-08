@@ -78,7 +78,7 @@ assembleur-out/
 ├── coherence-report.md
 └── attack-plan.md
 ```
-Le manifeste et les gabarits vivent dans `.factory/`. Écriture = read-modify-write + revalidation JSON.
+Les **gabarits** vivent dans `.factory/assembleur/` (git-ignoré) ; le **manifeste** est **committé** dans `cadrage-out/manifest.json`. Écriture = read-modify-write + revalidation JSON.
 
 **Déploiement mémoire (important).** L'équipe pose `CLAUDE.md` **et** le dossier `memory/` **à la
 racine** du repo de fabrication (les `@imports` du CLAUDE.md sont relatifs à ce fichier). Le
@@ -119,7 +119,7 @@ par introspection). Agent : `agents/contract-reader.md`.
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python scripts/check_assembly.py <projet>/.factory/manifest.json
+python scripts/check_assembly.py <projet>/cadrage-out/manifest.json
 ```
 
 ## Invariants

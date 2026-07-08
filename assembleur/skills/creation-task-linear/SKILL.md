@@ -31,7 +31,7 @@ génère). La seule écriture propre à la Factory est le bloc `linear` du manif
 `specs/<feature>/tasks.md` (fichier généré par SpecKit) **sans jamais le modifier**.
 
 ## Pré-requis (vérification silencieuse)
-Lire `.factory/manifest.json` **sans l'annoncer** :
+Lire `cadrage-out/manifest.json` **sans l'annoncer** :
 - `premier-alimente-linear` a tourné : `linear.issues[]` contient des tickets `Feature` avec un
   `issue_id` (l'UUID interne, nécessaire comme `parentId`) ;
 - au moins un `specs/<feature>/tasks.md` existe dans le repo de fabrication ;
@@ -104,7 +104,7 @@ Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
 ## Vérification avant de conclure
 - Chaque feature avec un `tasks.md` a **un sous-ticket par phase** (ou une décision `skipped`) ;
   chaque sous-ticket porte le label `Task` et pointe (`parentId`) vers son ticket `Feature`.
-- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/.factory/manifest.json`.
+- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/cadrage-out/manifest.json`.
 - Le bloc `linear` du manifeste **reparse sans erreur** ; restitution **en prose** (« j'ai créé N
   sous-tickets de phase sous M features »), manifeste mis à jour **en silence**.
 

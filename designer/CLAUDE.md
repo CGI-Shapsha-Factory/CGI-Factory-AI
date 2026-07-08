@@ -41,7 +41,7 @@ une entrée optionnelle).
 Lit les handoffs cadrage (`cadrage-out/`) et architecte (`architecte-out/`). Écrit tout dans
 `designer-out/` : rapport de couverture, guidelines, `designer-out/prompts/` (prompt Claude Design, **fichier
 plat**) et `designer-out/maquette-de-claude-design/` (export du design system committé par l'humain) ;
-dossiers créés par `designer-init`. Le manifeste et les gabarits vivent dans `.factory/`.
+dossiers créés par `designer-init`. Les **gabarits** vivent dans `.factory/designer/` (git-ignoré) ; le **manifeste** est **committé** dans `cadrage-out/manifest.json`.
 **Ne crée plus** `design-system/`. Le manifeste reçoit un bloc **`design`** orienté **couverture** :
 `{phase, inputs{cadrage_ok, design_impact_ok}, checklist{foundation[], experience[], technical[]} (items
 {id,label,origin,status,note}), coverage_sufficient(H), prompt_path, coverage_report_path,
@@ -80,7 +80,7 @@ rapport + handoff présents — pas des tokens).
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python scripts/check_design.py <projet>/.factory/manifest.json
+python scripts/check_design.py <projet>/cadrage-out/manifest.json
 ```
 
 ## Invariants

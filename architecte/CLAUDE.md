@@ -17,7 +17,7 @@ il discipline et grave. Ce sont des **skills Markdown** ; pas de build/test.
   Invocation : `/architecte:<skill>` (utilisateur) + auto par le modèle.
 
 ## Les 3 skills (découpage justifié)
-- `architecte-init` — setup (zéro décision IA) : **d'abord (re)pose dans `.factory/` ce dont la phase a besoin** (gabarits `.factory/architecte/` + bloc `architecture` du manifeste, créé s'il manque — `.factory/` est git-ignoré, donc absent d'un clone frais mené par une autre personne) ; puis `conventions/` **+ pose de tous les hooks de l'architecte** (enforcement des tests `PostToolUse` + protection de branche `.githooks/`/`SessionStart`, déterministe). **Jamais bloquant** : installe le socle **toujours** (même sans cadrage), puis **avertit** (sans refuser) si `cadrage-out/` manque. **`.gitignore` : jamais réécrit** — la première version est générée par le cadrage ; `architecte-init` **ajoute** seulement la ligne `.factory/` (et `architecte-contrat` les lignes `.env`), en le créant **uniquement s'il est absent**.
+- `architecte-init` — setup (zéro décision IA) : **d'abord (re)pose ce dont la phase a besoin** — gabarits dans `.factory/architecte/` (git-ignoré, absent d'un clone frais) + bloc `architecture` dans le **manifeste committé** `cadrage-out/manifest.json` (créé s'il manque) ; puis `conventions/` **+ pose de tous les hooks de l'architecte** (enforcement des tests `PostToolUse` + protection de branche `.githooks/`/`SessionStart`, déterministe). **Jamais bloquant** : installe le socle **toujours** (même sans cadrage), puis **avertit** (sans refuser) si `cadrage-out/` manque. **`.gitignore` : jamais réécrit** — la première version est générée par le cadrage ; `architecte-init` **ajoute** seulement la ligne `.factory/` (et `architecte-contrat` les lignes `.env`), en le créant **uniquement s'il est absent**.
 - `architecte-contrat` — construction interactive du contrat (porte humaine : **arbitrage des ADR**).
 - `architecte-coherence` — porte humaine : **validation de cohérence** (stricte, adversariale).
 Mappe les deux portes humaines de la définition + un setup déterministe isolé.
@@ -26,7 +26,7 @@ porter le même nom que le plugin.)*
 
 ## Workspace & manifeste
 Écrit ses propres sorties dans `architecte-out/` (à côté de `cadrage-out/`). Le
-manifeste `.factory/manifest.json` reçoit un bloc **`architecture`** (drivers,
+manifeste `cadrage-out/manifest.json` reçoit un bloc **`architecture`** (drivers,
 quality_attributes, components, stack, conventions_installed, adrs, walking_skeleton,
 feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**, **branch_protection**, coherence_validated). `conventions/` est créé à la **racine
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
@@ -85,7 +85,7 @@ merge en local — best practice, cf. enforcement/README) —
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md   # doit ne rien retourner
-python scripts/check_architecture.py <projet>/.factory/manifest.json
+python scripts/check_architecture.py <projet>/cadrage-out/manifest.json
 ```
 
 ## Invariants

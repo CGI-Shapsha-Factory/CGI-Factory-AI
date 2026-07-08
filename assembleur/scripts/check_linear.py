@@ -3,7 +3,7 @@
 
 Le skill `premier-alimente-linear` cree UN ticket Linear par feature approuvee (via le MCP linear-prism)
 et consigne le resultat dans le bloc `linear` du manifeste. Ce garde-fou lit le manifeste
-(.factory/manifest.json par defaut) et echoue si :
+(cadrage-out/manifest.json par defaut) et echoue si :
   - le bloc `linear` est absent (le skill n'a pas tourne) ;
   - une feature de `architecture.feature_sequence` n'est PAS traitee (ni ticket, ni decision
     explicite skipped/merged dans `linear.issues`) ;
@@ -27,7 +27,7 @@ NON_CREATED_STATUSES = {"skipped", "merged"}
 
 
 def main(argv):
-    path = argv[1] if len(argv) > 1 else ".factory/manifest.json"
+    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)
