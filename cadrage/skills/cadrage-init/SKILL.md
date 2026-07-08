@@ -15,13 +15,15 @@ Rendre un projet client **prêt à être cadré** : un dossier caché **`.factor
 (manifeste + gabarits, la mécanique interne), un dossier de sortie **`cadrage-out/`**
 à la racine pour les documents générés, un dossier `cadrage-out/prompts/` pour les
 prompts générés, un dossier `cadrage-out/source-contexte/` où l'utilisateur dépose la
-matière brute du projet (emplacement central, **facultatif**), et un manifeste initialisé.
+matière brute du projet (emplacement central, **facultatif**), un dossier
+`cadrage-out/maquette-de-claude-design/` (vide au départ) où l'utilisateur collera la **maquette du
+démonstrateur** générée par Claude Design, et un manifeste initialisé.
 
 ## Ancrage du répertoire (impératif)
 **La racine du projet est le dossier courant** — celui où la session est lancée (le
 cwd) — **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` /
 `*-out/` situé plus haut. Tout ce que ce skill installe (`.factory/`, `cadrage-out/`,
-`cadrage-out/source-contexte/`, `cadrage-out/prompts/`) est créé **sous ce dossier**. **Ne jamais remonter l'arborescence**
+`cadrage-out/source-contexte/`, `cadrage-out/maquette-de-claude-design/`, `cadrage-out/prompts/`) est créé **sous ce dossier**. **Ne jamais remonter l'arborescence**
 pour trouver un workspace existant : un `.factory/` (ou `factory-docs/`) trouvé dans un
 dossier **parent** n'appartient **pas** à ce projet — l'ignorer et créer le workspace
 dans le cwd. En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
@@ -48,6 +50,7 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
    cadrage-out/                     (documents générés par le cadrage, à la racine)
    ├── source-contexte/             (matière brute du projet — déposée par l'utilisateur, facultatif)
    ├── features-fonctionnels-brief/ (un brief par feature)
+   ├── maquette-de-claude-design/   (maquette du démonstrateur collée par l'utilisateur — vide au départ)
    └── prompts/                     (prompts générés — bien SOUS cadrage-out/)
    ```
 2. **Installer les gabarits** dans `.factory/cadrage/` : copier les gabarits
@@ -55,8 +58,10 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
    `spec-index.md`, `coupling-map.md`, `glossaire.md`). Ce sont les copies de
    travail du projet — les skills les lisent depuis là. Copier aussi la référence
    des questions de découverte (`discovery-questions.md`) dans `.factory/cadrage/`.
-   Puis **créer `cadrage-out/` (avec ses sous-dossiers `source-contexte/` et
-   `features-fonctionnels-brief/`) vide** ; les artefacts s'y déposeront au fil des skills.
+   Puis **créer `cadrage-out/` (avec ses sous-dossiers `source-contexte/`,
+   `features-fonctionnels-brief/` et `maquette-de-claude-design/`) vide** ; les artefacts s'y
+   déposeront au fil des skills, et l'utilisateur collera la maquette du démonstrateur dans
+   `maquette-de-claude-design/`.
 3. **Écrire le manifeste** `.factory/manifest.json` (squelette ci-dessous ;
    laisser `project` à `null` — il sera renseigné par `cadrage-extraction` ; pas de
    champ `client` ; dates en ISO 8601, laisser le reste neutre).
@@ -83,6 +88,16 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
    Cette invitation est **facultative** : si l'utilisateur ne dépose rien, le cadrage
    **démarre quand même** (les sources pourront être fournies autrement). Ce dossier n'est
    **jamais** une porte de validation ni une source obligatoire.
+
+7. **Inviter à coller la maquette du démonstrateur** : afficher en clair, **en gras**, l'invitation
+   suivante à l'utilisateur —
+   > **Une fois la maquette du démonstrateur générée par Claude Design, collez son export dans `cadrage-out/maquette-de-claude-design/` — au choix, un dossier ou une archive ZIP.**
+   >
+   > C'est l'emplacement de la **maquette de validation du cadrage** (le démonstrateur montré au client).
+
+   Cette invitation est **facultative** elle aussi : le dossier est créé **vide** à l'init et se
+   remplira quand la maquette existera (après `cadrage-demonstrateur-brief`). Il n'est **jamais** une
+   porte de validation ni une source obligatoire.
 
 ```json
 {
@@ -150,11 +165,13 @@ création/mise à jour du manifeste, pas la date d'une source.
 ## Résultat attendu
 
 - `.factory/` (avec `manifest.json` et `cadrage/`), `cadrage-out/` (avec
-  `source-contexte/` et `features-fonctionnels-brief/`) et `cadrage-out/prompts/`
-  existent ; `cadrage-out/` est créé et vide.
+  `source-contexte/`, `features-fonctionnels-brief/` et `maquette-de-claude-design/`) et
+  `cadrage-out/prompts/` existent ; `cadrage-out/` est créé et vide.
 - `.factory/cadrage/` contient les 6 gabarits installés.
 - L'utilisateur a reçu l'invitation **en gras** à déposer sa matière brute dans
   `cadrage-out/source-contexte/` (facultatif — n'empêche jamais de démarrer).
+- L'utilisateur a reçu l'invitation **en gras** à coller la maquette du démonstrateur (générée par
+  Claude Design) dans `cadrage-out/maquette-de-claude-design/` (facultatif — dossier créé **vide**).
 - `.gitignore` contient la ligne `.factory/`.
 - `.factory/manifest.json` reparse sans erreur, `phase = "init"`.
 - `project` est à `null` (il sera renseigné par `cadrage-extraction`) ; pas de champ `client`.

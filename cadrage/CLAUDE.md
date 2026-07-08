@@ -56,6 +56,7 @@ jusqu'à convergence → **revue de couplage humaine** → `briefs` → `complet
 └── cadrage/                       # gabarits FR du cadrage (copies projet)
 cadrage-out/                       # documents générés par le cadrage (à la racine)
 ├── source-contexte/               # matière brute déposée par l'utilisateur (facultatif)
+├── maquette-de-claude-design/     # maquette du démonstrateur collée par l'utilisateur (vide au départ)
 ├── capture-brute, project-frame, product-brief, glossaire,
 │   spec-index, coupling-map, completude-report
 └── features-fonctionnels-brief/   # un brief par feature (<feature>.md)
