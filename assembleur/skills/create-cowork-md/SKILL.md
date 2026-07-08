@@ -72,7 +72,7 @@ Sources = **sorties amont uniquement**, en synthèse (pas de copie) :
 - **Périmètre & features** : `architecture.feature_sequence` (`{id, name}`) + `assembleur-out/feature-map.md`
   → tableau feature ; colonne **Ticket Linear** = `identifier` + `url` depuis `linear.issues[]` **si
   créés**, sinon « à créer via premier-alimente-linear ».
-- **Contexte technique** : synthèse de la stack (`architecte-out/tech-stack*`), en bref.
+- **Contexte technique** : synthèse de la stack (`architecte-out/stack-technique*`), en bref.
 - **Contexte design** : référence du design system (`designer-out/design-guidelines*` / système
   synchronisé Claude Design).
 

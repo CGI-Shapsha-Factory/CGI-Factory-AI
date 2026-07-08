@@ -50,7 +50,7 @@
 ## Contexte technique (synthèse)
 
 [Stack principale figée par l'architecte, en bref — langages/frameworks/services clés. Tiré de
-`architecte-out/tech-stack.md`. Une synthèse, pas une copie : le détail est dans le dépôt.]
+`architecte-out/stack-technique.md`. Une synthèse, pas une copie : le détail est dans le dépôt.]
 
 ## Contexte design
 

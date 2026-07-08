@@ -22,7 +22,7 @@ limite), en **défense en profondeur**.
 
 ## Protection de branche locale (`.githooks/` + `core.hooksPath`)
 Garde-fou git **pur (git + Python, sans dépendance)** qui applique la règle « Aucun push direct sur
-`main` » de `standards.md` :
+`main` » de `standards-ingenierie.md` :
 - `pre-push` — **refuse** un push (normal, force-push ou suppression) vers une branche protégée
   (`main`/`master` par défaut ; override via `.githooks/protected-branches`).
 - `pre-commit` — **refuse** un commit fait *sur* une branche protégée, puis **relaie** l'enforcement
@@ -61,5 +61,5 @@ Python, TS/JS(x), Go, C#, Java. Correspondance test : `test_x.py`/`x_test.py`, `
 ## Notes
 - Les hooks appellent `python` (adapter en `py -3` si nécessaire sur Windows). `tests_guard.py`
   retrouve la racine git tout seul (`CLAUDE_PROJECT_DIR` sinon le cwd).
-- La *stratégie* de test (quoi tester, comment mocker) vit dans `architecte-out/standards.md` ; ce
+- La *stratégie* de test (quoi tester, comment mocker) vit dans `architecte-out/standards-ingenierie.md` ; ce
   catalogue ne fait que l'**appliquer**.

@@ -64,8 +64,8 @@ l'utilisateur décider de la suite.
 
 ## Procédure
 1. **Installer les gabarits d'architecture** dans `.factory/architecte/` : copier depuis le plugin `templates/` :
-   `drivers-quality.md`, `components.md`, `tech-stack.md`, `standards.md`,
-   `diagrams.md`, `adr.md`, `risks.md`, `design-impact.md`.
+   `facteurs-et-qualite.md`, `composants.md`, `stack-technique.md`, `standards-ingenierie.md`,
+   `diagrammes.md`, `adr.md`, `risques.md`, `impact-design.md`.
 2. **Créer le dossier `conventions/`** à la **racine du projet** et y déposer :
    - le socle universel `.editorconfig` (copie de `references/conventions/.editorconfig`) ;
    - **la config du formateur Python** `conventions/python/ruff.toml` (copie de
@@ -154,7 +154,7 @@ l'utilisateur décider de la suite.
 
 ## Porte de sortie
 - `conventions/` existe à la racine avec `.editorconfig`.
-- Les 8 gabarits d'architecture (dont `design-impact.md`) sont dans `.factory/architecte/`.
+- Les 8 gabarits d'architecture (dont `impact-design.md`) sont dans `.factory/architecte/`.
 - `.gitignore` contient la ligne `.factory/`.
 - `architecte-out/decisions/` existe.
 - Le manifeste contient le bloc `architecture` (`phase: "init"`), et reparse sans erreur.

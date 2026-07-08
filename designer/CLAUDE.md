@@ -53,7 +53,7 @@ retours structurés complets + passe de complétude) pour pré-remplir la checkl
 - **Cadrage** : `product-brief.md` (vision/ton), `glossaire.md` (**entités/données affichées**),
   `spec-index.md` (**parcours/use cases**, lu jamais modifié), **maquette validée** (`demonstrateur`,
   `client_validated`) = **direction, pas cible**.
-- **Architecte** : **`design-impact.md`** (section *Décisions à impact design* : stack front + style,
+- **Architecte** : **`impact-design.md`** (section *Décisions à impact design* : stack front + style,
   contrats transverses visibles, conventions d'API qui décident les états d'UI, NFR qui se voient). C'est
   le contrat propre qui alimente le **versant technique** de la checklist.
 

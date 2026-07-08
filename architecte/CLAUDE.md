@@ -30,7 +30,7 @@ manifeste `cadrage-out/manifest.json` reçoit un bloc **`architecture`** (driver
 quality_attributes, components, stack, conventions_installed, adrs, walking_skeleton,
 feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**, **branch_protection**, coherence_validated). `conventions/` est créé à la **racine
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
-**Handoff designer** : le skill `architecte-contrat` produit `design-impact.md` (section « Décisions à
+**Handoff designer** : le skill `architecte-contrat` produit `impact-design.md` (section « Décisions à
 impact design ») — la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer-atelier` ;
 `check_architecture.py` exige `architecture.design_impact = true`. Les diagrammes sont aussi rendus en
 **images PNG** dans `architecte-out/diagrammes/` (via `scripts/render_diagrams.py`, mermaid-cli) ; le
@@ -56,7 +56,7 @@ drivers/qualité → composants → stack → conventions → ADR → walking sk
 → diagrammes → risques → **fichiers d'environnement (automatique : `.env`+`.env.example` générés dès que la stack a des dépendances)** → validation de cohérence. *(L'enforcement — hooks de test + protection de branche — est posé plus tôt, dès `architecte-init`, pas dans le contrat.)*
 **Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
 risques** (le pourquoi / les limites) ; les attributs de qualité sont les **-ilités mesurées qui en
-découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `templates/drivers-quality.md`).
+découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `templates/facteurs-et-qualite.md`).
 
 ## Conventions partagées
 `references/interactive-loop.md` (boucle 3-options), `references/ux-conventions.md`
@@ -64,8 +64,8 @@ découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `tem
 Agent de lecture : `agents/architecte-reader.md` (lecture complète + sortie structurée,
 dispatché en parallèle par `architecte-contrat`).
 Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exactes** de
-`tech-stack.md`, **front-matter `version`/`date`** de chaque doc, **stratégie de test** de
-`standards.md`, **existence réelle des fichiers d'env à la racine** (`env_files.files` + `.env` gitignoré) / flag `test_enforcement`, marqueurs résiduels) ;
+`stack-technique.md`, **front-matter `version`/`date`** de chaque doc, **stratégie de test** de
+`standards-ingenierie.md`, **existence réelle des fichiers d'env à la racine** (`env_files.files` + `.env` gitignoré) / flag `test_enforcement`, marqueurs résiduels) ;
 `scripts/render_diagrams.py` (rendu Mermaid robuste, auto-install, replis, sans prompt) ;
 `scripts/provision_render.py` (pré-installe le rendu à l'init) ; `scripts/bump_doc_version.py`
 (incrément du compteur de version des documents) ; `scripts/install_formatter.py` (**installe l'outil

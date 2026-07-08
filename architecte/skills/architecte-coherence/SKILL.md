@@ -15,9 +15,9 @@ Le contrat technique a été produit (le bloc `architecture` est rempli). Vérif
 l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-contrat`.
 
 ## Entrées
-Les artefacts d'architecture dans `architecte-out/` : `drivers-quality.md`,
-`components.md`, `tech-stack.md`, `standards.md`, `decisions/ADR-*.md`,
-`diagrams.md`, `risks.md`, `design-impact.md` ; le dossier `conventions/` ; les
+Les artefacts d'architecture dans `architecte-out/` : `facteurs-et-qualite.md`,
+`composants.md`, `stack-technique.md`, `standards-ingenierie.md`, `decisions/ADR-*.md`,
+`diagrammes.md`, `risques.md`, `impact-design.md` ; le dossier `conventions/` ; les
 briefs sous `cadrage-out/features-fonctionnels-brief/*.md` ; le manifeste.
 
 ## Contrôles de cohérence — stricts et adversariaux
@@ -30,9 +30,9 @@ qui manque, ce qui se contredit, ce qui pourrait casser. Au minimum :
    à **résoudre en session** (voir ci-dessous).
 2. **Composants ↔ stack (deux sens, cohérence des technos)** : chaque composant a une techno
    **définie** dans la matrice (pas « à définir ») ; aucune ligne de matrice sans composant ;
-   aucun orphelin d'aucun côté. **La stack inline d'un composant (`components.md` → Technologies)
-   doit CORRESPONDRE à `tech-stack.md`** — mêmes technos, mêmes **versions exactes**. **Échec**
-   si un composant décrit une stack que `tech-stack.md` ne retient pas (ex. un composant en .NET
+   aucun orphelin d'aucun côté. **La stack inline d'un composant (`composants.md` → Technologies)
+   doit CORRESPONDRE à `stack-technique.md`** — mêmes technos, mêmes **versions exactes**. **Échec**
+   si un composant décrit une stack que `stack-technique.md` ne retient pas (ex. un composant en .NET
    alors que la stack retient Python), une version divergente, ou une version « latest »/vague.
    **Un composant Frontend/UI existe** si le produit a des écrans.
 3. **Drivers vs attributs de qualité — distincts, non redondants, dérivés** :
@@ -57,14 +57,14 @@ qui manque, ce qui se contredit, ce qui pourrait casser. Au minimum :
 7. **Walking skeleton** : traverse-t-il réellement le **couplage le plus risqué** (pas
    juste la première feature) ?
 8. **Diagrammes ↔ réel** : noms réels partout, aucun placeholder ; les composants des
-   diagrammes existent dans `components.md` ; les images PNG sont présentes dans
+   diagrammes existent dans `composants.md` ; les images PNG sont présentes dans
    `architecte-out/diagrammes/`.
 9. **Conventions ↔ stack** : chaque langage retenu a son fichier de conventions.
 10. **Cohérence de nommage** : un même concept est nommé pareil partout (alignement
     glossaire) — pas deux noms pour la même chose, pas deux choses sous le même nom.
 11. **Risques** : chaque risque porte impact + mitigation + déclencheur ; les spikes
     bloquants sont identifiés avant la première feature.
-12. **Design-impact** : produit et couvrant la tranche qui se voit (stack front + style,
+12. **Impact-design** : produit et couvrant la tranche qui se voit (stack front + style,
     contrats transverses visibles, conventions d'API → états d'UI, NFR qui touchent l'UX).
 13. **Passe « ce qui manque / ce qui peut casser »** : une lecture critique finale, pas
     une checklist de présence.
@@ -73,7 +73,7 @@ Garde-fou déterministe (**obligatoire, jamais sauté**) : lancer
 `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_architecture.py" <racine>/cadrage-out/manifest.json` — il
 échoue notamment s'il **reste un marqueur** dans un fichier `architecte-out/`, si un
 composant n'a pas de techno, si un langage retenu n'a pas son fichier de conventions,
-**si une techno de `tech-stack.md` n'a pas de version exacte (ou dit « latest »)**, ou
+**si une techno de `stack-technique.md` n'a pas de version exacte (ou dit « latest »)**, ou
 **si un fichier `architecte-out/` n'a pas de front-matter `version`/`date` valide**. Si le
 script est **introuvable** (chemin plugin non résolu) ou renvoie **exit 1**, **s'arrêter** et
 **rapporter en clair** ce qui manque — **ne jamais** basculer en vérification « à la main ».
@@ -99,10 +99,10 @@ Une fois la validation humaine actée, mettre à jour le manifeste **sans le nar
 
 ## Handoff (vers l'assembleur)
 Une fois validé, le contrat technique prêt à transmettre comprend : les ADR et
-contrats transverses, les normes (`standards.md` + `conventions/`), les diagrammes,
+contrats transverses, les normes (`standards-ingenierie.md` + `conventions/`), les diagrammes,
 le walking skeleton et la **séquence de features numérotée** (convergence des deux
 découpages), le registre de risques, et les **Décisions à impact design**
-(`design-impact.md`, consommées par le designer). (L'assembleur coud ensuite ces
+(`impact-design.md`, consommées par le designer). (L'assembleur coud ensuite ces
 contrats par feature, une fois le contrat de design figé.)
 
 ## Règles invariantes

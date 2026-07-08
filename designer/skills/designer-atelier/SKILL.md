@@ -22,7 +22,7 @@ en clair vers `/designer:designer-init`.
   comme **direction, pas cible** — le designer a autorité pour la faire évoluer.
   > **Lecture seule.** `cadrage-out/spec-index.md` est un **artefact du cadrage** : l'atelier le **lit**
   > (parcours, use cases) pour nourrir le versant expérience, mais ne le **crée ni ne le modifie jamais**.
-- **Architecte (A)** : **`design-impact.md`** (section *Décisions à impact design* : stack front + style,
+- **Architecte (A)** : **`impact-design.md`** (section *Décisions à impact design* : stack front + style,
   contrats transverses visibles, conventions d'API qui décident les états d'UI, NFR qui se voient).
 - Conventions : `references/coverage-checklist-guide.md`, `references/states-catalog.md`,
   `references/question-map.md`, `references/interactive-loop.md`, `references/ux-conventions.md`.
@@ -45,14 +45,14 @@ lecteurs (`agentType: "designer-reader"`), **un par lot**, chacun avec un **sch�
 en **un seul message** (appels parallèles), puis synthétiser. Lots :
 1. **Cadrage** — `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`.
    Extraire : ton/vision, entités/données affichées, parcours / use cases, états d'écran impliqués.
-2. **Architecte** — `architecte-out/design-impact.md`. Extraire : stack front + style, contrats
+2. **Architecte** — `architecte-out/impact-design.md`. Extraire : stack front + style, contrats
    transverses visibles, conventions d'API → états d'UI, NFR qui se voient (a11y, responsive, i18n, perf).
 
 *(Garde simple : entrée minuscule → un seul lecteur ; sinon fan-out.)* **Passe de complétude** : vérifier
 qu'aucun élément des handoffs n'a été manqué avant de pré-remplir.
 
 **Pré-remplir la checklist** (`design.checklist`) depuis les retours structurés : items d'origine **C**
-(parcours, états d'écran, hiérarchie…), items d'origine **A** depuis `design-impact.md` (erreurs, async,
+(parcours, états d'écran, hiérarchie…), items d'origine **A** depuis `impact-design.md` (erreurs, async,
 listes, identité/rôles, navigation, accessibilité visée, responsive, i18n, perf ; thématisation). Chaque
 item ainsi rempli passe en interne à `status: deduced` (montré **validé**) avec sa `note`. Marquer
 `design.inputs.cadrage_ok` / `design.inputs.design_impact_ok`. Le pré-remplissage suit

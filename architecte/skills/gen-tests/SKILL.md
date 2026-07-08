@@ -43,11 +43,11 @@ contrat de sortie est une **suite verte** (tous les tests passent), pas juste de
 
 ### Étape 2 — Lecture du contexte de test
 
-Lire `architecte-out/standards.md` (si présent) pour connaître :
+Lire `architecte-out/standards-ingenierie.md` (si présent) pour connaître :
 - Le **framework de test** du projet (pytest, jest, vitest, go testing, xUnit, JUnit…).
 - Les conventions : dossier de tests, conventions de nommage, mocking, fixtures.
 
-Si `standards.md` est absent, **inférer** :
+Si `standards-ingenierie.md` est absent, **inférer** :
 - Python → `pytest` (toujours)
 - TypeScript/JavaScript → chercher `jest` ou `vitest` dans `package.json` ; défaut `vitest`
 - Go → `testing` natif
@@ -142,7 +142,7 @@ func TestBar_Negatif(t *testing.T) {
 ### Étape 6 — Exécution (obligatoire, jamais optionnelle)
 
 Après avoir écrit **chaque** fichier de test, **le lancer** avec le runner du framework. Commandes
-par framework (adapter au projet — lire `standards.md`/`package.json`/`Makefile` si un runner custom
+par framework (adapter au projet — lire `standards-ingenierie.md`/`package.json`/`Makefile` si un runner custom
 existe) :
 
 | Framework | Commande (un fichier) | Commande (toute la suite) |
@@ -201,7 +201,7 @@ En cas d'arrêt sur un vrai bug source : le dire clairement au lieu d'annoncer u
 - **Jamais d'écrasement** d'un fichier de test existant.
 - **Un fichier source = un fichier de test** (pas de regroupements multi-sources).
 - **Lire le source en entier** avant de générer (pas de génération à l'aveugle).
-- **Inférer le framework** si `standards.md` est absent — ne jamais demander.
+- **Inférer le framework** si `standards-ingenierie.md` est absent — ne jamais demander.
 - **Plafond de 5 itérations** par cycle, puis exposer ce qui reste rouge (jamais de boucle infinie).
 
 ## Étape suivante

@@ -2,7 +2,7 @@
 
 <!-- Livrable de `assembleur-out/`. Mappe la section "Technical Context" du plan.md SpecKit,
      au niveau projet (les graines de feature en reprennent ce qui les concerne). Source :
-     architecte (tech-stack, components, standards, drivers-quality). Contenu seul. -->
+     architecte (stack-technique, components, standards, facteurs-et-qualite). Contenu seul. -->
 
 - **Langage / version** : [ex. Python 3.12]
 - **Dépendances principales** : [frameworks, libs structurantes]

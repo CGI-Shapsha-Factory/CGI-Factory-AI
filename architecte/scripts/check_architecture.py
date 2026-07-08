@@ -13,9 +13,9 @@ echoue si le contrat technique est incomplet :
   - section `Decisions a impact design` non produite (handoff designer) ;
   - un marqueur residuel ([A VALIDER]/[A CHIFFRER]/[A DEFINIR]) subsiste dans un
     fichier de `architecte-out/` (tout point doit etre tranche en session) ;
-  - une techno de `tech-stack.md` n'a pas de version exacte (vide / 'latest' / ...) ;
+  - une techno de `stack-technique.md` n'a pas de version exacte (vide / 'latest' / ...) ;
   - un fichier de `architecte-out/` n'a pas de front-matter version(entier)/date(ISO) ;
-  - la strategie de test de `standards.md` est incomplete (unit cas passant/echec/limite,
+  - la strategie de test de `standards-ingenierie.md` est incomplete (unit cas passant/echec/limite,
     integration avec mocks, tests en meme temps que le code) ;
   - les fichiers d'environnement ne sont pas generes (etape 10 : `env_files` absent, ou fichiers
     declares manquants a la racine, ou `.env` non gitignore), ou l'enforcement des tests n'est pas
@@ -52,9 +52,9 @@ def _fold(s):
 
 
 def testing_strategy_issues(manifest_path):
-    """standards.md doit porter une vraie strategie de test (pas un tableau mince)."""
+    """standards-ingenierie.md doit porter une vraie strategie de test (pas un tableau mince)."""
     root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
-    std = os.path.join(root, "architecte-out", "standards.md")
+    std = os.path.join(root, "architecte-out", "standards-ingenierie.md")
     if not os.path.isfile(std):
         return []
     try:
@@ -62,7 +62,7 @@ def testing_strategy_issues(manifest_path):
     except OSError:
         return []
     if "exigences de test" not in folded:
-        return ["section 'Exigences de test' absente de standards.md"]
+        return ["section 'Exigences de test' absente de standards-ingenierie.md"]
     checks = [
         ("meme temps", "regle 'tests en meme temps que le code' absente"),
         ("cas passant", "cas passant non exige"),
@@ -137,9 +137,9 @@ def frontmatter_issues(manifest_path):
 
 
 def tech_stack_versions(manifest_path):
-    """Chaque techno d'une table a colonne 'Version' de tech-stack.md porte une version exacte."""
+    """Chaque techno d'une table a colonne 'Version' de stack-technique.md porte une version exacte."""
     root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
-    ts = os.path.join(root, "architecte-out", "tech-stack.md")
+    ts = os.path.join(root, "architecte-out", "stack-technique.md")
     if not os.path.isfile(ts):
         return []
     try:
@@ -179,7 +179,7 @@ def tech_stack_versions(manifest_path):
         val = cells[ver_idx]
         name = cells[name_idx] if name_idx < len(cells) and cells[name_idx] else (cells[0] if cells else "?")
         if val in ("", "[...]", "[…]") or FORBIDDEN_VERSION_RE.match(val):
-            issues.append(f"tech-stack.md: techno '{name}' sans version exacte (valeur: '{val or 'vide'}')")
+            issues.append(f"stack-technique.md: techno '{name}' sans version exacte (valeur: '{val or 'vide'}')")
     return issues
 
 

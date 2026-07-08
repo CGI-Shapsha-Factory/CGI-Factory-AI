@@ -16,7 +16,7 @@ date: AAAA-MM-JJ
      les écrans — déclaré comme composant technique à part entière, avec sa propre stack
      (framework, outil de build, cible de déploiement). L'existence du plugin designer
      n'en dispense PAS : le designer produit le design SYSTEM visuel ; l'architecte
-     porte le composant front et sa stack (source de vérité = ce fichier + tech-stack.md). -->
+     porte le composant front et sa stack (source de vérité = ce fichier + stack-technique.md). -->
 <!-- Remplir chaque [placeholder]. Utiliser les marqueurs [À VALIDER] / [À CHIFFRER]
      là où une valeur manque encore.  -->
 
@@ -70,7 +70,7 @@ date: AAAA-MM-JJ
      que ce que CE composant utilise directement — pas la stack globale — de sorte
      qu'une IA lisant un seul composant isolément dispose de tout le contexte. -->
 <!-- COHÉRENCE (obligatoire) : les technos et versions inscrites ici doivent être
-     EXACTES (jamais « latest ») et STRICTEMENT cohérentes avec tech-stack.md — mêmes
+     EXACTES (jamais « latest ») et STRICTEMENT cohérentes avec stack-technique.md — mêmes
      technos, mêmes versions. Interdit : un composant décrivant une stack que
-     tech-stack.md ne retient pas (ex. un composant en .NET alors que la stack retient
-     Python). En cas de doute, tech-stack.md et ce fichier se tranchent ensemble en session. -->
+     stack-technique.md ne retient pas (ex. un composant en .NET alors que la stack retient
+     Python). En cas de doute, stack-technique.md et ce fichier se tranchent ensemble en session. -->

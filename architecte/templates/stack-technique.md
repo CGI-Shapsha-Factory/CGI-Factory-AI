@@ -8,7 +8,7 @@ date: AAAA-MM-JJ
 
 <!-- Public visé : Claude Code + humains. -->
 <!-- Remplir chaque [placeholder]. La matrice composant × techno doit lister CHAQUE
-     composant de components.md — garder les deux fichiers synchronisés. -->
+     composant de composants.md — garder les deux fichiers synchronisés. -->
 <!-- VERSION EXACTE OBLIGATOIRE : chaque ligne d'une table à colonne « Version » porte
      une version exacte et épinglée (ex. « Python 3.12.10 », « PostgreSQL 17.2 »,
      « React 19.1.0 »). INTERDIT : vide, « latest », « stable », « current »,
@@ -63,7 +63,7 @@ date: AAAA-MM-JJ
 <!-- Marquer chaque cellule : ✓ runtime/langage principal · DB stockage de données ·
      🔗 appel externe · — non utilisé. -->
 <!-- Colonnes = technologies des sections ci-dessus. Lignes = chaque composant de
-     components.md. RÈGLE : une ligne de la matrice par composant. -->
+     composants.md. RÈGLE : une ligne de la matrice par composant. -->
 
 | Composant       | [Lang] | [Framework] | [DB 1] | [DB 2] | [Cache] | [File] | [Svc auth] |
 |-----------------|--------|-------------|--------|--------|---------|--------|-----------|

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Rend en PNG les diagrammes Mermaid de diagrams.md — robuste, sans intervention.
+"""Rend en PNG les diagrammes Mermaid de diagrammes.md — robuste, sans intervention.
 
 Chaine de methodes a repli automatique (aucune interaction, aucune permission demandee) :
   1. mermaid-cli local `mmdc` + navigateur systeme (Edge/Chrome), SANS telecharger Chromium
@@ -13,7 +13,7 @@ desactive JAMAIS la verification TLS. Le telechargement de Chromium par Puppetee
 de rupture derriere un proxy) est evite en pointant sur un navigateur deja installe.
 
 Usage:
-    py -3 render_diagrams.py [chemin/vers/architecte-out/diagrams.md]
+    py -3 render_diagrams.py [chemin/vers/architecte-out/diagrammes.md]
 
 Exit 0 si au moins un diagramme rendu ; 1 sinon (le skill continue sans bloquer).
 """
@@ -179,7 +179,7 @@ def kroki_available(base_url):
 
 
 def main(argv):
-    md_path = argv[1] if len(argv) > 1 else "architecte-out/diagrams.md"
+    md_path = argv[1] if len(argv) > 1 else "architecte-out/diagrammes.md"
     if not os.path.isfile(md_path):
         print(f"ERREUR: fichier introuvable: {md_path}", file=sys.stderr)
         return 1

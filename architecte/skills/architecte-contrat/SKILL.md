@@ -85,7 +85,7 @@ tableaux clairs** (noms en clair, jamais de code) :
 
 *(Exception assumée à la règle « pas de tableau » — cf. `references/ux-conventions.md` §4 : drivers et
 attributs de qualité se lisent bien mieux en tableau.)* Faire valider, puis écrire
-`architecte-out/drivers-quality.md` (gabarit `templates/drivers-quality.md`). Mettre à jour le manifeste
+`architecte-out/facteurs-et-qualite.md` (gabarit `templates/facteurs-et-qualite.md`). Mettre à jour le manifeste
 en silence.
 
 ### Étape 2 — Workflow composants (interactif)
@@ -100,8 +100,8 @@ l'étape 3). **Restituer la liste sous forme de TABLEAU clair** — deux colonne
 **jamais de code `C1`/`C2`** ni d'identifiant technique. *(Exception assumée à la règle « pas de
 tableau » — cf. `references/ux-conventions.md` §4 : les composants se lisent bien mieux en tableau.)*
 **Demander si ça convient ou s'il faut modifier** ; appliquer les retours (ajout/fusion/suppression) ;
-**boucler jusqu'à validation**. Puis écrire `architecte-out/components.md` (gabarit
-`templates/components.md`). Mettre à jour le manifeste en silence.
+**boucler jusqu'à validation**. Puis écrire `architecte-out/composants.md` (gabarit
+`templates/composants.md`). Mettre à jour le manifeste en silence.
 
 ### Étape 3 — Workflow stack technique (interactif)
 Domaines de décision : **langage(s), framework(s) back, framework front / bibliothèque de
@@ -128,8 +128,8 @@ Respecter l'ordre des dépendances entre choix (langage avant framework, etc.).
 **Version exacte pour CHAQUE techno** : à la finalisation, chaque langage, framework,
 bibliothèque, base et outil reçoit une **version exacte et épinglée** (ex. « PostgreSQL 17.2 »,
 « React 19.1.0 ») — tranchée en session si inconnue ; **jamais** « latest » / « stable » / vide.
-**Validation finale** de la stack en chat. Écrire `architecte-out/tech-stack.md` (gabarit
-`templates/tech-stack.md`, dont la **matrice composant × techno** — une ligne par composant, **le
+**Validation finale** de la stack en chat. Écrire `architecte-out/stack-technique.md` (gabarit
+`templates/stack-technique.md`, dont la **matrice composant × techno** — une ligne par composant, **le
 composant front inclus**). Mettre à jour le manifeste en silence.
 
 ### Étape 4 — Activer les conventions (vrais fichiers)
@@ -153,7 +153,7 @@ réellement l'outil : `python "${CLAUDE_PLUGIN_ROOT}/scripts/install_formatter.p
 crée `package.json` via `npm init -y` si absent), et **non bloquant** : si `pip`/`npm` manque ou si
 l'install échoue, il l'indique **sans échouer** (l'équipe finira à la main). Adapter `python` → `py -3`
 si besoin. Confirmer **en clair** ce qui a été installé.
-Écrire/compléter `architecte-out/standards.md` (gabarit `templates/standards.md`)
+Écrire/compléter `architecte-out/standards-ingenierie.md` (gabarit `templates/standards-ingenierie.md`)
 qui **pointe vers `conventions/`** + couvre les standards non-formatage (erreurs,
 logging, sécurité, **stratégie de test**, API, données, git, doc). La **stratégie de test**
 est concrète : unitaires par règle métier (cas passant / échec / limite) ; intégration
@@ -198,11 +198,11 @@ manifeste en silence (walking skeleton = l'`id` correspondant).
 > `architecture.feature_sequence` : figer **toute** la liste, sans en omettre aucune.
 
 ### Étape 7 — Diagrammes (+ images PNG)
-Produire `architecte-out/diagrams.md` (gabarit `templates/diagrams.md`) :
+Produire `architecte-out/diagrammes.md` (gabarit `templates/diagrammes.md`) :
 C4 contexte, C4 conteneurs, flux d'un parcours critique, ERD, déploiement (Mermaid),
 avec les noms réels (pas de placeholders).
 Puis **générer les images** : lancer
-`py -3 "${CLAUDE_PLUGIN_ROOT}/scripts/render_diagrams.py" <projet>/architecte-out/diagrams.md`
+`py -3 "${CLAUDE_PLUGIN_ROOT}/scripts/render_diagrams.py" <projet>/architecte-out/diagrammes.md`
 (remplacer `py -3` par `python` si `py` est absent) — il rend un **PNG par diagramme** (nom
 déterministe `NN-slug.png`) dans **`architecte-out/diagrammes/`**. Le script **installe
 silencieusement ce qui manque** (mermaid-cli épinglé, **sans télécharger Chromium** — il
@@ -213,16 +213,16 @@ jamais demander de permission**. Les prérequis ont normalement été pré-insta
 le dire en clair et continuer — ne jamais bloquer la phase pour ça ; le markdown reste la source.
 
 ### Étape 8 — Registre de risques
-Produire `architecte-out/risks.md` (gabarit `templates/risks.md`) : risques
+Produire `architecte-out/risques.md` (gabarit `templates/risques.md`) : risques
 techniques, mitigations, spikes/POC nécessaires. Mettre à jour le manifeste en silence.
 
 ### Étape 9 — Décisions à impact design (handoff vers le Designer)
 **Synthétiser la tranche de l'architecture qui se voit à l'écran** — c'est le contrat propre
 Architecte → Designer (le designer ne doit pas fouiller tout le handoff ; l'architecte sait ce qui se
-voit). Produire `architecte-out/design-impact.md` (gabarit `templates/design-impact.md`), par ordre
+voit). Produire `architecte-out/impact-design.md` (gabarit `templates/impact-design.md`), par ordre
 d'importance : **1.** stack front + approche de style (framework, lib de composants, stratégie CSS — *ce
 qui rend le design system exécutable/synchronisable* ; **repris du composant front déclaré dans
-`components.md`/`tech-stack.md`, sans le redécider**) ; **2.** contrats transverses visibles
+`composants.md`/`stack-technique.md`, sans le redécider**) ; **2.** contrats transverses visibles
 (multitenance/theming par tenant ; identité/rôles/autorisations : variantes par rôle, non autorisé,
 connexion, session expirée ; navigation/routage) ; **3.** conventions d'API qui décident des états d'UI
 (format d'erreur → messages par champ, asynchrone, pagination/listes, cas vides) ; **4.** NFR qui touchent
@@ -238,9 +238,9 @@ n'y a **vraiment aucune** dépendance nécessitant une variable (ni base, ni ser
 d'infra) — auquel cas le noter en clair.
 
 **Déterminer les variables** depuis les artefacts (l'inventaire est déjà fait) :
-- `tech-stack.md` — **Stockages** (chaque base/cache → `DATABASE_URL`/`REDIS_URL`/…) et
+- `stack-technique.md` — **Stockages** (chaque base/cache → `DATABASE_URL`/`REDIS_URL`/…) et
   **Infrastructure** (fournisseur cloud, gestion des secrets, stockage objet) ;
-- `components.md` — **Services externes** : pour **chaque** API tierce / fournisseur d'auth, ajouter un
+- `composants.md` — **Services externes** : pour **chaque** API tierce / fournisseur d'auth, ajouter un
   **slot dédié** (`<SERVICE>_API_KEY` / `<SERVICE>_URL`) — pas seulement les variables génériques du
   gabarit ;
 - ADR — cloud / identité-authz / observabilité.
@@ -270,7 +270,7 @@ Confirmer en clair les fichiers créés. Mettre à jour le manifeste **en silenc
 `tests_guard.py` + `lefthook.yml`) **et** la protection de branche locale (`.githooks/` + `core.hooksPath`
 + hook `SessionStart` de réactivation) — sont **posés dès `architecte-init`** (déterministe, à la racine).
 Se contenter de **vérifier** qu'ils sont bien là (manifeste `test_enforcement: true` + `branch_protection`)
-et que la **stratégie de test** de `standards.md` (Étape 4) reste cohérente avec ce qui est enforced. Si
+et que la **stratégie de test** de `standards-ingenierie.md` (Étape 4) reste cohérente avec ce qui est enforced. Si
 l'enforcement manque (init d'une version antérieure), le reposer via les deux scripts du catalogue
 `references/enforcement/` (`install_test_hooks.py`, `install_branch_protection.py`). *(L'enforcement est
 **au moment du dev** (hooks `PostToolUse` + pre-commit), contournable avec `--no-verify` ; la seule
@@ -285,17 +285,17 @@ et **écrire la réponse en place**. Ne **pas conclure** la phase tant qu'un poi
 indéfini. Aucun fichier annexe.
 
 ## Vérification avant de conclure (silencieuse)
-- Réponses vérifiées (rien de bloquant en suspens) ; `drivers-quality.md`,
-  `components.md`, `tech-stack.md`, `standards.md`, ADR, `diagrams.md` (+ images dans
-  `diagrammes/`), `risks.md`, **`design-impact.md`** produits ; conventions par langage
+- Réponses vérifiées (rien de bloquant en suspens) ; `facteurs-et-qualite.md`,
+  `composants.md`, `stack-technique.md`, `standards-ingenierie.md`, ADR, `diagrammes.md` (+ images dans
+  `diagrammes/`), `risques.md`, **`impact-design.md`** produits ; conventions par langage
   installées dans `conventions/` ; walking skeleton et séquence de features figés.
-- **Composant Frontend/UI présent** dans `components.md` si le produit a des écrans ;
-  **chaque techno de `tech-stack.md` porte une version exacte** (aucun « latest » / vide) ;
-  `components.md` et `tech-stack.md` **cohérents** (mêmes technos/versions, pas de stack
+- **Composant Frontend/UI présent** dans `composants.md` si le produit a des écrans ;
+  **chaque techno de `stack-technique.md` porte une version exacte** (aucun « latest » / vide) ;
+  `composants.md` et `stack-technique.md` **cohérents** (mêmes technos/versions, pas de stack
   contradictoire).
 - **Front-matter présent** en tête de chaque fichier `architecte-out/` (`version:` entier,
   `date:` ISO `AAAA-MM-JJ`) ; ADR à `version: 1`.
-- **`standards.md` porte la stratégie de test** (unitaires cas passant/échec/limite ; intégration
+- **`standards-ingenierie.md` porte la stratégie de test** (unitaires cas passant/échec/limite ; intégration
   API/front/batch avec mocks ; tests en même temps que le code) ; **enforcement posé** à la racine
   (`.claude/` + `lefthook.yml`) ; **fichiers d'environnement** initialisés ou explicitement déclinés.
 - **Contenu seul** : aucune `(src:)`, aucun horodatage dans le corps, aucun nom de personne,

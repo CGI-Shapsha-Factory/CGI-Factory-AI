@@ -25,27 +25,27 @@ cadrage depuis `cadrage-out/` et écrit ses propres sorties dans `architecte-out
 `cadrage-out/features-fonctionnels-brief/*.md`.
 
 ## Sorties (dans `architecte-out/`)
-`drivers-quality.md`, `components.md`, `tech-stack.md`, `standards.md`,
-`decisions/ADR-*.md`, `diagrams.md` (+ images PNG dans `diagrammes/`), `risks.md`,
-`design-impact.md`, `coherence-report.md` ; + le dossier `conventions/` (à la racine du
+`facteurs-et-qualite.md`, `composants.md`, `stack-technique.md`, `standards-ingenierie.md`,
+`decisions/ADR-*.md`, `diagrammes.md` (+ images PNG dans `diagrammes/`), `risques.md`,
+`impact-design.md`, `coherence-report.md` ; + le dossier `conventions/` (à la racine du
 projet) avec les **vrais fichiers de config** par langage ; + la **séquence de features
 numérotée** (convergence des deux découpages). Chaque document porte un **front-matter
 `version`/`date`** (compteur d'itération ; les ADR restent en version 1, immuables).
 
 ## Garanties (retours de test)
-- **Frontend porté par l'architecte** : dès qu'il y a des écrans, `components.md` contient un
+- **Frontend porté par l'architecte** : dès qu'il y a des écrans, `composants.md` contient un
   composant Frontend/UI avec sa stack ; le designer garde le design system **visuel**.
 - **Aucune décision à ta place** : chaque techno (langage, framework, **front**, base,
   **cloud**, **déploiement**) est présentée en options + compromis, **tu tranches** ; pas de
   biais fournisseur, et l'expérience avec une techno ne vaut pas décision.
-- **Versions exactes** : toute techno de `tech-stack.md` porte une version épinglée (jamais
+- **Versions exactes** : toute techno de `stack-technique.md` porte une version épinglée (jamais
   « latest ») — vérifié par le garde-fou déterministe.
 - **Diagrammes fiables sans intervention** : rendu auto-installé (mermaid-cli + navigateur
   système, CA d'entreprise respectée **sans** désactiver TLS), replis automatiques, zéro prompt.
 - **Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
   risques** ; les attributs de qualité sont les **-ilités mesurées qui en découlent** (cible +
   scénario) — pas de doublon entre les deux.
-- **Tests & environnement** : stratégie de test concrète dans `standards.md` (unitaires
+- **Tests & environnement** : stratégie de test concrète dans `standards-ingenierie.md` (unitaires
   passant/échec/limite, intégration **mockée**, **tests écrits avec le code**), **posée en dur** par
   des hooks Claude Code + pre-commit à la racine ; fichiers d'environnement **optionnels** selon la
   stack (placeholders `.env`/Angular/…).
@@ -66,7 +66,7 @@ cadrage : ~16/17 sont déjà répondues ; seul le **profil d'équipe** est deman
 architecte/
 ├── .claude-plugin/plugin.json
 ├── skills/{architecte-init, architecte-contrat, architecte-coherence}/SKILL.md
-├── templates/   # drivers-quality, components, tech-stack, standards, diagrams, adr, risks, design-impact
+├── templates/   # facteurs-et-qualite, components, stack-technique, standards, diagrams, adr, risks, impact-design
 ├── references/  # interactive-loop, ux-conventions, question-map, conventions/, env-templates/, enforcement/ (catalogues)
 ├── scripts/     # check_architecture · render_diagrams · provision_render · bump_doc_version
 └── README.md

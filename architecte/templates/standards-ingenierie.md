@@ -33,7 +33,7 @@ fichier de config, pas une table de nommage dupliquée.
 | C                                 | `conventions/.clang-format`                | format + style de nommage (clang-format)                      |
 
 <!-- Ne garder que les lignes correspondant aux langages réellement présents dans la
-     stack (voir tech-stack.md). Pour JS/TS, choisir UNE approche : soit Biome (tout-en-un),
+     stack (voir stack-technique.md). Pour JS/TS, choisir UNE approche : soit Biome (tout-en-un),
      soit le couple ESLint + Prettier — pas les deux. Ajouter une ligne par langage
      supplémentaire et pointer vers le fichier de config correspondant dans `conventions/`. -->
 
@@ -84,7 +84,7 @@ réelle » dans le test). Pour chaque composant livrable :
 - **API / pipelines / batch** : couvrir **toutes les fonctionnalités exposées** en **mockant toutes les
   dépendances externes** (base, files, services tiers, horloge).
 
-**Frameworks & mocking par langage** (selon la stack de `tech-stack.md`) :
+**Frameworks & mocking par langage** (selon la stack de `stack-technique.md`) :
 - Python → pytest (+ `pytest-mock`/`monkeypatch`, `responses`/`respx` pour HTTP).
 - TS/JS → Vitest ou Jest (+ `msw` pour le réseau).
 - Angular → TestBed + `HttpTestingController` (ou Jest) ; spies pour les services.

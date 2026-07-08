@@ -49,8 +49,8 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
 - **cadrage** : `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`,
   `cadrage-out/spec-index.md`, et **au moins un** brief sous
   `cadrage-out/features-fonctionnels-brief/*.md`.
-- **architecte** : `architecte-out/tech-stack.md`, `architecte-out/components.md`,
-  `architecte-out/design-impact.md`, et le dossier `architecte-out/decisions/`.
+- **architecte** : `architecte-out/stack-technique.md`, `architecte-out/composants.md`,
+  `architecte-out/impact-design.md`, et le dossier `architecte-out/decisions/`.
 - **designer** : `designer-out/design-guidelines.md`.
 
 - **Amont complet** → rien à signaler ; enchaîner sur `/assembleur:assembleur-convergence`.

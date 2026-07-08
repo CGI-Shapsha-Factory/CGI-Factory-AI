@@ -18,7 +18,7 @@ export dans `designer-out/maquette-de-claude-design/`**.)*
 
 ## Entrées
 `designer-out/coverage-report.md` ; le bloc `design` du manifeste (checklist) ; le `cadrage-out/spec-index.md`
-(parcours) et `architecte-out/design-impact.md` (architecte) ; la **source du design system validé** =
+(parcours) et `architecte-out/impact-design.md` (architecte) ; la **source du design system validé** =
 l'**export committé** dans `designer-out/maquette-de-claude-design/` (dossier ou ZIP avec les tokens, ex.
 `tokens.css`), déposé par l'humain. *(Source unique : plus de référence Claude Design externe — l'équipe
 travaille à plusieurs et ne partage pas l'accès aux comptes ; tout vit dans le repo committé.)*

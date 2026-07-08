@@ -44,9 +44,9 @@ l'architecture ou les *Décisions à impact design* manquent.
 Après le setup, **vérifier l'état de l'amont** dans le cwd et le **signaler** (sans bloquer) :
 - maquette convergée (`demonstrateur.client_validated`), architecture validée
   (`architecture.coherence_validated`), section *Décisions à impact design*
-  (`architecture.design_impact` / `architecte-out/design-impact.md`) ;
+  (`architecture.design_impact` / `architecte-out/impact-design.md`) ;
 - artefacts : `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
-  `architecte-out/design-impact.md`.
+  `architecte-out/impact-design.md`.
 
 - **Amont prêt** → rien à signaler ; enchaîner sur `/designer:designer-atelier`.
 - **Amont absent ou incomplet** → **ne pas refuser**. Confirmer que l'atelier est amorcé, puis

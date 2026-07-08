@@ -41,11 +41,11 @@ parallèles) puis synthétiser leurs retours :
    `cadrage-out/coupling-map.md`. Extraire : langage ubiquitaire + entités clés ; la
    liste des use cases ; le **couplage / les dépendances** entre features ; le walking
    skeleton candidat.
-3. **Technique** — lire `architecte-out/tech-stack.md`, `components.md`, `standards.md`,
-   `drivers-quality.md`. Extraire le **Technical Context** (langage/version, dépendances,
+3. **Technique** — lire `architecte-out/stack-technique.md`, `composants.md`, `standards-ingenierie.md`,
+   `facteurs-et-qualite.md`. Extraire le **Technical Context** (langage/version, dépendances,
    stockage, tests, plateforme cible, objectifs de perf, contraintes, échelle), les
    cibles qualité, et les conventions.
-4. **Décisions** — lire `architecte-out/decisions/ADR-*.md`, `architecte-out/design-impact.md`.
+4. **Décisions** — lire `architecte-out/decisions/ADR-*.md`, `architecte-out/impact-design.md`.
    Extraire : les principes techniques **non négociables** (issus des ADR) et les
    décisions à impact design.
 5. **Design** — lire `designer-out/design-guidelines.md`, `designer-out/coverage-report.md`.

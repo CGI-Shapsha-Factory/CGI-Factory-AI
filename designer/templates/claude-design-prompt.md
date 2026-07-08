@@ -8,7 +8,7 @@
 >
 > Le modèle **remplace tous les `<…>`** par le contenu réel tiré du `product-brief.md`
 > (vision, ton), du `spec-index.md` (parcours), du `glossaire.md` (entités/microcopie) et de
-> `design-impact.md` (stack cible §1, thématisation/identité §2, erreurs/async §3,
+> `impact-design.md` (stack cible §1, thématisation/identité §2, erreurs/async §3,
 > accessibilité/responsive/i18n/perf §4). Le prompt doit être **auto-portant** : Claude
 > Design n'a aucun contexte projet, tout doit être dans le prompt. **Aucune `(src:)` dans le
 > prompt sauvegardé.** Les items « sans objet » sont **omis** ; **aucun `[À VALIDER]`** ne
