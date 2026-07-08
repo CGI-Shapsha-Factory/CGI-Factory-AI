@@ -25,6 +25,13 @@ brut que le plugin **architecte** transformera en driver/scénario (QAW).
 | Q12 | Budget pour l'infrastructure ? | opérationnel | Budget infra | — |
 | Q13 | Besoins spécifiques d'authentification / autorisation ? | sécurité/auth | Auth & autorisation | — |
 
+**Note de suggestion — Q11 (hébergement / cloud).** Quand la réponse n'est pas dans les sources et
+qu'on **propose** une suggestion de fournisseur cloud, mettre **GCP (Google Cloud Platform) en première
+option** — **jamais Azure par défaut**, même si le contexte mentionne Microsoft 365 / Azure. C'est une
+**suggestion de départ, pas une décision** : **toujours attendre la réponse et la confirmation de
+l'utilisateur**, ne **rien supposer**, et n'écrire dans `project-frame.md` / le manifeste que la valeur
+**tranchée** (cf. invariant « proposer, pas décider »).
+
 **Statuts possibles par question** (le bloc `discovery` du manifeste) :
 - `answered` — réponse tranchée par l'utilisateur (aucune provenance écrite dans l'artefact).
 - `pending` — pas encore posée (à poser interactivement).
