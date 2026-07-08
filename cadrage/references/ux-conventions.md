@@ -18,14 +18,25 @@ Le manifeste garde ses clés (contrat machine), mais le **texte affiché** et le
 | `discovery_complete` | « toutes les questions de cadrage sont répondues » |
 | `validation_points[]` | « les points à clarifier » |
 | `arbitrated: false` | « proposition — revue de couplage pas encore faite » |
+| `demonstrateur.current_version` | « la version de la maquette (v1, v2…) » |
+| `demonstrateur.external_ref` | « la maquette référencée / le lien de la maquette » |
+| `demonstrateur.client_validated` | « la maquette est validée par le client » |
 
 Ne jamais afficher de tableau de booléens bruts (ex. `decoupage_arbitrated == true`).
 
 **Règle absolue (jamais d'exception, même dans une explication ou une justification) :**
 on **n'écrit jamais** un nom de variable / clé du manifeste dans le texte vu par
 l'utilisateur — pas `all_briefs_complete`, pas `cadrage_complete`, pas
-`demonstrateur_converged`, etc. On reformule **toujours** en clair. Phrase interdite type
-« all_briefs_complete = false à cause de… » → dire « il reste un brief à compléter… ».
+`demonstrateur_converged`, pas `current_version`, pas `external_ref`, etc. On reformule
+**toujours** en clair. Phrase interdite type « all_briefs_complete = false à cause de… »
+→ dire « il reste un brief à compléter… ».
+
+**Les mises à jour du manifeste sont SILENCIEUSES — jamais narrées.** En particulier, en
+**enregistrant la maquette**, ne cite **jamais** `demonstrateur.current_version` /
+`external_ref` ni le chemin de fichier technique. Phrase interdite type « Référence de la
+maquette (v1) enregistrée dans le manifeste : demonstrateur.current_version = 1, external_ref
+pointe vers cadrage-out/… » → dire simplement, en clair : « **La maquette (v1) est bien
+enregistrée.** » (aucun nom de champ, aucun chemin technique).
 
 **Interdiction stricte de surfacer toute mécanique interne.** Ne **jamais** parler de
 « porte » / « porte d'entrée » / gate / drapeau, ni afficher un statut de pré-requis

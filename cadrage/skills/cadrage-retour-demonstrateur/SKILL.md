@@ -76,6 +76,12 @@ Read-modify-write puis revalidation JSON :
   convergence. **Aucune validation fantôme.**
 - `updated_at`.
 
+> **Silencieux, sans nom de champ (impératif).** La mise à jour du manifeste ne se **narre jamais** à
+> l'utilisateur. En **enregistrant la référence de la maquette**, ne cite **jamais**
+> `demonstrateur.current_version` / `external_ref` ni le chemin de fichier technique. Pour confirmer,
+> dire en clair : « **La maquette (v1) est bien enregistrée.** » — aucun nom de variable, aucun chemin
+> (cf. `references/ux-conventions.md` §1).
+
 ## Règles invariantes appliquées ici
 
 - **Capter ET invalider.** La nouveauté de la boucle : le skill sait remettre en

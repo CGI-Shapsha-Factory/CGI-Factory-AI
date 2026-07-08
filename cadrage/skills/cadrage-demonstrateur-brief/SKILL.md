@@ -138,6 +138,11 @@ Read-modify-write puis revalidation JSON :
   la maquette dans Claude Design).
 - `updated_at`.
 
+> **Silencieux, sans nom de champ (impératif).** Ne **jamais narrer** la mise à jour du manifeste ni
+> citer un nom de champ (`prompts`, `iterations`, `current_version`, `external_ref`…) ni un chemin
+> technique à l'utilisateur. Confirmer en clair ce qui a été **produit** (« Le prompt du démonstrateur
+> est prêt, sauvegardé dans le dossier des prompts. ») — cf. `references/ux-conventions.md` §1.
+
 ## Règles invariantes appliquées ici
 
 - **Le plugin ne génère pas la maquette.** Il produit un prompt ; Claude Design
