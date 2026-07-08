@@ -38,15 +38,17 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 > c'est plus cohérent. Ici, `project` reste `null` dans le manifeste, à renseigner
 > par `cadrage-extraction`. **Le nom du client n'est jamais demandé ni stocké.**
 
-1. **Créer l'arborescence** à la racine du projet client :
+1. **Créer l'arborescence** à la racine du projet client. **`prompts/` est un
+   sous-dossier de `cadrage-out/`, jamais un dossier à la racine** (chemin exact :
+   `cadrage-out/prompts/`) :
    ```
-   .factory/                (caché — la mécanique interne)
-   ├── manifest.json        (fichier — contrat machine)
-   └── cadrage/             (gabarits du cadrage — copies blanches installées)
-   cadrage-out/             (documents générés par le cadrage, à la racine)
-   ├── source-contexte/     (matière brute du projet — déposée par l'utilisateur, facultatif)
-   ├── features-fonctionnels-brief/   (un brief par feature)
-   └── prompts/             (prompts générés)
+   .factory/                        (caché — la mécanique interne)
+   ├── manifest.json                (fichier — contrat machine)
+   └── cadrage/                     (gabarits du cadrage — copies blanches installées)
+   cadrage-out/                     (documents générés par le cadrage, à la racine)
+   ├── source-contexte/             (matière brute du projet — déposée par l'utilisateur, facultatif)
+   ├── features-fonctionnels-brief/ (un brief par feature)
+   └── prompts/                     (prompts générés — bien SOUS cadrage-out/)
    ```
 2. **Installer les gabarits** dans `.factory/cadrage/` : copier les gabarits
    du plugin (`project-frame.md`, `product-brief.md`, `feature-brief.md`,
