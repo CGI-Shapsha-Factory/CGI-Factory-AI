@@ -63,12 +63,19 @@ le fichier et copie tout, sans rien nettoyer.
 
 ## 3ter. Jamais d'identifiant codé ni de marqueur technique en sortie
 Le PO ne connaît ni ne retient les identifiants. **Interdit** en sortie utilisateur :
-- les **codes** type `B1`, `B2`, `A6`, `UC1`, `UC2`… — toujours nommer la chose **en
-  clair** (« la validation de conformité par le bâtonnier », « le use case de recherche
-  documentaire »), jamais par son code interne ;
+- les **codes** type `B1`, `B2`, `A6` et les clés du manifeste — toujours nommer la chose **en
+  clair** (« la validation de conformité par le bâtonnier »), jamais par son code interne ;
 - les **marqueurs techniques** comme `[À CHIFFRER]`. On garde l'**information** mais en
   **phrase naturelle adaptée au PO** (ex. « cette capacité reste à préciser plus tard
   avec l'équipe technique ») — l'architecte relira l'orientation dans l'artefact.
+
+**Seule exception — les use cases (découpage & revue de couplage).** On **nomme toujours le use
+case par son intitulé complet en langage naturel**, **suivi de sa référence entre parenthèses** :
+`l'intitulé complet du use case (UC1)`. Le langage naturel **mène et est toujours présent** ; la
+référence `(UCn)` n'apparaît **jamais seule** (jamais un `UC1` nu), c'est uniquement un **suffixe
+entre parenthèses** — l'utilisateur garde ainsi un repère stable sans avoir à mémoriser quelle
+capacité correspond à quel numéro. Cette exception ne vaut **que** pour les use cases ; les autres
+codes (`B1`, `A6`, clés manifeste) restent bannis.
 
 ## 4. Langage produit (non technique) pour le découpage
 Dans les affichages de découpage/vision, parler **valeur et usage** (style Product

@@ -97,10 +97,13 @@ chat sous forme de tableau à TROIS colonnes, en français Product Owner** :
 - **Parler valeur et usage**, pas technique (cf. `references/ux-conventions.md`,
   langage produit). Pour chaque use case : ce qu'il permet de faire et pour qui.
 - **Aucune notion de MVP / post-MVP** : ne pas l'afficher, ne pas en parler.
-- **Aucun nom de champ, aucune clé JSON, aucun identifiant technique** dans la
-  sortie affichée : pas de `UC…`, pas de `arbitrated`, pas de noms d'attributs du
-  manifeste. Les identifiants provisoires restent **internes à l'artefact** ; à
-  l'écran on nomme le use case par son intitulé métier.
+- **Aucun nom de champ, aucune clé JSON, aucun nom d'attribut du manifeste** dans la
+  sortie affichée (pas de `arbitrated`, pas de clés internes). **Les use cases, eux, se
+  nomment par leur intitulé complet en langage naturel suivi de leur référence entre
+  parenthèses** — `Intitulé complet du use case (UC1)`, **jamais un `UC1` nu** — pour que
+  l'utilisateur garde un repère stable sans mémoriser les numéros (cf.
+  `references/ux-conventions.md`, §3ter). Dans le tableau, la colonne `Use case` porte cet
+  **intitulé complet suivi de `(UCn)`**.
 - Présenter la proposition comme une **proposition** (pas une décision).
 - **Demander à l'utilisateur si des modifications sont nécessaires** (reformuler,
   fusionner, scinder, réordonner). **Appliquer** les changements demandés dans
@@ -173,7 +176,11 @@ Déroulé :
    (cf. `references/interactive-loop.md`). Pour chaque point (état partagé,
    couplage direct, ce qui peut avancer en parallèle, chemin critique) : exposer
    le point en langage clair et proposer **une décision recommandée** (suggestion,
-   clairement étiquetée). L'utilisateur accepte ou donne la sienne. **Pas de menu
+   clairement étiquetée). **Chaque mention d'un use case — dans l'énoncé du point, dans la
+   décision recommandée ET dans chaque option — le désigne par son intitulé complet en langage
+   naturel suivi de sa référence entre parenthèses** (`l'ingestion documentaire (UC3)`),
+   **jamais par un `UC3` nu** : l'utilisateur n'a ainsi pas à se rappeler quel numéro
+   correspond à quelle capacité. L'utilisateur accepte ou donne la sienne. **Pas de menu
    numéroté** (pas de « 3. Saisir ma décision »). **Attendre la réponse** avant le
    point suivant.
 2. **Appliquer chaque décision EN PLACE** au fur et à mesure : modifier directement

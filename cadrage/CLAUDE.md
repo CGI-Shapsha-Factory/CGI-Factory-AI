@@ -93,9 +93,11 @@ uniquement — aucun point de découpage ouvert n'y est persisté) ; `prompts[]`
   rôles, actions), pas les outils/acronymes de l'existant ; validé **en bloc**.
 - **Aucune mécanique exposée.** Jamais de « porte d'entrée », gate, RGPD/conformité
   affichés à l'utilisateur ; **jamais de nom de variable** (`all_briefs_complete`,
-  `cadrage_complete`…), **jamais d'identifiant codé** (`B1`, `UC1`, `A6`), **jamais de
+  `cadrage_complete`…), **jamais d'identifiant codé** (`B1`, `A6`), **jamais de
   marqueur** `[À CHIFFRER]` — on reformule tout en langage naturel adapté au PO
-  (cf. `references/ux-conventions.md`).
+  (cf. `references/ux-conventions.md`). **Seule exception : les use cases** — dans le
+  découpage et la revue de couplage, on les nomme **intitulé complet en langage naturel
+  suivi de `(UCn)`** (jamais un `UCn` nu), pour donner au PO un repère stable (§3ter).
 
 ## Conventions d'interaction (voir `references/`)
 - **Boucle interactive** (`references/interactive-loop.md`) : une question à la fois —
