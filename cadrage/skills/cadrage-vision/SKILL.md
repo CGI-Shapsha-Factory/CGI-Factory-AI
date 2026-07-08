@@ -96,6 +96,11 @@ Read-modify-write puis revalidation JSON :
 - `phase = "vision"` (si la phase courante est `extraction`).
 - `updated_at` à l'horodatage courant.
 
+> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
+> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : phase: vision,
+> vision_complete: true », toute liste `champ: valeur`). Confirmer seulement, en clair, **ce qui a été
+> produit** + la prochaine étape (cf. `references/ux-conventions.md`).
+
 ## Livrable visuel
 
 Le canvas vision produit (synthèse visuelle d'une page, lisible par un comité) se

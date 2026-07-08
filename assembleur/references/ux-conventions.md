@@ -12,8 +12,10 @@ clair (« la cohérence est validée », « le paquet est complet »).
 
 ## 1bis. Mise à jour du manifeste = silencieuse
 Le manifeste se met à jour **sans le narrer**. Interdit à l'écran : « MAJ `assembly.*` »,
-« je passe `coherence_validated = true` », « `phase = "converge"` ». On dit **ce qui a été
-produit** (en prose) et **la prochaine étape** — rien de la mécanique.
+« je passe `coherence_validated = true` », « `phase = "converge"` », **toute ligne de bilan**
+« Manifeste à jour : phase: X, … » ou liste `champ: valeur` / `true`/`false`. **L'utilisateur ne
+s'intéresse pas à l'état du manifeste.** On dit **ce qui a été produit** (en prose) et **la prochaine
+étape** — rien de la mécanique.
 
 ## 2. Refus / pré-requis en langage naturel
 Quand un skill ne peut pas tourner, expliquer **en clair** pourquoi et quoi faire. Ex. :

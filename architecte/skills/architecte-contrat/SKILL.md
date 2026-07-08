@@ -23,7 +23,9 @@ sans l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-init`.
 > tableau. Désigner chaque chose par son **nom métier en clair** — jamais un code
 > (`C1`, `UC1`, `P1`…). **Aucune provenance** écrite dans les artefacts (pas de
 > `(src:)`, d'horodatage, de nom de personne). Mettre à jour le manifeste **en
-> silence** : ne jamais narrer « MAJ `architecture.*` » ni un nom de variable. Toute
+> silence** : ne jamais narrer « MAJ `architecture.*` » ni un nom de variable, ni **aucune ligne de
+> bilan** « Manifeste à jour : … » / liste `champ: valeur` / `true`/`false` (l'utilisateur ne s'y
+> intéresse pas). Toute
 > valeur manquante se **résout en session** (cf. `references/interactive-loop.md`) et
 > s'écrit **en place** — aucun marqueur n'est laissé dans un fichier final.
 >

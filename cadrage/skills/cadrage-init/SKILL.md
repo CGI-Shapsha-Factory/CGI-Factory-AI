@@ -185,6 +185,9 @@ création/mise à jour du manifeste, pas la date d'une source.
 
 - **Idempotent.** N'installe que le manquant ; ne détruit jamais un travail en
   cours.
+- **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un
+  `champ: valeur`/`true`/`false` ; confirmer en clair ce qui est installé + la suite (cf.
+  `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste, pas par un
   orchestrateur.
 - **Frontière claire.** Les gabarits installés appartiennent au projet ; le plugin

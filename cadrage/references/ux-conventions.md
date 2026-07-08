@@ -38,6 +38,11 @@ maquette (v1) enregistrée dans le manifeste : demonstrateur.current_version = 1
 pointe vers cadrage-out/… » → dire simplement, en clair : « **La maquette (v1) est bien
 enregistrée.** » (aucun nom de champ, aucun chemin technique).
 
+**Vaut pour TOUS les skills.** Jamais de **ligne de bilan du manifeste** en fin de skill : interdit
+« Manifeste à jour : phase: X, all_briefs_complete: true » et **toute** liste `champ: valeur` /
+`true`/`false`. **L'utilisateur ne s'intéresse pas à l'état du manifeste** : on met à jour **en silence**
+et on ne montre **jamais** que ça a eu lieu — on dit seulement **ce qui a été produit** + la suite.
+
 **Interdiction stricte de surfacer toute mécanique interne.** Ne **jamais** parler de
 « porte » / « porte d'entrée » / gate / drapeau, ni afficher un statut de pré-requis
 (« vision_complete = false »), ni exposer le raisonnement de vérification d'étape. Si une

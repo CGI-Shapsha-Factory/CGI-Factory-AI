@@ -145,6 +145,11 @@ Read-modify-write puis revalidation JSON :
 - **Ne modifie pas** `decoupage_arbitrated` à la hausse : il reflète une décision
   humaine ; le skill le lit, il ne l'invente pas.
 
+> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
+> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : …,
+> cadrage_complete: true », toute liste `champ: valeur`). Le verdict et l'état se disent **en clair**
+> (« le cadrage est terminé, prêt pour l'architecte ») — cf. `references/ux-conventions.md`.
+
 ## Livrable visuel
 
 Le dashboard Definition of Ready (jauge de complétude, statut par critère,

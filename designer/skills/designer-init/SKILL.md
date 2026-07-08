@@ -124,6 +124,9 @@ des **gestes humains** (jamais auto).*
 ## Règles invariantes
 - **Aucune décision de design** ni génération de design system. Ce skill prépare l'atelier.
 - **Jamais bloquant.** Le setup s'amorce toujours ; l'amont manquant **avertit**, ne refuse pas.
+- **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un
+  `champ: valeur`/`true`/`false` ; confirmer en clair ce qui est amorcé + la suite (cf.
+  `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
 Étape suivante : `/designer:designer-atelier` — dérouler la checklist de couverture (fondation, expérience, technique) et produire le prompt Claude Design.

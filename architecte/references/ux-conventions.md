@@ -31,8 +31,10 @@ affichés** ni utilisés pour désigner une chose à l'écran.
 ## 1ter. Mise à jour du manifeste = silencieuse
 Le manifeste se met à jour **sans le narrer**. **Interdit** à l'écran : « MAJ
 `architecture.components` », « `architecture.phase = "contrat"` », « je passe
-`coherence_validated = true` ». À l'utilisateur, on dit **ce qui a été produit** (en
-clair) et **la prochaine étape** — rien de la mécanique sous le capot.
+`coherence_validated = true` », **toute ligne de bilan** « Manifeste à jour : phase: X, … » ou liste
+`champ: valeur` / `true`/`false`. **L'utilisateur ne s'intéresse pas à l'état du manifeste.** À
+l'utilisateur, on dit **ce qui a été produit** (en clair) et **la prochaine étape** — rien de la
+mécanique sous le capot.
 
 ## 2. Refus en langage naturel
 Quand un skill ne peut pas tourner, expliquer **en clair** pourquoi et quoi faire.

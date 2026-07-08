@@ -111,6 +111,11 @@ Read-modify-write puis revalidation JSON :
   eu lieu, c'est `false`. Le skill ne force jamais cette validation de lui-même.
 - `updated_at` à l'horodatage courant.
 
+> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
+> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : …,
+> glossary_validated: true », toute liste `champ: valeur`). Confirmer seulement, en clair, **ce qui a
+> été produit** (« le glossaire est validé ») + la prochaine étape (cf. `references/ux-conventions.md`).
+
 ## Règles invariantes appliquées ici
 
 - **Termes du projet, pas le contexte.** On retient le vocabulaire de construction

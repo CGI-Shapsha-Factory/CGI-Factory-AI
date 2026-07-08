@@ -190,6 +190,9 @@ redémarrage est prioritaire (sans lui, l'enforcement ne tourne pas).
   l'enforcement des tests / la protection de branche** est de la préparation déterministe,
   pas une décision d'architecture.)
 - **Jamais bloquant.** Le setup s'installe toujours ; l'absence de cadrage **avertit**, ne refuse pas.
+- **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un
+  `champ: valeur`/`true`/`false` ; confirmer en clair le socle installé + la suite (cf.
+  `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
 Étape suivante : `/architecte:architecte-contrat` — construire le contrat technique (drivers, composants, stack, ADR, walking skeleton, diagrammes).

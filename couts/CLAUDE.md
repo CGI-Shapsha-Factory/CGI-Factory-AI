@@ -101,4 +101,5 @@ manuelle) ; **dossier courant** (installation + mesure confinées au dossier de 
 (reprise/fork comptés une fois) ; **5 catégories** dont **cache 1h à 2×** ; **table de prix par tier,
 externe et datée** ; **rapport par session** (pas de ventilation phase/feature/tier) ; installation
 **fusionnante** (ne jamais écraser un hook existant) ; **interaction en français, sans mécanique
-exposée**.
+exposée** ; **manifeste silencieux** — ne jamais annoncer que le bloc `costs` est écrit, ni afficher un
+`champ: valeur`/`true`/`false` (l'utilisateur ne s'intéresse pas à l'état du manifeste).

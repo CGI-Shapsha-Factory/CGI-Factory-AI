@@ -214,6 +214,11 @@ Read-modify-write puis revalidation JSON :
   légal laissé à l'équipe — **n'empêche pas** la complétude).
 - `updated_at` à l'horodatage courant.
 
+> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
+> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : phase:
+> extraction, discovery_complete: true », toute liste `champ: valeur`). Confirmer seulement, en clair,
+> **ce qui a été produit** + la prochaine étape (cf. `references/ux-conventions.md`).
+
 ## Règles invariantes appliquées ici
 
 - **Ne pas inventer.** On ne s'appuie que sur la matière ; un point non soutenu est

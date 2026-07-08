@@ -110,6 +110,9 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
   est posé **en amont par `architecte-init`** et déjà committé dans le repo ; l'assembleur n'a
   donc **rien à poser** de ce côté.
 - **Paquet seul.** Aucun repo cible ; tout ira dans `assembleur-out/`.
+- **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un
+  `champ: valeur`/`true`/`false` ; confirmer en clair ce qui est posé + la suite (cf.
+  `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
 Étape suivante : `/assembleur:assembleur-convergence` — lire les 3 contrats en parallèle, les converger et produire le paquet de handoff SpecKit.

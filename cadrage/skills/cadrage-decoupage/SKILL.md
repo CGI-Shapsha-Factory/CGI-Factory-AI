@@ -160,6 +160,11 @@ Read-modify-write puis revalidation JSON :
 - `phase = "decoupage"`.
 - `updated_at` à l'horodatage courant.
 
+> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
+> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : phase:
+> decoupage, decoupage_arbitrated: true », toute liste `champ: valeur`). Confirmer seulement, en clair,
+> **ce qui a été produit** + la prochaine étape (cf. `references/ux-conventions.md`).
+
 > **Aucun point ouvert n'est persisté** : pas de `validation_points[]` de découpage,
 > pas de `[À VALIDER]` dans les artefacts. Tout point se tranche en session.
 
