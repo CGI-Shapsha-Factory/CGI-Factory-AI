@@ -68,7 +68,9 @@ Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exa
 `standards.md`, **existence réelle des fichiers d'env à la racine** (`env_files.files` + `.env` gitignoré) / flag `test_enforcement`, marqueurs résiduels) ;
 `scripts/render_diagrams.py` (rendu Mermaid robuste, auto-install, replis, sans prompt) ;
 `scripts/provision_render.py` (pré-installe le rendu à l'init) ; `scripts/bump_doc_version.py`
-(incrément du compteur de version des documents).
+(incrément du compteur de version des documents) ; `scripts/install_formatter.py` (**installe l'outil
+de formatage retenu à l'Étape 4** — `ruff` via pip, `@biomejs/biome` ou `eslint`+`prettier` via npm local ;
+idempotent, sans admin, non bloquant).
 Catalogues copiés à la racine du projet : `references/conventions/` (linters par langage, Étape 4),
 `references/env-templates/` (fichiers d'env par stack, Étape 10), `references/enforcement/`
 (hook Claude Code `PostToolUse` `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code » —

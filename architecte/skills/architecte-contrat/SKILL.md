@@ -138,6 +138,15 @@ du projet :
   pas de convention prédéfinie, et **proposer une convention générique** (indentation,
   longueur de ligne, nommage) ; la faire **trancher en session** (recommandée +
   alternative + saisir), écrite en place.
+
+**Installer l'outil retenu (best-effort, sans admin, non bloquant).** Après avoir écrit la config, poser
+réellement l'outil : `python "${CLAUDE_PLUGIN_ROOT}/scripts/install_formatter.py" <racine> <clé>` où
+`<clé>` ∈ `python` (→ `pip install ruff`) / `ts-js-biome` (→ `npm i -D @biomejs/biome`) / `ts-js-eslint`
+(→ `npm i -D eslint prettier`) — **une invocation par langage/choix retenu**. Le script est **idempotent**
+(saute si déjà installé), **sans droits admin** (pip `--user` en repli ; npm en **local**, jamais `-g` ;
+crée `package.json` via `npm init -y` si absent), et **non bloquant** : si `pip`/`npm` manque ou si
+l'install échoue, il l'indique **sans échouer** (l'équipe finira à la main). Adapter `python` → `py -3`
+si besoin. Confirmer **en clair** ce qui a été installé.
 Écrire/compléter `architecte-out/standards.md` (gabarit `templates/standards.md`)
 qui **pointe vers `conventions/`** + couvre les standards non-formatage (erreurs,
 logging, sécurité, **stratégie de test**, API, données, git, doc). La **stratégie de test**
