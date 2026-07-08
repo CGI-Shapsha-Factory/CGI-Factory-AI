@@ -160,6 +160,11 @@ et le bloc `discovery` du manifeste.
    - Réponse explicite (suggestion acceptée ou saisie) → statut `answered`. **Aucune `(src:)` écrite.**
    - L'utilisateur laisse de côté → le champ est **omis** (statut `deferred`, rien d'écrit dans
      l'artefact, pas de marqueur).
+   - **Q8 (contraintes légales / conformité / RGPD) est OPTIONNELLE.** La proposer **une seule fois**,
+     sans insister. Si l'utilisateur la décline / la laisse à l'équipe (« on gère nous-mêmes ») →
+     statut **`na`** (traité hors cadrage), **pas `deferred`** : elle ne doit **jamais** bloquer la
+     complétude ni revenir. **Ne jamais pousser la conformité** (cf. `references/discovery-questions.md`,
+     note Q8, et `references/ux-conventions.md` §2bis).
    - Décisions groupées (l'utilisateur tranche plusieurs questions d'un coup) → **relire la liste parsée et
      faire confirmer** avant d'écrire (cf. interactive-loop) ; sinon, une question à la fois.
    À la fin de la boucle, annoncer que **tout est complété** (ou rappeler oralement les points laissés
@@ -200,8 +205,10 @@ Read-modify-write puis revalidation JSON :
 - `sources[]` complété par les sources dépouillées (si pas déjà fait au pré-requis).
 - `artifacts.project_frame.status`.
 - `discovery[]` : mettre à jour chaque entrée Qn (`status`, `answer`). **Pas de champ
-  `source`.** Une question tranchée → `answered` ; laissée de côté → `deferred`.
-- `discovery_complete` : `true` si aucune question n'est `pending`/`deferred`.
+  `source`.** Une question tranchée → `answered` ; laissée de côté → `deferred` ; **Q8 légal/conformité
+  laissée à l'équipe → `na`** (terminal, non bloquant).
+- `discovery_complete` : `true` si aucune question n'est `pending`/`deferred` (un `na` — dont un Q8
+  légal laissé à l'équipe — **n'empêche pas** la complétude).
 - `updated_at` à l'horodatage courant.
 
 ## Règles invariantes appliquées ici

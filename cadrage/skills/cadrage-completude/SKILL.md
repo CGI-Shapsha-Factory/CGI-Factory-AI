@@ -41,6 +41,10 @@ Calculer les booléens à partir de l'état réel des artefacts et du manifeste 
   `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" <racine>/.factory/manifest.json` (s'il est
   **introuvable** ou renvoie **exit 1**, **s'arrêter** et le dire en clair — jamais de vérification « à
   la main »). Une capacité du périmètre IN non couverte se **tranche en session**.
+  **Exception — Q8 (contraintes légales / conformité / RGPD) :** optionnelle, gérée **manuellement par
+  l'équipe** hors cadrage. Si elle a été laissée à l'équipe (statut `na`), elle **ne bloque pas** le
+  verdict et n'est **jamais** re-poussée. **Ne jamais pousser la conformité** (cf.
+  `references/ux-conventions.md` §2bis).
 - **`demonstrateur_converged`** — **calculé** : `aucun validation_point bloquant
   ouvert` **ET** `demonstrateur.client_validated == true`. Le skill **lit**
   `client_validated` (geste humain à l'étape 10), il ne le force jamais. Un projet
@@ -54,7 +58,8 @@ non atteint suffit à le laisser au rouge. (La logique interne est documentée d
 **Honnêteté du verdict (non négociable).** Le verdict passe au vert **uniquement**
 si la totalité des critères est verte. En particulier :
 - une **question de découverte différée** (« à confirmer » / passée pour l'instant)
-  reste un **trou bloquant** et maintient le verdict au rouge ;
+  reste un **trou bloquant** et maintient le verdict au rouge — **sauf Q8 (légal / conformité /
+  RGPD) laissée à l'équipe (`na`)**, qui est optionnelle, gérée hors cadrage, et **ne bloque pas** ;
 - **tout** point bloquant ouvert maintient le verdict au rouge ;
 - **aucun chemin « démo → vert »** n'existe : on ne marque jamais un critère comme
   atteint à partir d'une valeur de démonstration, d'exemple ou inventée. On ne

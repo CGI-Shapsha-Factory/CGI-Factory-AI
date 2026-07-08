@@ -51,11 +51,14 @@ avancer si la direction est claire. Exemple cible :
 > « Avant de découper, j'ai besoin de la vision produit — on la fait maintenant ? »
 Jamais : « ⛔ REFUSES: decoupage_arbitrated == false », ni « Porte d'entrée : … ».
 
-## 2bis. Jamais de conformité / RGPD côté utilisateur
-L'utilisateur du cadrage (Product Owner) **n'est pas concerné** par la conformité, le RGPD,
-ou les contraintes transverses (droits, audit, journalisation). **Ne jamais les afficher ni
-en faire des points d'arbitrage visibles.** Ces préoccupations sont captées **en silence**
-comme contraintes transverses transmises à l'architecte, hors du regard de l'utilisateur.
+## 2bis. Conformité / RGPD : optionnelle, jamais poussée
+La conformité (RGPD, hébergement UE, secret professionnel, non-entraînement…) est **gérée
+manuellement par l'équipe**, **hors cadrage** — **jamais** portée ni poussée par l'IA. **Ne jamais
+insister.** Q8 (contraintes légales) peut être **proposée au plus une fois** comme simple choix
+(lister l'option à l'utilisateur) ; un « non / on gère nous-mêmes » est **terminal et non bloquant**
+→ marquer Q8 **`na`**, ne plus jamais y revenir. **Jamais** un point d'arbitrage **récurrent ou
+bloquant**, jamais un blocage de la Definition of Ready. Les contraintes transverses **fines** (droits,
+audit, journalisation…) restent captées **en silence** pour l'architecte, hors du regard du PO.
 
 ## 3. Aucun placeholder persisté
 On **n'écrit pas** de point non tranché dans un artefact : un point sans réponse est **omis**

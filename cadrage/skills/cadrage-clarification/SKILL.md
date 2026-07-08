@@ -46,6 +46,12 @@ clarifier et s'arrêter.
 6. **Plafonner par session** (~8–10 questions) pour ne pas noyer l'utilisateur ; le
    reste sera reposé à un prochain passage.
 
+> **Q8 (légal / conformité / RGPD) n'est jamais poussée.** Si l'utilisateur l'a déjà laissée à
+> l'équipe (statut `na`), **ne pas la re-soulever** — elle est traitée **manuellement par l'équipe**,
+> hors cadrage. Si elle est encore ouverte, la proposer **au plus une fois** comme choix optionnel ;
+> un « non / on gère nous-mêmes » est **terminal** → la marquer `na`, ne plus jamais y revenir, et ne
+> jamais en faire un point bloquant (cf. `references/ux-conventions.md` §2bis).
+
 ## Vérification
 
 - Les points reposés sont **spécifiques et répondables**.

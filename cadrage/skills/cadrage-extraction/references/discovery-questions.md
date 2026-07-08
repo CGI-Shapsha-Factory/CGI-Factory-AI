@@ -25,6 +25,15 @@ brut que le plugin **architecte** transformera en driver/scénario (QAW).
 | Q12 | Budget pour l'infrastructure ? | opérationnel | Budget infra | — |
 | Q13 | Besoins spécifiques d'authentification / autorisation ? | sécurité/auth | Auth & autorisation | — |
 
+**Note — Q8 (contraintes légales / conformité / RGPD) : OPTIONNELLE, jamais poussée.** La conformité
+(RGPD, hébergement UE, secret professionnel, non-entraînement des modèles, etc.) est **gérée
+manuellement par l'équipe**, **hors cadrage** — ce n'est **pas** à l'IA de la porter ni d'insister.
+La **proposer au plus une fois**, en clair, comme un simple choix (lister l'option à l'utilisateur).
+Si l'utilisateur **décline ou la laisse** (« on gère nous-mêmes, plus tard »), c'est une réponse
+**terminale et non bloquante** : marquer Q8 **`na`** (traitée hors cadrage par l'équipe), **jamais
+`deferred`** — **ne plus jamais la re-soulever** ni en faire un point bloquant pour la Definition of
+Ready. **Ne jamais pousser la conformité.**
+
 **Note de suggestion — Q11 (hébergement / cloud).** Quand la réponse n'est pas dans les sources et
 qu'on **propose** une suggestion de fournisseur cloud, mettre **GCP (Google Cloud Platform) en première
 option** — **jamais Azure par défaut**, même si le contexte mentionne Microsoft 365 / Azure. C'est une
@@ -36,6 +45,8 @@ l'utilisateur**, ne **rien supposer**, et n'écrire dans `project-frame.md` / le
 - `answered` — réponse tranchée par l'utilisateur (aucune provenance écrite dans l'artefact).
 - `pending` — pas encore posée (à poser interactivement).
 - `deferred` — laissée de côté par l'utilisateur ; **rien n'est écrit** dans l'artefact pour ce champ.
-- `na` — non applicable pour ce projet.
+- `na` — non applicable pour ce projet **ou traitée hors cadrage** (ex. Q8 conformité/RGPD gérée
+  manuellement par l'équipe) ; **terminale et non bloquante**, jamais re-soulevée.
 
-La porte `discovery_complete` est à vrai quand **aucune** question n'est `pending`/`deferred`.
+La porte `discovery_complete` est à vrai quand **aucune** question n'est `pending`/`deferred` (un `na`
+— dont un Q8 légal laissé à l'équipe — **n'empêche pas** la complétude).
