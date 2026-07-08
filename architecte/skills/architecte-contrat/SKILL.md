@@ -78,9 +78,15 @@ clair et s'arrêter. Écrire le profil d'équipe au manifeste (en silence).
    drivers, chacune avec une **cible chiffrée** et **reliée au driver dont elle découle** ;
    puis formuler les **scénarios de qualité testables (QAW)**.
 **Les deux ne se recouvrent pas** : un attribut de qualité qui répète un driver — ou une
--ilité listée comme driver — est une **erreur à corriger**. Restituer **en prose** dans le
-chat (par leur nom en clair), faire valider, puis écrire `architecte-out/drivers-quality.md`
-(gabarit `templates/drivers-quality.md`). Mettre à jour le manifeste en silence.
+-ilité listée comme driver — est une **erreur à corriger**. **Restituer dans le chat sous forme de DEUX
+tableaux clairs** (noms en clair, jamais de code) :
+- **Drivers** — colonnes **`#`** (priorité) · **`Driver`** · **`Conséquence pour l'architecture`**.
+- **Attributs de qualité** — colonnes **`Attribut`** · **`Cible`** (chiffrée) · **`Scénario (QAW)`** · **`Driver source`**.
+
+*(Exception assumée à la règle « pas de tableau » — cf. `references/ux-conventions.md` §4 : drivers et
+attributs de qualité se lisent bien mieux en tableau.)* Faire valider, puis écrire
+`architecte-out/drivers-quality.md` (gabarit `templates/drivers-quality.md`). Mettre à jour le manifeste
+en silence.
 
 ### Étape 2 — Workflow composants (interactif)
 Dériver une **liste de composants candidats** depuis le périmètre fonctionnel
