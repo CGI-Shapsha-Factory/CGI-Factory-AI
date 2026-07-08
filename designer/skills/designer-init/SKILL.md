@@ -67,9 +67,12 @@ complètent par fusion, sans écraser le bloc `design`).
    - `designer-out/maquette-de-claude-design/` — créé **vide** ; l'humain y déposera l'export du design
      system produit par Claude Design.
 
-   Après création, **afficher à l'utilisateur cette phrase unique** : « Déposez l'export de la maquette
-   générée par Claude Design dans `designer-out/maquette-de-claude-design/` — au choix, un **dossier** ou une
-   **archive ZIP**. »
+   Après création, **afficher à l'utilisateur, en gras**, cette invitation : **« Déposez l'export du
+   design system généré par Claude Design directement dans `designer-out/maquette-de-claude-design/`.
+   Format attendu : le dossier de fichiers DÉZIPPÉ (fichiers et assets tels quels), pas une archive ZIP.
+   Si vous n'avez qu'un `.zip`, dézippez-le dans ce dossier. »** *(Raison : l'export reste directement
+   consultable et lisible dans le repo ; un `.zip` est un blob binaire que git ne sait pas comparer et
+   que `designer-coherence` / l'assembleur devraient extraire.)*
 
    *(Le plugin ne crée plus de dossier `design-system/` ni de seed de tokens : le design system naît dans
    Claude Design et son export est committé dans `designer-out/maquette-de-claude-design/`.)*

@@ -91,7 +91,11 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 
 7. **Inviter à coller la maquette du démonstrateur** : afficher en clair, **en gras**, l'invitation
    suivante à l'utilisateur —
-   > **Une fois la maquette du démonstrateur générée par Claude Design, collez son export dans `cadrage-out/maquette-de-claude-design/` — au choix, un dossier ou une archive ZIP.**
+   > **Collez la maquette du démonstrateur — l'export généré par Claude Design — directement dans le dossier `cadrage-out/maquette-de-claude-design/`.**
+   >
+   > **Format attendu : le dossier de fichiers DÉZIPPÉ** (les fichiers HTML/CSS/JS et les assets tels quels) — **pas une archive ZIP**. Si vous n'avez qu'un `.zip`, **dézippez-le dans ce dossier**.
+   >
+   > *(Raison : la maquette reste ainsi directement consultable et lisible dans le repo ; un `.zip` est un blob binaire que git ne sait pas comparer et que les étapes suivantes devraient extraire.)*
    >
    > C'est l'emplacement de la **maquette de validation du cadrage** (le démonstrateur montré au client).
 
