@@ -234,8 +234,11 @@ Python/Node/Vite/Go, Angular, .NET, Spring), **enrichi d'un slot par dépendance
   `application.yml` + `.env.example`).
 - **Valeurs vides ou d'exemple, jamais de secret réel.** Angular/Vite (bundle client **public**) :
   **URLs publiques uniquement, aucun secret** (les secrets restent côté serveur).
-- **`.gitignore`** : créer/compléter à la racine pour **ignorer** `.env` et `.env.*.local`, et
-  **committer** `.env.example`.
+- **`.gitignore`** (compléter, jamais réécrire) : le fichier **existe déjà** (première version générée
+  par le cadrage, ligne `.factory/` posée par `architecte-init`). **Y ajouter** seulement les lignes
+  manquantes pour **ignorer** `.env` et `.env.*.local` (sans dupliquer, en **préservant** tout le
+  reste) et laisser **`.env.example` committé**. **Le créer uniquement s'il est absent** ; ne jamais
+  l'écraser.
 
 Confirmer en clair les fichiers créés. Mettre à jour le manifeste **en silence** — `env_files` porte la
 **liste des fichiers écrits** (le garde-fou vérifie qu'ils existent) :

@@ -68,9 +68,12 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
    revalider le JSON.
 4. **Laisser `cadrage-out/prompts/` vide** : il se remplit au fil des prompts générés
    (voir `cadrage-demonstrateur-brief` et les autres skills à prompt).
-5. **Git-ignore `.factory/`** : s'assurer que le `.gitignore` du dossier courant
-   contient la ligne `.factory/` (le créer si absent ; ne pas dupliquer si déjà
-   présent). Tout `.factory/` est local, non versionné.
+5. **Git-ignore `.factory/` (première version du `.gitignore` du projet)** : le cadrage **génère la
+   première version** du `.gitignore` du projet — le seul `-init` qui le crée normalement. S'assurer
+   qu'il **contient** la ligne `.factory/` : le **créer s'il est absent**, sinon **ajouter** la ligne
+   manquante (sans dupliquer si déjà présente), en **préservant** le reste. Les phases aval (architecte,
+   designer, assembleur) ne font ensuite que **compléter** ce même fichier — elles ne le réécrivent
+   jamais. Tout `.factory/` est local, non versionné.
 6. **Inviter à centraliser le contexte** : afficher en clair, **en gras**, l'invitation
    suivante à l'utilisateur —
    > **Déposez tous vos fichiers de contexte du projet dans `cadrage-out/source-contexte/` : transcriptions, comptes rendus, fichiers Markdown, PDF, DOCX ou tout autre format.**

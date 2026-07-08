@@ -28,6 +28,15 @@ pour trouver le manifeste du cadrage : un `.factory/manifest.json` situé dans u
 ni l'étendre ; on crée/étend le manifeste **du cwd**, cf. procédure). En cas de doute sur
 un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
+## `.factory/` d'abord — clone frais, `.factory/` git-ignoré (impératif)
+`.factory/` est **entièrement git-ignoré** : il ne voyage **jamais** avec le repo. Cette phase peut être
+menée par **une autre personne**, sur une **autre machine**, à partir d'un **clone frais** où **aucun
+`.factory/` n'existe encore**. Ce skill ne présuppose donc **jamais** un `.factory/` déjà présent :
+**avant toute autre chose**, il (re)pose dans `.factory/` **tout ce dont la phase a besoin** — les
+gabarits d'architecture (`.factory/architecte/`) et le bloc `architecture` du manifeste
+`.factory/manifest.json` (créé s'il manque). Le **handoff** entre phases passe **uniquement** par les
+dossiers `-out/` committés, jamais par `.factory/` (régénérable en relançant ce `-init`).
+
 ## Setup inconditionnel + état du cadrage (jamais bloquant)
 **Ce skill ne bloque jamais.** Tout le setup technique — gabarits, `conventions/`, hooks
 d'enforcement, provisionnement du rendu, bloc `architecture` du manifeste — est **déterministe et
@@ -132,8 +141,12 @@ l'utilisateur décider de la suite.
      Claude Code demande la confiance des hooks — un « oui » par personne, une fois ; un dev hors
      Claude Code ou un `--no-verify` contourne ; la seule barrière non contournable multi-personnes est
      un **ruleset serveur GitHub** — à la charge de l'équipe, hors périmètre de la Factory.)*
-7. **Git-ignore `.factory/`** : s'assurer que le `.gitignore` du dossier courant contient la ligne
-   `.factory/` (le créer si absent ; ne pas dupliquer). Tout `.factory/` est local, non versionné.
+7. **Git-ignore `.factory/` (compléter, jamais réécrire)** : le **`.gitignore` est généré en premier
+   par le cadrage** (`cadrage-init`) et **committé** — il voyage avec le repo, donc présent dans un clone
+   frais. Ici, **ne jamais le réécrire ni l'écraser** : s'assurer seulement qu'il **contient** la ligne
+   `.factory/` — l'**ajouter** si elle manque (sans dupliquer), en **préservant** tout le reste du
+   fichier. **Le créer uniquement s'il est absent** (clone où le cadrage n'a pas tourné dans ce dossier).
+   Tout `.factory/` est local, non versionné.
 
 ## Porte de sortie
 - `conventions/` existe à la racine avec `.editorconfig`.

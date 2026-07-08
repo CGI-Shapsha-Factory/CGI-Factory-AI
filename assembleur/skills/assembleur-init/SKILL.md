@@ -28,6 +28,15 @@ un `.factory/` ou un dossier `-out/` situé dans un dossier **parent** n'apparti
 ce projet — le traiter comme **absent** (ne jamais le lire ; on crée/étend le manifeste **du
 cwd**). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
+## `.factory/` d'abord — clone frais, `.factory/` git-ignoré (impératif)
+`.factory/` est **entièrement git-ignoré** : il ne voyage **jamais** avec le repo. Cette phase peut être
+menée par **une autre personne**, sur une **autre machine**, à partir d'un **clone frais** où **aucun
+`.factory/` n'existe encore**. Ce skill ne présuppose donc **jamais** un `.factory/` déjà présent :
+**avant toute autre chose**, il (re)pose dans `.factory/` **tout ce dont la convergence a besoin** — les
+gabarits de convergence (`.factory/assembleur/`) et le bloc `assembly` du manifeste
+`.factory/manifest.json` (créé s'il manque). Le **handoff** entre phases passe **uniquement** par les
+dossiers `-out/` committés, jamais par `.factory/` (régénérable en relançant ce `-init`).
+
 ## Setup inconditionnel + état de l'amont (jamais bloquant)
 **Ce skill ne bloque jamais.** L'installation des gabarits de convergence, la création de
 `assembleur-out/` (avec `features/` et `memory/`) et l'amorçage du bloc `assembly` sont
@@ -60,9 +69,11 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
    `technical-context.md`, `project-claude-md.md`, `memory-index.md`, `memory-domain.md`,
    `memory-architecture.md`, `memory-design.md`, `memory-features.md`,
    `coherence-report.md`, `attack-plan.md`, `init-cowork.md`.
-2. **Git-ignore `.factory/`** : s'assurer que le `.gitignore` du dossier courant contient
-   la ligne `.factory/` (le créer si absent ; ne pas dupliquer). Tout `.factory/` est local,
-   non versionné.
+2. **Git-ignore `.factory/` (compléter, jamais réécrire)** : le **`.gitignore` est généré en premier
+   par le cadrage** et **committé** — présent dans un clone frais. **Ne jamais le réécrire ni l'écraser** :
+   s'assurer seulement qu'il **contient** la ligne `.factory/` — l'**ajouter** si elle manque (sans
+   dupliquer), en **préservant** le reste. **Le créer uniquement s'il est absent** (clone où le cadrage
+   n'a pas tourné ici). Tout `.factory/` est local, non versionné.
 3. **Créer le dossier de sortie** `assembleur-out/` avec ses sous-dossiers `features/`
    et `memory/` (vides).
 4. **Étendre le manifeste** `.factory/manifest.json` : ajouter le bloc `assembly`
