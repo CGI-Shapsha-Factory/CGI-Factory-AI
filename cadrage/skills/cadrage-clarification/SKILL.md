@@ -67,6 +67,13 @@ Read-modify-write puis revalidation JSON :
 - Ne modifie aucune porte (ni `decoupage_arbitrated`, ni `demonstrateur_converged` —
   calculés ailleurs).
 
+> **Silencieux, sans nom de champ, sans caveat.** Ne **jamais narrer** la mise à jour du manifeste ni
+> citer un nom de champ (`discovery_complete`, `discovery`, `answer`…) ou un code de question (`Q8`,
+> `Q11`) — dire en clair « les contraintes légales sont notées », « toutes les questions de cadrage
+> sont répondues ». **Ne pas ajouter de « ⚠️ point d'attention pour l'architecture »** ni de mise en
+> garde sur des points **déjà tranchés** (ex. conformité vs cloud) : l'équipe a l'image complète —
+> confirmer brièvement et passer à la suite (cf. `references/ux-conventions.md` §2ter et §3ter).
+
 ## Règles invariantes appliquées ici
 
 - **Tout interactif.** On repose les questions en session, on ne génère pas de

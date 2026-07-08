@@ -60,6 +60,15 @@ insister.** Q8 (contraintes légales) peut être **proposée au plus une fois** 
 bloquant**, jamais un blocage de la Definition of Ready. Les contraintes transverses **fines** (droits,
 audit, journalisation…) restent captées **en silence** pour l'architecte, hors du regard du PO.
 
+## 2ter. Ne pas ré-emphaser un point tranché ; aucun caveat d'architecture non sollicité
+Une fois qu'un point est **tranché** par l'équipe (ex. les contraintes légales, le choix de cloud),
+**ne pas y revenir**, ne pas le **ré-emphaser**, ne **jamais** ajouter de « ⚠️ point d'attention » ni
+de mise en garde du type « à vérifier lors du choix d'architecture » ou « ces deux choix pourraient
+être contradictoires ». **L'équipe communique en interne et a l'image complète** : le cadrage **capte**
+la décision et **avance**. Il ne fait pas le travail de l'architecte, ne signale pas de contradiction
+supposée entre décisions déjà prises, et n'insiste pas. Confirmer **brièvement**, en clair, puis passer
+à la suite.
+
 ## 3. Aucun placeholder persisté
 On **n'écrit pas** de point non tranché dans un artefact : un point sans réponse est **omis**
 (cf. `interactive-loop.md`), jamais marqué `[À VALIDER]`. Seul marqueur encore admis dans un
@@ -77,8 +86,9 @@ le fichier et copie tout, sans rien nettoyer.
 
 ## 3ter. Jamais d'identifiant codé ni de marqueur technique en sortie
 Le PO ne connaît ni ne retient les identifiants. **Interdit** en sortie utilisateur :
-- les **codes** type `B1`, `B2`, `A6` et les clés du manifeste — toujours nommer la chose **en
-  clair** (« la validation de conformité par le bâtonnier »), jamais par son code interne ;
+- les **codes** type `B1`, `B2`, `A6`, **`Q8`/`Q11` (codes des questions de découverte)** et les
+  clés du manifeste — toujours nommer la chose **en clair** (« les contraintes légales »,
+  « l'hébergement », « la validation par le bâtonnier »), jamais par son code interne ;
 - les **marqueurs techniques** comme `[À CHIFFRER]`. On garde l'**information** mais en
   **phrase naturelle adaptée au PO** (ex. « cette capacité reste à préciser plus tard
   avec l'équipe technique ») — l'architecte relira l'orientation dans l'artefact.

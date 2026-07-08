@@ -167,8 +167,11 @@ et le bloc `discovery` du manifeste.
      note Q8, et `references/ux-conventions.md` §2bis).
    - Décisions groupées (l'utilisateur tranche plusieurs questions d'un coup) → **relire la liste parsée et
      faire confirmer** avant d'écrire (cf. interactive-loop) ; sinon, une question à la fois.
-   À la fin de la boucle, annoncer que **tout est complété** (ou rappeler oralement les points laissés
-   de côté). Vaut en particulier pour les *seeds qualité* Q2/Q6/Q7.
+   À la fin de la boucle, annoncer **en clair** que tout est complété — « **toutes les questions de
+   cadrage sont répondues** » — (ou rappeler oralement les points laissés de côté). **Jamais** de nom
+   de champ (« discovery_complete = true ») ni de code de question (`Q8`, `Q11`…), et **aucun caveat
+   d'architecture** sur un point déjà tranché (cf. `references/ux-conventions.md` §2ter, §3ter). Vaut
+   en particulier pour les *seeds qualité* de charge/disponibilité/performance.
 3. **Écrire** les réponses dans `project-frame.md` (chaque champ = le contenu décidé, **sans `(src:)`** ;
    un champ non tranché est **omis**). Le project-frame vit sous
    `cadrage-out/project-frame.md`. Les réponses Q1 (qui utilise), Q3 (rôles)
