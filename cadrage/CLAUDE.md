@@ -37,7 +37,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | 2 | `cadrage-vision` | capture → `product-brief.md` (quoi/pourquoi, sans techno) | capture existe |
 | 3 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
 | 4 | `cadrage-decoupage` | découpage **fonctionnel** (use cases par valeur, **sans MVP**) + couplage (hypothèse) ; **table affichée en chat** ; arbitrage **en session, écrit en place** | `vision_complete` |
-| 5 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`), sauvé sous `cadrage-out/prompts/` — **fichier = corps du prompt seul** | vision dispo / retour dispo |
+| 5 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`, **direction visuelle délibérée anti-slop — palette dérivée du domaine, jamais le violet/indigo par défaut**), sauvé sous `cadrage-out/prompts/` — **fichier = corps du prompt seul** | vision dispo / retour dispo |
 | 6 | `cadrage-retour-demonstrateur` | ingère le retour client, résout/invalide | retour dispo |
 | 7 | `cadrage-clarification` | repose en session, une à une, les questions restées sans réponse | questions ouvertes |
 | 8 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |

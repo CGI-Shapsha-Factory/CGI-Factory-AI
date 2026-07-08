@@ -36,12 +36,26 @@ Pour chaque écran
 - Sur les écrans clés, montrer les états utiles : contenu chargé, état vide (avec message
   + action), et un cas d'erreur ou de chargement si pertinent.
 
-Style
-- Direction de marque : violet #5336AB en primaire, esthétique conseil premium, sobre et
-  aérée, beaucoup de blanc, typographie sans-serif lisible, coins arrondis discrets,
-  ombres légères. Aucun emoji.
-- Cohérent d'un écran à l'autre : mêmes composants, mêmes espacements, même palette.
-- Responsive : lisible et utilisable sur desktop et mobile.
+Style — direction visuelle DÉLIBÉRÉE (ne jamais rendre générique)
+- Palette délibérée, choisie pour ce domaine et ce public : <palette concrète — dominante, neutre,
+  accent, en OKLCH (+ hex) — déduite du domaine « <domaine> » et du ton « <ton> ». Utiliser les
+  couleurs de marque du client si elles existent>. Duo de polices : <police de titrage + police de
+  corps, choisies pour le domaine>.
+- Structure de palette : 3 teintes maximum — dominante (~60 %), neutre (~30 %), accent (~10 %) ;
+  décliner uniquement par nuances/teintes. Contraste AA (corps 4,5:1, grand texte 3:1). Fonds
+  légèrement teintés, jamais blanc pur #ffffff ni noir pur #000000.
+- Typographie : le duo ci-dessus, une échelle typographique nette (×1,25 ou ×1,333), corps ≥ 16 px.
+- Surfaces/cartes : SANS bordure par défaut — séparer par l'espace, puis un léger décalage de fond
+  (3–5 %), puis une ombre douce ; pas de bordure grise 1 px partout, pas de bande colorée à gauche.
+- Espacement sur une grille de 8 pt ; varier le rythme pour que les blocs n'aient pas tous le même poids.
+- Concevoir chaque état : survol, focus, actif, désactivé, chargement, vide, erreur.
+- INTERDIT (marqueurs d'interface générée par IA) : violet / indigo / mauve « par défaut » et
+  dégradés violet→bleu (sauf si c'est la vraie couleur de marque du client) ; glassmorphism
+  généralisé, orbes ou dégradés flottants, néon sur fond sombre ; héro centré avec pastille au-dessus
+  du titre, « exactement trois cartes » alignées, rangées d'étapes 1·2·3, bannières de statistiques ;
+  polices par défaut (Inter, Roboto, Poppins, Space Grotesk, Geist, Arial, system-ui) ; icônes
+  génériques géantes centrées ; emoji.
+- Cohérent d'un écran à l'autre (mêmes composants, espacements, palette). Responsive desktop + mobile.
 
 Rendu attendu : une maquette soignée et convaincante qui donne à voir le produit fini et
 sa valeur, suffisante pour décider de la direction. Tu peux poser des hypothèses
@@ -60,8 +74,8 @@ Changements demandés
 - <changement 3 — …>
 
 Contraintes
-- Ne régénère pas à blanc : conserve la mise en page, la palette violet #5336AB et les
-  composants existants.
+- Ne régénère pas à blanc : conserve la mise en page, **la palette et la direction visuelle déjà
+  validées** et les composants existants.
 - Garde la cohérence visuelle et le niveau de finition professionnel.
 - Reste borné aux changements ci-dessus ; ne touche pas à ce qui a été validé.
 ```

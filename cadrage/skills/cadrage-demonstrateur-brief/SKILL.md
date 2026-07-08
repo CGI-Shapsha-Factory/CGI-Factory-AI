@@ -21,7 +21,8 @@ Le démonstrateur sert à **valider la direction produit avec le client** : il d
 **paraître fini et crédible**, comme un vrai produit — pas un wireframe. Le prompt
 demande à Claude Design une **maquette propre et professionnelle** : vraie mise en
 page, hiérarchie visuelle claire, espacements réguliers, contenu réaliste du domaine,
-direction de marque violet sobre (#5336AB), sans emoji.
+**une direction visuelle délibérée adaptée au domaine** (jamais le violet/indigo par défaut des
+interfaces générées par IA), sans emoji.
 
 Ce **n'est pas** le design system définitif (il naît plus tard dans le plugin
 `designer`) : on ne fige pas une charte exhaustive ni tous les composants. Mais le
@@ -44,10 +45,28 @@ Un prompt médiocre donne une maquette médiocre. Pour produire un **prompt exce
   du `glossaire.md` et de la vision) — **jamais** de « lorem ipsum ».
 - **Demander les états utiles** sur les écrans clés : contenu chargé, état vide (message
   + action), un cas d'erreur/chargement si pertinent.
-- **Cadrer le style** : navigation persistante, hiérarchie typo, palette violet #5336AB
-  sobre et aérée, responsive, ton conseil premium, aucun emoji.
+- **Cadrer le style** : navigation persistante, hiérarchie typo, **palette délibérée adaptée au
+  domaine (jamais le violet/indigo par défaut)**, responsive, ton professionnel, aucun emoji.
+  Reprendre tel quel le bloc « Style — direction visuelle délibérée » du gabarit (interdictions
+  incluses), en remplissant les `<…>` par la palette et le duo de polices dérivés (voir ci-dessous).
 - **Auto-portance** : tout le contexte nécessaire est dans le prompt ; aucune référence
   à un fichier ou au manifeste.
+
+## Direction visuelle — dériver une palette délibérée (anti-slop)
+
+Le « violet partout » des maquettes IA vient d'un **défaut** (la médiane des données d'entraînement,
+l'indigo Tailwind). On le corrige en **décidant** : le modèle **déduit** du `product-brief.md`
+(domaine, public, ton — et d'éventuelles **couleurs de marque** du client dans le brief/glossaire)
+une **palette concrète** et **l'inscrit dans le prompt** (dans les `<…>` du bloc Style) :
+- **3 teintes en OKLCH (+ hex)** — dominante / neutre / accent — **adaptées au domaine**, **jamais**
+  le violet/indigo/mauve par défaut (sauf si c'est vraiment la marque du client) ;
+- **un duo de polices** (titrage + corps) choisi pour le domaine — **jamais** les polices par défaut
+  (Inter, Roboto, Poppins, Space Grotesk, Geist, Arial, system-ui).
+
+Exemples de **raisonnement** (décider, pas subir la médiane) : cabinet d'avocats → encre / bleu nuit
++ neutres chauds + **un seul** accent sobre ; santé → teal / vert apaisant + neutres clairs ; finance
+→ vert sobre ou anthracite + accent mesuré. Le client valide ensuite la direction **via la maquette**
+(la charte définitive naît plus tard dans le plugin `designer`).
 
 ## Mode INITIAL (étape 3)
 
@@ -62,7 +81,7 @@ du `cadrage-out/spec-index.md`.
 **démonstrateur de validation de direction** : couvre les parcours clés (walking
 skeleton + premiers use cases de valeur), matérialise le problème résolu et la valeur,
 avec un **rendu propre et professionnel** (mise en page réelle, contenu réaliste,
-direction de marque violet sobre #5336AB).
+**direction visuelle délibérée adaptée au domaine — jamais le violet par défaut**).
 
 ## Mode ADAPTATIF (étape 8b)
 
@@ -97,7 +116,7 @@ fichier. L'utilisateur doit pouvoir ouvrir le fichier et tout copier sans rien n
 ## Vérification (commune)
 
 - Le prompt vise un **rendu propre et professionnel** (mise en page réelle, contenu
-  réaliste, palette violet sobre), pas un wireframe.
+  réaliste, **palette délibérée non-générique — pas de violet/indigo par défaut**), pas un wireframe.
 - Le prompt est **auto-portant** : tout le contexte est dedans, aucun renvoi à un
   fichier.
 - Mode initial : les **parcours clés sont couverts**, avec une liste d'écrans explicite.

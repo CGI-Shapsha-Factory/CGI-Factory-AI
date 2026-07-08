@@ -2,15 +2,17 @@
 
 À coller dans Claude Design, avec les données du `spec-index.md` et du
 `coupling-map.md` en matière source. Sert de support à la revue de couplage.
-Direction de marque : violet sobre en primaire, sobre, sans-serif, aucun
-emoji.
+Direction visuelle : une palette délibérée et sobre adaptée au contenu
+(jamais le violet/indigo par défaut des interfaces générées par IA),
+sans-serif, aucun emoji.
 
 ```
 Crée une visualisation HTML interactive d'un découpage produit en features, à
 partir des données que je te fournirai. Objectif : me servir de support pour
 arbitrer le découpage en revue de couplage.
 
-Style : violet #5336AB en primaire, sobre, lisible, sans-serif, aucun emoji.
+Style : une palette délibérée et sobre adaptée au contenu (jamais le violet/indigo
+par défaut des interfaces générées par IA), lisible, sans-serif, aucun emoji.
 
 Représentation :
 - Chaque feature est un bloc, avec son identifiant et son nom.

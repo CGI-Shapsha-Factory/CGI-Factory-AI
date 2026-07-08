@@ -23,7 +23,11 @@ qui manque plutôt que de l'inventer.
 Contexte produit
 - Produit / vision : <1–2 phrases>.
 - Direction stylistique : <maquette de cadrage comme inspiration (réf. …) ; marque si
-  présente — palette / typo / ton — sinon direction à poser, feuille blanche assumée>.
+  présente — palette / typo / ton — sinon direction délibérée à poser (feuille blanche assumée),
+  choisie pour le domaine et le public — JAMAIS le violet/indigo par défaut des interfaces générées
+  par IA>. Palette concrète : 3 teintes en OKLCH — dominante / neutre / accent — + un duo de polices
+  (titrage + corps) adaptés au domaine (jamais Inter, Roboto, Poppins, Space Grotesk, Geist, Arial,
+  system-ui).
 - Stack cible (rend le système exécutable et synchronisable) : <framework front, lib de
   composants, stratégie CSS / tokens>.
 
@@ -51,6 +55,19 @@ Couverture exigée (consignes de discipline)
   erreurs jamais signalées par la couleur seule, focus porté sur le 1er champ en erreur.
 - Responsive : <breakpoints cibles + comportement mobile> ; internationalisation si requise ;
   budget de performance (éviter les animations lourdes si contrainte).
+
+À éviter absolument (marqueurs d'interface générée par IA)
+- Violet / indigo / mauve « par défaut » et dégradés violet→bleu (sauf vraie couleur de marque) ;
+  glassmorphism généralisé, orbes ou dégradés flottants, néon sur fond sombre.
+- Fonds blanc pur #ffffff ou noir pur #000000 (préférer des fonds légèrement teintés) ; cartes à
+  bordure grise 1 px partout ou à bande colorée à gauche (préférer : l'espace, puis un léger décalage
+  de fond 3–5 %, puis une ombre douce).
+- Polices par défaut (Inter, Roboto, Poppins, Space Grotesk, Geist, Arial, system-ui) ; icônes
+  génériques géantes centrées ; emoji ; layouts clichés (héro centré à pastille au-dessus du titre,
+  « exactement trois cartes » alignées, rangées d'étapes 1·2·3, bannières de statistiques).
+- Structure de palette : 3 teintes maximum (dominante ~60 %, neutre ~30 %, accent ~10 %), déclinées
+  par nuances/teintes ; espacement sur une grille de 8 pt ; échelle typographique nette (×1,25 ou
+  ×1,333), corps ≥ 16 px.
 
 Hors périmètre
 Le back, la persistance, le modèle de données interne et le déploiement ne sont pas demandés.

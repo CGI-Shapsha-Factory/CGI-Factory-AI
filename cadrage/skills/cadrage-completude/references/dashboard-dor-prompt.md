@@ -1,15 +1,17 @@
 # Prompt Claude Design — Dashboard Definition of Ready
 
 À coller dans Claude Design, avec l'état du manifeste / le `completude-report.md`
-en matière source. Direction de marque : violet sobre en primaire, sobre,
-premium, sans-serif, aucun emoji. Un vert sobre uniquement pour les états atteints.
+en matière source. Direction visuelle : une palette délibérée et sobre adaptée au
+contenu (jamais le violet/indigo par défaut des interfaces générées par IA), premium,
+sans-serif, aucun emoji. Un vert sobre uniquement pour les états atteints.
 
 ```
 Crée un tableau de bord HTML qui montre si la phase amont d'un projet est prête
 à passer en fabrication SpecKit, à partir d'un état que je te fournirai.
 Objectif : voir d'un coup d'œil ce qui est complet et ce qui manque.
 
-Style : violet #5336AB en primaire, sobre, premium, sans-serif, aucun emoji.
+Style : une palette délibérée et sobre adaptée au contenu (jamais le violet/indigo
+par défaut des interfaces générées par IA), premium, sans-serif, aucun emoji.
 Une jauge de complétude globale en pourcentage. Un vert sobre uniquement pour
 les états atteints.
 

@@ -92,6 +92,12 @@ true`, **geste humain**) :
   (tous les états par composant, tous les parcours, erreurs + états vides, marquer ce qui manque). Les items
   **sans objet** sont omis. **Aucun `[À VALIDER]` n'est émis** : tous les points ayant été résolus en
   session à l'étape 4, le prompt ne contient que des décisions actées.
+  - **Direction visuelle délibérée (anti-slop).** Remplir la direction stylistique par une **palette
+    concrète** (3 teintes en OKLCH — dominante / neutre / accent — + un duo de polices titrage/corps)
+    **déduite du domaine, du public et du ton**, ou des **couleurs de marque** du client si elles
+    existent — **jamais** le violet/indigo par défaut des interfaces générées par IA, jamais les polices
+    par défaut (Inter, Roboto, Poppins, Space Grotesk, Geist…). Reprendre tel quel le bloc « À éviter
+    absolument (marqueurs d'interface générée par IA) » du gabarit.
   > **Le fichier sauvegardé ne contient que le corps du prompt prêt à coller** (le bloc de code rempli du
   > gabarit) : **pas de titre H1, pas de note en blockquote, pas de métadonnée, pas de pied de page**. La
   > métadonnée (sujet, date, version) vit dans l'entrée `prompts[]` du manifeste, **jamais** dans le
