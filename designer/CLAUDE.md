@@ -58,7 +58,7 @@ retours structurés complets + passe de complétude) pour pré-remplir la checkl
   le contrat propre qui alimente le **versant technique** de la checklist.
 
 ## Sorties (3)
-1. **Prompt Claude Design** (`designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md`, **fichier plat**, **corps seul prêt à coller**) — fait naître le design system. **Direction visuelle délibérée anti-slop** : palette dérivée du domaine (3 teintes OKLCH + duo de polices), **jamais le violet/indigo par défaut** ni les autres marqueurs d'interface générée par IA (bloc « À éviter absolument » du gabarit).
+1. **Prompt Claude Design** (`designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md`, **fichier plat**, **corps seul prêt à coller — plein texte, aucun Markdown**) — fait naître le design system. **Direction visuelle délibérée et CONCRÈTE (anti-slop)** : valeurs **nommées** écrites dans le prompt — palette en **hex + rôle**, **polices nommées**, espacement/rayons — déduites du domaine (ou marque client), **jamais** le violet/indigo par défaut ni polices par défaut, **jamais** les clichés d'IA (bloc « À éviter absolument » + phrase de verrou « tout choix non spécifié = un défaut générique »). *« Silence = Claude defaults »* : on ne laisse aucun choix esthétique au défaut.
 2. **Rapport de couverture** (`designer-out/coverage-report.md`) — la trace de la rigueur.
 3. **Handoff design** (`designer-out/design-guidelines.md`) — réf. du système synchronisé +
    guidelines, consommé par l'Assembleur (qui grave la règle « tout écran dérive de l'export committé » en constitution/claude.md).

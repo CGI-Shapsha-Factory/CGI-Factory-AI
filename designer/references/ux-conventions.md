@@ -63,6 +63,11 @@ de page. La métadonnée (sujet, date, version) vit dans l'entrée `prompts[]` d
 nettoyer. Le gabarit `templates/claude-design-prompt.md` garde son en-tête explicatif ; seul le
 **corps du bloc de code** rempli est sauvegardé.
 
+Le prompt lui-même est du **plein texte prêt à coller** : **aucun Markdown dans le corps** — pas de
+titre `#`, pas de `**gras**`, pas de tableau, pas de `---`, pas de blocs ``` ``` — seulement des
+**libellés de section en clair** (« Direction visuelle », « Contexte produit », « Fondation »…) et des
+tirets `-`. Ainsi le texte collé dans Claude Design reste propre, sans artefact de mise en forme.
+
 ## 4. Langage non technique, pas de tableau imposé
 Composants, tokens, parcours et items de couverture restitués en **valeur / usage**
 compréhensibles (prose claire). Pas de jargon inutile, pas d'identifiant technique, et **pas de

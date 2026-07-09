@@ -20,14 +20,23 @@ Conçois et produis le design system de <produit en 1 phrase>, puis applique-le 
 implémenté en code. Ne copie pas la maquette existante : elle est une inspiration, pas une cible. Marque ce
 qui manque plutôt que de l'inventer.
 
+Direction visuelle — à suivre à la lettre (aucun choix laissé au défaut)
+- Palette : 3 couleurs en hexadécimal avec rôle nommé — <--couleur-primaire: #RRGGBB (actions/CTA)>,
+  <--fond: #RRGGBB (légèrement teinté, jamais #ffffff)>, <--texte: #RRGGBB (jamais #000000)>, plus
+  <succès / erreur / alerte>. Répartition dominante ~60 % / neutre ~30 % / accent ~10 %, déclinée par
+  nuances. Choisie pour ce domaine et ce public (ou la marque du client). JAMAIS violet / indigo /
+  mauve « par défaut », JAMAIS de dégradé violet→bleu.
+- Typographie : <police de titrage nommée> + <police de corps nommée> — jamais Inter, Roboto, Poppins,
+  Space Grotesk, Geist, Arial, system-ui. Échelle ×1,25 ou ×1,333, corps ≥ 16 px, graisses 400/500/600.
+- Espacement : unité de base <4 px> sur une grille de 8 pt. Rayons par composant (<boutons 4 px,
+  cartes 8 px, panneaux 0 px>). Bordures 1 px uniquement, jamais 2 px et plus.
+- N'introduis AUCUNE couleur, police, rayon ou traitement hors de ceux listés ici. Tout choix non
+  spécifié retombe sur un défaut générique : suis cette direction à la lettre.
+
 Contexte produit
 - Produit / vision : <1–2 phrases>.
-- Direction stylistique : <maquette de cadrage comme inspiration (réf. …) ; marque si
-  présente — palette / typo / ton — sinon direction délibérée à poser (feuille blanche assumée),
-  choisie pour le domaine et le public — JAMAIS le violet/indigo par défaut des interfaces générées
-  par IA>. Palette concrète : 3 teintes en OKLCH — dominante / neutre / accent — + un duo de polices
-  (titrage + corps) adaptés au domaine (jamais Inter, Roboto, Poppins, Space Grotesk, Geist, Arial,
-  system-ui).
+- Direction stylistique : <maquette de cadrage = inspiration (réf. …), jamais une cible ; marque du
+  client si présente>. Appliquer la « Direction visuelle » ci-dessus (valeurs déjà fixées, concrètes).
 - Stack cible (rend le système exécutable et synchronisable) : <framework front, lib de
   composants, stratégie CSS / tokens>.
 
@@ -63,8 +72,10 @@ Couverture exigée (consignes de discipline)
   bordure grise 1 px partout ou à bande colorée à gauche (préférer : l'espace, puis un léger décalage
   de fond 3–5 %, puis une ombre douce).
 - Polices par défaut (Inter, Roboto, Poppins, Space Grotesk, Geist, Arial, system-ui) ; icônes
-  génériques géantes centrées ; emoji ; layouts clichés (héro centré à pastille au-dessus du titre,
-  « exactement trois cartes » alignées, rangées d'étapes 1·2·3, bannières de statistiques).
+  génériques géantes centrées ; emoji ; coins très arrondis sur *tout* ; padding de 50 px et plus
+  partout ; layouts clichés : héro plein écran centré (titre + sous-titre + CTA), « exactement trois
+  cartes » alignées, sections en grille d'icônes, carrousels de témoignages, rangées d'étapes 1·2·3,
+  bannières de statistiques.
 - Structure de palette : 3 teintes maximum (dominante ~60 %, neutre ~30 %, accent ~10 %), déclinées
   par nuances/teintes ; espacement sur une grille de 8 pt ; échelle typographique nette (×1,25 ou
   ×1,333), corps ≥ 16 px.

@@ -92,12 +92,17 @@ true`, **geste humain**) :
   (tous les états par composant, tous les parcours, erreurs + états vides, marquer ce qui manque). Les items
   **sans objet** sont omis. **Aucun `[À VALIDER]` n'est émis** : tous les points ayant été résolus en
   session à l'étape 4, le prompt ne contient que des décisions actées.
-  - **Direction visuelle délibérée (anti-slop).** Remplir la direction stylistique par une **palette
-    concrète** (3 teintes en OKLCH — dominante / neutre / accent — + un duo de polices titrage/corps)
-    **déduite du domaine, du public et du ton**, ou des **couleurs de marque** du client si elles
-    existent — **jamais** le violet/indigo par défaut des interfaces générées par IA, jamais les polices
-    par défaut (Inter, Roboto, Poppins, Space Grotesk, Geist…). Reprendre tel quel le bloc « À éviter
-    absolument (marqueurs d'interface générée par IA) » du gabarit.
+  - **Direction visuelle délibérée et CONCRÈTE (anti-slop).** Remplir la section « Direction visuelle »
+    du gabarit avec des **valeurs NOMMÉES, jamais des placeholders** : palette en **hexadécimal + rôle**
+    (`--couleur-primaire: #… (CTA)`, `--fond: #…` légèrement teinté, `--texte: #…`, + succès/erreur/
+    alerte), **polices nommées** (titrage + corps), **unité d'espacement + rayons par composant** —
+    **déduits du domaine, du public et du ton** (ou de la **marque** du client si elle existe).
+    **Jamais** le violet/indigo par défaut ni les polices par défaut (Inter, Roboto, Poppins, Space
+    Grotesk, Geist…). Principe : **« tout choix non spécifié retombe sur un défaut générique »** — ne
+    rien laisser au hasard. Exemples de raisonnement : cabinet d'avocats → encre/bleu nuit + neutres
+    chauds + serif éditoriale (ex. Fraunces) ; santé → teal apaisant + sans-serif humaniste ; finance →
+    anthracite + un accent mesuré. Reprendre **tel quel** le bloc « À éviter absolument » **et la phrase
+    de verrou** du gabarit.
   > **Le fichier sauvegardé ne contient que le corps du prompt prêt à coller** (le bloc de code rempli du
   > gabarit) : **pas de titre H1, pas de note en blockquote, pas de métadonnée, pas de pied de page**. La
   > métadonnée (sujet, date, version) vit dans l'entrée `prompts[]` du manifeste, **jamais** dans le
