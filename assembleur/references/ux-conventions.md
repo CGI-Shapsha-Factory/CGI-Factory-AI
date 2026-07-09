@@ -29,8 +29,13 @@ phase concernée. » Jamais « ⛔ design_validated == false ».
 - Pas d'identifiant codé en sortie utilisateur ; on nomme chaque chose en clair.
 - **Contenu seul** dans les artefacts : aucune `(src:)`, aucun horodatage, aucun nom de personne.
 
-## 4. Pas de tableau, restitution en prose
+## 4. Restitution en prose — sauf le récapitulatif de la porte de validation
 Restituer la cohérence et l'avancement **en prose** ; pas de tableau de booléens, pas de jargon.
+**Seule exception : le récapitulatif de la porte de validation de cohérence** (`assembleur-convergence`),
+qui **doit** présenter un **tableau de synthèse par feature** (intitulés **en clair**, les 3 faces
+couvertes, verdict de cohérence, point d'attention) **juste avant** de poser la question — pour que le
+garant voie exactement ce qu'il approuve. Ce tableau reste en **langage naturel** : aucun identifiant
+codé, aucune clé manifeste, aucun booléen brut.
 
 ## 5. Une ligne « étape suivante » à la fin de chaque skill
 Terminer chaque exécution par exactement une phrase en clair sur la suite.

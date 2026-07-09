@@ -85,8 +85,11 @@ un trou ou une contradiction apparaît. Ne synthétiser que sur des retours comp
   SpecKit doit connaître pour ordonner les `/speckit.specify`.
 - **`technical-context.md`** (gabarit `technical-context.md`) — le **Technical Context**
   projet (mappe la section du `plan.md` SpecKit).
-- **`memory/`** — contexte durable (convention `MEMORY.md`) : `MEMORY.md` (index concis,
-  pointeurs), `domain.md` (langage ubiquitaire + entités — **remplace l'ancien GLOSSARY**),
+- **`memory/`** — contexte durable (convention `MEMORY.md`) : `MEMORY.md` (index concis :
+  des **pointeurs en liens Markdown** `[titre](chemin) — accroche`, jamais des chemins bruts
+  entre backticks ; chemins **relatifs à `memory/MEMORY.md`** — un voisin de `memory/` s'écrit
+  en nom nu `domain.md` (**jamais** `memory/domain.md`), un fichier du paquet à la racine est
+  préfixé `../` (`../technical-context.md`)), `domain.md` (langage ubiquitaire + entités — **remplace l'ancien GLOSSARY**),
   `architecture.md` (stack, composants, digest ADR, conventions, cibles qualité),
   `design.md` (réf. design system + guidelines : états, erreurs, a11y), `features.md`
   (séquence + couplage + walking skeleton + pointeurs des 3 faces).
@@ -113,8 +116,22 @@ les cibles qualité/perf sont tenables par la stack/déploiement). Écrire
 `assembleur-out/coherence-report.md` (prose, sans marqueur résiduel). Lancer le garde-fou
 (**obligatoire**) : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_assembly.py" <racine>/cadrage-out/manifest.json`.
 S'il est **introuvable** (chemin plugin non résolu) ou renvoie **exit 1**, **s'arrêter** et **dire en
-clair** ce qui manque — **jamais** de vérification « à la main » silencieuse. **Restituer en prose** ;
-l'humain valide. Ne **jamais** valider la cohérence de soi-même.
+clair** ce qui manque — **jamais** de vérification « à la main » silencieuse.
+
+**Récapitulatif de validation (obligatoire, juste avant la question).** Ne **jamais** poser la
+question de validation « à sec » : le garant doit **voir ce qu'il approuve**. Afficher d'abord un
+récapitulatif clair et présentable de ce qui a été convergé —
+- une phrase de contexte (le produit + le nombre de features) ;
+- un **tableau de synthèse, une ligne par feature** : intitulé métier **en clair** (jamais un
+  identifiant `001` / `UC1`), les **3 faces** (fonctionnel / technique / design — `✓` couverte, ou
+  « sans objet » **motivé** en une poignée de mots, ex. « pas d'écran direct »), le **verdict de
+  cohérence** (cohérente / à revoir) et un éventuel **point d'attention** ;
+- une ligne sur le **paquet produit** (pré-constitution, graines spec, carte des features, contexte
+  technique, mémoire, CLAUDE.md).
+
+**Puis** poser la question de validation. Le tableau reste en **langage naturel** au service de la
+lisibilité de la porte : **noms en clair uniquement**, aucune clé manifeste, aucun booléen brut. L'humain
+valide. Ne **jamais** valider la cohérence de soi-même.
 
 ## Étape 4 — Résolution interactive des points (obligatoire avant de conclure)
 Balayer **tout le paquet** : pour **chaque** marqueur `[À VALIDER]` / `[À CHIFFRER]` /
@@ -135,8 +152,9 @@ concerné. **Aucun fichier annexe.** **Ne pas conclure** tant qu'un marqueur sub
   un fichier que SpecKit génère.
 - **Proposer, ne pas décider.** La cohérence est validée par l'humain.
 - **Rien laissé indéfini.** Tout marqueur se résout en session, en place, avant d'avancer.
-- **Rien de la mécanique affiché.** Aucun nom de variable/clé manifeste, aucun tableau ;
-  manifeste mis à jour en silence (voir `references/ux-conventions.md`).
+- **Rien de la mécanique affiché.** Aucun nom de variable/clé manifeste ; **seul tableau autorisé :
+  le récapitulatif de la porte de validation** (noms en clair, pas de booléen brut) ; manifeste mis à
+  jour en silence (voir `references/ux-conventions.md`).
 - **Lecture depuis les fichiers, jamais depuis la session.** Les 3 contrats sont **toujours** (re)lus
   depuis les fichiers committés via les 5 agents, indépendamment de ce qui est déjà en contexte — pas
   de raccourci « déjà lu en session » (exécution reproductible par n'importe qui).
