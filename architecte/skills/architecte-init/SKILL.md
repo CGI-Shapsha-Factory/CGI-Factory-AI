@@ -20,10 +20,10 @@ partagé avec un bloc `architecture`.
 ## Ancrage du répertoire (impératif)
 **La racine du projet est le dossier courant** — celui où la session est lancée (le
 cwd) — **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` /
-`*-out/` situé plus haut. Tous les chemins de ce skill (`cadrage-out/manifest.json`,
+`*-out/` situé plus haut. Tous les chemins de ce skill (`manifest.json`,
 `.factory/architecte/`, `conventions/`, `architecte-out/`, `.claude/`,
 `lefthook.yml`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence**
-pour trouver le manifeste du cadrage : un `cadrage-out/manifest.json` situé dans un dossier
+pour trouver le manifeste du cadrage : un `manifest.json` situé dans un dossier
 **parent** n'appartient **pas** à ce projet — le traiter comme **absent** (ne jamais le lire
 ni l'étendre ; on crée/étend le manifeste **du cwd**, cf. procédure). En cas de doute sur
 un chemin relatif, l'écrire en **absolu à partir du cwd**.
@@ -34,7 +34,7 @@ menée par **une autre personne**, sur une **autre machine**, à partir d'un **c
 `.factory/` n'existe encore**. Ce skill ne présuppose donc **jamais** un `.factory/` déjà présent :
 **avant toute autre chose**, il (re)pose dans `.factory/` **tout ce dont la phase a besoin** — les
 gabarits d'architecture (`.factory/architecte/`) et le bloc `architecture` du manifeste
-`cadrage-out/manifest.json` (créé s'il manque). Le **handoff** entre phases passe **uniquement** par les
+`manifest.json` (créé s'il manque). Le **handoff** entre phases passe **uniquement** par les
 dossiers `-out/` committés, jamais par `.factory/` (régénérable en relançant ce `-init`).
 
 ## Setup inconditionnel + état du cadrage (jamais bloquant)
@@ -44,7 +44,7 @@ sans dépendance au cadrage** : il s'installe **toujours**, dans le dossier cour
 soit là ou non. **Ne jamais refuser** au motif que le cadrage manque.
 
 Après le setup, **vérifier l'état du cadrage** dans le cwd (présence, par chemin, de) :
-`cadrage-out/manifest.json` (verdict cadrage scellé), `cadrage-out/project-frame.md`,
+`manifest.json` (verdict cadrage scellé), `cadrage-out/project-frame.md`,
 `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`, et les
 briefs `cadrage-out/features-fonctionnels-brief/*.md`. Puis :
 
@@ -78,7 +78,7 @@ l'utilisateur décider de la suite.
    sont PAS installées ici** : la stack n'est connue qu'après le workflow stack — c'est
    `architecte-contrat` qui les déposera (voir son étape conventions).
 3. **Créer `architecte-out/decisions/`** (dossier des ADR, vide).
-4. **Manifeste** `cadrage-out/manifest.json` **du dossier courant** :
+4. **Manifeste** `manifest.json` **du dossier courant** :
    - **S'il existe** → ajouter le bloc `architecture` ci-dessous s'il est absent (read-modify-write
      + revalidation JSON), **sans toucher aux autres blocs**.
    - **S'il n'existe pas** (cadrage pas encore lancé ici) → **créer d'abord le dossier `cadrage-out/`

@@ -33,7 +33,7 @@ ne contient donc **que** ce qui sort des **3 contrats** + les **liens** GitHub/L
 on construit » à venir — le PO lira l'état vivant lui-même via les liens.
 
 ## Pré-requis (vérification silencieuse)
-Lire `cadrage-out/manifest.json` **sans l'annoncer** :
+Lire `manifest.json` **sans l'annoncer** :
 - la convergence a tourné et le paquet est présent (`assembleur-out/feature-map.md` + au moins une
   graine `assembleur-out/features/*.md`) ;
 - sinon → le dire en clair et orienter vers `/assembleur:assembleur-convergence` :
@@ -97,7 +97,7 @@ Sources = **sorties amont uniquement**, en synthèse (pas de copie) :
 ## Vérification avant de conclure
 - `init-cowork.md` existe à la racine, expose une **section GitHub** et une **section Linear**, et
   **ne contient aucune** section SpecKit / fabrication / avancement (contrainte de périmètre).
-- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_cowork.py" <racine>/cadrage-out/manifest.json`
+- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_cowork.py" <racine>/manifest.json`
   (utiliser `python` ; `python3` sur macOS/Linux).
 - Le bloc `cowork` du manifeste **reparse sans erreur** ; restitution **en prose** (« j'ai généré
   le contexte de supervision `init-cowork.md` — GitHub + Linear »), manifeste mis à jour **en silence**.

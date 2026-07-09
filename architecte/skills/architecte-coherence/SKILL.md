@@ -70,7 +70,7 @@ qui manque, ce qui se contredit, ce qui pourrait casser. Au minimum :
     une checklist de présence.
 
 Garde-fou déterministe (**obligatoire, jamais sauté**) : lancer
-`python "${CLAUDE_PLUGIN_ROOT}/scripts/check_architecture.py" <racine>/cadrage-out/manifest.json` — il
+`python "${CLAUDE_PLUGIN_ROOT}/scripts/check_architecture.py" <racine>/manifest.json` — il
 échoue notamment s'il **reste un marqueur** dans un fichier `architecte-out/`, si un
 composant n'a pas de techno, si un langage retenu n'a pas son fichier de conventions,
 **si une techno de `stack-technique.md` n'a pas de version exacte (ou dit « latest »)**, ou
@@ -115,7 +115,7 @@ contrats par feature, une fois le contrat de design figé.)
   identifiant codé, aucun tableau (voir `references/ux-conventions.md`). Manifeste
   mis à jour en silence ; à l'utilisateur, seulement le bilan en clair et la suite.
 
-**Handoff (avant de passer la main).** Committer `cadrage-out/manifest.json` (avec la cohérence **scellée**)
+**Handoff (avant de passer la main).** Committer `manifest.json` (avec la cohérence **scellée**)
 **et** `architecte-out/` — la phase suivante lit le **repo committé**, pas ta session ni ta machine. Un
 manifeste non re-committé après la validation ferait échouer `designer-init` (flag à `false`) sur un autre poste.
 

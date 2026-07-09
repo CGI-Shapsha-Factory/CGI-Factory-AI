@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la passe decouverte.
 
-Lit le manifeste d'un projet (cadrage-out/manifest.json par defaut) et echoue
-si la couverture des 13 questions de cadrage est incomplete :
+Lit le manifeste d'un projet (`manifest.json` a la racine par defaut ; repli
+`cadrage-out/manifest.json` legacy) et echoue si la couverture des 13 questions de cadrage est incomplete :
   - une question au statut `pending` -> non posee, trou bloquant.
 
 Aucune provenance n'est exigee (on n'ecrit pas de `source`). Une question
@@ -15,14 +15,22 @@ Usage:
     python check_discovery.py [chemin/vers/manifest.json]
 """
 import json
+import os
 import sys
 
 REQUIRED_IDS = [f"Q{i}" for i in range(1, 14)]
 OK_STATUSES = {"answered", "na", "deferred"}
 
 
+def _manifest_path(argv):
+    """Manifeste a la racine (`manifest.json`) par defaut ; repli `cadrage-out/manifest.json` (legacy)."""
+    if len(argv) > 1:
+        return argv[1]
+    return "manifest.json" if os.path.isfile("manifest.json") else "cadrage-out/manifest.json"
+
+
 def main(argv):
-    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
+    path = _manifest_path(argv)
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)

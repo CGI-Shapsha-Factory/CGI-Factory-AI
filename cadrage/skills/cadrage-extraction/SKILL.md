@@ -49,7 +49,7 @@ les sources — il n'est **jamais** obligatoire ni une porte de validation.
 ## Workspace et manifeste
 
 Les documents du cadrage vivent dans `cadrage-out/` à la racine du projet client, et le
-manifeste `cadrage-out/manifest.json` est le contrat machine entre les skills.
+manifeste `manifest.json` est le contrat machine entre les skills.
 **Les deux sont créés par `cadrage-init`** (skill d'amorçage) — `cadrage-extraction`
 ne bootstrappe plus rien. Toute écriture du manifeste est un **read-modify-write**
 suivi d'une **revalidation JSON** (le fichier doit reparser sans erreur).
@@ -60,7 +60,7 @@ Vérifier sans l'annoncer : **le manifeste existe ET au moins une source est
 déclarée.** Ne jamais afficher de statut de « porte » ; si un pré-requis manque,
 poser une question en clair.
 
-1. Si `cadrage-out/manifest.json` est absent : indiquer en clair qu'il faut
+1. Si `manifest.json` est absent : indiquer en clair qu'il faut
    d'abord initialiser le workspace (`cadrage-init`) et s'arrêter là.
 2. Recueille les sources que l'utilisateur déclare (id de page Notion, chemin de
    fichier, plusieurs chemins, ou un dossier). Si l'entrée est un dossier, lister
@@ -196,7 +196,7 @@ Avant d'écrire le manifeste, vérifier :
 - **Aucune invention** (auto-contrôle passé), **aucune `(src:)` ni horodatage** dans l'artefact.
 - **Chaque question de découverte tranchée est écrite** ; les questions laissées de côté sont
   simplement absentes. Vérifiable par
-  `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" <racine>/cadrage-out/manifest.json`.
+  `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" <racine>/manifest.json`.
 
 Si une de ces conditions échoue, corriger avant d'écrire.
 

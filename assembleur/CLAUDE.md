@@ -82,7 +82,7 @@ assembleur-out/
 ├── CLAUDE.md                  # CLAUDE.md projet (< 200 lignes, @import memory/MEMORY.md — jamais backtiqué)
 └── memory/{MEMORY,domain,architecture,design,features}.md
 ```
-Les **gabarits** vivent dans `.factory/assembleur/` (git-ignoré) ; le **manifeste** est **committé** dans `cadrage-out/manifest.json`. Écriture = read-modify-write + revalidation JSON.
+Les **gabarits** vivent dans `.factory/assembleur/` (git-ignoré) ; le **manifeste** est **committé** dans `manifest.json`. Écriture = read-modify-write + revalidation JSON.
 
 **Déploiement mémoire (important).** `CLAUDE.md` **et** le dossier `memory/` ne sont **pas** posés dans
 `assembleur-out/` : `assembleur-convergence` les écrit **directement dans le `.claude/` du projet**
@@ -127,7 +127,7 @@ par introspection). Agent : `agents/contract-reader.md`.
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python scripts/check_assembly.py <projet>/cadrage-out/manifest.json
+python scripts/check_assembly.py <projet>/manifest.json
 ```
 
 ## Invariants

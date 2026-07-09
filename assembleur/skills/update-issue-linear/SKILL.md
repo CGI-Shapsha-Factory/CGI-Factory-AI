@@ -26,7 +26,7 @@ Factory est le bloc `linear` du manifeste. Le dialogue passe par le **MCP du plu
 (externe à la Factory) — voir `references/linear-guide.md`.
 
 ## Pré-requis (vérification silencieuse)
-Lire `cadrage-out/manifest.json` **sans l'annoncer** : le bloc `linear` liste les tickets déjà créés
+Lire `manifest.json` **sans l'annoncer** : le bloc `linear` liste les tickets déjà créés
 (`issues[]` : `identifier`, `id` de feature, `name`, `url`).
 - **Des tickets existent** → s'en servir comme index (résolution rapide et précise).
 - **Aucun ticket / pas de bloc `linear`** → **ne pas bloquer** : on peut chercher directement dans

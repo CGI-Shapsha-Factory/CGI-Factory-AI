@@ -3,8 +3,8 @@
 
 Le skill `create-cowork-md` genere `init-cowork.md` a la racine du projet (contexte unique pour le
 PO qui supervise depuis Quark : liens vers le depot GitHub et le projet Linear + le contexte issu
-des 3 contrats). Ce garde-fou lit le manifeste (cadrage-out/manifest.json par defaut), en deduit la
-racine du projet, et echoue si :
+des 3 contrats). Ce garde-fou lit le manifeste (`manifest.json` a la racine par defaut ; repli
+`cadrage-out/manifest.json` legacy), en deduit la racine du projet, et echoue si :
   - le bloc `cowork` est absent (le skill n'a pas tourne) ;
   - `init-cowork.md` n'existe pas a la racine ;
   - le document n'expose pas une section GitHub ET une section Linear (les deux points d'entree
@@ -25,8 +25,21 @@ GITHUB_RE = re.compile(r"github", re.IGNORECASE)
 LINEAR_RE = re.compile(r"linear", re.IGNORECASE)
 
 
+def _manifest_path(argv):
+    """Manifeste a la racine (`manifest.json`) par defaut ; repli `cadrage-out/manifest.json` (legacy)."""
+    if len(argv) > 1:
+        return argv[1]
+    return "manifest.json" if os.path.isfile("manifest.json") else "cadrage-out/manifest.json"
+
+
+def _project_root(manifest_path):
+    """Racine = dossier du manifeste ; si le manifeste est dans `cadrage-out/` (legacy), on remonte."""
+    d = os.path.dirname(os.path.abspath(manifest_path))
+    return os.path.dirname(d) if os.path.basename(d) == "cadrage-out" else d
+
+
 def main(argv):
-    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
+    path = _manifest_path(argv)
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)
@@ -42,7 +55,7 @@ def main(argv):
         print("ERREUR: bloc `cowork` absent (lancer create-cowork-md).", file=sys.stderr)
         return 1
 
-    root = os.path.dirname(os.path.dirname(os.path.abspath(path)))
+    root = _project_root(path)
     rel_path = cowork.get("path") or "init-cowork.md"
     doc = os.path.join(root, rel_path)
     problems = []

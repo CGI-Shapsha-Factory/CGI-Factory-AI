@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la porte des briefs (cadrage).
 
-Lit le manifeste d'un projet (cadrage-out/manifest.json par defaut) et echoue si la
-porte DURE de `cadrage-briefs` n'est pas franchie :
+Lit le manifeste d'un projet (`manifest.json` a la racine par defaut ; repli
+`cadrage-out/manifest.json` legacy) et echoue si la porte DURE de `cadrage-briefs` n'est pas franchie :
   - `definition_of_ready.decoupage_arbitrated` != true (revue de couplage non faite) ;
   - `definition_of_ready.demonstrateur_converged` != true (maquette non validee client).
 
@@ -14,11 +14,19 @@ Usage:
     python check_ready.py [chemin/vers/manifest.json]
 """
 import json
+import os
 import sys
 
 
+def _manifest_path(argv):
+    """Manifeste a la racine (`manifest.json`) par defaut ; repli `cadrage-out/manifest.json` (legacy)."""
+    if len(argv) > 1:
+        return argv[1]
+    return "manifest.json" if os.path.isfile("manifest.json") else "cadrage-out/manifest.json"
+
+
 def main(argv):
-    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
+    path = _manifest_path(argv)
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)

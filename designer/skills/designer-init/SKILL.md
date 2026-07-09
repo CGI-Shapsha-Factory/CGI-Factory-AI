@@ -18,10 +18,10 @@ avec un bloc `design` orienté **couverture** (checklist pré-remplie par les ha
 ## Ancrage du répertoire (impératif)
 **La racine du projet est le dossier courant** — celui où la session est lancée (le cwd) — **jamais** un
 dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé plus haut. Tous les chemins de
-ce skill (`cadrage-out/manifest.json`, `.factory/designer/`, `designer-out/`, `designer-out/prompts/`,
+ce skill (`manifest.json`, `.factory/designer/`, `designer-out/`, `designer-out/prompts/`,
 `designer-out/maquette-de-claude-design/`) se
 résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** pour trouver le manifeste ou les
-dossiers `-out/` amont : un `cadrage-out/manifest.json` (ou un `cadrage-out/` / `architecte-out/`) situé dans
+dossiers `-out/` amont : un `manifest.json` (ou un `cadrage-out/` / `architecte-out/`) situé dans
 un dossier **parent** n'appartient **pas** à ce projet — le traiter comme **absent** (ne jamais le lire ;
 on crée/étend le manifeste **du cwd**). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
@@ -30,7 +30,7 @@ on crée/étend le manifeste **du cwd**). En cas de doute sur un chemin relatif,
 menée par **une autre personne**, sur une **autre machine**, à partir d'un **clone frais** où **aucun
 `.factory/` n'existe encore**. Ce skill ne présuppose donc **jamais** un `.factory/` déjà présent :
 **avant toute autre chose**, il (re)pose dans `.factory/` **tout ce dont l'atelier a besoin** — les
-gabarits de couverture (`.factory/designer/`) et le bloc `design` du manifeste `cadrage-out/manifest.json`
+gabarits de couverture (`.factory/designer/`) et le bloc `design` du manifeste `manifest.json`
 (créé s'il manque). Le **handoff** entre phases passe **uniquement** par les dossiers `-out/` committés,
 jamais par `.factory/` (régénérable en relançant ce `-init`).
 
@@ -55,7 +55,7 @@ Après le setup, **vérifier l'état de l'amont** dans le cwd et le **signaler**
   fichier `…-out/…` absent, par chemin) et indiquer que **l'atelier** (`/designer:designer-atelier`) a
   besoin de ces handoffs pour pré-remplir la checklist.
 
-**Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si `cadrage-out/manifest.json`
+**Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si `manifest.json`
 n'existe pas encore, **créer d'abord le dossier `cadrage-out/` s'il est absent** (même sans cadrage), puis y
 **créer** le manifeste comme objet JSON valide `{ "design": { … } }` (les autres phases le
 complètent par fusion, sans écraser le bloc `design`).
@@ -77,7 +77,7 @@ complètent par fusion, sans écraser le bloc `design`).
 
    *(Le plugin ne crée plus de dossier `design-system/` ni de seed de tokens : le design system naît dans
    Claude Design et son export est committé dans `designer-out/maquette-de-claude-design/`.)*
-2. **Étendre le manifeste** `cadrage-out/manifest.json` : ajouter le bloc `design` ci-dessous s'il est
+2. **Étendre le manifeste** `manifest.json` : ajouter le bloc `design` ci-dessous s'il est
    absent (read-modify-write + revalidation JSON), en **semant la checklist** avec les items canoniques
    de `coverage-checklist.md` au statut `open` :
 

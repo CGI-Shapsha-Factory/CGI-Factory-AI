@@ -6,7 +6,7 @@ Verifie que le compteur est correctement pose et que le journal est exploitable 
   - `.claude/hooks/turn_cost.py` present et hook SessionEnd (compteur) enregistre ;
   - chaque enregistrement du journal `.factory/couts/**/*.jsonl` parse et porte les champs attendus.
 
-Usage : python check_costs.py [chemin/vers/cadrage-out/manifest.json]   (defaut : cadrage-out/manifest.json)
+Usage : python check_costs.py [chemin/vers/manifest.json]   (defaut : manifest.json a la racine, repli cadrage-out/)
 Exit 0 si OK, 1 sinon.
 """
 import glob
@@ -15,9 +15,22 @@ import os
 import sys
 
 
+def _manifest_path(argv):
+    """Manifeste a la racine (`manifest.json`) par defaut ; repli `cadrage-out/manifest.json` (legacy)."""
+    if len(argv) > 1:
+        return argv[1]
+    return "manifest.json" if os.path.isfile("manifest.json") else "cadrage-out/manifest.json"
+
+
+def _project_root(manifest_path):
+    """Racine = dossier du manifeste ; si le manifeste est dans `cadrage-out/` (legacy), on remonte."""
+    d = os.path.dirname(os.path.abspath(manifest_path))
+    return os.path.dirname(d) if os.path.basename(d) == "cadrage-out" else d
+
+
 def main(argv):
-    manifest = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
-    root = os.path.dirname(os.path.dirname(os.path.abspath(manifest)))
+    manifest = _manifest_path(argv)
+    root = _project_root(manifest)
     problems = []
 
     cost_dir = os.path.join(root, ".factory", "couts")

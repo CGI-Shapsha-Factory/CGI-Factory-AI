@@ -18,7 +18,7 @@ python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='u
 # chaque skill a un frontmatter name
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
 # garde-fou découverte (sur le manifeste d'un projet)
-python scripts/check_discovery.py <projet>/cadrage-out/manifest.json
+python scripts/check_discovery.py <projet>/manifest.json
 ```
 Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 
@@ -32,7 +32,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 
 | # | skill | rôle | porte |
 |---|-------|------|-------|
-| 0 | `cadrage-init` | crée `.factory/` (gabarits, git-ignoré) + `cadrage-out/` (docs **+ manifeste committé** `cadrage-out/manifest.json`) (le nom du projet est demandé par `cadrage-extraction`) | aucune |
+| 0 | `cadrage-init` | crée `.factory/` (gabarits, git-ignoré) + `cadrage-out/` (docs) + le **manifeste committé** `manifest.json` **à la racine** (le nom du projet est demandé par `cadrage-extraction`) | aucune |
 | 1 | `cadrage-extraction` | matière brute (fichier/multi/dossier ; .txt/.md/.pdf/.docx) → `capture-brute.md` (contenu, **sans horodatage ni src**) + **passe découverte** (13 questions, interactive) → `project-frame.md` | manifeste existe + 1 source |
 | 2 | `cadrage-vision` | capture → `product-brief.md` (quoi/pourquoi, sans techno) | capture existe |
 | 3 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
@@ -53,8 +53,8 @@ jusqu'à convergence → **revue de couplage humaine** → `briefs` → `complet
 ```
 .factory/                          # caché, git-ignoré — gabarits seulement
 └── cadrage/                       # gabarits FR du cadrage (copies projet)
-cadrage-out/                       # documents générés + manifeste, COMMITTÉ (à la racine)
-├── manifest.json                  # contrat machine — COMMITTÉ, voyage avec le repo
+manifest.json                      # contrat machine — COMMITTÉ à la racine, voyage avec le repo
+cadrage-out/                       # documents générés, COMMITTÉ (à la racine)
 ├── source-contexte/               # matière brute déposée par l'utilisateur (facultatif)
 ├── maquette-de-claude-design/     # maquette du démonstrateur collée par l'utilisateur (vide au départ)
 ├── capture-brute, project-frame, product-brief, glossaire,
@@ -65,7 +65,7 @@ cadrage-out/prompts/               # prompts générés, en <NNN>-<JJ-MM>-<nom>.
 Chaque plugin écrit dans son propre dossier de sortie à la racine (`cadrage-out/`,
 `architecte-out/`, `designer-out/`, `assembleur-out/`) et lit ceux de l'amont.
 
-## Schéma du manifeste (`cadrage-out/manifest.json`)
+## Schéma du manifeste (`manifest.json`)
 Créé par `cadrage-init` uniquement. Blocs : `project`/dates ; `phase` ;
 `sources[]` ; `artifacts{}` (capture_brute, project_frame, product_brief, glossaire,
 spec_index{arbitrated}, briefs[]) ;

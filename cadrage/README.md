@@ -16,7 +16,7 @@ Il couvre deux travaux distincts : **capter la vision produit**, puis la
 
 Chaque skill fait une chose et est **invocable seul**. La cohérence ne vient pas
 d'un orchestrateur, elle vient d'un fichier d'état unique, le **manifeste**
-(`cadrage-out/manifest.json`), que tous les skills lisent et mettent à
+(`manifest.json`), que tous les skills lisent et mettent à
 jour en read-modify-write. Chaque skill vérifie ses **pré-requis** en silence avant
 d'agir et contrôle sa sortie avant d'écrire le manifeste — sans jamais exposer de
 « porte » à l'utilisateur.
@@ -102,8 +102,8 @@ un brief dérive d'une vision stable.
   le prototype, hors plugin. La spécification se valide par feature, plus tard dans
   la chaîne (architecte → assembleur → SpecKit).
 - **Frontière des artefacts.** Tous les documents du cadrage (vision, glossaire,
-  découpage, briefs) **et le manifeste committé** (`cadrage-out/manifest.json`) sont dans
-  `cadrage-out/` ; seuls les **gabarits** vivent dans `.factory/` (git-ignoré). L'architecte puis l'assembleur lisent directement
+  découpage, briefs) sont dans `cadrage-out/`, et le **manifeste committé** (`manifest.json`)
+  est **à la racine** du projet ; seuls les **gabarits** vivent dans `.factory/` (git-ignoré). L'architecte puis l'assembleur lisent directement
   ces fichiers ; la constitution finale convergée est produite par l'assembleur.
 - **Skills indépendants.** Pas d'orchestrateur monolithique. La cohérence vient
   du manifeste.
@@ -132,8 +132,8 @@ le valide, l'architecte puis l'assembleur le reprennent. Il doit être auto-port
 ```
 .factory/                          # caché, git-ignoré — gabarits seulement
 └── cadrage/                       # gabarits FR du cadrage (copies projet)
-cadrage-out/                       # documents générés + manifeste, COMMITTÉ (à la racine)
-├── manifest.json                  # contrat machine — COMMITTÉ, voyage avec le repo
+manifest.json                      # contrat machine — COMMITTÉ à la racine, voyage avec le repo
+cadrage-out/                       # documents générés, COMMITTÉ (à la racine)
 ├── source-contexte/               # matière brute déposée par l'utilisateur (facultatif)
 ├── capture-brute, project-frame, product-brief, glossaire,
 │   spec-index, coupling-map, completude-report

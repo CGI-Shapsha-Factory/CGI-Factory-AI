@@ -73,7 +73,7 @@ chaque run écrit un **nouveau fichier** (`rapport-couts.md`, puis `rapport-cout
 **jamais d'écrasement** ; le chemin écrit est renvoyé (stdout + champ `report_path` en `--json`).
 
 ## Manifeste (optionnel)
-Si un `cadrage-out/manifest.json` existe, `couts-init` y ajoute le bloc `costs` :
+Si un `manifest.json` existe, `couts-init` y ajoute le bloc `costs` :
 `{ installed, hook:"SessionEnd", price_table_date, gitignored:true }`. Sinon rien n'est créé (le
 garde-fou n'ouvre pas le manifeste).
 
@@ -89,7 +89,7 @@ localise le journal `.factory/couts/` avec journal, pas le git root), `reference
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
 python -m py_compile references/turn_cost.py references/cost_report.py references/install_cost_hook.py scripts/check_costs.py
-python scripts/check_costs.py <projet>/cadrage-out/manifest.json
+python scripts/check_costs.py <projet>/manifest.json
 ```
 
 ## Invariants

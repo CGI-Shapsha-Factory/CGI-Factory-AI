@@ -124,7 +124,7 @@ chaque feature a sa graine) ; non-contradiction (design system couvre les états
 pas de parcours sans FR ni de FR sans parcours ; pas de terme de glossaire en conflit ;
 les cibles qualité/perf sont tenables par la stack/déploiement). Écrire
 `assembleur-out/coherence-report.md` (prose, sans marqueur résiduel). Lancer le garde-fou
-(**obligatoire**) : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_assembly.py" <racine>/cadrage-out/manifest.json`.
+(**obligatoire**) : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_assembly.py" <racine>/manifest.json`.
 S'il est **introuvable** (chemin plugin non résolu) ou renvoie **exit 1**, **s'arrêter** et **dire en
 clair** ce qui manque — **jamais** de vérification « à la main » silencieuse.
 
@@ -174,7 +174,7 @@ concerné. **Aucun fichier annexe.** **Ne pas conclure** tant qu'un marqueur sub
 
 À la fin, dire en clair **ce qui a été produit** (en prose) et **la prochaine étape**.
 
-**Handoff (avant de passer la main).** Committer `cadrage-out/manifest.json` **et** `assembleur-out/` (le
+**Handoff (avant de passer la main).** Committer `manifest.json` **et** `assembleur-out/` (le
 paquet) — l'équipe qui lance SpecKit part du **repo committé**, pas de ta session.
 
 Étape suivante : `/assembleur:premier-alimente-linear` crée un ticket Linear par feature (confirmation ticket par ticket) ; puis `/assembleur:install-speckit` pose SpecKit dans le repo (`specify init`, sans manip). Ensuite l'équipe fabrique feature par feature : `/speckit.constitution` depuis `pre-constitution.md`, puis les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord).

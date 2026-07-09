@@ -30,7 +30,7 @@ travaille à plusieurs et ne partage pas l'accès aux comptes ; tout vit dans le
    `deduced`/`decided`/`sans_objet`). Les parcours du `spec-index.md` sont tous couverts (versant
    expérience). Sinon, renvoyer vers `/designer:designer-atelier` pour statuer les items restants. Lancer le
    garde-fou déterministe (**obligatoire**) :
-   `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_design.py" <racine>/cadrage-out/manifest.json`. S'il est
+   `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_design.py" <racine>/manifest.json`. S'il est
    **introuvable** (chemin plugin non résolu) ou renvoie **exit 1**, **s'arrêter** et **dire en clair**
    ce qui manque — **jamais** de vérification « à la main » silencieuse.
 2. **Porte humaine : validation du système généré** (porte 2, jamais automatisée). D'abord **vérifier que
@@ -74,7 +74,7 @@ contrôler les états et patterns d'erreur.
 - **Pas de fuite de champ** en sortie utilisateur ni de tableau de booléens ; **manifeste mis à jour en
   silence** (voir `references/ux-conventions.md`).
 
-**Handoff (avant de passer la main).** Committer `cadrage-out/manifest.json` (design **scellé**) **et**
+**Handoff (avant de passer la main).** Committer `manifest.json` (design **scellé**) **et**
 `designer-out/` — **y compris l'export du design system déposé dans
 `designer-out/maquette-de-claude-design/`**. La phase suivante lit le **repo committé**, pas ta session.
 

@@ -21,7 +21,7 @@ session** (on pose la question), rien d'ouvert n'est listé dans un fichier.
 
 ## Entrée
 
-Le manifeste `cadrage-out/manifest.json` et tous les artefacts qu'il
+Le manifeste `manifest.json` et tous les artefacts qu'il
 référence (capture, vision, glossaire, spec index, briefs).
 
 ## Pré-requis (vérification silencieuse)
@@ -38,7 +38,7 @@ Calculer les booléens à partir de l'état réel des artefacts et du manifeste 
 - **`all_briefs_complete`** — tous les briefs au statut `complete`.
 - **`no_blocking_gaps`** — **toute question de découverte `pending`/`deferred`**
   (bloc `discovery` du manifeste) maintient le verdict au rouge — **vérifié (obligatoire)** par
-  `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" <racine>/cadrage-out/manifest.json` (s'il est
+  `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" <racine>/manifest.json` (s'il est
   **introuvable** ou renvoie **exit 1**, **s'arrêter** et le dire en clair — jamais de vérification « à
   la main »). Une capacité du périmètre IN non couverte se **tranche en session**.
   **Exception — Q8 (contraintes légales / conformité / RGPD) :** optionnelle, gérée **manuellement par
@@ -172,7 +172,7 @@ bloc de code du gabarit), sans titre/date/mode/version (cf. `references/ux-conve
   en session, et les réponses sont appliquées **en place** dans `cadrage-out/`.
 - **Skill indépendant.** Lit et écrit le manifeste, sans orchestrateur.
 
-**Handoff (avant de passer la main).** Committer `cadrage-out/manifest.json` (verdict cadrage **scellé**)
+**Handoff (avant de passer la main).** Committer `manifest.json` (verdict cadrage **scellé**)
 **et** `cadrage-out/` — l'architecte lit le **repo committé**, pas ta session ni ta machine.
 
 Étape suivante : `/architecte:architecte-init` — une fois le cadrage terminé, l'architecte lit directement les fichiers de `cadrage-out/` pour bâtir le contrat technique.

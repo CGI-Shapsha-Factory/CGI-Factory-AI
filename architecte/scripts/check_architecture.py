@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la phase architecture.
 
-Lit le manifeste partage d'un projet (cadrage-out/manifest.json par defaut) et
-echoue si le contrat technique est incomplet :
+Lit le manifeste partage d'un projet (`manifest.json` a la racine par defaut ; repli
+`cadrage-out/manifest.json` pour les projets legacy) et echoue si le contrat technique est incomplet :
   - bloc `architecture` absent ;
   - profil d'equipe non renseigne (seule reponse demandee a l'utilisateur) ;
   - aucun composant ;
@@ -45,6 +45,19 @@ FORBIDDEN_VERSION_RE = re.compile(
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
+def _manifest_path(argv):
+    """Manifeste a la racine (`manifest.json`) par defaut ; repli `cadrage-out/manifest.json` (legacy)."""
+    if len(argv) > 1:
+        return argv[1]
+    return "manifest.json" if os.path.isfile("manifest.json") else "cadrage-out/manifest.json"
+
+
+def _project_root(manifest_path):
+    """Racine du projet = dossier du manifeste ; si le manifeste est dans `cadrage-out/` (legacy), on remonte."""
+    d = os.path.dirname(os.path.abspath(manifest_path))
+    return os.path.dirname(d) if os.path.basename(d) == "cadrage-out" else d
+
+
 def _fold(s):
     """minuscule + sans accents (comparaisons robustes)."""
     return "".join(c for c in unicodedata.normalize("NFD", s.lower())
@@ -53,7 +66,7 @@ def _fold(s):
 
 def testing_strategy_issues(manifest_path):
     """standards-ingenierie.md doit porter une vraie strategie de test (pas un tableau mince)."""
-    root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
+    root = _project_root(manifest_path)
     std = os.path.join(root, "architecte-out", "standards-ingenierie.md")
     if not os.path.isfile(std):
         return []
@@ -76,7 +89,7 @@ def testing_strategy_issues(manifest_path):
 
 def residual_markers(manifest_path):
     """Renvoie la liste (fichier, marqueur) des marqueurs residuels dans architecte-out/."""
-    root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
+    root = _project_root(manifest_path)
     out_dir = os.path.join(root, "architecte-out")
     hits = []
     for md in glob.glob(os.path.join(out_dir, "**", "*.md"), recursive=True):
@@ -114,7 +127,7 @@ def parse_frontmatter(text):
 
 def frontmatter_issues(manifest_path):
     """Chaque .md de architecte-out/ doit porter un front-matter version(entier)/date(ISO)."""
-    root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
+    root = _project_root(manifest_path)
     out_dir = os.path.join(root, "architecte-out")
     issues = []
     for md in glob.glob(os.path.join(out_dir, "**", "*.md"), recursive=True):
@@ -138,7 +151,7 @@ def frontmatter_issues(manifest_path):
 
 def tech_stack_versions(manifest_path):
     """Chaque techno d'une table a colonne 'Version' de stack-technique.md porte une version exacte."""
-    root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
+    root = _project_root(manifest_path)
     ts = os.path.join(root, "architecte-out", "stack-technique.md")
     if not os.path.isfile(ts):
         return []
@@ -216,7 +229,7 @@ def env_files_issues(manifest_path, arch):
         return []  # valeur historique non structuree : toleree
     if not env.get("initialized"):
         return []  # cas explicite « aucune dependance necessitant des variables »
-    root = os.path.dirname(os.path.dirname(os.path.abspath(manifest_path)))
+    root = _project_root(manifest_path)
     issues = []
     files = env.get("files") or []
     if not files:
@@ -236,7 +249,7 @@ def env_files_issues(manifest_path, arch):
 
 
 def main(argv):
-    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
+    path = _manifest_path(argv)
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)

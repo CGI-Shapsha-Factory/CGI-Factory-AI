@@ -43,7 +43,7 @@ orienter. Message cible :
 > le prototype — on s'en occupe d'abord ? »
 
 **Garde-fou déterministe (anti-contournement, obligatoire).** Avant toute génération, lancer
-`python "${CLAUDE_PLUGIN_ROOT}/scripts/check_ready.py" <projet>/cadrage-out/manifest.json` : il échoue
+`python "${CLAUDE_PLUGIN_ROOT}/scripts/check_ready.py" <projet>/manifest.json` : il échoue
 (exit 1) si la revue de couplage ou la convergence du démonstrateur n'est pas faite. **Ne jamais
 contourner** : en cas d'échec — ou si le script est **introuvable** (chemin plugin non résolu) —
 **s'arrêter**, le dire en clair et orienter vers la revue de couplage (`/cadrage:cadrage-decoupage`)

@@ -3,7 +3,8 @@
 
 L'assembleur produit un PAQUET de handoff dans `assembleur-out/` et deploie `CLAUDE.md` + `memory/`
 directement dans le `.claude/` du projet (seule exception a "paquet seul"). Ce garde-fou lit le
-manifeste (cadrage-out/manifest.json par defaut), en deduit la racine du projet, et echoue si :
+manifeste (`manifest.json` a la racine par defaut ; repli `cadrage-out/manifest.json` legacy), en
+deduit la racine du projet, et echoue si :
   - le bloc `assembly` est absent ;
   - un fichier du paquet manque (pre-constitution, >=1 graine de feature, feature-map,
     technical-context, coherence-report, attack-plan) dans `assembleur-out/` ;
@@ -29,8 +30,21 @@ MARKER_RE = re.compile(
 )
 
 
+def _manifest_path(argv):
+    """Manifeste a la racine (`manifest.json`) par defaut ; repli `cadrage-out/manifest.json` (legacy)."""
+    if len(argv) > 1:
+        return argv[1]
+    return "manifest.json" if os.path.isfile("manifest.json") else "cadrage-out/manifest.json"
+
+
+def _project_root(manifest_path):
+    """Racine = dossier du manifeste ; si le manifeste est dans `cadrage-out/` (legacy), on remonte."""
+    d = os.path.dirname(os.path.abspath(manifest_path))
+    return os.path.dirname(d) if os.path.basename(d) == "cadrage-out" else d
+
+
 def main(argv):
-    path = argv[1] if len(argv) > 1 else "cadrage-out/manifest.json"
+    path = _manifest_path(argv)
     try:
         with open(path, encoding="utf-8-sig") as f:
             manifest = json.load(f)
@@ -46,7 +60,7 @@ def main(argv):
         print("ERREUR: bloc `assembly` absent (lancer assembleur-init).", file=sys.stderr)
         return 1
 
-    root = os.path.dirname(os.path.dirname(os.path.abspath(path)))
+    root = _project_root(path)
     out = os.path.join(root, "assembleur-out")
     claude_dir = os.path.join(root, ".claude")
     problems = []

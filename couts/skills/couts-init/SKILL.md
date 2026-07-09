@@ -51,7 +51,7 @@ dossier où il est posé, et ne mesure **que** les sessions lancées dans ce dos
 4. **Journal** : créer `.factory/couts/` ; **git-ignorer tout `.factory/`** en ajoutant la ligne
    `.factory/` au `.gitignore` du dossier courant (le créer si absent ; ne pas dupliquer si déjà
    présent). Tout `.factory/` est local, non versionné.
-5. **Manifeste (optionnel, silencieux)** : si `<dossier courant>/cadrage-out/manifest.json` existe, y
+5. **Manifeste (optionnel, silencieux)** : si `<dossier courant>/manifest.json` existe, y
    ajouter le bloc `costs` `{ "installed": true, "hook": "SessionEnd", "price_table_date": "<date>",
    "gitignored": true }`. **S'il n'existe pas, ne rien créer** — l'outil fonctionne sans.
 
@@ -65,7 +65,7 @@ rapport (chaque requête comptée une seule fois).
   compteur (les autres hooks préservés).
 - `.factory/couts/price-table.json` présent ; `.factory/couts/` existe ; `.gitignore` couvre
   `.factory/` (donc `.factory/couts/`).
-- Vérifier : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_costs.py" <dossier courant>/cadrage-out/manifest.json`
+- Vérifier : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_costs.py" <dossier courant>/manifest.json`
   (exit 0 attendu ; s'il renvoie exit 1, corriger le manquant sans l'exposer en détail).
 
 ## Règles invariantes

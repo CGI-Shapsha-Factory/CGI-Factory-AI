@@ -57,7 +57,7 @@ Dans l'app, `/plugin` → onglet **Discover** montre les modules **groupés par 
 
 ## 🧩 Les quatre plugins
 
-Exécutés dans l'ordre, pilotés par un **manifeste partagé** (`factory-docs/manifest.json`) — chacun produit un **contrat** validé par une porte humaine.
+Exécutés dans l'ordre, pilotés par un **manifeste partagé** (`manifest.json`, à la racine du projet) — chacun produit un **contrat** validé par une porte humaine.
 
 | # | Plugin | Contrat | Ce qu'il produit |
 |---|--------|---------|------------------|
