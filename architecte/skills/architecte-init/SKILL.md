@@ -1,6 +1,6 @@
 ---
 name: architecte-init
-description: Amorce la phase architecture : crée le dossier conventions, installe les gabarits, pose l'enforcement (hooks de test + protection de branche) et étend le manifeste.
+description: Amorce la phase architecture : crée le dossier conventions, installe les gabarits, pose l'enforcement (hooks de test + formatage) et étend le manifeste.
 ---
 
 # architecte-init
@@ -13,15 +13,15 @@ d'architecture (zéro choix IA). Les autres skills (`architecte`,
 
 ## Objectif
 Rendre un projet **prêt pour la phase technique** : installer les gabarits
-d'architecture, créer le dossier `conventions/`, **poser tous les hooks de l'architecte**
-(enforcement des tests + protection de branche, déterministe) et étendre le manifeste
+d'architecture, créer le dossier `conventions/`, **poser les hooks de l'architecte**
+(enforcement des tests + formatage, déterministe) et étendre le manifeste
 partagé avec un bloc `architecture`.
 
 ## Ancrage du répertoire (impératif)
 **La racine du projet est le dossier courant** — celui où la session est lancée (le
 cwd) — **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` /
 `*-out/` situé plus haut. Tous les chemins de ce skill (`cadrage-out/manifest.json`,
-`.factory/architecte/`, `conventions/`, `architecte-out/`, `.claude/`, `.githooks/`,
+`.factory/architecte/`, `conventions/`, `architecte-out/`, `.claude/`,
 `lefthook.yml`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence**
 pour trouver le manifeste du cadrage : un `cadrage-out/manifest.json` situé dans un dossier
 **parent** n'appartient **pas** à ce projet — le traiter comme **absent** (ne jamais le lire
@@ -132,19 +132,10 @@ l'utilisateur décider de la suite.
      ligne) et le traduit en options `ruff format --config`. Claude Code ne lit pas `.editorconfig`
      lui-même — ce hook fait le pont. Best-effort et **non bloquant** : si `ruff` est absent, il
      l'indique et n'échoue pas. *(Portée actuelle : Python. Extensible à d'autres langages/formateurs.)*
-   - **Protection de branche** :
-     `python "${CLAUDE_PLUGIN_ROOT}/references/enforcement/install_branch_protection.py" <racine>` — **si
-     le dossier n'est pas encore un dépôt git, il l'initialise** (`git init -b main` — branche `main`,
-     convention GitHub ; `git init` est non destructif) pour poser la protection **tout de suite**, sans
-     attendre un `git init` manuel. Puis il copie `.githooks/` (pur git+Python), pose `git config
-     core.hooksPath .githooks` pour ce clone **et fusionne un hook `SessionStart`** qui le réactive à
-     chaque session (auto pour toute l'équipe) ; il écrit `architecture.branch_protection` au manifeste.
-     Refuse le push/commit direct sur `main`/`master`. *(Non bloquant : si git lui-même est absent, il
-     l'indique et n'échoue pas.)*
-   - Adapter `python` → `py -3` si besoin. Confirmer en clair. *(Caveats honnêtes : la 1ʳᵉ session,
-     Claude Code demande la confiance des hooks — un « oui » par personne, une fois ; un dev hors
-     Claude Code ou un `--no-verify` contourne ; la seule barrière non contournable multi-personnes est
-     un **ruleset serveur GitHub** — à la charge de l'équipe, hors périmètre de la Factory.)*
+   - *(Pas de protection de branche locale.* La règle « aucun push direct sur `main` » est gérée par un
+     **ruleset serveur GitHub**, pas par des hooks git locaux — ceux-ci ont été retirés de la Factory.)*
+   - Adapter `python` → `py -3` si besoin. Confirmer en clair. *(Caveat : la 1ʳᵉ session, Claude Code
+     demande la confiance des hooks — un « oui » par personne, une fois.)*
 7. **Git-ignore `.factory/` (compléter, jamais réécrire)** : le **`.gitignore` est généré en premier
    par le cadrage** (`cadrage-init`) et **committé** — il voyage avec le repo, donc présent dans un clone
    frais. Ici, **ne jamais le réécrire ni l'écraser** : s'assurer seulement qu'il **contient** la ligne
@@ -161,8 +152,8 @@ l'utilisateur décider de la suite.
 - Rendu diagrammes provisionné (best-effort) : `.factory/puppeteer.json` écrit si un
   navigateur système est présent, mermaid-cli installé si possible — non bloquant.
 - **Enforcement posé** : `.claude/hooks/tests_guard.py` + `.claude/hooks/format_guard.py` + **deux**
-  hooks `PostToolUse` (test + formatage) dans `.claude/settings.json` ; `.githooks/` + `core.hooksPath`
-  + hook `SessionStart` ; manifeste `test_enforcement: true` + bloc `branch_protection`.
+  hooks `PostToolUse` (test + formatage) dans `.claude/settings.json` ; manifeste `test_enforcement: true`.
+  *(Aucune protection de branche locale — gérée côté GitHub.)*
 - **État du cadrage signalé** : si `cadrage-out/` manque, l'utilisateur a été **averti** (pas
   bloqué) que la construction du contrat a besoin du cadrage.
 - Rien d'existant n'a été écrasé (idempotence).
@@ -172,7 +163,7 @@ Après le setup, afficher **dans cet ordre exact** :
 
 1. le **récapitulatif** du socle installé (table courte) ;
 2. **AVANT toute autre chose**, et **en gras, bien visible**, l'**avertissement de redémarrage de
-   session** — les hooks Claude Code (`PostToolUse` de test + `SessionStart` de protection de branche)
+   session** — les hooks Claude Code (`PostToolUse` de test + de formatage)
    ne deviennent actifs qu'au **démarrage** d'une session ; ceux qu'on vient d'installer **ne le sont
    pas encore** dans la session courante. Afficher exactement, en gras :
 
@@ -191,7 +182,7 @@ redémarrage est prioritaire (sans lui, l'enforcement ne tourne pas).
 ## Règles invariantes
 - **Aucune décision IA.** Ce skill prépare ; il ne classe pas de drivers, ne choisit
   pas de composants ni de stack. (Installer l'outillage de rendu des diagrammes **et
-  l'enforcement des tests / la protection de branche** est de la préparation déterministe,
+  l'enforcement des tests** est de la préparation déterministe,
   pas une décision d'architecture.)
 - **Jamais bloquant.** Le setup s'installe toujours ; l'absence de cadrage **avertit**, ne refuse pas.
 - **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un

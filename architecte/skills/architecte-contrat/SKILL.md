@@ -266,16 +266,14 @@ Confirmer en clair les fichiers créés. Mettre à jour le manifeste **en silenc
 `{ "initialized": false, "reason": "aucune dépendance nécessitant des variables d'environnement" }`.
 
 ### Étape 11 — Enforcement (déjà posé par `architecte-init`)
-**Rien à installer ici.** Tous les hooks de l'architecte — l'enforcement des tests (hook `PostToolUse`
-`tests_guard.py` + `lefthook.yml`) **et** la protection de branche locale (`.githooks/` + `core.hooksPath`
-+ hook `SessionStart` de réactivation) — sont **posés dès `architecte-init`** (déterministe, à la racine).
-Se contenter de **vérifier** qu'ils sont bien là (manifeste `test_enforcement: true` + `branch_protection`)
-et que la **stratégie de test** de `standards-ingenierie.md` (Étape 4) reste cohérente avec ce qui est enforced. Si
-l'enforcement manque (init d'une version antérieure), le reposer via les deux scripts du catalogue
-`references/enforcement/` (`install_test_hooks.py`, `install_branch_protection.py`). *(L'enforcement est
-**au moment du dev** (hooks `PostToolUse` + pre-commit), contournable avec `--no-verify` ; la seule
-barrière non contournable multi-personnes serait un **ruleset serveur GitHub** — à la charge de
-l'équipe, **hors périmètre** de la Factory qui ne produit aucune CI.)*
+**Rien à installer ici.** Les hooks de l'architecte — l'enforcement des tests et du formatage (hooks
+`PostToolUse` `tests_guard.py` / `format_guard.py` + `lefthook.yml`) — sont **posés dès `architecte-init`**
+(déterministe, à la racine). Se contenter de **vérifier** qu'ils sont bien là (manifeste
+`test_enforcement: true`) et que la **stratégie de test** de `standards-ingenierie.md` (Étape 4) reste
+cohérente avec ce qui est enforced. Si l'enforcement manque (init d'une version antérieure), le reposer via
+`references/enforcement/install_test_hooks.py`. **Pas de protection de branche locale** : la règle « aucun
+push direct sur `main` » est gérée par un **ruleset serveur GitHub** (require PR + review + CI) — à la
+charge de l'équipe, **hors périmètre** de la Factory (qui ne pose aucun hook de branche local).
 
 ## Résolution des points avant de conclure
 Avant de terminer, **balayer tous les fichiers `architecte-out/`** : pour **chaque**

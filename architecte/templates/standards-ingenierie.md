@@ -128,11 +128,9 @@ réelle » dans le test). Pour chaque composant livrable :
 - Les messages de commit suivent les [Conventional Commits] : `type(scope): description à l'impératif` — ex. `feat(orders): add cancellation endpoint`.
 - Les pull requests doivent compter [N] fichiers ou moins ; les changements plus volumineux sont découpés en PR empilées (stacked PRs).
 - Aucun push direct sur `main` ou `master` ; tout changement passe par une PR avec au moins [N] approbation(s).
-  Cette règle est **appliquée localement** par les garde-fous git `.githooks/` (posés par l'architecte) :
-  `pre-push` refuse le push vers `main`/`master`, `pre-commit` refuse le commit *sur* ces branches.
-  Les hooks se **réactivent automatiquement** à chaque session Claude Code (hook `SessionStart` →
-  `git config core.hooksPath .githooks`) ; garde-fou local, contournable `--no-verify` ; la garantie
-  forte reste le ruleset serveur GitHub.
+  Cette règle est appliquée par un **ruleset serveur GitHub** (require PR + review + check CI, block
+  force-push/delete) — la seule garantie non contournable multi-personnes. *(Pas de hook de branche local :
+  contournable `--no-verify` et par-clone, donc géré côté serveur.)*
 - La CI doit être verte avant fusion.
 
 ## Règles de documentation

@@ -17,7 +17,7 @@ il discipline et grave. Ce sont des **skills Markdown** ; pas de build/test.
   Invocation : `/architecte:<skill>` (utilisateur) + auto par le modèle.
 
 ## Les 3 skills (découpage justifié)
-- `architecte-init` — setup (zéro décision IA) : **d'abord (re)pose ce dont la phase a besoin** — gabarits dans `.factory/architecte/` (git-ignoré, absent d'un clone frais) + bloc `architecture` dans le **manifeste committé** `cadrage-out/manifest.json` (créé s'il manque) ; puis `conventions/` **+ pose de tous les hooks de l'architecte** (enforcement des tests `PostToolUse` + protection de branche `.githooks/`/`SessionStart`, déterministe). **Jamais bloquant** : installe le socle **toujours** (même sans cadrage), puis **avertit** (sans refuser) si `cadrage-out/` manque. **`.gitignore` : jamais réécrit** — la première version est générée par le cadrage ; `architecte-init` **ajoute** seulement la ligne `.factory/` (et `architecte-contrat` les lignes `.env`), en le créant **uniquement s'il est absent**.
+- `architecte-init` — setup (zéro décision IA) : **d'abord (re)pose ce dont la phase a besoin** — gabarits dans `.factory/architecte/` (git-ignoré, absent d'un clone frais) + bloc `architecture` dans le **manifeste committé** `cadrage-out/manifest.json` (créé s'il manque) ; puis `conventions/` **+ pose des hooks de l'architecte** (enforcement des tests + formatage `PostToolUse`, déterministe ; **pas de protection de branche locale** — gérée côté GitHub). **Jamais bloquant** : installe le socle **toujours** (même sans cadrage), puis **avertit** (sans refuser) si `cadrage-out/` manque. **`.gitignore` : jamais réécrit** — la première version est générée par le cadrage ; `architecte-init` **ajoute** seulement la ligne `.factory/` (et `architecte-contrat` les lignes `.env`), en le créant **uniquement s'il est absent**.
 - `architecte-contrat` — construction interactive du contrat (porte humaine : **arbitrage des ADR**).
 - `architecte-coherence` — porte humaine : **validation de cohérence** (stricte, adversariale).
 Mappe les deux portes humaines de la définition + un setup déterministe isolé.
@@ -28,7 +28,7 @@ porter le même nom que le plugin.)*
 Écrit ses propres sorties dans `architecte-out/` (à côté de `cadrage-out/`). Le
 manifeste `cadrage-out/manifest.json` reçoit un bloc **`architecture`** (drivers,
 quality_attributes, components, stack, conventions_installed, adrs, walking_skeleton,
-feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**, **branch_protection**, coherence_validated). `conventions/` est créé à la **racine
+feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**, coherence_validated). `conventions/` est créé à la **racine
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
 **Handoff designer** : le skill `architecte-contrat` produit `impact-design.md` (section « Décisions à
 impact design ») — la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer-atelier` ;
@@ -53,7 +53,7 @@ non ; l'ordre est purement technique (dépendances).
 
 ## Ordre de remplissage (dépendances)
 drivers/qualité → composants → stack → conventions → ADR → walking skeleton+numérotation
-→ diagrammes → risques → **fichiers d'environnement (automatique : `.env`+`.env.example` générés dès que la stack a des dépendances)** → validation de cohérence. *(L'enforcement — hooks de test + protection de branche — est posé plus tôt, dès `architecte-init`, pas dans le contrat.)*
+→ diagrammes → risques → **fichiers d'environnement (automatique : `.env`+`.env.example` générés dès que la stack a des dépendances)** → validation de cohérence. *(L'enforcement — hooks de test + formatage — est posé plus tôt, dès `architecte-init`, pas dans le contrat.)*
 **Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
 risques** (le pourquoi / les limites) ; les attributs de qualité sont les **-ilités mesurées qui en
 découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `templates/facteurs-et-qualite.md`).
@@ -76,12 +76,8 @@ Catalogues copiés à la racine du projet : `references/conventions/` (linters p
 (hook Claude Code `PostToolUse` `tests_guard.py` + `lefthook.yml` — « tests écrits avec le code » —
 **+ hook `PostToolUse` `format_guard.py`** : formatage à l'édition (Python : lit `.editorconfig` →
 `ruff format --config` ; comble le fait que Claude Code/ruff ne lisent pas `.editorconfig` ; posé par
-`install_format_hook.py`, non bloquant) — **et
-`.githooks/` + `install_branch_protection.py` : protection de branche locale (refus push/commit
-sur `main`/`master` — hooks `pre-push`/`pre-commit`, **posés à la racine du dépôt git**, via
-`core.hooksPath` **réactivé automatiquement par un hook `SessionStart`** ; **pas** de blocage du
-merge en local — best practice, cf. enforcement/README) —
-**tout posé par `architecte-init`**, plus par le contrat**). *(Le hook `Stop` bloquant a été retiré : seul `PostToolUse` reste côté session.)*
+`install_format_hook.py`, non bloquant) —
+**tout posé par `architecte-init`**, plus par le contrat**). *(Le hook `Stop` bloquant a été retiré : seul `PostToolUse` reste côté session.)* **Pas de protection de branche locale** : les hooks git `.githooks/` ont été **retirés** ; la règle « aucun push direct sur `main` » est gérée par un **ruleset serveur GitHub**.
 
 ## Vérifications
 ```bash

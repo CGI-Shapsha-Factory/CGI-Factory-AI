@@ -107,8 +107,8 @@ absent** (même sans amont), puis y **créer** le manifeste comme objet JSON val
   vérifie seulement que les fichiers de sortie sont **là et non vides**, et le **signale**. Aucun
   flag de validation lu ni exigé.
 - **Aucun hook à poser.** L'assembleur n'a **pas de hook ni d'enforcement propre** à installer :
-  l'enforcement (hook de test `PostToolUse` + protection de branche `SessionStart`/`.githooks/`)
-  est posé **en amont par `architecte-init`** et déjà committé dans le repo ; l'assembleur n'a
+  l'enforcement (hooks de test + formatage `PostToolUse`) est posé **en amont par `architecte-init`**
+  et déjà committé dans le repo (la protection de branche est gérée côté GitHub) ; l'assembleur n'a
   donc **rien à poser** de ce côté.
 - **Paquet seul.** Aucun repo cible ; tout ira dans `assembleur-out/`.
 - **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un

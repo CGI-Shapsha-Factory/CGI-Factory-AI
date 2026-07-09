@@ -15,7 +15,7 @@ cadrage depuis `cadrage-out/` et écrit ses propres sorties dans `architecte-out
 ## Les 3 skills, dans l'ordre
 | # | Skill | Rôle | Porte d'entrée |
 |---|-------|------|----------------|
-| 0 | `architecte-init` | Installe les gabarits d'archi, crée `conventions/` (`.editorconfig`), étend le manifeste (bloc `architecture`) **+ pose tous les hooks de l'architecte** (enforcement des tests `PostToolUse` + protection de branche `.githooks/`/`SessionStart`) | cadrage prêt |
+| 0 | `architecte-init` | Installe les gabarits d'archi, crée `conventions/` (`.editorconfig`), étend le manifeste (bloc `architecture`) **+ pose les hooks de l'architecte** (enforcement des tests + formatage `PostToolUse` ; pas de protection de branche locale — gérée côté GitHub) | cadrage prêt |
 | 1 | `architecte-contrat` | Vérifie les réponses (depuis cadrage) → drivers & attributs de qualité → **composants** (dont le **frontend**, interactif) → **stack** (interactif : **options + compromis + arbitrage humain**, **versions exactes**) → conventions → **ADR** (arbitrage, consigné après décision) → walking skeleton + numérotation → diagrammes (rendu robuste) → risques → **fichiers d'env (optionnel)** *(l'enforcement est déjà posé par `architecte-init`)* | init faite |
 | 2 | `architecte-coherence` | **Validation de cohérence** (composants↔stack↔ADR↔diagrammes↔features) + rapport + garde-fou déterministe | contrat produit |
 

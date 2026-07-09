@@ -208,6 +208,6 @@ En cas d'arrêt sur un vrai bug source : le dire clairement au lieu d'annoncer u
 
 Une fois la suite **verte** (Étape 7 confirmée par une exécution réelle), relancer
 `python .claude/hooks/tests_guard.py check` pour confirmer qu'aucune source ne reste sans test, puis
-committer (`git add` + `git commit`) via ton flux git habituel — en respectant la protection de branche
-posée par `architecte-init` (pas de commit direct sur `main`/`master`). Si un vrai bug source a été
+committer (`git add` + `git commit`) via ton flux git habituel — en respectant les **règles de branche**
+de ton dépôt (ruleset serveur GitHub : pas de commit/push direct sur `main`). Si un vrai bug source a été
 remonté, le traiter d'abord.

@@ -1,5 +1,0 @@
-# Les garde-fous git (hooks) sont exécutés via leur shebang par git (y compris sous Windows).
-# Un CRLF dans le shebang casse l'interpréteur -> forcer LF sur le catalogue .githooks.
-architecte/references/enforcement/.githooks/pre-push text eol=lf
-architecte/references/enforcement/.githooks/pre-commit text eol=lf
-architecte/references/enforcement/.githooks/branch_guard.py text eol=lf
