@@ -81,9 +81,15 @@ Sources = **sorties amont uniquement**, en synthèse (pas de copie) :
    **remplir** avec les infos détectées (Étapes 1–3). Inclure la section **« Accès Linear pour
    Quark »** (setup MCP + clé API — cf. `references/linear-guide.md`, sous-section « Accès par clé
    API »).
-2. **Confirmer avant d'écrire** (recommandé + ajuster + saisir) : montrer en clair l'**URL GitHub**
-   et l'**URL Linear** retenues (les deux liens vivants) et signaler tout `<à renseigner>`. « ajuster »
-   / « saisir » corrige en place. **Ne rien écrire à la racine tant que ce n'est pas approuvé.**
+2. **Confirmer les deux liens vivants — une question par lien, posées SÉPARÉMENT (jamais les deux à
+   la fois).** Chaque question porte **une seule URL** (recommandé + autre + saisir) :
+   1. **D'abord GitHub** : poser **une seule question** sur l'**URL GitHub** — proposer l'URL détectée
+      (Étape 1) en option recommandée, ou `<à renseigner>` si aucune ; « autre URL » / « saisir »
+      corrige en place. **Attendre la réponse** avant de passer à la suivante.
+   2. **Ensuite Linear** : poser **une seconde question, distincte**, sur l'**URL Linear** — proposer
+      l'URL détectée (Étape 2 : projet existant / dérivée) en option recommandée, ou `<à renseigner>` ;
+      « autre URL » / « saisir » corrige en place.
+   **Ne rien écrire à la racine tant que les deux liens ne sont pas tranchés.**
 3. **Écrire** `init-cowork.md` à la **racine** du projet (read-modify-write si déjà présent).
 4. **Consigner en silence** le bloc `cowork` du manifeste :
 ```json
@@ -107,7 +113,8 @@ Sources = **sorties amont uniquement**, en synthèse (pas de copie) :
   manifeste ; jamais un fichier que SpecKit génère.
 - **Rien d'aval.** Aucun contenu sur SpecKit / la fabrication / l'avancement — ils n'existent pas
   encore ; seuls les **liens** GitHub/Linear renvoient à l'état vivant.
-- **Confirmer avant d'écrire.** Les deux liens sont validés par l'humain avant l'écriture racine.
+- **Confirmer avant d'écrire.** Les deux liens sont validés par l'humain **une question par lien,
+  posées séparément** (GitHub d'abord, Linear ensuite — jamais les deux à la fois) avant l'écriture racine.
 - **Ne pas bloquer.** Source manquante → `<à renseigner>` + note ; jamais d'arrêt.
 - **Rien d'inventé.** Uniquement du contenu réellement présent dans les 3 contrats / le manifeste.
 - **Manifeste en silence.** Aucun nom de clé à l'écran ; restitution en prose.
