@@ -9,11 +9,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 **produit un paquet de handoff** que l'équipe donne à SpecKit. **Il n'écrit jamais dans un
 repo cible** : tout sort dans **`assembleur-out/`**. Pas de constitution dans `.specify/`,
 pas de `specs/NNN/spec.md`, pas de GLOSSARY.md. Ce sont des **skills Markdown** ; pas de build/test.
-**Trois exceptions bornées** à « ne rien écrire hors du paquet » : `premier-alimente-linear` **et
+**Quatre exceptions bornées** à « ne rien écrire hors du paquet » : `premier-alimente-linear` **et
 `update-issue-linear`** créent et mettent à jour des tickets **Linear** (système externe, pas le repo
-cible) ; `install-speckit` invoque `specify init` (c'est SpecKit qui génère `.specify/`) ; et
+cible) ; `install-speckit` invoque `specify init` (c'est SpecKit qui génère `.specify/`) ;
 `create-cowork-md` écrit **`init-cowork.md` à la racine** (document de contexte de supervision pour
-le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
+le PO/Quark) ; et `assembleur-convergence` écrit **`CLAUDE.md` + `memory/` dans le `.claude/` du
+projet** (déploiement, pour qu'ils soient actifs sans copie manuelle).
 
 ## Langue & invocation
 - **Tout en français** (skills, templates, artefacts, interaction). Seuls les
@@ -29,8 +30,9 @@ le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
   validation (validé ou non n'est pas le problème de l'assembleur). **Aucun repo cible à capturer, aucun
   hook à poser** (l'enforcement est posé en amont par `architecte-init`).
 - `assembleur-convergence` — **lit les 3 contrats en parallèle** (5 sous-agents `contract-reader`,
-  map-reduce), converge, **produit le paquet** dans `assembleur-out/`, **résout les marqueurs en
-  session**, et fait la cohérence (porte humaine : *garant de cohérence*).
+  map-reduce), converge, **produit le paquet** dans `assembleur-out/` **+ déploie `CLAUDE.md` et
+  `memory/` directement dans le `.claude/` du projet** (actifs sans copie manuelle), **résout les
+  marqueurs en session**, et fait la cohérence (porte humaine : *garant de cohérence*).
 - `premier-alimente-linear` — **première alimentation de Linear** : lit les features approuvées, les
   présente en tableau, puis crée **un ticket Linear par feature** (label **`Feature`** résolu par nom
   + `feature:<id>` clé de jointure ; via le MCP **`linear-prism`**, confirmation ticket par ticket,
@@ -66,26 +68,32 @@ le PO/Quark, pas un artefact SpecKit ni le repo cible SpecKit).
   bornée** à « n'écrit jamais dans le repo cible » : c'est `specify init` qui génère `.specify/`,
   jamais ce skill.
 
-## Le paquet `assembleur-out/`
+## Le paquet `assembleur-out/` + déploiement `.claude/`
 ```
 assembleur-out/
 ├── pre-constitution.md        # principes non négociables, format constitution.md (→ /speckit.constitution)
 ├── features/NNN-….md          # une graine par feature, format spec.md (→ /speckit.specify)
 ├── feature-map.md             # séquence + couplage/dépendances + walking skeleton
 ├── technical-context.md       # Technical Context (→ /speckit.plan)
-├── CLAUDE.md                  # CLAUDE.md projet (< 200 lignes, @import memory/MEMORY.md — jamais backtiqué)
-├── memory/{MEMORY,domain,architecture,design,features}.md
 ├── coherence-report.md
 └── attack-plan.md
+
+.claude/                       # ÉCRIT DIRECTEMENT dans le projet (actif sans copie manuelle)
+├── CLAUDE.md                  # CLAUDE.md projet (< 200 lignes, @import memory/MEMORY.md — jamais backtiqué)
+└── memory/{MEMORY,domain,architecture,design,features}.md
 ```
 Les **gabarits** vivent dans `.factory/assembleur/` (git-ignoré) ; le **manifeste** est **committé** dans `cadrage-out/manifest.json`. Écriture = read-modify-write + revalidation JSON.
 
-**Déploiement mémoire (important).** L'équipe pose `CLAUDE.md` **et** le dossier `memory/` **à la
-racine** du repo de fabrication (les `@imports` du CLAUDE.md sont relatifs à ce fichier). Le
-`CLAUDE.md` **importe l'index** via une ligne `@memory/MEMORY.md` **jamais entre backticks** (un
-`@import` backtiqué = texte littéral, non importé) ; l'index (chargé chaque session) pointe vers les
-thématiques, lues à la demande. **Ce n'est PAS l'auto-mémoire native** de Claude Code
-(`~/.claude/projects/<projet>/memory/`, machine-locale et non commitée) : ici la mémoire est
+**Déploiement mémoire (important).** `CLAUDE.md` **et** le dossier `memory/` ne sont **pas** posés dans
+`assembleur-out/` : `assembleur-convergence` les écrit **directement dans le `.claude/` du projet**
+(racine du dossier courant), pour qu'ils soient **actifs dès la session suivante** sans copie manuelle.
+C'est la **seule exception** au « paquet seul » (en plus de Linear / `specify init` / `init-cowork.md`).
+Le `CLAUDE.md` **importe l'index** via une ligne `@memory/MEMORY.md` **jamais entre backticks** (un
+`@import` backtiqué = texte littéral, non importé) ; `CLAUDE.md` et `memory/` sont **co-localisés dans
+`.claude/`**, donc l'`@import` et les liens de `MEMORY.md` résolvent en relatif. `MEMORY.md` ne **lie en
+dur** que ses **voisins de `memory/`** (qui voyagent avec lui) ; les fichiers du paquet `assembleur-out/`
+y sont cités **en texte simple** (pas de lien `../` cassable). **Ce n'est PAS l'auto-mémoire native** de
+Claude Code (`~/.claude/projects/<projet>/memory/`, machine-locale et non commitée) : ici la mémoire est
 **commitée et partagée** avec l'équipe, chargée par l'`@import`.
 
 ## Lecture parallèle (map-reduce)
@@ -123,11 +131,12 @@ python scripts/check_assembly.py <projet>/cadrage-out/manifest.json
 ```
 
 ## Invariants
-**Paquet seul** (n'écrit que dans `assembleur-out/`, jamais un fichier que SpecKit génère — **trois
+**Paquet seul** (n'écrit que dans `assembleur-out/`, jamais un fichier que SpecKit génère — **quatre
 exceptions bornées : `premier-alimente-linear` et `update-issue-linear`, qui créent et mettent à jour des
 tickets Linear (système externe, jamais le repo cible) ; `install-speckit`, qui invoque `specify
-init` pour que SpecKit génère lui-même `.specify/`, sans jamais le rédiger à la main ; et
+init` pour que SpecKit génère lui-même `.specify/`, sans jamais le rédiger à la main ;
 `create-cowork-md`, qui écrit `init-cowork.md` à la racine (contexte de supervision PO/Quark, pas un
-artefact SpecKit)**) ; proposer/pas décider (cohérence validée par l'humain) ; **rien laissé indéfini** (tout marqueur
+artefact SpecKit) ; et `assembleur-convergence`, qui écrit `CLAUDE.md` + `memory/` dans le `.claude/`
+du projet (déploiement, actif sans copie manuelle)**) ; proposer/pas décider (cohérence validée par l'humain) ; **rien laissé indéfini** (tout marqueur
 résolu en session, en place) ; **contenu seul** (aucune `(src:)`, horodatage, nom de personne) ;
 restitutions en prose, manifeste mis à jour en silence.

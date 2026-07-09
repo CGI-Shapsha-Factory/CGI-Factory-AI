@@ -1,6 +1,6 @@
 # Design — système, états, accessibilité
 
-<!-- Fichier mémoire (assembleur-out/memory/design.md), chargé à la demande. Digest du handoff
+<!-- Fichier mémoire (.claude/memory/design.md), lu par Claude au besoin. Digest du handoff
      design pour la fabrication. Contenu seul. -->
 
 ## Design system (opposable)

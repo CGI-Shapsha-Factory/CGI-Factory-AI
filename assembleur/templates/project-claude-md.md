@@ -1,6 +1,6 @@
-<!-- CLAUDE.md du PROJET, livré en `assembleur-out/CLAUDE.md`. L'équipe le place à la racine du repo
-     de fabrication. < 200 lignes, concis. Instructions durables + @imports vers les fichiers mémoire.
-     Contenu seul. -->
+<!-- CLAUDE.md du PROJET, écrit directement dans `.claude/CLAUDE.md` du projet (co-localisé avec
+     `.claude/memory/`). Actif dès la session suivante, sans copie manuelle. < 200 lignes, concis.
+     Instructions durables + @import vers l'index mémoire. Contenu seul. -->
 
 # <PROJECT_NAME>
 
@@ -17,17 +17,17 @@ L'index `memory/MEMORY.md` (chargé à chaque session) pointe vers les fichiers 
 lit **à la demande**.
 
 ## Contrats (3 faces) — où regarder
-- **Fonctionnel** : les graines de feature (`features/<id>-…spec-seed.md`) ; langage = `memory/domain.md`.
-- **Technique** : `technical-context.md` et `memory/architecture.md` (stack, composants, ADR, conventions).
+- **Fonctionnel** : les graines de feature (`assembleur-out/features/<id>-…spec-seed.md`) ; langage = `memory/domain.md`.
+- **Technique** : `assembleur-out/technical-context.md` et `memory/architecture.md` (stack, composants, ADR, conventions).
 - **Design** : `memory/design.md` (design system synchronisé + états + erreurs + a11y).
 
 ## Constitution (opposable)
-`pre-constitution.md` porte les **principes non négociables**. À donner à `/speckit.constitution` au
+`assembleur-out/pre-constitution.md` porte les **principes non négociables**. À donner à `/speckit.constitution` au
 démarrage de SpecKit ; chaque `plan.md` passe ensuite la *Constitution Check*.
 
 ## Lancer SpecKit
-Voir `attack-plan.md` : `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) →
-`/speckit.specify` par feature **dans l'ordre du `feature-map.md`** (walking skeleton d'abord) →
+Voir `assembleur-out/attack-plan.md` : `specify init` → `/speckit.constitution` (depuis `assembleur-out/pre-constitution.md`) →
+`/speckit.specify` par feature **dans l'ordre du `assembleur-out/feature-map.md`** (walking skeleton d'abord) →
 `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 
 ## Design — non négociable

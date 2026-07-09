@@ -1,6 +1,6 @@
 # Domaine — langage ubiquitaire & entités
 
-<!-- Fichier mémoire (assembleur-out/memory/domain.md), chargé à la demande. REMPLACE l'ancien
+<!-- Fichier mémoire (.claude/memory/domain.md), lu par Claude au besoin. REMPLACE l'ancien
      GLOSSARY.md. Le vocabulaire de référence du projet : un terme = un sens. Contenu seul. -->
 
 ## Termes du projet

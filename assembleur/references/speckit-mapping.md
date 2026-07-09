@@ -5,11 +5,12 @@ paquet `assembleur-out/`**, et comment ce paquet alimente SpecKit (vérifié sur
 SpecKit réelle).
 
 ## Principe — paquet seul (l'assembleur n'écrit PAS dans le repo SpecKit)
-L'assembleur produit un **paquet de handoff** dans `assembleur-out/`. C'est **l'équipe** qui
-lance SpecKit avec ce paquet comme matière : `specify init`, puis `/speckit.constitution` (depuis
-`pre-constitution.md`), puis `/speckit.specify` par feature (depuis les graines). L'assembleur ne
-crée **jamais** `.specify/memory/constitution.md` ni `specs/NNN/spec.md` — ce sont des fichiers que
-SpecKit génère.
+L'assembleur produit un **paquet de handoff** dans `assembleur-out/`, **plus** un déploiement direct de
+`CLAUDE.md` + `memory/` dans le `.claude/` du projet (seule exception à « paquet seul » : ces deux-là
+doivent être actifs sans copie manuelle). C'est **l'équipe** qui lance SpecKit avec ce paquet comme
+matière : `specify init`, puis `/speckit.constitution` (depuis `pre-constitution.md`), puis
+`/speckit.specify` par feature (depuis les graines). L'assembleur ne crée **jamais**
+`.specify/memory/constitution.md` ni `specs/NNN/spec.md` — ce sont des fichiers que SpecKit génère.
 
 ```
 assembleur-out/
@@ -17,10 +18,12 @@ assembleur-out/
 ├── features/NNN-….md         -> matière de /speckit.specify  (format spec.md)
 ├── feature-map.md            -> ordre + couplage des /speckit.specify
 ├── technical-context.md      -> matière du Technical Context de /speckit.plan
-├── CLAUDE.md                 -> CLAUDE.md projet (instructions de fabrication)
-├── memory/{MEMORY,domain,architecture,design,features}.md
 ├── coherence-report.md
 └── attack-plan.md
+
+.claude/                      (déploiement direct dans le projet — actif sans copie manuelle)
+├── CLAUDE.md                 -> CLAUDE.md projet (instructions de fabrication, @import memory/MEMORY.md)
+└── memory/{MEMORY,domain,architecture,design,features}.md
 ```
 
 ## Graine `spec.md` (par feature) — où va chaque face

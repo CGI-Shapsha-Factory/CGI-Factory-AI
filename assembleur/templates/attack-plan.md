@@ -4,8 +4,9 @@
 > SpecKit, il fournit le paquet. Contenu seul (aucune provenance).
 
 ## 0. Mettre le paquet en place
-- Copier le contenu de `assembleur-out/` à la racine du repo de fabrication (constitution, graines,
-  carte des features, contexte technique, `CLAUDE.md`, `memory/`).
+- `CLAUDE.md` et `memory/` sont **déjà déployés dans `.claude/`** par la convergence — actifs sans
+  copie manuelle. Le reste du paquet (constitution, graines, carte des features, contexte technique)
+  reste dans `assembleur-out/` et sert de matière aux `/speckit.*`.
 - Initialiser SpecKit : `specify init --here --integration claude` dans le repo (automatisable via
   `/assembleur:install-speckit` — installe `uv`/le CLI et joue `specify init` sans manip).
 

@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la phase convergence (assembleur).
 
-L'assembleur produit un PAQUET de handoff dans `assembleur-out/` (il n'ecrit jamais dans un
-repo cible). Ce garde-fou lit le manifeste (cadrage-out/manifest.json par defaut), en deduit la
-racine du projet, et echoue si :
+L'assembleur produit un PAQUET de handoff dans `assembleur-out/` et deploie `CLAUDE.md` + `memory/`
+directement dans le `.claude/` du projet (seule exception a "paquet seul"). Ce garde-fou lit le
+manifeste (cadrage-out/manifest.json par defaut), en deduit la racine du projet, et echoue si :
   - le bloc `assembly` est absent ;
   - un fichier du paquet manque (pre-constitution, >=1 graine de feature, feature-map,
-    technical-context, memory/MEMORY.md, CLAUDE.md, coherence-report, attack-plan) ;
+    technical-context, coherence-report, attack-plan) dans `assembleur-out/` ;
+  - `.claude/CLAUDE.md` ou `.claude/memory/MEMORY.md` manque (deploiement) ;
   - il reste un marqueur ([A VALIDER]/[A CHIFFRER]/NEEDS CLARIFICATION) dans `assembleur-out/`
-    (tout point doit etre tranche en session) ;
+    ou dans `.claude/memory/` (tout point doit etre tranche en session) ;
   - une feature de `architecture.feature_sequence` n'a pas sa graine dans `features/`.
 
 La porte HUMAINE (`coherence_validated`) n'est PAS verifiee ici. Exit 0 si tout est present,
@@ -47,20 +48,24 @@ def main(argv):
 
     root = os.path.dirname(os.path.dirname(os.path.abspath(path)))
     out = os.path.join(root, "assembleur-out")
+    claude_dir = os.path.join(root, ".claude")
     problems = []
 
     def rel(*parts):
         return os.path.join(out, *parts)
 
-    # 1. Presence du paquet.
+    # 1. Presence du paquet (assembleur-out/).
     required = [
         ("pre-constitution.md", rel("pre-constitution.md")),
         ("feature-map.md", rel("feature-map.md")),
         ("technical-context.md", rel("technical-context.md")),
-        ("memory/MEMORY.md", rel("memory", "MEMORY.md")),
-        ("CLAUDE.md", rel("CLAUDE.md")),
         ("coherence-report.md", rel("coherence-report.md")),
         ("attack-plan.md", rel("attack-plan.md")),
+    ]
+    # ... et le deploiement dans .claude/ (CLAUDE.md + memory/).
+    required += [
+        (".claude/CLAUDE.md", os.path.join(claude_dir, "CLAUDE.md")),
+        (".claude/memory/MEMORY.md", os.path.join(claude_dir, "memory", "MEMORY.md")),
     ]
     for label, p in required:
         if not os.path.isfile(p):
@@ -70,8 +75,11 @@ def main(argv):
     if not seeds:
         problems.append("aucune graine de feature dans features/ (*.md)")
 
-    # 2. Aucun marqueur residuel dans assembleur-out/.
-    for md in glob.glob(os.path.join(out, "**", "*.md"), recursive=True):
+    # 2. Aucun marqueur residuel dans assembleur-out/ ni dans .claude/memory/.
+    scan = glob.glob(os.path.join(out, "**", "*.md"), recursive=True)
+    scan += glob.glob(os.path.join(claude_dir, "memory", "*.md"))
+    scan.append(os.path.join(claude_dir, "CLAUDE.md"))
+    for md in scan:
         try:
             text = open(md, encoding="utf-8").read()
         except OSError:

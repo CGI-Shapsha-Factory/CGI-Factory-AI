@@ -1,6 +1,6 @@
 # Architecture — stack, composants, décisions
 
-<!-- Fichier mémoire (assembleur-out/memory/architecture.md), chargé à la demande. Digest du
+<!-- Fichier mémoire (.claude/memory/architecture.md), lu par Claude au besoin. Digest du
      contrat technique pour la fabrication. Contenu seul. -->
 
 ## Stack

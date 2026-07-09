@@ -85,25 +85,35 @@ un trou ou une contradiction apparaît. Ne synthétiser que sur des retours comp
   SpecKit doit connaître pour ordonner les `/speckit.specify`.
 - **`technical-context.md`** (gabarit `technical-context.md`) — le **Technical Context**
   projet (mappe la section du `plan.md` SpecKit).
-- **`memory/`** — contexte durable (convention `MEMORY.md`) : `MEMORY.md` (index concis :
-  des **pointeurs en liens Markdown** `[titre](chemin) — accroche`, jamais des chemins bruts
-  entre backticks ; chemins **relatifs à `memory/MEMORY.md`** — un voisin de `memory/` s'écrit
-  en nom nu `domain.md` (**jamais** `memory/domain.md`), un fichier du paquet à la racine est
-  préfixé `../` (`../technical-context.md`)), `domain.md` (langage ubiquitaire + entités — **remplace l'ancien GLOSSARY**),
-  `architecture.md` (stack, composants, digest ADR, conventions, cibles qualité),
-  `design.md` (réf. design system + guidelines : états, erreurs, a11y), `features.md`
-  (séquence + couplage + walking skeleton + pointeurs des 3 faces).
-- **`CLAUDE.md`** (gabarit `project-claude-md.md`) — instructions projet **< 200 lignes**
-  pour la fabrication : identité, principes, la **règle design** (export committé), où vivent
-  conventions/constitution, la séquence de features, les commandes build/test (depuis la
-  stack), **+ l'`@import` de l'index mémoire** : une ligne `@memory/MEMORY.md` **jamais entre
-  backticks** (un `@import` backtiqué est traité comme du texte littéral → non importé). `MEMORY.md`
-  (chargé à chaque session) pointe vers les fichiers thématiques, lus **à la demande**. `CLAUDE.md`
-  et `memory/` sont posés **à la racine** du repo de fabrication (les `@imports` sont relatifs).
+- **`.claude/memory/`** (écrit **directement dans le `.claude/` du projet**, PAS dans `assembleur-out/`)
+  — contexte durable (convention `MEMORY.md`) : `MEMORY.md` (index concis : des **pointeurs en liens
+  Markdown** `[titre](chemin) — accroche`, jamais des chemins bruts entre backticks ; **ne lie en dur
+  que ses voisins de `memory/`** — `domain.md`, `architecture.md`, `design.md`, `features.md` (chemin =
+  **nom nu**, **jamais** `memory/domain.md`), car ce sont les seuls fichiers qui **voyagent avec**
+  l'index ; les fichiers du paquet `assembleur-out/` — contexte technique, carte des features,
+  pré-constitution — sont cités **en texte simple**, jamais en lien `../` cassable), `domain.md`
+  (langage ubiquitaire + entités — **remplace l'ancien GLOSSARY**), `architecture.md` (stack,
+  composants, digest ADR, conventions, cibles qualité), `design.md` (réf. design system + guidelines :
+  états, erreurs, a11y), `features.md` (séquence + couplage + walking skeleton + pointeurs des 3 faces).
+- **`.claude/CLAUDE.md`** (gabarit `project-claude-md.md`, écrit **directement dans le `.claude/` du
+  projet**) — instructions projet **< 200 lignes** pour la fabrication : identité, principes, la
+  **règle design** (export committé), où vivent conventions/constitution, la séquence de features, les
+  commandes build/test (depuis la stack), **+ l'`@import` de l'index mémoire** : une ligne
+  `@memory/MEMORY.md` **jamais entre backticks** (un `@import` backtiqué est traité comme du texte
+  littéral → non importé). `MEMORY.md` (chargé à chaque session) pointe vers les fichiers thématiques,
+  lus **à la demande**. `CLAUDE.md` et `memory/` sont **co-localisés dans `.claude/`** — l'`@import` et
+  les liens résolvent en relatif (`.claude/CLAUDE.md` → `.claude/memory/MEMORY.md`).
 - **`attack-plan.md`** (gabarit `attack-plan.md`) — l'ordre de fabrication : `specify init`,
   puis `/speckit.constitution` (depuis `pre-constitution.md`), puis `/speckit.specify` par
   feature dans l'ordre des dépendances (walking skeleton d'abord), puis `/speckit.plan` →
   `/speckit.tasks`.
+
+**Déploiement `.claude/` (exception bornée au « paquet seul »).** `CLAUDE.md` et le dossier `memory/`
+sont les **seuls** artefacts écrits **hors `assembleur-out/`** : ils vont **directement dans le
+`.claude/` du projet** (à la racine du dossier de travail courant), pour être **actifs immédiatement**
+(Claude Code les charge dès la session suivante) sans copie manuelle. Créer `.claude/` et `.claude/memory/`
+s'ils manquent ; ne pas toucher au reste de `.claude/` (hooks, settings). Tout le reste du paquet reste
+dans `assembleur-out/`.
 
 **Contenu seul** : aucune `(src:)`, aucun horodatage, aucun nom de personne dans le paquet.
 
@@ -143,13 +153,16 @@ concerné. **Aucun fichier annexe.** **Ne pas conclure** tant qu'un marqueur sub
 ## Vérification avant de conclure
 - Le paquet est complet dans `assembleur-out/` : `pre-constitution.md`, `features/` (≥1
   graine, une par feature de la séquence), `feature-map.md`, `technical-context.md`,
-  `memory/` (MEMORY.md + thématiques), `CLAUDE.md`, `coherence-report.md`, `attack-plan.md`.
-- **Aucun marqueur résiduel**, aucune `(src:)`, **rien écrit hors `assembleur-out/`**.
+  `coherence-report.md`, `attack-plan.md`.
+- `CLAUDE.md` et `memory/` (MEMORY.md + thématiques) sont écrits dans **`.claude/`** du projet.
+- **Aucun marqueur résiduel**, aucune `(src:)`, **rien écrit hors `assembleur-out/` — sauf**
+  `.claude/CLAUDE.md` et `.claude/memory/` (déploiement).
 - Mettre à jour le manifeste **en silence**.
 
 ## Règles invariantes
-- **Paquet seul.** N'écrit que dans `assembleur-out/` ; jamais dans un repo cible, jamais
-  un fichier que SpecKit génère.
+- **Paquet seul (une exception bornée).** N'écrit que dans `assembleur-out/`, jamais un fichier que
+  SpecKit génère — **sauf** `CLAUDE.md` et `memory/`, écrits **directement dans `.claude/` du projet**
+  (déploiement, pour qu'ils soient actifs sans copie manuelle).
 - **Proposer, ne pas décider.** La cohérence est validée par l'humain.
 - **Rien laissé indéfini.** Tout marqueur se résout en session, en place, avant d'avancer.
 - **Rien de la mécanique affiché.** Aucun nom de variable/clé manifeste ; **seul tableau autorisé :
