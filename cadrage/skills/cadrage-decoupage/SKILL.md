@@ -128,7 +128,7 @@ Avant d'écrire le manifeste, vérifier :
 
 ## Réjeu incrémental (idempotence)
 
-Rejoué après une vision corrigée (retour de démonstrateur, clarification levée),
+Rejoué après une vision corrigée (retour de démonstrateur, point levé en session),
 ce skill **met à jour le découpage en place** :
 - **Préserve** la trace de ce qui était déjà arbitré et le contenu inchangé.
 - **Applique** les déplacements de frontière, ajouts ou fusions de features que la

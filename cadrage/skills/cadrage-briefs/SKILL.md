@@ -51,8 +51,8 @@ puis la boucle démonstrateur (`/cadrage:cadrage-demonstrateur-brief`). **Jamais
 la main » à la place du script.
 
 Adapter selon ce qui manque (en restant en clair) : si le prototype n'est pas
-encore validé, renvoyer vers la boucle (clarification → retour-démonstrateur →
-brief-démonstrateur) puis le point de complétude ; s'il manque la revue de
+encore validé, renvoyer vers la boucle démonstrateur (brief-démonstrateur →
+retour-démonstrateur → complétude) ; s'il manque la revue de
 couplage, renvoyer vers cette revue. Ne **jamais** afficher de nom d'attribut ni de
 statut de gate.
 

@@ -106,11 +106,22 @@ identifiant codé.
 Le skill enchaîne sur une **boucle interactive** pour trancher ce qui peut l'être
 tout de suite, selon `references/interactive-loop.md` (**une question à la fois, une
 réponse recommandée + réponse libre, pas de menu numéroté** ; on attend la réponse
-avant la suivante). On parcourt ainsi :
+avant la suivante). **C'est le point de résolution unique du cadrage** — il absorbe toute
+la clarification des points ouverts, y compris pendant la **boucle démonstrateur**
+(rejouable : il résout ce qui peut l'être ; le verdict reste au rouge tant que la maquette
+n'est pas validée — c'est normal). **Prioriser** : d'abord ce qui **bloque un artefact**,
+ensuite le raffinement ; **formuler des questions spécifiques et répondables** (pas
+« préciser le besoin » mais « quelle cible chiffrée de réduction du temps de recherche ? »).
+**Plafonner à ~8–10 questions par session** pour ne pas noyer l'utilisateur ; le reste sera
+repris à un prochain passage. On parcourt ainsi :
 
 - **Validation du glossaire** si elle n'a pas encore eu lieu : proposer la validation
   en bloc (pas terme par terme).
-- **Questions de découverte restées sans réponse** : les reposer une à une.
+- **Questions de découverte restées sans réponse** (`pending`/`deferred`) : les reposer une à une.
+- **Acquis remis en cause** (`[REMIS EN CAUSE]`, issus d'un retour de démonstrateur) : les
+  reposer et **retrancher** en session — corriger ou retirer l'acquis contredit, en place.
+- **Souhaits hors périmètre** repérés : les **confirmer une fois** (rester OUT, ou basculer IN
+  si l'utilisateur le décide) — **jamais pousser** ; un « on garde hors périmètre » est terminal.
 - **Points bloquants** : ne pas se contenter de les énoncer. Pour **chaque** point
   bloquant, **poser la question** correspondante à l'utilisateur (en clair, sans code
   ni jargon), une à la fois, jusqu'à ce que toute l'information nécessaire soit là.

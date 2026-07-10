@@ -27,7 +27,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 - Le **workspace + manifeste** = créés **dans le projet client** par `cadrage-init`.
   Le plugin lit/écrit ces fichiers ; il ne les contient pas.
 
-## Les skills (10 du pipeline + `help-factory`)
+## Les skills (9 du pipeline + `help-factory`)
 `help-factory` (hors pipeline) est l'**aide unique** de la Factory : elle affiche, de façon **statique** (rendu immédiat), la **carte des 4 plugins** (cadrage → architecte → designer → assembleur → SpecKit) avec **un tableau par plugin** (rôle de chaque skill, ordre, portes humaines). C'est la seule aide — il n'y a plus de `help-cadrage` (son détail est absorbé dans le tableau cadrage).
 
 | # | skill | rôle | porte |
@@ -39,14 +39,13 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | 4 | `cadrage-decoupage` | découpage **fonctionnel** (use cases par valeur, **sans MVP**) + couplage (hypothèse) ; **table affichée en chat** ; arbitrage **en session, écrit en place** | `vision_complete` |
 | 5 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`, **direction visuelle délibérée anti-slop — palette dérivée du domaine, jamais le violet/indigo par défaut**), sauvé sous `cadrage-out/prompts/` — **fichier = corps du prompt seul** | vision dispo / retour dispo |
 | 6 | `cadrage-retour-demonstrateur` | ingère le retour client, résout/invalide | retour dispo |
-| 7 | `cadrage-clarification` | repose en session, une à une, les questions restées sans réponse | questions ouvertes |
-| 8 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
-| 9 | `cadrage-completude` | **étape terminale** : bilan Definition of Ready (résumé en prose, **jamais de tableau**) + résolution interactive en place, puis relais vers l'architecte | aucune (rejouable) |
+| 7 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
+| 8 | `cadrage-completude` | **étape terminale ET point de résolution unique** : bilan Definition of Ready (résumé en prose, **jamais de tableau**) + **résolution interactive en place de tous les points ouverts** (découverte, glossaire, acquis remis en cause, hors-périmètre, bloquants), puis relais vers l'architecte | aucune (rejouable) |
 
 Flux : `cadrage-init` → `extraction` → (`vision` ∥ `glossaire`) → `decoupage` →
-**boucle démonstrateur** [`demonstrateur-brief` ⟳ `clarification` → `retour-demonstrateur`]
+**boucle démonstrateur** [`demonstrateur-brief` ⟳ `retour-demonstrateur` → `completude`]
 jusqu'à convergence → **revue de couplage humaine** → `briefs` → `completude` → **`/architecte:architecte-init`**.
-`completude` et `clarification` sont rejouables à tout moment. Aide : `/cadrage:help-factory`.
+`completude` est rejouable à tout moment (mesure le verdict **et** résout les points ouverts). Aide : `/cadrage:help-factory`.
 **Plus de skill handoff** : l'architecte (puis l'assembleur) lisent directement les fichiers de `cadrage-out/` ; le handoff/convergence est le rôle de l'assembleur.
 
 ## Workspace du projet client

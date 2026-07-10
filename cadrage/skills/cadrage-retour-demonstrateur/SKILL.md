@@ -47,8 +47,8 @@ exposer de mécanique interne de pré-requis.
    (`cadrage-vision`, `cadrage-glossaire`, `cadrage-decoupage`), qui
    appliqueront corrections et `[REMIS EN CAUSE]` en place (bloc idempotence).
 4. **Faire émerger les nouveaux points.** Toute nouvelle question ou souhait né du
-   retour → nouveau `validation_point` (`open`), qui repart vers
-   `cadrage-clarification`.
+   retour → nouveau `validation_point` (`open`), qui sera **résolu en session** au
+   point de complétude (`cadrage-completude`).
 
 ## Vérification
 
@@ -93,4 +93,4 @@ Read-modify-write puis revalidation JSON :
 - **Skill indépendant.** Il propage via le registre et recommande les réjeux ; il
   n'orchestre pas les autres skills.
 
-Étape suivante : `/cadrage:cadrage-clarification` — regrouper les points résolus, contredits et neufs en une liste à reboucler.
+Étape suivante : `/cadrage:cadrage-completude` — résoudre en session les points résolus, contredits et neufs, et faire le point d'état (verdict Definition of Ready).

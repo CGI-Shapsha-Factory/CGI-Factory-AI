@@ -29,9 +29,8 @@ De la matière brute (transcripts, docs) au pack fonctionnel repris par l'archit
 | 4 | `cadrage-decoupage` | découpage fonctionnel en use cases (par valeur) + carte de couplage | vision faite |
 | 5 | `cadrage-demonstrateur-brief` | prompt Claude Design pour la maquette de validation | vision / retour dispo |
 | 6 | `cadrage-retour-demonstrateur` | ingère le retour client sur la maquette, propage les corrections | retour dispo |
-| 7 | `cadrage-clarification` | pose les questions restantes en session *(rejouable)* | ≥1 point à clarifier |
-| 8 | `cadrage-briefs` | brief auto-portant par feature (dans `cadrage-out/features-fonctionnels-brief/`) | couplage arbitré + maquette validée |
-| 9 | `cadrage-completude` | **étape terminale** : bilan + résolution en session, puis relais vers l'architecte | *(rejouable)* — fin du cadrage |
+| 7 | `cadrage-briefs` | brief auto-portant par feature (dans `cadrage-out/features-fonctionnels-brief/`) | couplage arbitré + maquette validée |
+| 8 | `cadrage-completude` | **étape terminale ET point de résolution unique** : bilan + **résolution en session de tous les points ouverts**, puis relais vers l'architecte | *(rejouable)* — fin du cadrage |
 
 ### Phase 2 — `architecte` (contrat technique)
 Transforme le besoin fonctionnel en cadre technique et fige la séquence numérotée des features.
