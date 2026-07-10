@@ -12,11 +12,18 @@ contrats** (cadrage / architecte / designer), et **génère `init-cowork.md` à 
 — le document unique que le PO donne à **Quark** pour superviser sans setup supplémentaire.
 
 ## Objectif
-Produire, **à la racine**, un `init-cowork.md` centralisant : le **dépôt GitHub** (où lire
-l'implémentation et l'avancement du code), le **projet Linear** (où suivre l'avancement, les issues
-terminées et les tâches en cours), et le **contexte du produit** disponible à la convergence
-(projet, périmètre/features, synthèse technique, référence design). Idempotent : régénère le
-fichier proprement.
+Produire, **à la racine**, un `init-cowork.md` qui porte **tout le contexte utile** pour que le PO
+**initialise un projet dans Quark/Cowork** et supervise sans setup supplémentaire. Il centralise :
+- le **routage vers l'état vivant** — « où chercher quoi » : tâches / issues / avancement → **Linear** ;
+  fichiers / specs / features implémentées / technique → **dépôt GitHub** ;
+- le **contexte produit complet** figé par les 3 contrats : **problème** (le pourquoi), **objectif**,
+  **utilisateurs & rôles**, **proposition de valeur**, **critères de succès**, **périmètre** (inclus /
+  hors-périmètre / **contraintes clés**), la **liste des features** (description + dépendances + walking
+  skeleton), la **synthèse technique** (stack, intégrations, hébergement, cibles qualité) et la
+  **référence design** ;
+- les deux **liens vivants** (GitHub, Linear).
+
+Idempotent : régénère le fichier proprement. **Synthèse, pas copie ; rien d'inventé ; rien d'aval.**
 
 ## Frontière (exception assumée)
 L'assembleur ne produit que son paquet (`assembleur-out/`) et **n'écrit jamais un fichier que
@@ -67,20 +74,35 @@ Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-gui
   créer via `/assembleur:premier-alimente-linear` ».
 
 ## Étape 3 — Rassembler le contexte des 3 contrats (silencieux, best-effort)
-Sources = **sorties amont uniquement**, en synthèse (pas de copie) :
-- **Projet** : nom + résumé une ligne (`manifest.project` + `cadrage-out/product-brief*`).
+Sources = **sorties amont uniquement**, en **synthèse** (pas de copie ; source absente → omettre ou
+`<à renseigner>`, **jamais inventer**) :
+- **Projet** (contexte riche, ← `cadrage-out/product-brief.md` + `manifest.project`) :
+  - **Problème** (le *pourquoi*, §Problème), **Objectif** (§Objectif métier), **Utilisateurs & rôles**
+    (§Parties prenantes + `cadrage-out/project-frame.md` §Utilisateurs & rôles), **Proposition de valeur**
+    (une phrase), **Critères de succès** (§Critères de succès, à haut niveau).
+- **Périmètre** (← product-brief + `cadrage-out/project-frame.md`) :
+  - **Inclus** (§Périmètre IN), **Hors périmètre** (§Hors périmètre OUT), **Contraintes clés**
+    (§Contraintes + project-frame : légal/RGPD, sécurité, sensibilité des données, hébergement,
+    disponibilité, performance).
 - **Périmètre & features** : `architecture.feature_sequence` (`{id, name}`) + `assembleur-out/feature-map.md`
-  → tableau feature ; colonne **Ticket Linear** = `identifier` + `url` depuis `linear.issues[]` **si
-  créés**, sinon « à créer via premier-alimente-linear ».
-- **Contexte technique** : synthèse de la stack (`architecte-out/stack-technique*`), en bref.
-- **Contexte design** : référence du design system (`designer-out/design-guidelines*` / système
+  → tableau feature avec **description courte** + **dépendances** + **walking skeleton** ; colonne
+  **Ticket Linear** = `identifier` + `url` depuis `linear.issues[]` **si créés**, sinon « à créer via
+  premier-alimente-linear ». (Glossaire `cadrage-out/glossaire.md` / use cases `cadrage-out/spec-index.md`
+  pour nommer juste.)
+- **Contexte technique** : synthèse de la stack (`architecte-out/stack-technique.md`) + **intégrations**
+  (project-frame §Intégrations) + **hébergement** (project-frame §Hébergement) + **cibles de qualité**
+  (`architecte-out/facteurs-et-qualite.md`), en bref.
+- **Contexte design** : référence du design system (`designer-out/design-guidelines.md` / système
   synchronisé Claude Design).
 
 ## Étape 4 — Générer `init-cowork.md` (racine) + confirmer
 1. Partir du gabarit `.factory/assembleur/init-cowork.md` (installé par `assembleur-init`) et le
-   **remplir** avec les infos détectées (Étapes 1–3). Inclure la section **« Accès Linear pour
-   Quark »** (setup MCP + clé API — cf. `references/linear-guide.md`, sous-section « Accès par clé
-   API »).
+   **remplir intégralement** avec les infos détectées (Étapes 1–3) : la section **« Où chercher quoi »**
+   (routage GitHub/Linear), le **contexte projet** (problème, objectif, utilisateurs, valeur, critères
+   de succès), le **périmètre** (inclus / hors-périmètre / contraintes clés), le **tableau des features**
+   (description + dépendances + walking skeleton), la **synthèse technique** et la **référence design**,
+   plus la section **« Accès Linear pour Quark »** (setup MCP + clé API — cf. `references/linear-guide.md`,
+   sous-section « Accès par clé API »). Toute section sans matière amont → `<à renseigner>`, jamais inventée.
 2. **Confirmer les deux liens vivants — une question par lien, posées SÉPARÉMENT (jamais les deux à
    la fois).** Chaque question porte **une seule URL** (recommandé + autre + saisir) :
    1. **D'abord GitHub** : poser **une seule question** sur l'**URL GitHub** — proposer l'URL détectée
@@ -101,8 +123,9 @@ Sources = **sorties amont uniquement**, en synthèse (pas de copie) :
 (read-modify-write + revalidation JSON).
 
 ## Vérification avant de conclure
-- `init-cowork.md` existe à la racine, expose une **section GitHub** et une **section Linear**, et
-  **ne contient aucune** section SpecKit / fabrication / avancement (contrainte de périmètre).
+- `init-cowork.md` existe à la racine, expose une **section GitHub**, une **section Linear**, une
+  section **« Périmètre »** et un **contexte projet** (problème / objectif / périmètre / contraintes),
+  et **ne contient aucune** section SpecKit / fabrication / avancement (contrainte de périmètre).
 - Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_cowork.py" <racine>/manifest.json`
   (utiliser `python` ; `python3` sur macOS/Linux).
 - Le bloc `cowork` du manifeste **reparse sans erreur** ; restitution **en prose** (« j'ai généré
@@ -111,6 +134,9 @@ Sources = **sorties amont uniquement**, en synthèse (pas de copie) :
 ## Règles invariantes
 - **Exception racine bornée.** On n'écrit que `init-cowork.md` (racine) + le bloc `cowork` du
   manifeste ; jamais un fichier que SpecKit génère.
+- **Contexte complet.** Le document porte tout le contexte utile à la supervision (problème, objectif,
+  utilisateurs, périmètre inclus/hors, contraintes, features, technique, design) + le routage
+  « où chercher quoi » — pas seulement les deux liens.
 - **Rien d'aval.** Aucun contenu sur SpecKit / la fabrication / l'avancement — ils n'existent pas
   encore ; seuls les **liens** GitHub/Linear renvoient à l'état vivant.
 - **Confirmer avant d'écrire.** Les deux liens sont validés par l'humain **une question par lien,

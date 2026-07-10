@@ -8,7 +8,7 @@ des 3 contrats). Ce garde-fou lit le manifeste (`manifest.json` a la racine par 
   - le bloc `cowork` est absent (le skill n'a pas tourne) ;
   - `init-cowork.md` n'existe pas a la racine ;
   - le document n'expose pas une section GitHub ET une section Linear (les deux points d'entree
-    vivants que le PO doit pouvoir atteindre).
+    vivants que le PO doit pouvoir atteindre) ET une section Perimetre (le contexte projet enrichi).
 
 Ecriture racine = exception bornee assumee (fichier de contexte de supervision, jamais un fichier
 que SpecKit genere). Exit 0 si tout est coherent, sinon 1.
@@ -23,6 +23,7 @@ import sys
 
 GITHUB_RE = re.compile(r"github", re.IGNORECASE)
 LINEAR_RE = re.compile(r"linear", re.IGNORECASE)
+PERIMETRE_RE = re.compile(r"p[ée]rim[èe]tre", re.IGNORECASE)
 
 
 def _manifest_path(argv):
@@ -70,7 +71,7 @@ def main(argv):
             problems.append(f"document illisible ({rel_path}): {exc}")
             text = ""
 
-    # Les deux points d'entree vivants doivent etre presents (section GitHub + section Linear).
+    # Les deux points d'entree vivants (GitHub + Linear) ET le contexte projet enrichi (Perimetre).
     if text:
         headings = re.findall(r"^#{1,6}\s+.*$", text, flags=re.MULTILINE)
         joined = "\n".join(headings)
@@ -78,6 +79,8 @@ def main(argv):
             problems.append("section GitHub absente du document (depot du code introuvable)")
         if not LINEAR_RE.search(joined):
             problems.append("section Linear absente du document (suivi du projet introuvable)")
+        if not PERIMETRE_RE.search(joined):
+            problems.append("section Perimetre absente du document (contexte projet non enrichi)")
 
     if problems:
         print("DOCUMENT COWORK INCOMPLET - points bloquants :", file=sys.stderr)

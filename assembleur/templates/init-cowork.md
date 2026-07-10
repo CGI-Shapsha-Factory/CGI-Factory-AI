@@ -1,26 +1,43 @@
 # init-cowork — contexte de supervision (PO / Quark)
 
-<!-- Genere par `create-cowork-md` a la RACINE du projet. Document de contexte UNIQUE pour le PO
-     qui supervise depuis Quark. Ne contient QUE ce qui existe a la phase assembleur : les sorties
-     des 3 contrats (cadrage / architecte / designer) + les liens GitHub et Linear. AUCUNE section
-     sur le workflow SpecKit, la fabrication feature-par-feature, ni l'avancement d'implementation
-     (rien de tout cela n'existe encore). Contenu seul (aucune provenance, aucun horodatage). -->
+<!-- Genere par `create-cowork-md` a la RACINE du projet. Document de contexte UNIQUE avec lequel le
+     PO INITIALISE un projet dans Quark/Cowork pour superviser. Il porte TOUT le contexte utile issu
+     des 3 contrats (cadrage / architecte / designer) + les liens GitHub et Linear. AUCUNE section sur
+     le workflow SpecKit, la fabrication feature-par-feature, ni l'avancement d'implementation (rien de
+     tout cela n'existe encore). Tout est SYNTHESE (pas de copie), contenu seul (aucune provenance,
+     aucun horodatage). Source absente -> omettre la ligne ou mettre `<a renseigner>` ; ne rien inventer. -->
 
-> Ce document centralise les liens et le contexte dont tu as besoin pour superviser le projet.
-> C'est un **instantané** de la convergence : pour l'**état vivant** (code, avancement, tâches),
-> consulte toujours **GitHub** et **Linear** (liens ci-dessous).
+> Ce document centralise **le contexte et les liens** dont tu as besoin pour superviser le projet.
+> C'est un **instantané figé** de la convergence : pour l'**état vivant** (code, avancement, tâches),
+> consulte toujours **GitHub** et **Linear** (liens plus bas). Ce fichier ne se met **pas** à jour seul.
+
+## Où chercher quoi (l'état vivant n'est PAS dans ce document)
+
+- **Avancement, tâches, issues terminées / en cours, qui fait quoi, planning** → **Linear** (lien plus bas).
+- **Code, fichiers, spécifications (`spec.md`), features implémentées, détails techniques, pull requests** → **dépôt GitHub** (lien plus bas).
+- **Le « pourquoi », le périmètre et les contraintes du produit** → **ce document** (sections ci-dessous, figées à la convergence).
 
 ## Projet
 
 - **Nom** : [nom du produit]
-- **Résumé** : [une à deux phrases — l'objectif du produit, tiré du product-brief cadrage]
+- **Problème** : [le besoin auquel le produit répond — le *pourquoi*, en 1–3 phrases, tiré du product-brief §Problème]
+- **Objectif** : [le résultat métier visé — product-brief §Objectif métier]
+- **Utilisateurs & rôles clés** : [pour qui + les rôles principaux — product-brief §Parties prenantes / project-frame §Utilisateurs & rôles]
+- **Proposition de valeur** : [une phrase — ce que le produit apporte concrètement]
+- **Critères de succès** : [ce qui définit la réussite, à haut niveau — product-brief §Critères de succès]
+
+## Périmètre
+
+- **Inclus** : [les grandes capacités couvertes — puces, synthèse du product-brief §Périmètre IN]
+- **Hors périmètre** : [ce qui n'est explicitement PAS fait dans cette version — puces, product-brief §Hors périmètre OUT]
+- **Contraintes clés** : [légal / RGPD, sécurité, sensibilité des données, hébergement, disponibilité, performance — puces, product-brief §Contraintes + project-frame §Légal / Données / Disponibilité / Hébergement]
 
 ## Dépôt GitHub
 
 [URL du dépôt, ex. `https://github.com/<org>/<repo>`]
 
-> Pour toute information sur l'**implémentation**, l'**avancement du code** ou les **détails
-> techniques**, consulte le dépôt GitHub ci-dessus.
+> Pour toute information sur l'**implémentation**, les **fichiers**, les **spécifications**, les
+> **features développées** ou les **détails techniques**, consulte le dépôt GitHub ci-dessus.
 
 <!-- Si aucun remote GitHub n'est encore configuré : mettre `<à renseigner>` + garder cette note :
      « Le dépôt n'a pas encore de remote GitHub ; renseigner l'URL dès qu'il est créé. » -->
@@ -29,8 +46,8 @@
 
 [URL du projet Linear, ex. `https://linear.app/<workspace>/project/<slug>`]
 
-> Suis l'**avancement du projet** depuis Linear : issues **terminées**, tâches **en cours**, et
-> les dernières issues livrées.
+> Pour l'**avancement du projet** — issues **terminées**, tâches **en cours**, qui travaille sur quoi
+> et les dernières livraisons — consulte Linear ci-dessus.
 
 <!-- Si le projet Linear n'est pas détecté (MCP absent, ou tickets pas encore créés) : mettre
      `<à renseigner>` + la note d'installation (section « Accès Linear pour Quark » ci-dessous),
@@ -38,19 +55,27 @@
 
 ## Périmètre & features
 
-<!-- Depuis `architecture.feature_sequence` + `assembleur-out/feature-map.md`. La colonne « Ticket
-     Linear » n'est remplie que si `premier-alimente-linear` a déjà tourné (bloc manifeste `linear`) ;
-     sinon indiquer « à créer via premier-alimente-linear ». -->
+<!-- Depuis `architecture.feature_sequence` (id, name) + `assembleur-out/feature-map.md` (description,
+     dépendances, walking skeleton). La colonne « Ticket Linear » n'est remplie que si
+     `premier-alimente-linear` a déjà tourné (bloc manifeste `linear`) ; sinon « à créer via
+     premier-alimente-linear ». -->
 
-| Feature | Intitulé | Ticket Linear | Lien |
-|---------|----------|---------------|------|
-| 001 | [intitulé] | [ENG-123 / à créer] | [url ou —] |
-| 002 | [intitulé] | [ENG-124 / à créer] | [url ou —] |
+| Feature | Intitulé | Description courte | Dépend de | Ticket Linear | Lien |
+|---------|----------|--------------------|-----------|---------------|------|
+| 001 | [intitulé] | [ce que la feature apporte, en une ligne] | — | [ENG-123 / à créer] | [url ou —] |
+| 002 | [intitulé] | [une ligne] | 001 | [ENG-124 / à créer] | [url ou —] |
+
+> **Walking skeleton** : la feature [00X] est la tranche de bout en bout à livrer d'abord (socle
+> technique traversant), avant les features qui en dépendent.
 
 ## Contexte technique (synthèse)
 
-[Stack principale figée par l'architecte, en bref — langages/frameworks/services clés. Tiré de
-`architecte-out/stack-technique.md`. Une synthèse, pas une copie : le détail est dans le dépôt.]
+- **Stack** : [langages / frameworks / base de données / style d'API — architecte-out/stack-technique.md, en bref]
+- **Intégrations** : [systèmes externes, SSO, connecteurs — project-frame §Intégrations]
+- **Hébergement** : [cible de déploiement — project-frame §Hébergement]
+- **Cibles de qualité** : [attributs prioritaires + cibles chiffrées si connues — architecte-out/facteurs-et-qualite.md]
+
+> Synthèse : le détail vit dans le dépôt GitHub (code + specs).
 
 ## Contexte design
 
