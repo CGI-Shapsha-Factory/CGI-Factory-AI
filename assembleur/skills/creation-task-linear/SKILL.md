@@ -5,10 +5,16 @@ description: Après /speckit.tasks, crée un sous-ticket Linear par phase de spe
 
 # creation-task-linear
 
-**Deuxième alimentation de Linear (niveau tâches).** À lancer **pendant la fabrication**, **après
-`/speckit.tasks`** — c'est-à-dire une fois que SpecKit a produit `specs/<feature>/tasks.md`. Ce skill
-lit les **phases** de chaque `tasks.md` et crée, dans Linear, **un sous-ticket par phase** (label
-`Task`) **rattaché** (`parentId`) au ticket `Feature` déjà créé par `premier-alimente-linear`.
+**Deuxième niveau de tâches Linear (par phase d'implémentation).** À lancer **pendant la fabrication**,
+**après `/speckit.tasks`** — c'est-à-dire une fois que SpecKit a produit `specs/<feature>/tasks.md`. Ce
+skill lit les **phases** de chaque `tasks.md` et crée, dans Linear, **un sous-ticket par phase** (label
+`Task`, en **Backlog**) **rattaché** (`parentId`) au ticket `Feature` déjà créé par
+`premier-alimente-linear`.
+
+> **Coexistence assumée (deux niveaux de Task).** `premier-alimente-linear` a déjà posé, sous chaque
+> Feature, **un `Task` par Functional Requirement** (niveau fonctionnel). Ce skill ajoute, sous la même
+> Feature, **un `Task` par phase** (niveau implémentation). Les deux se distinguent dans le manifeste
+> par les champs `fr` vs `phase` de `sub_issues[]`.
 
 ## Objectif
 Pour chaque feature dont le `tasks.md` existe : parcourir ses **phases** (`## Phase N: …`) et créer
@@ -65,8 +71,8 @@ Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-gui
 Pour chaque ticket de feature (`linear.issues[]` avec `issue_id`), s'assurer qu'il porte le label
 `Feature` **sans perdre ses labels existants** : lire ses labels via `get_issue({id})`, puis
 `save_issue({id, labelIds: <union des labelIds existants + Feature>})`. **Additif** : ne jamais
-retirer `feature:<id>` ni `walking-skeleton`. Idempotent : si `Feature` est déjà présent, ne rien
-écrire.
+retirer un label existant (ex. `walking-skeleton`). Idempotent : si `Feature` est déjà présent, ne
+rien écrire.
 
 ## Étape 4 — Boucle par feature puis par phase (confirmation obligatoire)
 Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
@@ -92,8 +98,8 @@ Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
    créer.)
 5. **Créer** (cf. `references/linear-guide.md`) :
    `save_issue({team, title, parentId: "<issue_id UUID du ticket Feature>", labelIds: ["<UUID Task>"],
-   description: "<résumé 1 ligne>", state: <Todo/unstarted si résolu>})` → récupérer `issue_id` /
-   `identifier` / `url`.
+   description: "<résumé 1 ligne>", state: <Backlog>})` → récupérer `issue_id` / `identifier` / `url`.
+   **State = Backlog** (comme toute nouvelle issue).
 6. **Consigner** dans `linear.issues[].sub_issues[]` (en silence) : `{phase, phase_name, title,
    issue_id, identifier, url, status: "created"}`, puis phase suivante. **Répéter** jusqu'à épuisement
    des phases, puis feature suivante.

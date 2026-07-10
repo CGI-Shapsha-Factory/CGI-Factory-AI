@@ -73,8 +73,9 @@ def main(argv):
             fid = it.get("id") or it.get("name") or "?"
             problems.append(f"ticket feature '{fid}' marque cree sans identifiant Linear")
 
-    # 3. Sous-tickets de phase (creation-task-linear) : INDULGENT - ne valide que les entrees presentes.
-    #    Un sous-ticket "created" doit porter un identifiant ; l'absence de sub_issues n'echoue pas.
+    # 3. Sous-tickets Task (premier-alimente-linear par `fr` / creation-task-linear par `phase`) :
+    #    INDULGENT - ne valide que les entrees presentes. Un sous-ticket "created" doit porter un
+    #    identifiant ; l'absence de sub_issues n'echoue pas.
     for it in issues:
         if not isinstance(it, dict):
             continue
@@ -86,9 +87,9 @@ def main(argv):
             if status in NON_CREATED_STATUSES:
                 continue
             if not (sub.get("issue_id") or sub.get("identifier")):
-                ph = sub.get("phase")
+                ref = sub.get("fr") or (f"phase {sub.get('phase')}" if sub.get("phase") is not None else "?")
                 problems.append(
-                    f"sous-ticket feature '{fid}' phase '{ph}' marque cree sans identifiant Linear"
+                    f"sous-ticket feature '{fid}' ({ref}) marque cree sans identifiant Linear"
                 )
 
     if problems:

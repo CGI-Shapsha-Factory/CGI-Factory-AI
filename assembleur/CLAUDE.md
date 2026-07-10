@@ -34,18 +34,21 @@ projet** (déploiement, pour qu'ils soient actifs sans copie manuelle).
   `memory/` directement dans le `.claude/` du projet** (actifs sans copie manuelle), **résout les
   marqueurs en session**, et fait la cohérence (porte humaine : *garant de cohérence*).
 - `premier-alimente-linear` — **première alimentation de Linear** : lit les features approuvées, les
-  présente en tableau, puis crée **un ticket Linear par feature** (label **`Feature`** résolu par nom
-  + `feature:<id>` clé de jointure ; via le MCP **`linear-prism`**, confirmation ticket par ticket,
-  **liste de contrôle** dans la description pour les grosses features, `blockedBy` pour les
-  dépendances), bloc manifeste `linear`. **Exception bornée** à « pas de Linear » (Linear est
+  présente en tableau, puis crée **un ticket `Feature` par feature + un sous-ticket `Task` par
+  Functional Requirement** (`parentId`), **tout en Backlog** (label **`Feature`** seul, résolu par nom —
+  **jamais** `feature:<id>` ni un label de numérotation, l'identifiant Linear porte déjà le numéro ;
+  `Task` pour les sous-tickets ; via le MCP **`linear-prism`**, confirmation ticket par ticket,
+  `blockedBy` pour les dépendances), bloc manifeste `linear`. **Exception bornée** à « pas de Linear » (Linear est
   externe). Si le MCP `linear-prism` est **absent**, **ne rien créer** : refuser en clair et
   afficher les **instructions d'installation** (section « Installation du plugin linear-prism »).
   Voir `references/linear-guide.md`.
-- `creation-task-linear` — **sous-tickets par phase** : à lancer **après `/speckit.tasks`** (quand
-  `specs/<feature>/tasks.md` existe). Pour chaque feature, parse les phases (`## Phase N:`) de son
-  `tasks.md` et crée **un sous-ticket Linear par phase** (label **`Task`**, `parentId` = ticket
-  `Feature`, **titre descriptif** généré — jamais le nom générique brut « Setup »), après
-  confirmation. Labels `Feature`/`Task` **résolus par nom** (`list_issue_labels`), jamais créés. Bloc
+- `creation-task-linear` — **sous-tickets par phase (2ᵉ niveau de Task)** : à lancer **après
+  `/speckit.tasks`** (quand `specs/<feature>/tasks.md` existe). Pour chaque feature, parse les phases
+  (`## Phase N:`) de son `tasks.md` et crée **un sous-ticket Linear par phase** (label **`Task`**, en
+  **Backlog**, `parentId` = ticket `Feature`, **titre descriptif** généré — jamais le nom générique
+  brut « Setup »), après confirmation. **Coexiste** avec les Task par FR posés en amont par
+  `premier-alimente-linear` (distingués dans le manifeste par `fr` vs `phase`). Labels `Feature`/`Task`
+  **résolus par nom** (`list_issue_labels`), jamais créés. Bloc
   manifeste `linear.issues[].sub_issues[]`. Si le MCP `linear-prism` est **absent**, **ne rien
   créer** : refuser en clair et afficher les **instructions d'installation**. Voir
   `references/linear-guide.md`.

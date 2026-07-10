@@ -52,9 +52,9 @@ reprend dans `init-cowork.md` (« Accès Linear pour Quark »).
   `team` (nom ou id).
 - **Projet** (optionnel) : `list_projects({team})` → proposer un projet existant ou en créer un au
   nom du produit. Retenir le `project`.
-- **État initial** (optionnel) : `list_issue_statuses({team})` → viser un état de type **Todo /
-  unstarted** (jamais Backlog), tickets **non assignés**. Si l'état n'est pas résolvable
-  proprement, laisser l'état par défaut de l'équipe.
+- **État initial = Backlog** : `list_issue_statuses({team})` → viser le type **`backlog`**, tickets
+  **non assignés**. **Toute nouvelle issue** (Feature comme Task) est créée en **Backlog**, jamais en
+  Todo. Si l'état n'est pas résolvable proprement, laisser l'état par défaut de l'équipe.
 
 ## Créer un ticket (par feature)
 `mcp__plugin_linear-prism_linear__save_issue` — création quand on ne passe **pas** d'`id` :
@@ -63,31 +63,32 @@ reprend dans `init-cowork.md` (« Accès Linear pour Quark »).
 - **`description`** — **Markdown** (newlines littéraux, pas d'échappement) : la description d'une
   ligne + un court contexte (parcours principal, critère de succès clé). Voir la face fonctionnelle
   de la graine `assembleur-out/features/<id>-*.md`.
-- **`project`** — si retenu. **`state`** — Todo/unstarted si résolu.
-- **`labels`** — le label plat **`Feature`** (taxonomie) + `feature:<id>` (clé de jointure) +
-  `walking-skeleton` (si la feature 001 / le walking skeleton). **Jamais de label `MVP`** —
-  l'architecture n'a **aucune notion de MVP**. Les labels plats **`Feature`** / **`Task`**
-  **préexistent** dans l'espace de travail : les **résoudre par nom** via `list_issue_labels`
-  (comparaison **insensible à la casse**) et passer leurs **UUID** dans `labelIds` — **ne pas les
-  créer**. Un label absent : le créer via `create_issue_label` ou l'omettre (best-effort, ne pas
-  bloquer). Note : `save_issue` prend `labelIds` (UUID), pas des noms — d'où la résolution préalable.
+- **`project`** — si retenu. **`state`** — **Backlog** (type `backlog`).
+- **`labels`** — le label plat **`Feature`** (taxonomie) **seul** (+ `walking-skeleton` si la feature
+  001 / le walking skeleton). **Jamais** de label de numérotation **`feature:<id>`** / `Issue:<id>`
+  (l'`identifier` Linear `<TEAM>-<n>` porte déjà le numéro), **jamais** `MVP`. Les labels plats
+  **`Feature`** / **`Task`** **préexistent** dans l'espace de travail : les **résoudre par nom** via
+  `list_issue_labels` (comparaison **insensible à la casse**) et passer leurs **UUID** dans `labelIds`
+  — **ne pas les créer**. Un label absent : le créer via `create_issue_label` ou l'omettre (best-effort,
+  ne pas bloquer). Note : `save_issue` prend `labelIds` (UUID), pas des noms — d'où la résolution préalable.
 - Récupérer dans la réponse : l'**id interne**, l'**identifier** (ex. `ENG-123`) et l'**url**.
 
-## Liste de contrôle d'une grosse feature → checkboxes dans la description
-Pour une feature **volumineuse** (bundle > 1 use case, **ou** ≥ 4 exigences fonctionnelles, **ou**
-≥ 2 user stories dans la graine) : inclure la liste de contrôle **directement dans la `description`**
-du ticket via la syntaxe Markdown `- [ ] item`. Linear les rend interactifs (cases cochables). Pas de
-sous-ticket (`parentId`) — tout reste dans un seul ticket. Format de la description :
+## Sous-tickets Task par Functional Requirement (`premier-alimente-linear`)
+Chaque « chose à faire » d'une feature est un **vrai sous-ticket `Task`** (pas une checkbox dans la
+description). `premier-alimente-linear` crée **un `Task` par Functional Requirement** (`FR-xxx`) de la
+graine `assembleur-out/features/<id>-*.md`, **rattaché** à la Feature :
 
-```markdown
-Description en une ligne.
+`save_issue({team, title: "FR-00x — <intitulé fonctionnel court>", parentId: "<issue_id UUID de la
+Feature>", labelIds: ["<UUID Task>"], description: "<énoncé du FR, 1 ligne>", state: <Backlog>})`
 
-**Checklist :**
-- [ ] FR-004 — Intitulé fonctionnel
-- [ ] FR-005 — Intitulé fonctionnel
-```
+- **`parentId` = l'UUID interne** (`issue_id`) de la Feature, **pas** l'`identifier` (`ENG-123`).
+- **State = Backlog** (comme la Feature). Label **`Task`** seul.
+- Récupérer `issue_id` / `identifier` / `url` et consigner dans `linear.issues[].sub_issues[]` avec le
+  champ **`fr`** (clé stable = `id` de feature + `fr`).
 
-Dériver les items des `FR-xxx` / scénarios d'acceptation / `SC-xxx` de la graine.
+*(Niveau distinct, plus tard : `creation-task-linear` crée en plus un `Task` par **phase** de
+`tasks.md` après SpecKit — voir ci-dessous. Les deux niveaux coexistent sous la même Feature,
+distingués dans le manifeste par `fr` vs `phase`.)*
 
 ## Dépendances entre features → relations bloquantes
 La carte `assembleur-out/feature-map.md` porte la colonne **« Dépend de »**. Les features sont
@@ -108,9 +109,9 @@ par phase** (contrairement à la checklist-dans-la-description du ticket de feat
   tâches de la phase ; pour une phase « User Story N — <titre> », reprendre l'intitulé de la story.
 - **Créer le sous-ticket** :
   `save_issue({team, title, parentId: "<issue_id UUID du ticket Feature>", labelIds: ["<UUID Task>"],
-  description: "<résumé 1 ligne>", state})`. Le **`parentId` est l'UUID interne** (`issue_id`) du
-  ticket `Feature`, **pas** l'`identifier` (`ENG-123`). La **description est un résumé d'une ligne**
-  (pas d'énumération des `Txxx`).
+  description: "<résumé 1 ligne>", state: <Backlog>})`. Le **`parentId` est l'UUID interne**
+  (`issue_id`) du ticket `Feature`, **pas** l'`identifier` (`ENG-123`). **State = Backlog.** La
+  **description est un résumé d'une ligne** (pas d'énumération des `Txxx`).
 - **Rattraper le label `Feature`** sur le ticket de feature sans écraser ses labels : `get_issue({id})`
   → union des `labelIds` existants + `Feature` → `save_issue({id, labelIds: <union>})`.
 - Récupérer `issue_id` / `identifier` / `url` et consigner dans `linear.issues[].sub_issues[]`.
@@ -148,6 +149,8 @@ Bloc :
       "issue_id": "…", "identifier": "ENG-123", "url": "https://linear.app/…",
       "status": "created",
       "sub_issues": [
+        { "fr": "FR-001", "title": "FR-001 — Recherche en langage naturel",
+          "issue_id": "…", "identifier": "ENG-124", "url": "https://linear.app/…", "status": "created" },
         { "phase": 1, "phase_name": "Setup", "title": "Mise en place : scaffolding & outillage (Ingestion)",
           "issue_id": "…", "identifier": "ENG-131", "url": "https://linear.app/…", "status": "created" }
       ]
@@ -157,6 +160,10 @@ Bloc :
 }
 ```
 Statuts (ticket **et** sous-ticket) : `created` (posé, exige `issue_id`), `skipped` (écarté en
-session), `merged` (fusionné). `sub_issues[]` (posé par `creation-task-linear`)
-: **une entrée par phase** du `tasks.md`, clé stable = `id` de feature + `phase`. Écriture
-**silencieuse** (read-modify-write + revalidation JSON), jamais narrée.
+session), `merged` (fusionné). `sub_issues[]` porte **deux natures** de Task, toutes en **Backlog** :
+- **`{fr, …}`** — un par Functional Requirement, posé par **`premier-alimente-linear`** (clé stable =
+  `id` de feature + `fr`) ;
+- **`{phase, phase_name, …}`** — un par phase du `tasks.md`, posé par **`creation-task-linear`** (clé
+  stable = `id` de feature + `phase`).
+
+Écriture **silencieuse** (read-modify-write + revalidation JSON), jamais narrée.

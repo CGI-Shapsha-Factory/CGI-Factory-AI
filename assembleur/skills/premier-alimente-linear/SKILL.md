@@ -1,6 +1,6 @@
 ---
 name: premier-alimente-linear
-description: Première alimentation de Linear — transforme les features approuvées en tickets Linear (un par feature, label Feature), avec confirmation ticket par ticket, via le MCP linear-prism — juste avant install-speckit. Les sous-tickets par phase (label Task) sont créés plus tard par creation-task-linear, après /speckit.tasks.
+description: Première alimentation de Linear — transforme les features approuvées en tickets Linear (un ticket Feature par feature + un sous-ticket Task par Functional Requirement, tout en Backlog, label Feature seul), avec confirmation ticket par ticket, via le MCP linear-prism — juste avant install-speckit. Les sous-tickets par phase (label Task) restent créés plus tard par creation-task-linear, après /speckit.tasks.
 ---
 
 # premier-alimente-linear
@@ -8,14 +8,20 @@ description: Première alimentation de Linear — transforme les features approu
 **Pont vers Linear.** À lancer **après `assembleur-convergence`** (le paquet est produit, la
 cohérence validée, les features **déjà approuvées**) et **avant `install-speckit`**. Ce skill lit
 la liste des features, la présente en **tableau de revue**, puis — **ticket par ticket, avec
-confirmation** — crée **un ticket Linear par feature** pour que l'équipe pilote la fabrication
-SpecKit feature par feature.
+confirmation** — crée **un ticket `Feature` par feature** et, sous chacun, **un sous-ticket `Task`
+par Functional Requirement**, pour que l'équipe pilote la fabrication SpecKit feature par feature.
 
 ## Objectif
-Créer, dans Linear, **un ticket par feature approuvée** : un **titre**, une **description d'une
-ligne**, et — pour une feature **volumineuse** — une **liste de contrôle** (cases à cocher dans l'issue) pour suivre
-l'avancement. Chaque ticket est **confirmé avant création**. Idempotent : on ne recrée jamais un
-ticket déjà posé.
+Créer, dans Linear, pour **chaque feature approuvée** :
+- **un ticket `Feature`** — un **titre** (intitulé métier), une **description d'une ligne**, le label
+  **`Feature`** (seul ; **jamais** `feature:<id>` ni un label de numérotation — l'identifiant Linear
+  `<TEAM>-<n>` porte déjà le numéro) (+ `walking-skeleton` si concernée) ;
+- **un sous-ticket `Task` par Functional Requirement** (`FR-xxx`) de la graine, **rattaché** à la
+  Feature (`parentId`), label **`Task`**.
+
+**Tout est créé en Backlog** (features **et** tasks). Chaque ticket est **confirmé avant création**.
+Idempotent : on ne recrée jamais un ticket (feature ou task) déjà posé. **Plus de checklist dans la
+description** — chaque « chose à faire » est un vrai sous-ticket `Task`.
 
 ## Frontière (exception assumée)
 L'assembleur ne produit que son paquet (`assembleur-out/`) et **n'écrit jamais dans le repo cible**.
@@ -49,10 +55,13 @@ de**, parallélisable) et chaque graine `assembleur-out/features/<id>-*.md` (Use
 `FR-xxx`, `SC-xxx`, cas limites). Afficher **un tableau de revue unique** (c'est l'exception au
 « pas de tableau » — une revue, comme `feature-map.md`) :
 
-| Ordre | Feature | Use cases | Walking skeleton | Dépend de | Titre proposé | Description (1 ligne) | Volumineuse ? |
-|-------|---------|-----------|------------------|-----------|---------------|-----------------------|---------------|
+| Ordre | Feature | Use cases | Walking skeleton | Dépend de | Titre proposé | Description (1 ligne) | # FR (Tasks) |
+|-------|---------|-----------|------------------|-----------|---------------|-----------------------|--------------|
 
-Puis **demander (oui/non) : « Créer un ticket par feature ? »**
+(La colonne **# FR (Tasks)** = le nombre de Functional Requirements de la graine → autant de
+sous-tickets `Task` qui seront créés sous la Feature.)
+
+Puis **demander (oui/non) : « Créer un ticket Feature par feature, avec ses sous-tickets Task ? »**
 - **Oui** → passer à l'Étape 3.
 - **Non** → **boucle d'ajustement** (un point à la fois, cf. `references/interactive-loop.md` :
   recommandée + alternative + « saisir ») : quelles features **fusionner / renommer / écarter /
@@ -61,38 +70,47 @@ Puis **demander (oui/non) : « Créer un ticket par feature ? »**
 
 ## Étape 3 — Cible Linear (une seule fois)
 Choisir l'**équipe** (`list_teams` → recommandée + alternative + saisir) et, optionnellement, le
-**projet** (`list_projects`), l'**état initial** (Todo/unstarted). Consigner `team`/`project` dans
-le manifeste **en silence**. Détails : `references/linear-guide.md`.
+**projet** (`list_projects`). **État initial = Backlog** : `list_issue_statuses({team})` → viser le
+type **`backlog`** (toute nouvelle issue — Feature comme Task — est créée en **Backlog**, jamais Todo).
+Résoudre aussi les labels **`Feature`** et **`Task`** par nom (`list_issue_labels`, insensible à la
+casse ; ne pas les créer). Consigner `team`/`project` dans le manifeste **en silence**. Détails :
+`references/linear-guide.md`.
 
-## Étape 4 — Boucle par ticket (un à la fois, confirmation obligatoire)
+## Étape 4 — Boucle par feature : la Feature puis ses Task (confirmation obligatoire)
 Pour **chaque** feature retenue, **dans l'ordre** :
-1. **Préparer** : un **titre** (intitulé métier, ex. `001 — Recherche Q&A sourcée`), une
-   **description d'une ligne** (parcours principal / rôle de la feature, depuis la graine), et — si
-   la feature est **volumineuse** — une **liste de contrôle** = cases à cocher (`- [ ] …`) à
-   inclure dans la **description** de l'issue (dérivées des `FR-xxx` / scénarios d'acceptation /
-   `SC-xxx`). **Volumineuse** = bundle **> 1 use case** (`ucs`), **ou** ≥ 4 exigences
-   fonctionnelles, **ou** ≥ 2 user stories dans la graine.
-2. **Confirmer** (recommandée + ajuster + saisir) : le **titre**, la **description d'une ligne**,
-   et **la liste de contrôle (seulement si volumineuse)**. **Ne rien créer** tant que ce
-   n'est pas approuvé ; « ajuster »/« saisir » corrige en place.
-3. **Créer** (cf. `references/linear-guide.md`) : `save_issue({team, title, description: <1 ligne
-   + '\n\n**Checklist :**\n- [ ] item…'>, labels, state})` → récupérer `identifier`/`url`. La
-   liste de contrôle est dans la `description` (Markdown `- [ ] item` — Linear les rend
-   interactifs, pas de sous-ticket ici — les vrais sous-tickets par phase viennent plus tard, via
-   `creation-task-linear`). Poser les **relations bloquantes** (`blockedBy`) d'après « Dépend de ».
-   Labels : **`Feature`** (label plat de taxonomie, **résolu par nom** via `list_issue_labels`, jamais
-   créé ici) + `feature:<id>` (clé de jointure) (+ `walking-skeleton` si concerné) — **jamais `MVP`**.
-4. **Consigner** dans `linear.issues[]` (en silence), puis **passer à la feature suivante**.
-   **Répéter jusqu'à ce que toutes soient traitées.**
+1. **Préparer** :
+   - la **Feature** : un **titre** (intitulé métier, ex. `001 — Recherche Q&A sourcée`) et une
+     **description d'une ligne** (parcours principal / rôle de la feature, depuis la graine) ;
+   - la **liste des `Task`** : **un par Functional Requirement** de la graine
+     `assembleur-out/features/<id>-*.md` (§Functional Requirements). Pour chaque `FR-xxx` : **titre**
+     = `FR-00x — <intitulé fonctionnel court>` ; **description d'une ligne** = l'énoncé du FR.
+2. **Confirmer** (recommandée + ajuster + saisir) : le **titre** + **description** de la Feature **et
+   la liste des Task (FR)**. **Ne rien créer** tant que ce n'est pas approuvé ; « ajuster »/« saisir »
+   corrige en place.
+3. **Créer la Feature** (cf. `references/linear-guide.md`) : `save_issue({team, title, description,
+   labelIds:[<Feature>(+<walking-skeleton> si 001/walking skeleton)], state:<Backlog>})` → récupérer
+   `issue_id` (UUID) / `identifier` / `url`. Poser les **relations bloquantes** (`blockedBy`) d'après
+   « Dépend de » (la dépendance est une feature **antérieure**, déjà créée). Label **`Feature` seul** —
+   **jamais** `feature:<id>`, **jamais** `MVP`.
+4. **Créer chaque Task** (sous-ticket de la Feature) : `save_issue({team, title:"FR-00x — …",
+   parentId:<issue_id UUID de la Feature>, labelIds:[<Task>], description:"<énoncé du FR>",
+   state:<Backlog>})` → récupérer `issue_id` / `identifier` / `url`. Le **`parentId` est l'UUID
+   interne** de la Feature (pas l'`identifier`).
+5. **Consigner** (en silence) : la Feature dans `linear.issues[]` ; chaque Task dans son
+   `sub_issues[]` avec `{fr:"FR-001", title, issue_id, identifier, url, status:"created"}`. Puis
+   **passer à la feature suivante**. **Répéter jusqu'à ce que toutes soient traitées.**
 
-**Idempotence** : une feature déjà consignée avec un `issue_id` n'est **pas recréée**.
+**Idempotence** : une feature déjà consignée avec un `issue_id` n'est **pas recréée** ; un Task déjà
+consigné (même `id` de feature + même `fr`) avec un `issue_id` n'est **pas recréé**.
 
 ## Vérification avant de conclure
-- Chaque feature approuvée a **son ticket** (ou une décision `skipped`/`merged`) ; les grosses
-  features ont leur **liste de contrôle** dans la description ; les **dépendances** sont posées.
+- Chaque feature approuvée a **son ticket `Feature`** (ou une décision `skipped`/`merged`), en
+  **Backlog**, label **`Feature`** (sans `feature:<id>`) ; les **dépendances** (`blockedBy`) sont posées.
+- Chaque `Feature` porte **un sous-ticket `Task` par FR** (rattaché par `parentId`), en **Backlog**,
+  label `Task`.
 - Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/manifest.json`.
 - Le bloc `linear` du manifeste **reparse sans erreur** ; restitution **en prose** (« j'ai créé N
-  tickets, un par feature »), manifeste mis à jour **en silence**.
+  tickets Feature et M sous-tickets Task, en Backlog »), manifeste mis à jour **en silence**.
 
 ## Règles invariantes
 - **Exception Linear bornée.** On n'écrit que dans Linear (externe) + le bloc `linear` du manifeste ;
