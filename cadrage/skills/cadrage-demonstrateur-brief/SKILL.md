@@ -39,6 +39,11 @@ aucun contexte projet).
 ## Qualité du prompt à générer (consignes au modèle)
 
 Un prompt médiocre donne une maquette médiocre. Pour produire un **prompt excellent** :
+- **Assigner un rôle + viser haut (prompt engineering).** Ouvrir le prompt par le **rôle** du gabarit
+  en **remplissant `<domaine>`** depuis le `product-brief.md` (ex. « interfaces juridiques »,
+  « santé »), puis reprendre **tel quel** le bloc « Avant de dessiner » (décider la langue visuelle +
+  **un parti pris signature** + décider-puis-appliquer + north-star « viser l'excellence, pas la
+  moyenne »). Le rôle **signale les priorités** mieux qu'une liste ; le garder **court** (1 ligne).
 - **Lister explicitement les écrans à produire** (3 à 6), un par parcours clé du
   `spec-index.md`, avec pour chacun ce qu'on y fait.
 - **Injecter du contenu réaliste du domaine** (libellés, noms, données plausibles tirés

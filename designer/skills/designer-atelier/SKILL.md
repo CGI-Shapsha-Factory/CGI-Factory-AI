@@ -92,6 +92,11 @@ true`, **geste humain**) :
   (tous les états par composant, tous les parcours, erreurs + états vides, marquer ce qui manque). Les items
   **sans objet** sont omis. **Aucun `[À VALIDER]` n'est émis** : tous les points ayant été résolus en
   session à l'étape 4, le prompt ne contient que des décisions actées.
+  - **Rôle + viser haut (prompt engineering).** Ouvrir le prompt par le **rôle** du gabarit en
+    **remplissant `<domaine>`** depuis le `product-brief.md`/`impact-design.md`, puis reprendre **tel
+    quel** le bloc « Avant de concevoir » (décider la langue visuelle + **un parti pris signature** +
+    décider-puis-appliquer + north-star « viser l'excellence, pas la moyenne »). Rôle **court** (1 ligne) —
+    il signale les priorités mieux qu'une liste.
   - **Direction visuelle délibérée et CONCRÈTE (anti-slop).** Remplir la section « Direction visuelle »
     du gabarit avec des **valeurs NOMMÉES, jamais des placeholders** : palette en **hexadécimal + rôle**
     (`--couleur-primaire: #… (CTA)`, `--fond: #…` légèrement teinté, `--texte: #…`, + succès/erreur/
