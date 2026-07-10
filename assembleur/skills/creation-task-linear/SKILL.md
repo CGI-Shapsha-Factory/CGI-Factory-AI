@@ -16,6 +16,14 @@ skill lit les **phases** de chaque `tasks.md` et crée, dans Linear, **un sous-t
 > Feature, **un `Task` par phase** (niveau implémentation). Les deux se distinguent dans le manifeste
 > par les champs `fr` vs `phase` de `sub_issues[]`.
 
+> **Déclenchement automatique (hook).** Le hook `PostToolUse` `tasks_linear_hook.py` (posé par
+> `install-speckit` dans `.claude/hooks/`) détecte **chaque édition d'un `specs/<feature>/tasks.md`** et,
+> s'il repère une **phase sans sous-ticket** consigné, **pousse l'agent à lancer ce skill** (le hook ne
+> parle jamais à Linear). Ce skill est donc la **sync** : il **vérifie** que chaque phase a son sous-ticket
+> `Task` (label `Task`, **Backlog**, `parentId` = ticket `Feature`), **crée uniquement les manquants**
+> (après confirmation groupée), et **ne modifie jamais** un sous-ticket déjà existant (ni état, ni label —
+> « ce n'est pas son business »).
+
 ## Objectif
 Pour chaque feature dont le `tasks.md` existe : parcourir ses **phases** (`## Phase N: …`) et créer
 **un sous-ticket Linear par phase** avec :

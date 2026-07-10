@@ -17,11 +17,14 @@ projet a deja SpecKit, sinon il l'installe bout en bout dans UN seul processus :
   7. test de fumee (.specify/ + commandes /speckit.*) ;
   8. registre de hooks `.specify/extensions.yml` pose depuis le gabarit Factory
      `references/speckit-extensions.yml` (config d'equipe, NON generee par specify init ; idempotent) ;
-  9. bloc `speckit` ecrit dans manifest.json a la racine (repli cadrage-out/ legacy ; lecture-modif-ecriture + revalidation JSON).
+  9. hook PostToolUse de sync tasks.md -> Linear pose dans `.claude/` (via
+     `references/linear-sync/install_tasks_linear_hook.py` ; best-effort, fusion idempotente) ;
+ 10. bloc `speckit` ecrit dans manifest.json a la racine (repli cadrage-out/ legacy ; lecture-modif-ecriture + revalidation JSON).
 
 Il n'ecrit JAMAIS a la main un fichier que SpecKit GENERE : c'est `specify init` qui cree `.specify/`
-et les commandes. Les seules ecritures propres a la Factory sont le bloc de manifeste ET le registre
-de hooks `.specify/extensions.yml` (config d'equipe branchant les automations Factory sur le cycle).
+et les commandes. Les seules ecritures propres a la Factory sont le bloc de manifeste, le registre de
+hooks `.specify/extensions.yml`, et le hook `.claude/hooks/tasks_linear_hook.py` (config/enforcement
+d'equipe branchant les automations Factory sur le cycle).
 
 Usage :
     python install_speckit.py [racine-projet] [options]
@@ -309,6 +312,25 @@ def _report_extensions(status):
         print(".specify/extensions.yml deja present -- hooks inchanges.")
 
 
+def install_tasks_hook(target):
+    """Pose le hook PostToolUse de sync tasks.md -> Linear (script + fusion settings.json) via
+    l'installeur `references/linear-sync/install_tasks_linear_hook.py`. Best-effort (ne bloque jamais
+    l'install de SpecKit). Renvoie True si l'installeur a tourne sans erreur, False sinon."""
+    installer = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "references", "linear-sync", "install_tasks_linear_hook.py")
+    if not os.path.isfile(installer):
+        return False
+    try:
+        r = subprocess.run([sys.executable, installer, target],
+                           capture_output=True, text=True, timeout=60)
+        for line in (r.stdout or "").splitlines():
+            if line.strip():
+                print(line)
+        return r.returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
 def emit_result(block, target):
     print(MARKER + " " + json.dumps({**block, "target": target}, ensure_ascii=False))
 
@@ -336,9 +358,10 @@ def main(argv):
     if speckit_present(target):
         print(f"SpecKit deja present dans {target} (.specify/) -- rien a faire.")
         ext = write_extensions(target)  # rattrape le registre de hooks meme sur une install existante
+        tasks_hook = install_tasks_hook(target)  # rattrape aussi le hook sync tasks->Linear
         block = {"installed": True, "initialized": True, "path": ".specify",
                  "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
-                 "extensions_hooks": ext}
+                 "extensions_hooks": ext, "tasks_hook": tasks_hook}
         write_manifest(target, block, args.no_manifest)
         _report_extensions(ext)
         emit_result(block, target)
@@ -380,13 +403,14 @@ def main(argv):
         )
         return 1
 
-    # 6. Registre de hooks SpecKit (config d'equipe, non generee par specify init).
+    # 6. Registre de hooks SpecKit (config d'equipe, non generee par specify init) + hook sync tasks->Linear.
     ext = write_extensions(target)
+    tasks_hook = install_tasks_hook(target)
 
     # 7. Manifeste + statut.
     block = {"installed": True, "initialized": True, "path": ".specify",
              "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
-             "extensions_hooks": ext}
+             "extensions_hooks": ext, "tasks_hook": tasks_hook}
     write_manifest(target, block, args.no_manifest)
     print(f"SpecKit installe et initialise dans {target}.")
     print("Crees par `specify init` : .specify/ (constitution, scripts, templates) et les commandes /speckit.* dans .claude/.")

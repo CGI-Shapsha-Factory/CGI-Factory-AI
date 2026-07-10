@@ -19,16 +19,19 @@ scripts, templates) et les commandes `/speckit.*` existent dans le repo, **et le
 `.specify/extensions.yml` est posé** (config d'équipe **non générée par `specify init`** ; sans elle
 les `/speckit.*` rapportent « No hooks ») — il branche les automations Linear de la Factory en
 **hooks optionnels** (ex. `after_tasks` → `creation-task-linear`, `after_implement` →
-`update-issue-linear`).
+`update-issue-linear`). **Et** le **hook `PostToolUse` `tasks_linear_hook.py`** est posé dans
+`.claude/hooks/` : il détecte **toute édition d'un `specs/<feature>/tasks.md`** et pousse l'agent à
+lancer `creation-task-linear` pour synchroniser les sous-tickets `Task` (le hook ne parle jamais à Linear).
 
 ## Frontière (exception assumée)
 L'assembleur **n'écrit jamais lui-même** un fichier que SpecKit **génère**. Ce skill **ne rédige à la
 main aucun contenu produit par `specify init`** (constitution, scripts, templates, commandes) : il
 **invoque `specify init`**, et c'est **SpecKit** qui les produit. Les seules écritures propres à la
-Factory sont : le bloc `speckit` du **manifeste committé** `manifest.json`, **et le registre de hooks
-`.specify/extensions.yml`** — qui n'est **pas** un artefact généré par `specify init` mais la **config
-d'équipe** qui branche les automations Factory sur le cycle SpecKit (posé par le script, idempotent).
-Exceptions **explicitement bornées** à l'invariant « paquet seul » — pas une violation.
+Factory sont : le bloc `speckit` du **manifeste committé** `manifest.json`, **le registre de hooks
+`.specify/extensions.yml`**, **et le hook `.claude/hooks/tasks_linear_hook.py`** (+ son entrée dans
+`.claude/settings.json`) — aucun n'est un artefact généré par `specify init` : ce sont la **config /
+l'enforcement d'équipe** qui branchent les automations Factory sur le cycle SpecKit (posés par le
+script, idempotents). Exceptions **explicitement bornées** à l'invariant « paquet seul » — pas une violation.
 
 ## Pré-requis (vérification silencieuse)
 Lire `manifest.json` **sans l'annoncer**, uniquement pour situer la racine (dossier
@@ -52,8 +55,10 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
    propre processus), vérifie Git, acquiert le CLI `specify`, **introspecte `specify init --help`**
    pour bâtir les bons flags (version-proof), joue `specify init` non-interactif, fait un **test de
    fumée**, **pose le registre de hooks `.specify/extensions.yml`** (gabarit
-   `references/speckit-extensions.yml`, **idempotent** : ne touche pas un fichier existant), écrit le
-   bloc `speckit` du manifeste, et affiche un statut clair en français.
+   `references/speckit-extensions.yml`, **idempotent**), **pose le hook `PostToolUse`
+   `tasks_linear_hook.py`** dans `.claude/` (via `references/linear-sync/install_tasks_linear_hook.py`,
+   fusion idempotente de `settings.json`, best-effort), écrit le bloc `speckit` du manifeste, et affiche
+   un statut clair en français.
 2. **Relayer le résultat en prose** (voir `references/ux-conventions.md`) : dire **ce qui s'est
    passé** et **la prochaine étape** ; ne jamais afficher de nom de clé du manifeste ni de tableau.
 3. Si le script **sort en échec** : relayer son message **actionnable** tel quel (ex. « Git est
@@ -65,6 +70,7 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
   `scripts/`, `templates/`).
 - Au moins une commande `/speckit.*` est présente sous `.claude/` (commandes ou skills selon la version).
 - Le registre de hooks `.specify/extensions.yml` existe (posé par le script, ou déjà présent — idempotent).
+- Le hook `.claude/hooks/tasks_linear_hook.py` existe et son entrée `PostToolUse` est dans `.claude/settings.json`.
 - Le CLI `specify` est disponible (installation persistante) — `specify check` a pu tourner (informatif).
 - Le manifeste contient le bloc `speckit` (installé + initialisé) et **reparse sans erreur**.
 - **Idempotence** : si `.specify/` préexistait, rien n'a été réinitialisé ni écrasé.
