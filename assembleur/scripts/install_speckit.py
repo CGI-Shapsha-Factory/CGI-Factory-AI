@@ -15,10 +15,13 @@ projet a deja SpecKit, sinon il l'installe bout en bout dans UN seul processus :
      absorbe le renommage `--ai` -> `--integration` et les versions qui omettent `--script`) ;
   6. `specify init` joue en non-interactif (timeouts, messages reseau/quotas clairs) ;
   7. test de fumee (.specify/ + commandes /speckit.*) ;
-  8. bloc `speckit` ecrit dans manifest.json a la racine (repli cadrage-out/ legacy ; lecture-modif-ecriture + revalidation JSON).
+  8. registre de hooks `.specify/extensions.yml` pose depuis le gabarit Factory
+     `references/speckit-extensions.yml` (config d'equipe, NON generee par specify init ; idempotent) ;
+  9. bloc `speckit` ecrit dans manifest.json a la racine (repli cadrage-out/ legacy ; lecture-modif-ecriture + revalidation JSON).
 
-Il n'ecrit JAMAIS a la main un fichier que SpecKit genere : c'est `specify init` qui cree
-`.specify/` et les commandes. La seule ecriture propre a la Factory est le bloc de manifeste.
+Il n'ecrit JAMAIS a la main un fichier que SpecKit GENERE : c'est `specify init` qui cree `.specify/`
+et les commandes. Les seules ecritures propres a la Factory sont le bloc de manifeste ET le registre
+de hooks `.specify/extensions.yml` (config d'equipe branchant les automations Factory sur le cycle).
 
 Usage :
     python install_speckit.py [racine-projet] [options]
@@ -277,6 +280,35 @@ def write_manifest(target, block, no_manifest):
         f.write(tmp + "\n")
 
 
+def write_extensions(target):
+    """Pose le registre de hooks SpecKit (.specify/extensions.yml) — config d'equipe, NON generee par
+    `specify init` (sans elle les /speckit.* rapportent "No hooks"). Copie le gabarit Factory
+    `references/speckit-extensions.yml`. Idempotent (ne touche pas un fichier existant) et best-effort
+    (ne bloque jamais l'installation). Renvoie 'created' / 'present' / None."""
+    spec = os.path.join(target, ".specify")
+    if not os.path.isdir(spec):
+        return None
+    dest = os.path.join(spec, "extensions.yml")
+    if os.path.isfile(dest):
+        return "present"
+    tpl = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "references", "speckit-extensions.yml")
+    try:
+        with open(tpl, encoding="utf-8") as f:
+            content = f.read()
+        with open(dest, "w", encoding="utf-8", newline="\n") as f:
+            f.write(content)
+        return "created"
+    except OSError:
+        return None
+
+
+def _report_extensions(status):
+    if status == "created":
+        print("Hooks SpecKit initialises : .specify/extensions.yml (registre Factory, branche les automations Linear en hooks optionnels).")
+    elif status == "present":
+        print(".specify/extensions.yml deja present -- hooks inchanges.")
+
+
 def emit_result(block, target):
     print(MARKER + " " + json.dumps({**block, "target": target}, ensure_ascii=False))
 
@@ -303,9 +335,12 @@ def main(argv):
     # 1. Idempotence : SpecKit deja present -> rien a faire.
     if speckit_present(target):
         print(f"SpecKit deja present dans {target} (.specify/) -- rien a faire.")
+        ext = write_extensions(target)  # rattrape le registre de hooks meme sur une install existante
         block = {"installed": True, "initialized": True, "path": ".specify",
-                 "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc}
+                 "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
+                 "extensions_hooks": ext}
         write_manifest(target, block, args.no_manifest)
+        _report_extensions(ext)
         emit_result(block, target)
         return 0
 
@@ -345,12 +380,17 @@ def main(argv):
         )
         return 1
 
-    # 6. Manifeste + statut.
+    # 6. Registre de hooks SpecKit (config d'equipe, non generee par specify init).
+    ext = write_extensions(target)
+
+    # 7. Manifeste + statut.
     block = {"installed": True, "initialized": True, "path": ".specify",
-             "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc}
+             "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
+             "extensions_hooks": ext}
     write_manifest(target, block, args.no_manifest)
     print(f"SpecKit installe et initialise dans {target}.")
     print("Crees par `specify init` : .specify/ (constitution, scripts, templates) et les commandes /speckit.* dans .claude/.")
+    _report_extensions(ext)
     print("Prochaine etape : /speckit.constitution avec assembleur-out/pre-constitution.md, puis les /speckit.specify dans l'ordre de feature-map.md.")
     emit_result(block, target)
     return 0

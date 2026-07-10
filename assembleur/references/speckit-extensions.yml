@@ -1,0 +1,44 @@
+# SpecKit — registre des hooks d'extension (.specify/extensions.yml)
+# Pose par /assembleur:install-speckit. Lu par les skills /speckit.* a chaque phase du cycle.
+# Ce fichier n'est PAS genere par `specify init` : c'est la config d'equipe qui branche des
+# automations sur les points du cycle SpecKit (sans lui, les /speckit.* rapportent "No hooks").
+#
+#   enabled  : mettre false pour desactiver un hook.
+#   optional : true  -> l'utilisateur est INVITE et peut refuser (le hook ne bloque jamais la phase).
+#   command  : identifiant logique du hook ; l'agent lance le skill Factory correspondant
+#              (indique en clair dans prompt/description : /assembleur:<skill>).
+#
+# La Factory pilote Linear via ses propres skills (assembleur:*), pas via une extension SpecKit :
+# ces hooks servent de declencheur/rappel a la bonne etape du cycle.
+
+hooks:
+  # Apres /speckit.tasks : refleter les phases du tasks.md en sous-tickets Task Linear.
+  after_tasks:
+    - extension: factory-linear
+      command: assembleur.creation-task-linear
+      enabled: true
+      optional: true
+      prompt: "Creer les sous-tickets Task Linear (un par phase de tasks.md), rattaches au ticket Feature ? Lance /assembleur:creation-task-linear."
+      description: "Factory — reflete les phases du tasks.md en sous-tickets Task Linear (skill /assembleur:creation-task-linear)."
+      condition: null
+
+  # Apres /speckit.implement : faire avancer l'etat du ticket Linear (feature/phase terminee).
+  after_implement:
+    - extension: factory-linear
+      command: assembleur.update-issue-linear
+      enabled: true
+      optional: true
+      prompt: "Mettre a jour l'etat du ticket Linear (feature/phase terminee) ? Lance /assembleur:update-issue-linear."
+      description: "Factory — avance l'etat du ticket Linear apres implementation (skill /assembleur:update-issue-linear)."
+      condition: null
+
+# Points de hook additionnels disponibles (before_/after_ pour chaque phase), a activer au besoin :
+#   constitution, specify, clarify, plan, tasks, analyze, checklist, implement, converge, taskstoissues.
+# Exemple (desactive) :
+#   after_specify:
+#     - extension: factory-linear
+#       command: assembleur.premier-alimente-linear
+#       enabled: false
+#       optional: true
+#       description: "Rappel : alimenter Linear (Feature + Task/FR) — normalement fait avant SpecKit."
+#       condition: null

@@ -67,9 +67,13 @@ projet** (déploiement, pour qu'ils soient actifs sans copie manuelle).
   à la demande (idéalement après `premier-alimente-linear`). Voir `references/linear-guide.md`.
 - `install-speckit` — **pont vers SpecKit** : pose SpecKit dans le repo cible via
   `scripts/install_speckit.py` (auto-install `uv` sans admin, introspection des flags de `specify
-  init`, `specify init` non-interactif, test de fumée, bloc manifeste `speckit`). **Seule exception
-  bornée** à « n'écrit jamais dans le repo cible » : c'est `specify init` qui génère `.specify/`,
-  jamais ce skill.
+  init`, `specify init` non-interactif, test de fumée, **pose le registre de hooks
+  `.specify/extensions.yml`** depuis `references/speckit-extensions.yml` — config d'équipe **non
+  générée par `specify init`** qui branche les automations Linear de la Factory en **hooks optionnels**
+  (`after_tasks`→`creation-task-linear`, `after_implement`→`update-issue-linear`) —, bloc manifeste
+  `speckit`). **Exceptions bornées** à « n'écrit jamais dans le repo cible » : `specify init` génère
+  `.specify/` (jamais ce skill à la main) ; le registre `extensions.yml` et le bloc manifeste sont de la
+  config Factory.
 
 ## Le paquet `assembleur-out/` + déploiement `.claude/`
 ```

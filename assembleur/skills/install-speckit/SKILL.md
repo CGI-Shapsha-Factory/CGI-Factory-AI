@@ -15,14 +15,20 @@ soient disponibles **immédiatement**. Principe directeur : **rien ne doit bloqu
 Garantir que SpecKit (`specify`) est **installé et initialisé** dans le repo courant : le CLI est
 acquis via `uv` (auto-installé si absent, en **espace utilisateur, sans admin**), puis `specify
 init` est joué en **non-interactif** pour l'agent Claude Code. À la fin, `.specify/` (constitution,
-scripts, templates) et les commandes `/speckit.*` existent dans le repo.
+scripts, templates) et les commandes `/speckit.*` existent dans le repo, **et le registre de hooks
+`.specify/extensions.yml` est posé** (config d'équipe **non générée par `specify init`** ; sans elle
+les `/speckit.*` rapportent « No hooks ») — il branche les automations Linear de la Factory en
+**hooks optionnels** (ex. `after_tasks` → `creation-task-linear`, `after_implement` →
+`update-issue-linear`).
 
 ## Frontière (exception assumée)
-L'assembleur **n'écrit jamais lui-même** un fichier que SpecKit génère. Ce skill **ne rédige à la
-main aucun contenu de `.specify/`** : il **invoque `specify init`**, et c'est **SpecKit** qui
-produit `.specify/` et les `/speckit.*`. La seule écriture propre à la Factory est le bloc
-`speckit` du **manifeste committé** `manifest.json` (comme chaque plugin y écrit son bloc).
-C'est donc une exception **explicitement bornée** à l'invariant « paquet seul » — pas une violation.
+L'assembleur **n'écrit jamais lui-même** un fichier que SpecKit **génère**. Ce skill **ne rédige à la
+main aucun contenu produit par `specify init`** (constitution, scripts, templates, commandes) : il
+**invoque `specify init`**, et c'est **SpecKit** qui les produit. Les seules écritures propres à la
+Factory sont : le bloc `speckit` du **manifeste committé** `manifest.json`, **et le registre de hooks
+`.specify/extensions.yml`** — qui n'est **pas** un artefact généré par `specify init` mais la **config
+d'équipe** qui branche les automations Factory sur le cycle SpecKit (posé par le script, idempotent).
+Exceptions **explicitement bornées** à l'invariant « paquet seul » — pas une violation.
 
 ## Pré-requis (vérification silencieuse)
 Lire `manifest.json` **sans l'annoncer**, uniquement pour situer la racine (dossier
@@ -45,7 +51,9 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
    (**idempotent**), s'assure de `uv` (l'auto-installe sans admin, rafraîchit le PATH dans son
    propre processus), vérifie Git, acquiert le CLI `specify`, **introspecte `specify init --help`**
    pour bâtir les bons flags (version-proof), joue `specify init` non-interactif, fait un **test de
-   fumée**, écrit le bloc `speckit` du manifeste, et affiche un statut clair en français.
+   fumée**, **pose le registre de hooks `.specify/extensions.yml`** (gabarit
+   `references/speckit-extensions.yml`, **idempotent** : ne touche pas un fichier existant), écrit le
+   bloc `speckit` du manifeste, et affiche un statut clair en français.
 2. **Relayer le résultat en prose** (voir `references/ux-conventions.md`) : dire **ce qui s'est
    passé** et **la prochaine étape** ; ne jamais afficher de nom de clé du manifeste ni de tableau.
 3. Si le script **sort en échec** : relayer son message **actionnable** tel quel (ex. « Git est
@@ -56,6 +64,7 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
 - `.specify/` existe à la racine du repo cible (généré par `specify init` : `memory/constitution.md`,
   `scripts/`, `templates/`).
 - Au moins une commande `/speckit.*` est présente sous `.claude/` (commandes ou skills selon la version).
+- Le registre de hooks `.specify/extensions.yml` existe (posé par le script, ou déjà présent — idempotent).
 - Le CLI `specify` est disponible (installation persistante) — `specify check` a pu tourner (informatif).
 - Le manifeste contient le bloc `speckit` (installé + initialisé) et **reparse sans erreur**.
 - **Idempotence** : si `.specify/` préexistait, rien n'a été réinitialisé ni écrasé.
@@ -64,8 +73,12 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
 - Restitution faite **en prose**, manifeste mis à jour **en silence**.
 
 ## Règles invariantes
-- **N'écrit aucun fichier SpecKit à la main.** Seul `specify init` génère `.specify/` et les
-  `/speckit.*`. Exception bornée à l'invariant « paquet seul ».
+- **N'écrit aucun fichier généré par SpecKit à la main.** Seul `specify init` produit `.specify/`
+  (constitution, scripts, templates) et les `/speckit.*`. Le script ne pose que deux fichiers **de
+  config** : le bloc `speckit` du manifeste **et** le registre de hooks `.specify/extensions.yml`
+  (non généré par `specify init`). Exceptions bornées à l'invariant « paquet seul ».
+- **Hooks non bloquants.** Les hooks du registre sont `optional: true` : ils **invitent** l'agent à
+  lancer un skill Factory (`/assembleur:*`) à la bonne étape, sans jamais bloquer la phase SpecKit.
 - **Rien ne bloque l'installation.** `uv` auto-installé sans admin ; PATH rafraîchi en cours de
   processus ; flags construits par introspection ; sous-processus bornés par timeout ; échecs
   réseau attrapés proprement.
