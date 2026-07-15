@@ -30,6 +30,17 @@ Voir `assembleur-out/attack-plan.md` : `specify init` → `/speckit.constitution
 `/speckit.specify` par feature **dans l'ordre du `assembleur-out/feature-map.md`** (walking skeleton d'abord) →
 `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`.
 
+## Numérotation SpecKit — imposée (multi-développeurs)
+- **Une feature = une branche = un développeur.** Le numéro `NNN-slug` est **déjà fixé** dans
+  `assembleur-out/feature-map.md` (colonne « Répertoire / branche SpecKit ») — c'est l'`id` du registre
+  de l'architecte, pas un numéro à recalculer.
+- Pour chaque feature : `git checkout -b NNN-slug`, **puis** `/speckit.specify` en fournissant
+  explicitement **`SPECIFY_FEATURE_DIRECTORY=specs/NNN-slug`**. **Ne jamais** laisser SpecKit
+  auto-numéroter — deux développeurs partis de `main` collisionneraient le même numéro. Le garde-fou
+  `.claude/hooks/check_speckit_alignment.py` bloque toute dérive (doublon, timestamp, numéro hors registre).
+- **Claim.** Avant de démarrer `NNN`, s'assigner son ticket `Feature` Linear et le passer *In Progress* ;
+  ne jamais prendre une feature déjà assignée. L'**avancement vit dans Linear** (l'application), pas dans le repo.
+
 ## Design — non négociable
 - **Le design system committé** (`designer-out/maquette-de-claude-design/`) est la **source** ; ne
   construire qu'à partir de ses **tokens et composants** — **aucune valeur de style en dur**.

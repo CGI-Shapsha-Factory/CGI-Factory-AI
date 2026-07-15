@@ -19,7 +19,12 @@ projet a deja SpecKit, sinon il l'installe bout en bout dans UN seul processus :
      `references/speckit-extensions.yml` (config d'equipe, NON generee par specify init ; idempotent) ;
   9. hook PostToolUse de sync tasks.md -> Linear pose dans `.claude/` (via
      `references/linear-sync/install_tasks_linear_hook.py` ; best-effort, fusion idempotente) ;
- 10. bloc `speckit` ecrit dans manifest.json a la racine (repli cadrage-out/ legacy ; lecture-modif-ecriture + revalidation JSON).
+ 10. numerotation figee en SEQUENTIEL (`.specify/init-options.json feature_numbering:sequential` +
+     `--branch-numbering sequential` si le CLI l'expose) et garde-fou d'alignement anti-collision de
+     numero pose dans `.claude/` (via `references/speckit-sync/install_align_hook.py` : copie
+     `check_speckit_alignment.py` + fusion PostToolUse ; best-effort) — pour que le NNN de SpecKit reste
+     l'`id` du registre canonique et que deux developpeurs ne collisionnent jamais un numero ;
+ 11. bloc `speckit` ecrit dans manifest.json a la racine (repli cadrage-out/ legacy ; lecture-modif-ecriture + revalidation JSON).
 
 Il n'ecrit JAMAIS a la main un fichier que SpecKit GENERE : c'est `specify init` qui cree `.specify/`
 et les commandes. Les seules ecritures propres a la Factory sont le bloc de manifeste, le registre de
@@ -208,6 +213,10 @@ def build_init_argv(cli_prefix, target, dir_nonempty, integration, help_text):
         argv += ["--ai", integration]
     if has("--script"):
         argv += ["--script", SCRIPT_FLAVOR]
+    # why: figer la numerotation en SEQUENTIEL des l'init (jamais timestamp) — le NNN 3 chiffres doit
+    # rester l'`id` du registre canonique ; turn_cost.py:27 et le hook Linear lisent `^\d{3}-`.
+    if has("--branch-numbering"):
+        argv += ["--branch-numbering", "sequential"]
     if dir_nonempty and has("--force"):
         argv += ["--force"]
     if has("--ignore-agent-tools"):
@@ -312,12 +321,62 @@ def _report_extensions(status):
         print(".specify/extensions.yml deja present -- hooks inchanges.")
 
 
+def write_init_options(target):
+    """Fige la numerotation SpecKit en SEQUENTIEL dans `.specify/init-options.json` — c'est ce que lit
+    le command `/speckit.specify` pour numeroter les features. Sequentiel = NNN 3 chiffres, aligne sur
+    l'`id` du registre canonique de l'architecte ; le timestamp est BANNI (turn_cost.py:27 et le hook
+    Linear lisent `^\\d{3}-`, une numerotation horodatee casserait l'attribution des couts et la sync).
+    Read-merge-write si le fichier existe, creation sinon. Idempotent, best-effort ; ne jamais ecraser
+    un JSON qu'on ne comprend pas. Renvoie 'set' / 'present' / None."""
+    spec = os.path.join(target, ".specify")
+    if not os.path.isdir(spec):
+        return None
+    dest = os.path.join(spec, "init-options.json")
+    data = {}
+    if os.path.isfile(dest):
+        try:
+            with open(dest, encoding="utf-8-sig") as f:
+                data = json.load(f) or {}
+        except ValueError:
+            return None
+    if data.get("feature_numbering") == "sequential":
+        return "present"
+    data["feature_numbering"] = "sequential"
+    try:
+        with open(dest, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        return "set"
+    except OSError:
+        return None
+
+
 def install_tasks_hook(target):
     """Pose le hook PostToolUse de sync tasks.md -> Linear (script + fusion settings.json) via
     l'installeur `references/linear-sync/install_tasks_linear_hook.py`. Best-effort (ne bloque jamais
     l'install de SpecKit). Renvoie True si l'installeur a tourne sans erreur, False sinon."""
     installer = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              "..", "references", "linear-sync", "install_tasks_linear_hook.py")
+    if not os.path.isfile(installer):
+        return False
+    try:
+        r = subprocess.run([sys.executable, installer, target],
+                           capture_output=True, text=True, timeout=60)
+        for line in (r.stdout or "").splitlines():
+            if line.strip():
+                print(line)
+        return r.returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def install_align_hook(target):
+    """Pose le hook PostToolUse d'alignement SpecKit (garde-fou anti-collision de numero de feature)
+    via `references/speckit-sync/install_align_hook.py` (copie `check_speckit_alignment.py` + fusionne
+    settings.json). Best-effort (ne bloque jamais l'install). Renvoie True si l'installeur a tourne sans
+    erreur, False sinon."""
+    installer = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "references", "speckit-sync", "install_align_hook.py")
     if not os.path.isfile(installer):
         return False
     try:
@@ -359,9 +418,12 @@ def main(argv):
         print(f"SpecKit deja present dans {target} (.specify/) -- rien a faire.")
         ext = write_extensions(target)  # rattrape le registre de hooks meme sur une install existante
         tasks_hook = install_tasks_hook(target)  # rattrape aussi le hook sync tasks->Linear
+        init_options = write_init_options(target)  # rattrape la numerotation sequentielle
+        align_hook = install_align_hook(target)  # rattrape le garde-fou anti-collision de numero
         block = {"installed": True, "initialized": True, "path": ".specify",
                  "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
-                 "extensions_hooks": ext, "tasks_hook": tasks_hook}
+                 "extensions_hooks": ext, "tasks_hook": tasks_hook,
+                 "init_options": init_options, "align_hook": align_hook}
         write_manifest(target, block, args.no_manifest)
         _report_extensions(ext)
         emit_result(block, target)
@@ -403,19 +465,25 @@ def main(argv):
         )
         return 1
 
-    # 6. Registre de hooks SpecKit (config d'equipe, non generee par specify init) + hook sync tasks->Linear.
+    # 6. Registre de hooks SpecKit (config d'equipe, non generee par specify init) + hook sync tasks->Linear
+    #    + numerotation sequentielle figee + garde-fou d'alignement (anti-collision de numero multi-dev).
     ext = write_extensions(target)
     tasks_hook = install_tasks_hook(target)
+    init_options = write_init_options(target)
+    align_hook = install_align_hook(target)
 
     # 7. Manifeste + statut.
     block = {"installed": True, "initialized": True, "path": ".specify",
              "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
-             "extensions_hooks": ext, "tasks_hook": tasks_hook}
+             "extensions_hooks": ext, "tasks_hook": tasks_hook,
+             "init_options": init_options, "align_hook": align_hook}
     write_manifest(target, block, args.no_manifest)
     print(f"SpecKit installe et initialise dans {target}.")
     print("Crees par `specify init` : .specify/ (constitution, scripts, templates) et les commandes /speckit.* dans .claude/.")
     _report_extensions(ext)
-    print("Prochaine etape : /speckit.constitution avec assembleur-out/pre-constitution.md, puis les /speckit.specify dans l'ordre de feature-map.md.")
+    if init_options in ("set", "present"):
+        print("Numerotation SpecKit figee en SEQUENTIEL (.specify/init-options.json) — chaque feature garde son NNN canonique ; jamais d'auto-numerotation entre developpeurs.")
+    print("Prochaine etape : /speckit.constitution avec assembleur-out/pre-constitution.md, puis les /speckit.specify dans l'ordre de feature-map.md (une branche NNN-slug par feature, SPECIFY_FEATURE_DIRECTORY=specs/NNN-slug).")
     emit_result(block, target)
     return 0
 

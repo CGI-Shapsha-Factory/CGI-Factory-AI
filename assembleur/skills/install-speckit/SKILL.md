@@ -28,7 +28,8 @@ L'assembleur **n'écrit jamais lui-même** un fichier que SpecKit **génère**. 
 main aucun contenu produit par `specify init`** (constitution, scripts, templates, commandes) : il
 **invoque `specify init`**, et c'est **SpecKit** qui les produit. Les seules écritures propres à la
 Factory sont : le bloc `speckit` du **manifeste committé** `manifest.json`, **le registre de hooks
-`.specify/extensions.yml`**, **et le hook `.claude/hooks/tasks_linear_hook.py`** (+ son entrée dans
+`.specify/extensions.yml`**, **la numérotation figée `.specify/init-options.json`**, **et les hooks
+`.claude/hooks/{tasks_linear_hook,check_speckit_alignment}.py`** (+ leurs entrées dans
 `.claude/settings.json`) — aucun n'est un artefact généré par `specify init` : ce sont la **config /
 l'enforcement d'équipe** qui branchent les automations Factory sur le cycle SpecKit (posés par le
 script, idempotents). Exceptions **explicitement bornées** à l'invariant « paquet seul » — pas une violation.
@@ -57,8 +58,11 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
    fumée**, **pose le registre de hooks `.specify/extensions.yml`** (gabarit
    `references/speckit-extensions.yml`, **idempotent**), **pose le hook `PostToolUse`
    `tasks_linear_hook.py`** dans `.claude/` (via `references/linear-sync/install_tasks_linear_hook.py`,
-   fusion idempotente de `settings.json`, best-effort), écrit le bloc `speckit` du manifeste, et affiche
-   un statut clair en français.
+   fusion idempotente de `settings.json`, best-effort), **fige la numérotation en séquentiel**
+   (`.specify/init-options.json`, jamais timestamp) **et pose le garde-fou d'alignement
+   `check_speckit_alignment.py`** (hook `PostToolUse` via `references/speckit-sync/install_align_hook.py`)
+   qui bloque toute **collision de numéro de feature entre développeurs**, écrit le bloc `speckit` du
+   manifeste, et affiche un statut clair en français.
 2. **Relayer le résultat en prose** (voir `references/ux-conventions.md`) : dire **ce qui s'est
    passé** et **la prochaine étape** ; ne jamais afficher de nom de clé du manifeste ni de tableau.
 3. Si le script **sort en échec** : relayer son message **actionnable** tel quel (ex. « Git est
@@ -71,6 +75,8 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
 - Au moins une commande `/speckit.*` est présente sous `.claude/` (commandes ou skills selon la version).
 - Le registre de hooks `.specify/extensions.yml` existe (posé par le script, ou déjà présent — idempotent).
 - Le hook `.claude/hooks/tasks_linear_hook.py` existe et son entrée `PostToolUse` est dans `.claude/settings.json`.
+- La numérotation est figée en séquentiel (`.specify/init-options.json` : `feature_numbering: sequential`).
+- Le garde-fou `.claude/hooks/check_speckit_alignment.py` existe et son entrée `PostToolUse` est dans `.claude/settings.json`.
 - Le CLI `specify` est disponible (installation persistante) — `specify check` a pu tourner (informatif).
 - Le manifeste contient le bloc `speckit` (installé + initialisé) et **reparse sans erreur**.
 - **Idempotence** : si `.specify/` préexistait, rien n'a été réinitialisé ni écrasé.
@@ -80,9 +86,10 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
 
 ## Règles invariantes
 - **N'écrit aucun fichier généré par SpecKit à la main.** Seul `specify init` produit `.specify/`
-  (constitution, scripts, templates) et les `/speckit.*`. Le script ne pose que deux fichiers **de
-  config** : le bloc `speckit` du manifeste **et** le registre de hooks `.specify/extensions.yml`
-  (non généré par `specify init`). Exceptions bornées à l'invariant « paquet seul ».
+  (constitution, scripts, templates) et les `/speckit.*`. Le script ne pose que des fichiers **de
+  config / enforcement** — bloc `speckit` du manifeste, registre `.specify/extensions.yml`, numérotation
+  `.specify/init-options.json`, hooks `tasks_linear_hook.py` + `check_speckit_alignment.py` —, aucun
+  généré par `specify init`. Exceptions bornées à l'invariant « paquet seul ».
 - **Hooks non bloquants.** Les hooks du registre sont `optional: true` : ils **invitent** l'agent à
   lancer un skill Factory (`/assembleur:*`) à la bonne étape, sans jamais bloquer la phase SpecKit.
 - **Rien ne bloque l'installation.** `uv` auto-installé sans admin ; PATH rafraîchi en cours de

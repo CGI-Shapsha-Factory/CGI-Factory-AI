@@ -44,12 +44,14 @@ briefs sous `cadrage-out/features-fonctionnels-brief/*.md`. **`architecte-contra
 cadrage en parallèle** (fan-out de sous-agents `architecte-reader`, partitionnés par préoccupation,
 retours structurés complets + passe de complétude) — pour maximiser l'exactitude et le temps mural,
 sans rien manquer. La table `references/question-map.md` indique ensuite où chaque réponse se trouve
-déjà → on ne re-pose que les trous (profil d'équipe). Convergence : `architecte` **fige le registre canonique**
+déjà → on ne re-pose que les trous (profil d'équipe). Convergence : `architecte` **propose la séquence**
 `architecture.feature_sequence` — la liste numérotée/séquencée des features (le 2ᵉ
 découpage), en objets `{id, ucs, name}` (`ucs` = **liste** de use cases, une feature
 pouvant en bundler plusieurs ; `id` `001…` = ordre de fabrication) — à partir des use
 cases du `spec-index.md`. **Aucune notion de MVP** : on ne décide pas ce qui est MVP ou
-non ; l'ordre est purement technique (dépendances).
+non ; l'ordre est purement technique (dépendances). **Proposition, pas verdict** : cette séquence est
+un **point de départ** ; l'**arbitrage final** du découpage (split/merge) et le **gel** appartiennent à
+l'**assembleur** (`assembleur-convergence` réécrit `architecture.feature_sequence`, figée à l'init Linear).
 
 ## Ordre de remplissage (dépendances)
 drivers/qualité → composants → stack → conventions → ADR → walking skeleton+numérotation

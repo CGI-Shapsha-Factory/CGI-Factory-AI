@@ -11,6 +11,12 @@ la liste des features, la présente en **tableau de revue**, puis — **ticket p
 confirmation** — crée **un ticket `Feature` par feature** et, sous chacun, **un sous-ticket `Task`
 par Functional Requirement**, pour que l'équipe pilote la fabrication SpecKit feature par feature.
 
+> **Point de gel du registre de features.** Peupler Linear **fige** le découpage : à partir d'ici,
+> `architecture.feature_sequence` est **immuable** (plus de découpage/fusion, plus de renumérotation).
+> Tout **arbitrage** (split/merge) doit avoir eu lieu **avant**, dans `assembleur-convergence`, qui a
+> l'autorité finale sur le registre. Ensuite, le garde-fou `check_speckit_alignment.py` impose
+> l'alignement `specs/NNN-slug` ↔ registre pour toute la fabrication.
+
 ## Objectif
 Créer, dans Linear, pour **chaque feature approuvée** :
 - **un ticket `Feature`** — un **titre** (intitulé métier), une **description d'une ligne**, le label

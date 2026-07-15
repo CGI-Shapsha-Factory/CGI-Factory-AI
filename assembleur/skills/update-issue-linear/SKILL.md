@@ -21,9 +21,10 @@ si le ticket est déjà dans l'état visé, on ne réécrit rien.
 ## Frontière (exception assumée)
 L'assembleur **n'écrit jamais dans le repo cible** : tout sort dans `assembleur-out/`. Mettre à jour
 un ticket Linear est la **même exception bornée** que `premier-alimente-linear` : Linear est un **système
-externe** (pas le repo cible, pas un fichier que SpecKit génère). La seule écriture propre à la
-Factory est le bloc `linear` du manifeste. Le dialogue passe par le **MCP du plugin `linear-prism`**
-(externe à la Factory) — voir `references/linear-guide.md`.
+externe** (pas le repo cible, pas un fichier que SpecKit génère). **L'état d'avancement vit dans Linear**
+— ce skill **n'écrit rien dans le manifeste committé** (deux développeurs mettant à jour en parallèle
+réécriraient le même `linear.issues[]` → conflit de merge). Le dialogue passe par le **MCP du plugin
+`linear-prism`** (externe à la Factory) — voir `references/linear-guide.md`.
 
 ## Pré-requis (vérification silencieuse)
 Lire `manifest.json` **sans l'annoncer** : le bloc `linear` liste les tickets déjà créés
@@ -54,10 +55,10 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
 
 ## Étape 3 — Identifier le ticket
 - **Tâche nommée** → chercher d'abord dans `linear.issues[]` (par `identifier`, `id` de feature, ou
-  mot-clé du `name`) ; **et aussi dans les sous-tickets** `linear.issues[].sub_issues[]` (par
-  `identifier`, `phase`/`phase_name`, ou mot-clé du `title`) quand l'indice vise une **phase**
-  (« phase 2 », « la partie tests », un titre de phase) ; sinon interroger Linear :
-  `list_issues({query: "<mots-clés>", team})` (la recherche porte sur titre + description).
+  mot-clé du `name`) — c'est la **carte amont figée**. Quand l'indice vise une **phase** (« phase 2 »,
+  « la partie tests », un titre de phase), les sous-tickets de phase **vivent dans Linear** (pas dans le
+  manifeste) : les retrouver via `list_issues({parentId: "<issue_id de la Feature>"})` (jeton
+  `Phase N —` en tête de titre) ou `list_issues({query: "<mots-clés>", team})` (titre + description).
 - **Tâche non nommée** → **déduire des derniers changements de code** (le repo cible est souvent un
   dépôt git), best-effort :
   - **branche courante** `git rev-parse --abbrev-ref HEAD` — les branches Linear encodent souvent
@@ -89,24 +90,24 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
    - état : `save_issue({id, state: "<nom ou type de l'état résolu>"})` ;
    - case : `save_issue({id, description: "<description avec la case cochée>"})`.
    - **Pas de commentaire** (on ne change que l'état / la case).
-3. **Consigner en silence** dans `linear.issues[]` le dernier état posé (champ `workflow_state`,
-   distinct du `status` d'action Factory), puis restituer en prose.
+3. **Ne rien écrire dans le manifeste** : l'état courant vit **dans Linear** (`get_issue` fait foi).
+   Restituer en prose.
 
 ## Vérification avant de conclure
 - `get_issue` reflète le **nouvel état** (ou la case cochée) ; le ticket **existe** et l'écriture a
   réussi.
-- Le bloc `linear` du manifeste **reparse sans erreur** ; mise à jour **en silence**.
+- **Aucune écriture manifeste** : l'état d'avancement vit dans Linear (pas de conflit multi-dev).
 - Restitution **en prose** (« j'ai passé *Recherche Q&A sourcée* à *Terminé* »), **une** phrase de suite.
 
 ## Règles invariantes
-- **Exception Linear bornée.** On n'écrit que dans Linear (externe) + le bloc `linear` du manifeste ;
-  jamais dans le repo cible.
+- **Exception Linear bornée.** On n'écrit **que dans Linear** (externe) ; **jamais** dans le manifeste
+  committé (conflit multi-dev) ni dans le repo cible.
 - **Confirmer avant d'écrire.** Toute mise à jour est validée par l'humain (action externe, difficile
   à défaire) ; on ne se fie **jamais** à une déduction seule.
 - **Un point à la fois.** Questions et confirmations en prose, une par une (cf. `interactive-loop.md`) ;
   pas de tableau.
 - **Idempotent.** `get_issue` **avant** d'écrire ; si l'état est déjà bon, ne rien faire.
 - **Rien d'inventé.** On ne met à jour qu'un ticket **confirmé** ; jamais un état non demandé.
-- **Manifeste en silence.** Aucun nom de clé ni statut brut à l'écran ; restitution en prose.
+- **Rien dans le manifeste.** L'état vit dans Linear ; restitution en prose (aucun statut brut à l'écran).
 
 Étape suivante : reprendre la fabrication de la feature suivante (le cycle SpecKit `/speckit.specify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`), et relancer ce skill dès qu'une tâche avance.

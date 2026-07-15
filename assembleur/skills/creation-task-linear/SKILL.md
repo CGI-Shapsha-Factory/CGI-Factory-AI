@@ -13,8 +13,10 @@ skill lit les **phases** de chaque `tasks.md` et crée, dans Linear, **un sous-t
 
 > **Coexistence assumée (deux niveaux de Task).** `premier-alimente-linear` a déjà posé, sous chaque
 > Feature, **un `Task` par Functional Requirement** (niveau fonctionnel). Ce skill ajoute, sous la même
-> Feature, **un `Task` par phase** (niveau implémentation). Les deux se distinguent dans le manifeste
-> par les champs `fr` vs `phase` de `sub_issues[]`.
+> Feature, **un `Task` par phase** (niveau implémentation). Les Task par FR sont consignés dans le
+> manifeste (carte amont figée, single-owner) ; les Task **par phase vivent uniquement dans Linear** —
+> l'avancement de fabrication ne s'écrit **jamais** dans le manifeste committé (deux développeurs sur
+> deux branches réécriraient le même `linear.issues[]` → conflit de merge).
 
 > **Déclenchement automatique (hook).** Le hook `PostToolUse` `tasks_linear_hook.py` (posé par
 > `install-speckit` dans `.claude/hooks/`) détecte **chaque édition d'un `specs/<feature>/tasks.md`** et,
@@ -35,14 +37,16 @@ Pour chaque feature dont le `tasks.md` existe : parcourir ses **phases** (`## Ph
 - le **`parentId`** = le ticket `Feature` de la feature ;
 - une **description d'une ligne** (résumé du but de la phase) — **pas de liste de tâches** dans le corps.
 
-Chaque sous-ticket est **confirmé avant création**. Idempotent : une phase déjà consignée avec un
-`issue_id` n'est **pas recréée**.
+Chaque sous-ticket est **confirmé avant création**. Idempotent : une phase qui a **déjà son sous-ticket
+dans Linear** (vérifié par `parentId`) n'est **pas recréée**.
 
 ## Frontière (exception assumée)
 Comme `premier-alimente-linear` : créer des tickets Linear est une **exception explicitement bornée**
 à « pas de Linear ». Linear est un **système externe** (pas le repo cible, pas un fichier que SpecKit
-génère). La seule écriture propre à la Factory est le bloc `linear` du manifeste. On **lit**
-`specs/<feature>/tasks.md` (fichier généré par SpecKit) **sans jamais le modifier**.
+génère). **Les sous-tickets de phase vivent uniquement dans Linear** — ce skill **n'écrit rien dans le
+manifeste committé** : l'avancement de fabrication n'y est jamais consigné (deux développeurs sur deux
+branches réécriraient le même `linear.issues[]` → conflit). On **lit** `specs/<feature>/tasks.md`
+(fichier généré par SpecKit) **sans jamais le modifier**.
 
 ## Pré-requis (vérification silencieuse)
 Lire `manifest.json` **sans l'annoncer** :
@@ -85,53 +89,63 @@ rien écrire.
 ## Étape 4 — Boucle par feature puis par phase (confirmation obligatoire)
 Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
 
-1. **Rattacher** : retrouver le ticket `Feature` de la feature dans `linear.issues[]` — jointure par
-   `id` (`001…`) et par nom de dossier/branche `NNN-feature`. Récupérer son **`issue_id` (UUID)** =
-   le futur `parentId`. Si aucun ticket `Feature` ne correspond → le signaler et passer (ne pas créer
-   d'orphelin).
-2. **Parser `tasks.md`** (lecture seule) :
+1. **Rattacher** : retrouver le ticket `Feature` de la feature dans `linear.issues[]` (carte amont
+   figée) — jointure par `id` (`001…`) et par nom de dossier/branche `NNN-slug`. Récupérer son
+   **`issue_id` (UUID)** = le futur `parentId`. Si aucun ticket `Feature` ne correspond → le signaler et
+   passer (ne pas créer d'orphelin).
+2. **Lister l'existant DANS Linear (autorité d'idempotence)** : `list_issues({parentId: "<issue_id>"})`
+   pour récupérer les sous-tickets `Task` déjà créés sous cette Feature. **Linear est la source de
+   vérité** (pas le manifeste — l'avancement de fabrication n'y est jamais écrit). La ré-identification
+   d'une phase se fait sur le **jeton stable `Phase N —`** en tête de titre (voir étape 6).
+3. **Parser `tasks.md`** (lecture seule) :
    - phases : lignes `^## Phase (\d+): (.+)$` (le titre suit le numéro) ;
    - tâches d'une phase : lignes `^- \[[ xX]\] (T\d{3})(?: \[P\])?(?: \[US\d+\])? (.+)$`, groupées
      sous la phase courante (les IDs `T001…` sont **séquentiels sur tout le fichier**) ;
    - **retirer les emoji** (🎯 ⚠️ …) des titres de phase, puis **collapser les espaces** doublés.
-3. **Par phase** (dans l'ordre), préparer :
-   - un **titre descriptif** (voir Objectif) — enrichir les phases génériques à partir de leurs
-     tâches ; reprendre l'intitulé des phases « User Story N » ; suffixer par le nom de la feature
-     pour lever l'ambiguïté ;
+4. **Par phase manquante** (celles sans sous-ticket dans Linear, dans l'ordre), préparer :
+   - un **titre** = **jeton stable `Phase N — `** + intitulé **descriptif** (voir Objectif) — enrichir
+     les phases génériques à partir de leurs tâches ; reprendre l'intitulé des phases « User Story N » ;
+     suffixer par le nom de la feature pour lever l'ambiguïté. Ex. `Phase 1 — Mise en place :
+     scaffolding & outillage (Ingestion)`. Le jeton `Phase N —` est ce qui permet de ré-apparier sans
+     manifeste ;
    - une **description d'une ligne** (le but de la phase, déduit de ses tâches) — **sans** énumérer
      les tâches `Txxx`.
-4. **Confirmer** (recommandé + ajuster + saisir, cf. `references/interactive-loop.md`) : le **titre**
-   et la **description d'une ligne** de chaque phase. **Ne rien créer** tant que ce n'est pas approuvé.
-   (Astuce : présenter d'un coup la liste des phases d'une feature pour validation groupée, puis
-   créer.)
-5. **Créer** (cf. `references/linear-guide.md`) :
-   `save_issue({team, title, parentId: "<issue_id UUID du ticket Feature>", labelIds: ["<UUID Task>"],
-   description: "<résumé 1 ligne>", state: <Backlog>})` → récupérer `issue_id` / `identifier` / `url`.
-   **State = Backlog** (comme toute nouvelle issue).
-6. **Consigner** dans `linear.issues[].sub_issues[]` (en silence) : `{phase, phase_name, title,
-   issue_id, identifier, url, status: "created"}`, puis phase suivante. **Répéter** jusqu'à épuisement
-   des phases, puis feature suivante.
+5. **Confirmer** (recommandé + ajuster + saisir, cf. `references/interactive-loop.md`) : le **titre**
+   et la **description d'une ligne** de chaque phase manquante. **Ne rien créer** tant que ce n'est pas
+   approuvé. (Astuce : présenter d'un coup la liste des phases manquantes d'une feature pour validation
+   groupée, puis créer.)
+6. **Créer** (cf. `references/linear-guide.md`) :
+   `save_issue({team, title: "Phase N — <intitulé descriptif>", parentId: "<issue_id UUID du ticket
+   Feature>", labelIds: ["<UUID Task>"], description: "<résumé 1 ligne>", state: <Backlog>})`.
+   **State = Backlog.** **Ne rien consigner dans le manifeste** : le sous-ticket **est** la trace, et il
+   vit dans Linear. Passer à la phase suivante, puis à la feature suivante.
 
-**Idempotence** : une phase déjà consignée (même `id` de feature + même numéro de phase) avec un
-`issue_id` n'est **pas recréée**.
+**Idempotence (via Linear).** Une phase dont le sous-ticket existe **déjà dans Linear** (jeton
+`Phase N —` présent sous le bon `parentId`) n'est **pas recréée**. On ne s'appuie **pas** sur le
+manifeste : l'avancement de fabrication n'y est jamais écrit (multi-développeurs, sans conflit).
 
 ## Vérification avant de conclure
-- Chaque feature avec un `tasks.md` a **un sous-ticket par phase** (ou une décision `skipped`) ;
-  chaque sous-ticket porte le label `Task` et pointe (`parentId`) vers son ticket `Feature`.
-- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/manifest.json`.
-- Le bloc `linear` du manifeste **reparse sans erreur** ; restitution **en prose** (« j'ai créé N
-  sous-tickets de phase sous M features »), manifeste mis à jour **en silence**.
+- Chaque feature avec un `tasks.md` a **un sous-ticket par phase dans Linear** (ou une phase
+  explicitement écartée) ; chaque sous-ticket porte le label `Task`, le jeton `Phase N —`, et pointe
+  (`parentId`) vers son ticket `Feature`. Vérifier via `list_issues({parentId})`.
+- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/manifest.json`
+  (il valide la **carte amont figée** — tickets `Feature` + `Task` par FR ; les sous-tickets **de phase
+  vivent dans Linear** et ne sont **pas** exigés dans le manifeste).
+- **Aucune écriture manifeste** par ce skill ; restitution **en prose** (« j'ai créé N sous-tickets de
+  phase sous M features »).
 
 ## Règles invariantes
-- **Exception Linear bornée.** On n'écrit que dans Linear (externe) + le bloc `linear` du manifeste ;
-  jamais dans le repo cible. `tasks.md` est **lu**, jamais modifié.
-- **Titre descriptif obligatoire.** Jamais le nom générique brut d'une phase ; toujours enrichi.
+- **Exception Linear bornée.** On n'écrit **que dans Linear** (externe) ; **jamais** dans le manifeste
+  committé (l'avancement de fabrication n'y va pas — conflit multi-dev) ni dans le repo cible. `tasks.md`
+  est **lu**, jamais modifié.
+- **Titre descriptif + jeton.** Toujours `Phase N — <intitulé enrichi>` ; jamais le nom générique brut.
 - **Confirmer avant de créer.** Chaque sous-ticket est validé par l'humain avant création.
 - **Rattachement réel.** `parentId` = l'**UUID** (`issue_id`) du ticket `Feature`, jamais l'identifier
   (`ENG-123`).
 - **Labels résolus, pas inventés.** `Feature`/`Task` sont résolus par nom ; jamais recréés.
-- **Idempotent.** On ne crée jamais deux fois le même sous-ticket.
-- **Manifeste en silence.** Aucun nom de clé à l'écran ; restitution en prose.
+- **Idempotent via Linear.** On liste les sous-tickets existants (`parentId`) avant de créer ; jamais
+  deux fois la même phase.
+- **Restitution en prose.** Aucun nom de clé à l'écran.
 
 Étape suivante : reprendre la fabrication SpecKit de la feature (`/speckit.implement`), puis
 `/assembleur:update-issue-linear` pour faire avancer l'état d'un ticket `Feature` ou d'un sous-ticket

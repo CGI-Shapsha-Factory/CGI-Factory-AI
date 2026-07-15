@@ -30,10 +30,12 @@ projet** (déploiement, pour qu'ils soient actifs sans copie manuelle).
   validation (validé ou non n'est pas le problème de l'assembleur). **Aucun repo cible à capturer, aucun
   hook à poser** (l'enforcement est posé en amont par `architecte-init`).
 - `assembleur-convergence` — **lit les 3 contrats en parallèle** (5 sous-agents `contract-reader`,
-  map-reduce), converge, **produit le paquet** dans `assembleur-out/` **+ déploie `CLAUDE.md` et
+  map-reduce), converge, **arbitre le registre de features** (autorité finale : découpe/fusionne,
+  **réécrit `architecture.feature_sequence`**, figé ensuite à l'init Linear), **produit le paquet** dans `assembleur-out/` **+ déploie `CLAUDE.md` et
   `memory/` directement dans le `.claude/` du projet** (actifs sans copie manuelle), **résout les
   marqueurs en session**, et fait la cohérence (porte humaine : *garant de cohérence*).
-- `premier-alimente-linear` — **première alimentation de Linear** : lit les features approuvées, les
+- `premier-alimente-linear` — **première alimentation de Linear** (**point de gel** du registre de
+  features : après, `architecture.feature_sequence` est immuable) : lit les features approuvées, les
   présente en tableau, puis crée **un ticket `Feature` par feature + un sous-ticket `Task` par
   Functional Requirement** (`parentId`), **tout en Backlog** (label **`Feature`** seul, résolu par nom —
   **jamais** `feature:<id>` ni un label de numérotation, l'identifiant Linear porte déjà le numéro ;
@@ -47,16 +49,17 @@ projet** (déploiement, pour qu'ils soient actifs sans copie manuelle).
   (`## Phase N:`) de son `tasks.md` et crée **un sous-ticket Linear par phase** (label **`Task`**, en
   **Backlog**, `parentId` = ticket `Feature`, **titre descriptif** généré — jamais le nom générique
   brut « Setup »), après confirmation. **Coexiste** avec les Task par FR posés en amont par
-  `premier-alimente-linear` (distingués dans le manifeste par `fr` vs `phase`). Labels `Feature`/`Task`
-  **résolus par nom** (`list_issue_labels`), jamais créés. Bloc
-  manifeste `linear.issues[].sub_issues[]`. Si le MCP `linear-prism` est **absent**, **ne rien
-  créer** : refuser en clair et afficher les **instructions d'installation**. Voir
-  `references/linear-guide.md`.
+  `premier-alimente-linear`. Labels `Feature`/`Task` **résolus par nom** (`list_issue_labels`), jamais
+  créés. **Idempotence via Linear** (`list_issues({parentId})`, jeton `Phase N —` en tête de titre) : les
+  sous-tickets **par phase vivent uniquement dans Linear** — **aucune écriture dans le manifeste
+  committé** (l'avancement de fabrication est concurrent, une branche par dev ; le fichier unique
+  committé entrerait en conflit). Si le MCP `linear-prism` est **absent**, **ne rien créer** : refuser en
+  clair et afficher les **instructions d'installation**. Voir `references/linear-guide.md`.
 - `update-issue-linear` — **mise à jour Linear** : à partir du message de l'utilisateur (« j'ai
   terminé la tâche … »), retrouve le ticket (par nom, ou **déduit des derniers changements de code**)
   et **met à jour son état** (terminé / en cours ; ou **coche une case** d'une grosse feature), après
   confirmation, via le MCP **`linear-prism`**. **Non gaté**, invoqué à la demande pendant la
-  fabrication ; champ manifeste silencieux `workflow_state`. Voir `references/linear-guide.md`.
+  fabrication ; **l'état vit dans Linear** — **aucune écriture manifeste**. Voir `references/linear-guide.md`.
 - `create-cowork-md` — **contexte de supervision (Quark)** : détecte le **dépôt GitHub**
   (`git remote get-url origin`, repli `gh repo view`) et le **projet Linear** (MCP `linear-prism`
   + bloc `linear`), rassemble le contexte des **3 contrats**, et génère **`init-cowork.md` à la
@@ -113,8 +116,9 @@ puis synthétise. Cadrage : 3–5 sous-agents, objectif/format/limites clairs (E
 extraits → on utilise un agent dédié à lecture complète).
 
 ## Convergence (mapping 3 faces → SpecKit)
-Voir `references/speckit-mapping.md`. **Clé de jointure = le use case** (registre canonique
-`architecture.feature_sequence` = objets `{id, ucs, name}`). Fonctionnel + technique joints **par use
+Voir `references/speckit-mapping.md`. **Clé de jointure = le use case** (registre
+`architecture.feature_sequence` = objets `{id, ucs, name}` — **proposé par l'architecte, finalisé
+(split/merge) et figé à l'init Linear par l'assembleur**). Fonctionnel + technique joints **par use
 case** ; design **global** (export committé du design system + guidelines). La pré-constitution
 converge les **principes non négociables** des 3 contrats (dont la règle design : tout écran
 dérive de l'export committé du design system, aucune valeur de style en dur, états couverts, contrat d'erreur ;

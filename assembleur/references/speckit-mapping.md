@@ -11,6 +11,10 @@ doivent être actifs sans copie manuelle). C'est **l'équipe** qui lance SpecKit
 matière : `specify init`, puis `/speckit.constitution` (depuis `pre-constitution.md`), puis
 `/speckit.specify` par feature (depuis les graines). L'assembleur ne crée **jamais**
 `.specify/memory/constitution.md` ni `specs/NNN/spec.md` — ce sont des fichiers que SpecKit génère.
+Le **numéro** `NNN` d'une feature est l'`id` du registre canonique : le basename `NNN-slug` de la graine
+**est** le nom du répertoire SpecKit et de la branche git, et `/speckit.specify` est lancé avec
+`SPECIFY_FEATURE_DIRECTORY=specs/NNN-slug` (**jamais** d'auto-numérotation SpecKit — collision entre
+développeurs ; garde-fou `check_speckit_alignment.py`). Voir `feature-map.md` et `attack-plan.md`.
 
 ```
 assembleur-out/

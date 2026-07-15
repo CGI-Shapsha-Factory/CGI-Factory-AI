@@ -1,15 +1,22 @@
 #!/usr/bin/env python
 """Hook PostToolUse (Write|Edit) — sync tasks.md SpecKit -> Linear (declencheur, best-effort).
 
-A chaque ecriture/edition d'un `specs/<feature>/tasks.md`, verifie que chaque **phase** du fichier
-(`## Phase N:`) a bien un sous-ticket `Task` deja consigne pour cette feature dans le manifeste
-(`linear.issues[].sub_issues[].phase`). S'il en manque, POUSSE l'agent (message `decision:block`) a
-lancer `/assembleur:creation-task-linear`, qui — cote agent, avec le MCP — verifie sur Linear et cree
-les sous-tickets manquants (label `Task`, en Backlog, rattaches au ticket `Feature`).
+A chaque ecriture/edition d'un `specs/<feature>/tasks.md`, si le fichier contient des **phases**
+(`## Phase N:`), POUSSE l'agent (message `decision:block`) a lancer `/assembleur:creation-task-linear`,
+qui — cote agent, avec le MCP — **verifie sur Linear** (par `parentId` du ticket Feature) et cree les
+sous-tickets `Task` manquants (label `Task`, Backlog, rattaches au ticket Feature).
 
-Le hook NE PARLE JAMAIS a Linear (un hook `command` n'a pas acces au MCP) et ne touche a rien : il
-detecte une derive et declenche le skill. Toujours exit 0 (ne casse jamais un Write) ; ne parle que
-s'il manque quelque chose (silencieux si tout est deja couvert, ou si le fichier n'est pas un tasks.md).
+**L'etat d'avancement vit DANS Linear, jamais dans le manifeste committe** (pas de conflit de merge
+multi-dev). Le hook n'a pas acces au MCP ; il ne peut donc pas lire l'etat Linear. Il lit seulement :
+  - le manifeste committe pour savoir si un **ticket Feature** existe pour la feature (carte amont figee,
+    posee une fois par premier-alimente-linear — donnee single-owner, jamais un etat de dev mutant) ;
+  - un **marqueur de debounce PAR DEV**, git-ignore (`.factory/linear/tasks-hook-seen.json`), pour ne
+    pousser qu'une fois par jeu de phases et ne pas re-harceler a chaque edition. Ce marqueur est
+    NON autoritatif et regenerable — l'autorite d'idempotence reste **Linear** (interrogee par le skill).
+
+Le hook NE PARLE JAMAIS a Linear et n'ecrit jamais le manifeste. Toujours exit 0 (ne casse jamais un
+Write) ; silencieux si le fichier n'est pas un tasks.md, s'il n'a pas de phases, ou si ses phases ont
+deja ete signalees.
 
 Usage : hook PostToolUse. Lit le JSON du tool sur stdin.
     python tasks_linear_hook.py posttooluse
@@ -48,20 +55,26 @@ def _phases_in_file(tasks_path):
     return {int(n) for n in PHASE_RE.findall(text)}
 
 
-def _created_phases(issue):
-    out = set()
-    for sub in issue.get("sub_issues") or []:
-        if not isinstance(sub, dict):
-            continue
-        ph = sub.get("phase")
-        created = (sub.get("status") or "created").lower() == "created" and (
-            sub.get("issue_id") or sub.get("identifier"))
-        if ph is not None and created:
-            try:
-                out.add(int(ph))
-            except (TypeError, ValueError):
-                pass
-    return out
+def _seen_path(root):
+    return os.path.join(root, ".factory", "linear", "tasks-hook-seen.json")
+
+
+def _load_seen(root):
+    """Marqueur de debounce PAR DEV, git-ignore, NON autoritatif : {feature_dir: [phases signalees]}."""
+    try:
+        with open(_seen_path(root), encoding="utf-8") as f:
+            return json.load(f) or {}
+    except (OSError, ValueError):
+        return {}
+
+
+def _save_seen(root, data):
+    try:
+        os.makedirs(os.path.dirname(_seen_path(root)), exist_ok=True)
+        with open(_seen_path(root), "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except OSError:
+        pass  # best-effort : le marqueur est regenerable, ne jamais casser un Write
 
 
 def _find_issue(linear, fid, feature_dir):
@@ -119,16 +132,23 @@ def cmd_posttooluse():
             f"correspond. Lance /assembleur:creation-task-linear (il verifiera le rattachement au ticket Feature)."
         )
 
-    missing = sorted(phases - _created_phases(issue))
-    if not missing:
-        return 0  # deja synchronise — silencieux
+    # Debounce PAR DEV (git-ignore) : ne pousser que pour des phases pas encore signalees. L'autorite
+    # d'idempotence reste Linear (le skill interroge Linear par parentId) ; ce marqueur evite juste de
+    # re-harceler a chaque edition et n'est jamais committe.
+    seen = _load_seen(root)
+    already = set(seen.get(feature_dir) or [])
+    fresh = sorted(phases - already)
+    if not fresh:
+        return 0  # phases deja signalees — silencieux
 
-    phases_txt = ", ".join(f"Phase {n}" for n in missing)
+    seen[feature_dir] = sorted(already | phases)
+    _save_seen(root, seen)
+    phases_txt = ", ".join(f"Phase {n}" for n in fresh)
     return _block(
-        f"Le tasks.md de la feature '{feature_dir}' a change : {len(missing)} phase(s) sans sous-ticket "
-        f"Task Linear ({phases_txt}). Lance /assembleur:creation-task-linear pour creer les sous-tickets "
-        f"manquants (label Task, en Backlog, rattaches au ticket Feature). Le hook ne touche pas Linear "
-        f"et ne modifie pas les sous-tickets deja existants."
+        f"Le tasks.md de la feature '{feature_dir}' a change : {len(fresh)} phase(s) a synchroniser vers "
+        f"Linear ({phases_txt}). Lance /assembleur:creation-task-linear — il verifie sur Linear (par "
+        f"parentId) et cree uniquement les sous-tickets Task manquants (label Task, Backlog, rattaches au "
+        f"ticket Feature). L'avancement vit dans Linear, pas dans le manifeste committe."
     )
 
 

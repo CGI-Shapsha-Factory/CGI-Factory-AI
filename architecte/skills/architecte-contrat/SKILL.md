@@ -171,22 +171,28 @@ une décision non tranchée, une formule « décision non remise en question » 
 proposé, ni une **prémisse non énoncée** (composition d'équipe, infra existante…) — si une
 prémisse manque, la **demander** d'abord. Mettre à jour le manifeste en silence.
 
-### Étape 6 — Walking skeleton + convergence (numérotation)
+### Étape 6 — Walking skeleton + convergence (numérotation **proposée**)
 Désigner le **walking skeleton définitif** (la première tranche de bout en bout qui
-dé-risque la stack ; confirmer/ajuster le candidat du spec-index). **Figer la liste
+dé-risque la stack ; confirmer/ajuster le candidat du spec-index). **Proposer la liste
 de features numérotées et séquencée** : **chaque** use case du `spec-index.md`
 devient une feature numérotée. La liste est **complète** — couverture 1:1, **aucun
 use case laissé de côté** — ordonnée selon les **dépendances et le couplage
 technique** (walking skeleton en premier). C'est la **convergence des deux
 découpages**. Mettre à jour la section Dépendances des briefs en conséquence.
 
+> **Proposition, pas verdict final.** Cette séquence est le **point de départ**. L'**arbitrage final**
+> du découpage (découper une feature en deux, en fusionner deux) se fait dans l'**assembleur**
+> (`assembleur-convergence`), qui **réécrit** `architecture.feature_sequence` avec la liste définitive ;
+> elle est **figée à l'init Linear** (`premier-alimente-linear`). L'architecte fournit une base
+> **complète et cohérente**, pas le registre gelé.
+
 **Aucune notion de MVP / post-MVP.** On ne décide pas ce qui est MVP ou non : sauf si
 la matière de cadrage le mentionne explicitement, cette distinction n'existe nulle
 part. L'ordre est purement technique (dépendances), pas un filtre de périmètre.
 
-**Format — registre canonique.** `architecture.feature_sequence` est le **registre
-canonique des features** : une liste d'**objets** `{id, ucs, name}` où **`ucs` est une
-liste** de use cases du cadrage — ex. `{"id": "001", "ucs": ["UC2"], "name": "Recherche Q&A
+**Format — séquence proposée.** `architecture.feature_sequence` est la **séquence de features
+proposée** (registre que l'**assembleur** finalise et fige) : une liste d'**objets** `{id, ucs, name}`
+où **`ucs` est une liste** de use cases du cadrage — ex. `{"id": "001", "ucs": ["UC2"], "name": "Recherche Q&A
 sourcée"}`. Une feature de fabrication peut **bundler plusieurs use cases**
 (fusion : `"ucs": ["UC5", "UC6"]`) ; un seul use case = liste à un élément. Les `ucs` portent
 la correspondance **use case ↔ id** (identité fonctionnelle stable du cadrage) pour que le

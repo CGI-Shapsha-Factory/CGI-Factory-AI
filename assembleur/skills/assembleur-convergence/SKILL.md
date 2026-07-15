@@ -65,7 +65,18 @@ un trou ou une contradiction apparaît. Ne synthétiser que sur des retours comp
 
 ## Étape 2 — Produire le paquet `assembleur-out/`
 
-À partir des extractions, écrire (gabarits dans `.factory/assembleur/`) :
+**Étape 2.0 — Arbitrage du registre de features (autorité finale de l'assembleur).** La
+`architecture.feature_sequence` reçue de l'architecte est une **proposition**. C'est **ici** que le
+découpage en features devient **définitif** : présenter la séquence proposée et, avec l'humain (« l'IA
+propose, l'humain tranche »), **arbitrer** si besoin — **découper** une feature en deux, **fusionner**
+deux features (une seule entrée, `ucs` = liste des use cases concernés). Puis **réécrire**
+`architecture.feature_sequence` avec la liste **finale**, renumérotée **contiguë** `001…00N` dans
+l'ordre de fabrication (walking skeleton = `001`). Les graines, la `feature-map` et Linear en
+**découlent** (couverture 1:1 sur ce registre final). Ce registre est **figé à l'init Linear**
+(`premier-alimente-linear`) — après, plus de découpage/fusion ni de renumérotation. Manifeste mis à
+jour en silence.
+
+À partir des extractions **et du registre final ci-dessus**, écrire (gabarits dans `.factory/assembleur/`) :
 
 - **`pre-constitution.md`** (gabarit `pre-constitution.md`) — **mappe 1:1 le
   `constitution.md` SpecKit** : principes non négociables P1..Pn (fonctionnel : identité,
@@ -75,11 +86,15 @@ un trou ou une contradiction apparaît. Ne synthétiser que sur des retours comp
   suivent le contrat, accessibilité au niveau visé ; **tests : écrits avec le code, unitaires
   passant/échec/limite, intégration mockée**) + gouvernance + footer
   version/ratification. **Prêt pour `/speckit.constitution`, sans contexte supplémentaire.**
-- **`features/<id>-<feature>.md`** (gabarit `spec-seed.md`), une par feature de
+- **`features/<id>-<slug>.md`** (gabarit `spec-seed.md`), une par feature de
   la séquence (walking skeleton d'abord) — **mappe le `spec.md` SpecKit** : User Scenarios
   (P1/P2/P3, Given/When/Then), Functional Requirements (FR-xxx), Key Entities (← domaine),
   Success Criteria (SC-xxx mesurables ← cibles qualité + a11y), Assumptions, + annexes face
-  technique / face design. Le `<feature>` est l'intitulé métier en clair.
+  technique / face design. Le `<slug>` est un **slug git/SpecKit-safe** (`[a-z0-9-]` : minuscules,
+  tirets, ASCII, ≤ ~4 mots) dérivé de l'intitulé métier. **`<id>-<slug>` EST le nom canonique** du
+  répertoire SpecKit (`specs/<id>-<slug>/`) **et** de la branche git de la feature — jamais
+  d'auto-numérotation SpecKit (collision entre développeurs). Reporter **le même `<id>-<slug>`** dans
+  la colonne « Répertoire / branche SpecKit » de `feature-map.md`.
 - **`feature-map.md`** (gabarit `feature-map.md`) — la **liste numérotée et séquencée** +
   le **couplage / les dépendances** + le walking skeleton. C'est l'info de découpage que
   SpecKit doit connaître pour ordonner les `/speckit.specify`.

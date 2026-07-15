@@ -131,15 +131,23 @@ Pour `update-issue-linear`. Un seul outil `save_issue` **crée ou met à jour** 
 - **Cocher une case** (sous-partie d'une grosse feature) : lire la `description` via `get_issue`,
   passer la ligne `- [ ] …` visée à `- [x] …`, puis `save_issue({id, description: "<MAJ>"})`.
 - **Idempotence** : lire l'état courant (`get_issue`) **avant** d'écrire ; s'il est déjà celui visé,
-  ne rien faire. Consigner le dernier état posé dans `linear.issues[]` via un champ **`workflow_state`**
-  (distinct de `status`, qui reste l'action Factory `created/skipped/merged` — `check_linear.py`
-  n'y touche pas et ignore `workflow_state`).
+  ne rien faire. **L'état courant vit dans Linear** — ne **rien consigner** dans le manifeste committé
+  (l'avancement de fabrication n'y va pas : deux développeurs sur deux branches le réécriraient en
+  parallèle → conflit de merge).
 - **Pas de commentaire** par défaut (on ne change que l'état / la case). `save_comment({issueId, body})`
   existe mais n'est pas utilisé ici.
 
-## Idempotence (bloc manifeste `linear`)
-Avant de créer, lire `linear.issues` : une feature déjà consignée avec un `issue_id` est **déjà
-créée** → ne pas recréer (proposer éventuellement une mise à jour via `save_issue({id, …})`).
+## Idempotence (bloc manifeste `linear` = carte amont figée seulement)
+Le manifeste committé porte **uniquement la carte amont figée** : les tickets `Feature` et leurs
+sous-tickets `Task` **par FR**, posés **une seule fois** par `premier-alimente-linear` (phase
+single-owner, **avant tout branchement** — aucune concurrence). Avant de créer, lire `linear.issues` :
+une feature déjà consignée avec un `issue_id` est **déjà créée** → ne pas recréer.
+
+**Ce qui n'est PLUS dans le manifeste (vit dans Linear) :** les sous-tickets **par phase**
+(`creation-task-linear`) et l'**état d'avancement** (`update-issue-linear`). L'avancement de fabrication
+est concurrent (une branche par développeur) ; l'écrire dans le fichier committé unique provoquerait des
+conflits de merge. **Linear est la source de vérité** : idempotence via `list_issues({parentId})` + le
+jeton `Phase N —` en tête de titre.
 Bloc :
 ```json
 "linear": {
@@ -150,20 +158,18 @@ Bloc :
       "status": "created",
       "sub_issues": [
         { "fr": "FR-001", "title": "FR-001 — Recherche en langage naturel",
-          "issue_id": "…", "identifier": "ENG-124", "url": "https://linear.app/…", "status": "created" },
-        { "phase": 1, "phase_name": "Setup", "title": "Mise en place : scaffolding & outillage (Ingestion)",
-          "issue_id": "…", "identifier": "ENG-131", "url": "https://linear.app/…", "status": "created" }
+          "issue_id": "…", "identifier": "ENG-124", "url": "https://linear.app/…", "status": "created" }
       ]
     }
   ],
-  "all_issues_created": false, "all_sub_issues_created": false
+  "all_issues_created": false
 }
 ```
-Statuts (ticket **et** sous-ticket) : `created` (posé, exige `issue_id`), `skipped` (écarté en
-session), `merged` (fusionné). `sub_issues[]` porte **deux natures** de Task, toutes en **Backlog** :
+Statuts (ticket **et** sous-ticket FR) : `created` (posé, exige `issue_id`), `skipped` (écarté en
+session), `merged` (fusionné). Dans le manifeste, `sub_issues[]` ne porte **qu'une nature**, en **Backlog** :
 - **`{fr, …}`** — un par Functional Requirement, posé par **`premier-alimente-linear`** (clé stable =
-  `id` de feature + `fr`) ;
-- **`{phase, phase_name, …}`** — un par phase du `tasks.md`, posé par **`creation-task-linear`** (clé
-  stable = `id` de feature + `phase`).
+  `id` de feature + `fr`).
 
-Écriture **silencieuse** (read-modify-write + revalidation JSON), jamais narrée.
+Les sous-tickets **`{phase, …}`** (posés par `creation-task-linear`) et l'état d'avancement vivent
+**dans Linear**, jamais dans ce bloc. Écriture **silencieuse** (read-modify-write + revalidation JSON),
+jamais narrée.

@@ -1,20 +1,22 @@
 #!/usr/bin/env python
 """Garde-fou deterministe (sans IA) de la creation des tickets Linear (premier-alimente-linear).
 
-Le skill `premier-alimente-linear` cree UN ticket Linear par feature approuvee (via le MCP linear-prism)
-et consigne le resultat dans le bloc `linear` du manifeste. Ce garde-fou lit le manifeste
-(`manifest.json` a la racine par defaut ; repli `cadrage-out/manifest.json` legacy) et echoue si :
+Le skill `premier-alimente-linear` cree, UNE fois et en amont (single-owner), UN ticket `Feature` par
+feature approuvee + UN sous-ticket `Task` par Functional Requirement (via le MCP linear-prism), et
+consigne cette **carte amont figee** dans le bloc `linear` du manifeste committe. Ce garde-fou lit le
+manifeste (`manifest.json` a la racine par defaut ; repli `cadrage-out/manifest.json` legacy) et echoue si :
   - le bloc `linear` est absent (le skill n'a pas tourne) ;
   - une feature de `architecture.feature_sequence` n'est PAS traitee (ni ticket, ni decision
     explicite skipped/merged dans `linear.issues`) ;
   - un ticket marque `status: "created"` n'a pas d'identifiant Linear (`issue_id`/`identifier`) ;
-  - un sous-ticket de phase (`linear.issues[].sub_issues[]`, pose par creation-task-linear) marque
-    `status: "created"` n'a pas d'identifiant Linear.
+  - un sous-ticket `{fr, …}` marque `status: "created"` n'a pas d'identifiant Linear.
 
-Un ticket `skipped` / `merged` compte comme "traite" (le user a pu fusionner/ecarter des features
-dans la boucle interactive). La verification des sous-tickets est INDULGENTE : elle ne valide que les
-sous-tickets DEJA consignes ; l'absence de `sub_issues` (creation-task-linear pas encore lance, ou
-`tasks.md` pas encore genere) n'echoue jamais. Exit 0 si tout est coherent, sinon 1.
+**Etat de dev hors manifeste.** Les sous-tickets **par phase** (`creation-task-linear`) et l'etat
+d'avancement (`update-issue-linear`) vivent dans **Linear**, pas dans le manifeste committe (la
+fabrication est concurrente — une branche par developpeur — et un fichier unique committe entrerait en
+conflit). Le garde-fou ne les exige donc PAS : la verification des sous-tickets reste INDULGENTE (ne
+valide que ce qui est present ; l'absence de `sub_issues` n'echoue jamais ; une eventuelle entree
+`{phase, …}` d'un ancien manifeste est validee comme les autres). Exit 0 si tout est coherent, sinon 1.
 
 Usage:
     python check_linear.py [chemin/vers/manifest.json]
@@ -73,9 +75,9 @@ def main(argv):
             fid = it.get("id") or it.get("name") or "?"
             problems.append(f"ticket feature '{fid}' marque cree sans identifiant Linear")
 
-    # 3. Sous-tickets Task (premier-alimente-linear par `fr` / creation-task-linear par `phase`) :
-    #    INDULGENT - ne valide que les entrees presentes. Un sous-ticket "created" doit porter un
-    #    identifiant ; l'absence de sub_issues n'echoue pas.
+    # 3. Sous-tickets Task consignes (par `fr`, poses en amont par premier-alimente-linear ; les
+    #    sous-tickets par `phase` vivent dans Linear, pas ici) : INDULGENT - ne valide que les entrees
+    #    presentes. Un sous-ticket "created" doit porter un identifiant ; l'absence n'echoue jamais.
     for it in issues:
         if not isinstance(it, dict):
             continue
