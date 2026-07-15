@@ -71,6 +71,10 @@ SCHEMA_INSTRUCTION = (
     "Liste vide si rien de valable. AUCUNE prose hors du JSON."
 )
 
+# Prefixe des cles "Auth key" (Gemini Enterprise Agent Platform, ex-Vertex) : elles exigent
+# vertexai=True (mode Express). Les cles standard "AIza..." restent en mode Developer.
+ENTERPRISE_KEY_PREFIX = "AQ."
+
 DEFAULT_MODEL = os.environ.get("GEMINI_REVIEW_MODEL", "gemini-2.5-flash")
 MAX_CHARS = int(os.environ.get("GEMINI_REVIEW_MAX_CHARS", "120000"))  # ~30k tokens/chunk, borne le contexte
 MAX_CHUNKS = int(os.environ.get("GEMINI_REVIEW_MAX_CHUNKS", "8"))
@@ -108,8 +112,12 @@ def read_env_file(repo):
 
 
 def resolve_key(repo):
-    return (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-            or read_env_file(repo))
+    # Cette fonctionnalite GERE la cle dans le `.env` du projet (la skill revue-gemini l'y ecrit) : le
+    # `.env` PRIME donc sur d'eventuelles variables d'environnement ambiantes, qui peuvent etre perimees
+    # et masquer silencieusement la cle voulue (ex. un vieux GOOGLE_API_KEY invalide). Repli sur
+    # l'environnement uniquement si aucun `.env` ne porte de cle (ex. usage CI).
+    return (read_env_file(repo)
+            or os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"))
 
 
 # --- SDK google-genai (import paresseux + auto-install best-effort) ------------------------------
@@ -262,7 +270,11 @@ def main(argv):
              "(pip install --user google-genai).")
 
     from google import genai
-    client = genai.Client(api_key=key)
+    # Les cles "Auth key" (prefixe AQ.) ciblent le Gemini Enterprise Agent Platform (ex-Vertex),
+    # pas l'API Gemini Developer : sans vertexai=True (mode Express, cle seule) elles renvoient un
+    # 403 API_KEY_SERVICE_BLOCKED. Les cles standard AIza restent en mode Developer.
+    client = (genai.Client(vertexai=True, api_key=key)
+              if key.startswith(ENTERPRISE_KEY_PREFIX) else genai.Client(api_key=key))
 
     if args.check:
         # validation legere : un appel minimal pour verifier cle + API + modele.
