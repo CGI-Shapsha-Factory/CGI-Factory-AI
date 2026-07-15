@@ -5,182 +5,223 @@ description: Confronte le projet à la Definition of Ready et rend le verdict d'
 
 # cadrage-completude
 
-**Étape terminale du cadrage** (rejouable à tout moment). Mesure l'état du pack
-amont, résout en session ce qui peut l'être, et rend le verdict : **le cadrage
-est-il terminé, prêt à passer à l'architecte ?** C'est la vue cockpit et la
-dernière étape avant `/architecte:architecte-init`.
+**Étape terminale du cadrage** (rejouable à tout moment). C'est la **porte de complétude et de
+cohérence** du pack fonctionnel : elle **challenge** le cadrage (rien d'essentiel manquant, rien
+qui se contredit, exigences bien formées, valeur réelle), **résout en session** ce qui peut
+l'être, et rend le verdict : **le cadrage est-il terminé, prêt à passer à l'architecte ?** C'est
+la vue cockpit et la dernière étape avant `/architecte:architecte-init`.
 
 ## Objectif
 
-Produire un **rapport de complétude** honnête : statut par critère et le **verdict
-maître**. Le skill mesure, il ne maquille pas. **Honnêteté absolue** : le verdict ne
-passe au vert **que si tout est réellement vert**. Une question de découverte laissée
-de côté maintient le verdict au **rouge**. Aucune résolution n'est fabriquée : il
-n'existe **aucun chemin « démo → vert »**. Ce qui peut être tranché se tranche **en
-session** (on pose la question), rien d'ouvert n'est listé dans un fichier.
+Produire un **rapport de complétude** honnête : statut par critère et le **verdict maître**. Le
+skill mesure, il ne maquille pas. **Honnêteté absolue** : le verdict ne passe au vert **que si
+tout est réellement vert**. Une question de découverte laissée de côté maintient le verdict au
+**rouge**. Aucune résolution n'est fabriquée : il n'existe **aucun chemin « démo → vert »**. Ce
+qui peut être tranché se tranche **en session** (on pose la question), rien d'ouvert n'est listé
+dans un fichier.
 
 ## Entrée
 
-Le manifeste `manifest.json` et tous les artefacts qu'il
-référence (capture, vision, glossaire, spec index, briefs).
+Le manifeste `manifest.json` et tous les artefacts qu'il référence (capture, project-frame,
+product-brief, glossaire, spec-index, coupling-map, briefs).
 
 ## Pré-requis (vérification silencieuse)
 
 **Aucun.** Invocable à tout moment pour prendre la température du projet.
 
-## Logique de validation
+## Étape 0 — Relecture parallèle exhaustive (ne rien manquer)
+
+**Toujours (re)lire depuis les fichiers committés**, même si tu crois les avoir déjà lus dans
+cette session — **jamais** t'appuyer sur la mémoire du chat (reproductible par n'importe qui, sur
+une autre machine, après plusieurs jours). Dispatcher des sous-agents lecteurs
+(`agentType: "cadrage-reader"`), **un par lot**, chacun avec un **schéma de sortie structuré**, en
+**un seul message** (appels parallèles), puis synthétiser. Lots :
+1. **Vision & cadre** — `cadrage-out/project-frame.md`, `cadrage-out/product-brief.md`. Extraire :
+   objectifs, périmètre IN/OUT, critères de succès, contraintes.
+2. **Domaine & découpage** — `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
+   `cadrage-out/coupling-map.md`. Extraire : termes/définitions, use cases + walking skeleton
+   candidat, couplages/dépendances.
+3. **Briefs** — `cadrage-out/features-fonctionnels-brief/*.md`. Extraire, par feature : statut,
+   sections présentes/absentes, user stories, critères d'acceptation, critères de succès, OUT,
+   dépendances, termes employés.
+
+*(Garde simple : peu à lire → un seul lecteur ; beaucoup de briefs → fan-out, plafonné à la
+concurrence.)* **Passe de complétude** : vérifier qu'aucun fichier, use case, terme ou brief n'a
+été manqué avant de challenger.
+
+## Contrôles de cohérence — stricts et adversariaux
+
+**Challenger, pas cocher.** Dérouler la **grille canonique** de
+`references/completude-checklist-guide.md`, adaptée au cadrage (contrat *fonctionnel*, jamais
+technique), en **quatre lentilles** — c'est ce qui rend le verdict honnête, au-delà de la simple
+présence :
+
+- **Lentille A — Complétude (rien d'essentiel manquant)** : chaque **use case a son brief** ;
+  chaque **brief complet** (sections 1–9, section Trous vide, OUT non vide, critères de succès
+  chiffrés ou « à préciser à l'architecture ») ; le **glossaire couvre** tout terme employé dans
+  les briefs ; les **seeds qualité** charge/disponibilité/performance sont captées ou différées
+  (l'architecte en dépend) ; chaque **capacité du périmètre IN** est couverte par ≥1 use case.
+
+- **Lentille B — Cohérence (rien ne se contredit)** : **langage ubiquitaire** cohérent (un terme
+  = un sens ; un concept = un terme, pas de synonymes pour un même acteur) ; chaque **use case
+  sert un objectif** de la vision ; **aucune fuite hors-périmètre** (rien du OUT en IN ; souhaits
+  hors périmètre confirmés une fois, jamais poussés) ; **retour démonstrateur résolu** (aucun
+  `[REMIS EN CAUSE]` ne survit) ; **dépendances cohérentes** (features citées existent, pas de
+  cycle, aligné à la coupling-map).
+
+- **Lentille C — Qualité des exigences (bien formées)** : **user stories INVEST** (une story qui
+  échoue à une lettre est reformulée/scindée/retirée) ; **critères d'acceptation testables**
+  (Étant donné/Quand/Alors, pass-fail clair, atomiques, **mots vagues bannis**, ~1–3 par story —
+  4+ = story trop grosse) ; **critères de succès mesurables** ou différés à l'architecture ;
+  chaque exigence **nécessaire, non ambiguë, singulière, vérifiable**, au bon niveau (aucune
+  solution technique prématurée).
+
+- **Lentille D — Validation & prêt-architecte** : chaque **feature délivre de la valeur** (tracée
+  à un objectif métier ; une feature bien écrite mais sans valeur = candidate au retrait) ;
+  **traçabilité bidirectionnelle** objectifs ↔ features (aucune feature orpheline, aucun objectif
+  non couvert) ; **prêt pour l'architecte** — project-frame, product-brief, glossaire, spec-index
+  (use cases + walking skeleton candidat + couplage) et briefs présents et mutuellement
+  cohérents (l'architecte les lit **directement**, donc vérifiés en priorité).
+
+Chaque écart relevé n'est **pas** listé comme un trou : il passe par la **résolution interactive**
+ci-dessous (toujours une décision).
+
+## Logique de validation (les 6 critères + verdict)
 
 Calculer les booléens à partir de l'état réel des artefacts et du manifeste :
 
-- **`vision_complete`** — product brief : OUT non vide, critères de succès présents.
-- **`glossary_validated`** — le glossaire a été **validé en bloc** par l'utilisateur.
-- **`decoupage_arbitrated`** — la revue de couplage a été tranchée en session (drapeau vrai).
-- **`all_briefs_complete`** — tous les briefs au statut `complete`.
-- **`no_blocking_gaps`** — **toute question de découverte `pending`/`deferred`**
-  (bloc `discovery` du manifeste) maintient le verdict au rouge — **vérifié (obligatoire)** par
+- **vision complète** — product brief : OUT non vide, critères de succès présents.
+- **glossaire validé** — le glossaire a été **validé en bloc** par l'utilisateur.
+- **découpage arbitré** — la revue de couplage a été tranchée en session (drapeau vrai).
+- **tous les briefs complets** — tous les briefs au statut `complete`.
+- **aucun trou de découverte bloquant** — **toute question de découverte `pending`/`deferred`**
+  (bloc `discovery`) maintient le verdict au rouge — **vérifié (obligatoire)** par
   `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" <racine>/manifest.json` (s'il est
-  **introuvable** ou renvoie **exit 1**, **s'arrêter** et le dire en clair — jamais de vérification « à
-  la main »). Une capacité du périmètre IN non couverte se **tranche en session**.
-  **Exception — Q8 (contraintes légales / conformité / RGPD) :** optionnelle, gérée **manuellement par
-  l'équipe** hors cadrage. Si elle a été laissée à l'équipe (statut `na`), elle **ne bloque pas** le
-  verdict et n'est **jamais** re-poussée. **Ne jamais pousser la conformité** (cf.
+  **introuvable** ou renvoie **exit 1**, **s'arrêter** et le dire en clair — jamais de vérification
+  « à la main »). Une capacité du périmètre IN non couverte se **tranche en session**.
+  **Exception — Q8 (contraintes légales / conformité / RGPD) :** optionnelle, gérée **manuellement
+  par l'équipe** hors cadrage. Si elle a été laissée à l'équipe (statut `na`), elle **ne bloque
+  pas** et n'est **jamais** re-poussée. **Ne jamais pousser la conformité** (cf.
   `references/ux-conventions.md` §2bis).
-- **`demonstrateur_converged`** — **calculé** : `aucun validation_point bloquant
-  ouvert` **ET** `demonstrateur.client_validated == true`. Le skill **lit**
-  `client_validated` (geste humain à l'étape 10), il ne le force jamais. Un projet
-  sans boucle démonstrateur n'est convergé que lorsque le client a validé la
-  maquette.
+- **démonstrateur convergé** — **calculé** : `aucun validation_point bloquant ouvert` **ET**
+  `demonstrateur.client_validated == true`. Le skill **lit** `client_validated` (geste humain à
+  l'étape 10), il ne le force jamais.
 
-Puis le **verdict maître**, ET strict des six critères ci-dessus : un seul critère
-non atteint suffit à le laisser au rouge. (La logique interne est documentée dans
-`cadrage-init`, schéma du manifeste ; elle n'est jamais affichée telle quelle.)
+Puis le **verdict maître**, ET strict des six critères : un seul non atteint suffit à le laisser au
+rouge. **Les quatre lentilles ci-dessus alimentent ces critères** (une story non testable ⇒ brief
+non complet ; un objectif non couvert ⇒ trou bloquant ; etc.).
 
-**Honnêteté du verdict (non négociable).** Le verdict passe au vert **uniquement**
-si la totalité des critères est verte. En particulier :
-- une **question de découverte différée** (« à confirmer » / passée pour l'instant)
-  reste un **trou bloquant** et maintient le verdict au rouge — **sauf Q8 (légal / conformité /
-  RGPD) laissée à l'équipe (`na`)**, qui est optionnelle, gérée hors cadrage, et **ne bloque pas** ;
-- **tout** point bloquant ouvert maintient le verdict au rouge ;
-- **aucun chemin « démo → vert »** n'existe : on ne marque jamais un critère comme
-  atteint à partir d'une valeur de démonstration, d'exemple ou inventée. On ne
-  fabrique aucune résolution. Le skill mesure l'état réel, il ne le maquille pas.
+**Honnêteté du verdict (non négociable).** Le verdict passe au vert **uniquement** si la totalité
+des critères est verte. En particulier : une **question de découverte différée** reste un **trou
+bloquant** (sauf Q8 `na`) ; **tout** point bloquant ouvert maintient le rouge ; **aucun chemin
+« démo → vert »** — on ne marque jamais un critère atteint à partir d'une valeur de démonstration
+ou inventée. Le skill mesure l'état réel, il ne le maquille pas.
+
+## Résolution interactive — TOUJOURS une décision, jamais un simple constat
+
+Le skill enchaîne sur une **boucle interactive** pour trancher ce qui peut l'être, selon
+`references/interactive-loop.md`. **C'est le point de résolution unique du cadrage.** Règle
+centrale : **aucun écart n'est seulement annoncé** (« il manque X », « ce point est bloquant »,
+« il reste N points »). Pour **chaque** écart trouvé (trou, contradiction, exigence mal formée,
+feature sans valeur), **une chose à la fois** :
+1. **Énoncer en clair** ce qui est présent **et** ce qui manque / ce qui cloche — en prose, nom
+   métier, **aucun nom de champ ni code** (seule exception : un use case, nommé « intitulé complet
+   (UCn) »).
+2. Demander explicitement : **« que veux-tu faire ? »**
+3. Proposer, **en prose (pas de menu numéroté)** : une **réponse recommandée** adaptée au contexte,
+   une **alternative** plausible, et l'invitation à **saisir ta propre réponse**.
+4. **Appliquer directement** le choix, **en place** dans l'artefact concerné de `cadrage-out/`
+   (product-brief, spec-index, brief, glossaire…). **Aucun fichier annexe.**
+
+**Si l'utilisateur ne tranche pas** un point : **on n'écrit rien** (le point est omis, jamais
+marqué), il **ne débloque pas** le verdict (qui reste au rouge), et on peut le lui rappeler
+**oralement** en fin de boucle. **L'utilisateur ne relit jamais les artefacts** : tout se règle
+dans la décision.
+
+**Prioriser** : d'abord ce qui **bloque un artefact**, ensuite le raffinement. **Questions
+spécifiques et répondables** (pas « préciser le besoin » mais « quelle cible chiffrée de réduction
+du temps de recherche ? »). **Plafonner à ~8–10 questions par session** pour ne pas noyer ; le
+reste sera repris au prochain passage. On parcourt notamment : validation du glossaire (en bloc,
+si pas encore faite) ; questions de découverte `pending`/`deferred` ; acquis `[REMIS EN CAUSE]` ;
+souhaits hors périmètre (confirmés une fois) ; stories/critères mal formés (INVEST, mots vagues) ;
+objectifs non couverts ou features orphelines.
+
+> **Interdit explicite.** Afficher un écart (« il manque… », « bloquant », « il reste N points »)
+> **sans** l'accompagner immédiatement de la question **« que veux-tu faire ? »**, des propositions,
+> et de l'application du choix. Un constat nu est une violation de ce skill.
+
+**Rappels de la convention (rien n'est inventé) :** une réponse explicite → décision humaine,
+**aucune provenance écrite** ; un point non tranché reste « à confirmer », **ne débloque jamais** le
+verdict, et **n'est écrit nulle part** ; **interdit** d'écrire une valeur « démo » comme un fait.
+
+À la fin : « **Tout est complété — tu peux passer à l'étape suivante.** », ou rappeler oralement
+combien de points restent à trancher (le verdict reste alors au rouge).
 
 ## Sortie — rapport écrit + affichage en session
 
-Le skill produit **deux choses** : un rapport complet écrit sur disque, et un
-affichage immédiat en session. **Toute la sortie utilisateur est en langage
-naturel français** : on n'affiche **jamais** de nom d'attribut ni de clé du
-manifeste (suivre la table de correspondance de `references/ux-conventions.md` — on
-dit « le cadrage est terminé, prêt pour l'architecte », « le glossaire est validé »,
-« aucun point bloquant ouvert »… jamais `cadrage_complete = false` ni un tableau de
-booléens bruts). **Jamais d'identifiant codé** (`B1`, `B2`, `A6`, `UC1`…) : on nomme
-chaque chose en clair. **Jamais de marqueur `[À CHIFFRER]`** : on dit « à préciser
-plus tard avec l'équipe technique ».
+**Toute la sortie utilisateur est en langage naturel français** : **jamais** de nom d'attribut ni
+de clé manifeste (suivre `references/ux-conventions.md` — « le cadrage est terminé, prêt pour
+l'architecte », « le glossaire est validé », « aucun point bloquant ouvert »… jamais
+`cadrage_complete = false` ni un tableau de booléens). **Jamais d'identifiant codé** (`B1`, `A6`,
+`UC1`… — hors « intitulé (UCn) »). **Jamais de marqueur `[À CHIFFRER]`** : « à préciser plus tard
+avec l'équipe technique ».
 
 ### 1. Rapport écrit — `cadrage-out/completude-report.md`
-
-Écrire le **rapport complet** dans ce fichier, **daté et marqué comme instantané** :
+Écrire le **rapport complet**, **daté et marqué comme instantané** :
 - **En-tête obligatoire** : « Rapport généré le `<updated_at>` à partir du manifeste — **le
   manifeste est la source de vérité** ; ce rapport est un instantané, **à régénérer après toute
   résolution de point**. »
-- Statut par critère (atteint / non atteint) avec la raison, en clair.
-- **Verdict maître** bien visible, au vert seulement si tous les critères sont verts
-  (voir la règle d'honnêteté ci-dessus).
+- Statut par critère (atteint / non atteint) avec la raison, en clair — incluant ce que les
+  quatre lentilles ont trouvé et corrigé.
+- **Verdict maître** bien visible, au vert seulement si tous les critères sont verts.
 
 ### 2. Affichage en session
+Un **résumé d'état** — un court paragraphe « où en est le projet », pensé pour quelqu'un qui
+reprend **après plusieurs jours** : en une lecture, il sait où il en est, ce qui reste à trancher,
+la prochaine action, et le verdict en clair.
 
-En plus du fichier, **afficher directement dans la conversation** un **résumé
-d'état du projet** — un court paragraphe « où en est le projet », pensé pour
-quelqu'un qui reprend **après plusieurs jours** : en une lecture, il sait où il en
-est, ce qui reste à trancher, et quelle est la prochaine action. Donner le verdict
-en clair (« le cadrage est terminé, prêt pour l'architecte » ou « pas encore prêt,
-il reste… »).
-
-**JAMAIS de tableau.** Ne produis **aucun tableau à colonnes**, et en particulier
-**aucune colonne « ce qui est complet »**. Un paragraphe en prose, point. Ne liste
-pas non plus les critères réussis : on parle de **ce qui reste**, en clair, sans
-identifiant codé.
-
-## Résolution interactive en session
-
-Le skill enchaîne sur une **boucle interactive** pour trancher ce qui peut l'être
-tout de suite, selon `references/interactive-loop.md` (**une question à la fois, une
-réponse recommandée + réponse libre, pas de menu numéroté** ; on attend la réponse
-avant la suivante). **C'est le point de résolution unique du cadrage** — il absorbe toute
-la clarification des points ouverts, y compris pendant la **boucle démonstrateur**
-(rejouable : il résout ce qui peut l'être ; le verdict reste au rouge tant que la maquette
-n'est pas validée — c'est normal). **Prioriser** : d'abord ce qui **bloque un artefact**,
-ensuite le raffinement ; **formuler des questions spécifiques et répondables** (pas
-« préciser le besoin » mais « quelle cible chiffrée de réduction du temps de recherche ? »).
-**Plafonner à ~8–10 questions par session** pour ne pas noyer l'utilisateur ; le reste sera
-repris à un prochain passage. On parcourt ainsi :
-
-- **Validation du glossaire** si elle n'a pas encore eu lieu : proposer la validation
-  en bloc (pas terme par terme).
-- **Questions de découverte restées sans réponse** (`pending`/`deferred`) : les reposer une à une.
-- **Acquis remis en cause** (`[REMIS EN CAUSE]`, issus d'un retour de démonstrateur) : les
-  reposer et **retrancher** en session — corriger ou retirer l'acquis contredit, en place.
-- **Souhaits hors périmètre** repérés : les **confirmer une fois** (rester OUT, ou basculer IN
-  si l'utilisateur le décide) — **jamais pousser** ; un « on garde hors périmètre » est terminal.
-- **Points bloquants** : ne pas se contenter de les énoncer. Pour **chaque** point
-  bloquant, **poser la question** correspondante à l'utilisateur (en clair, sans code
-  ni jargon), une à la fois, jusqu'à ce que toute l'information nécessaire soit là.
-- **Confirmation des éléments signalés** : tout point « à confirmer » est confirmé ou
-  modifié en session.
-
-**Appliquer les réponses EN PLACE.** Dès qu'une réponse débloque ou corrige quelque
-chose, **modifier directement l'artefact concerné** dans `cadrage-out/` (product-brief,
-spec-index, brief, glossaire…). **Ne créer aucun nouveau fichier** pour stocker les
-réponses obtenues ; rien n'est mis de côté dans un journal.
-
-Rappels de la convention (rien n'est inventé) :
-- Une réponse explicite (recommandée acceptée ou saisie) → décision **humaine**.
-  **Aucune provenance écrite.**
-- Un point que l'utilisateur ne tranche pas reste « à confirmer », **ne débloque
-  jamais** le verdict, et **n'est écrit nulle part**.
-- **Interdit** d'écrire une valeur « démo » comme un fait.
-
-À la fin de la boucle : « **Tout est complété — tu peux passer à l'étape
-suivante.** », ou rappeler oralement combien de points restent à trancher (le
-verdict reste alors au rouge).
+**JAMAIS de tableau.** Aucun tableau à colonnes, en particulier **aucune colonne « ce qui est
+complet »**. Un paragraphe en prose. On parle de **ce qui reste**, en clair, sans identifiant codé.
 
 ## Mise à jour du manifeste
 
 Read-modify-write puis revalidation JSON :
-- Met à jour tout le bloc `definition_of_ready` (les booléens, dont
-  `demonstrateur_converged`, + `cadrage_complete`). **Seul ce skill met à jour ces drapeaux** :
-  ne **jamais** les flipper ailleurs ni à la main après avoir résolu un point — **relancer
-  `cadrage-completude`**, pour que le rapport écrit et le manifeste restent cohérents (jamais de
-  manifeste « prêt » avec un rapport « pas prêt »).
+- Met à jour tout le bloc `definition_of_ready` (les booléens, dont `demonstrateur_converged`, +
+  `cadrage_complete`). **Seul ce skill met à jour ces drapeaux** : ne **jamais** les flipper
+  ailleurs ni à la main après avoir résolu un point — **relancer `cadrage-completude`**, pour que
+  le rapport écrit et le manifeste restent cohérents (jamais de manifeste « prêt » avec un rapport
+  « pas prêt »).
 - `updated_at`.
-- **Ne modifie pas** `decoupage_arbitrated` à la hausse : il reflète une décision
-  humaine ; le skill le lit, il ne l'invente pas.
+- **Ne modifie pas** `decoupage_arbitrated` à la hausse : décision humaine ; le skill le lit.
 
-> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
-> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : …,
-> cadrage_complete: true », toute liste `champ: valeur`). Le verdict et l'état se disent **en clair**
-> (« le cadrage est terminé, prêt pour l'architecte ») — cf. `references/ux-conventions.md`.
+> **Silencieux — jamais annoncé.** Ne **jamais** dire que le manifeste est mis à jour, ni citer un
+> nom de champ ou `true`/`false`. Le verdict et l'état se disent **en clair** (« le cadrage est
+> terminé, prêt pour l'architecte ») — cf. `references/ux-conventions.md`.
 
 ## Livrable visuel
 
-Le dashboard Definition of Ready (jauge de complétude, statut par critère,
-verdict maître, ce qui manque) se génère dans Claude Design. Le prompt prêt à
-coller est dans `references/dashboard-dor-prompt.md` (gabarit statique). Le prompt
-utilisé est sauvegardé sous `cadrage-out/prompts/<NNN>-<JJ-MM>-dashboard-dor.md` et tracé
-dans `prompts[]`. Le fichier sauvegardé ne contient **que le corps du prompt** (le
-bloc de code du gabarit), sans titre/date/mode/version (cf. `references/ux-conventions.md`).
+Le dashboard Definition of Ready (jauge de complétude, statut par critère, verdict maître, ce qui
+manque) se génère dans Claude Design. Le prompt prêt à coller est dans
+`references/dashboard-dor-prompt.md` (gabarit statique). Le prompt utilisé est sauvegardé sous
+`cadrage-out/prompts/<NNN>-<JJ-MM>-dashboard-dor.md` et tracé dans `prompts[]`. Le fichier
+sauvegardé ne contient **que le corps du prompt** (le bloc de code du gabarit), sans
+titre/date/mode/version (cf. `references/ux-conventions.md`).
 
 ## Règles invariantes appliquées ici
 
-- **Reflète l'état réel.** Le verdict ne passe au vert que sur du vert intégral.
-  Aucun critère forcé, aucune résolution fabriquée, aucun chemin « démo → vert ».
-  Une réponse différée ou un trou bloquant ouvert maintient le verdict au rouge.
-- **Pas de fuite de nom d'attribut, d'identifiant codé, ni de jargon de porte.**
-  Verdict et critères en clair, en français (table de `references/ux-conventions.md`) —
-  jamais `cadrage_complete = false`, jamais `B1`/`UC1`, jamais `[À CHIFFRER]`, jamais
-  « porte », ni tableau de booléens bruts. Les clés du manifeste restent internes.
-- **Rien d'ouvert persisté.** Aucune liste de trous écrite ; ce qui reste se tranche
-  en session, et les réponses sont appliquées **en place** dans `cadrage-out/`.
+- **Challenger, pas cocher.** On cherche ce qui manque, se contredit, est mal formé ou sans valeur
+  — pas la simple présence (grille ancrée : DoR, INVEST, ISO/IEC/IEEE 29148, BABOK, DDD, MoSCoW,
+  traçabilité — `references/completude-checklist-guide.md`).
+- **Toujours une décision, jamais un constat.** Chaque écart → question « que veux-tu faire ? » +
+  réponse recommandée / alternative / saisie + application en place. Aucun « bloquant » nu.
+  L'utilisateur ne relit rien.
+- **Reflète l'état réel.** Le verdict ne passe au vert que sur du vert intégral. Aucun critère
+  forcé, aucune résolution fabriquée, aucun chemin « démo → vert ».
+- **Pas de fuite de nom d'attribut, d'identifiant codé, ni de jargon de porte.** Verdict et
+  critères en clair (table `references/ux-conventions.md`) — jamais `cadrage_complete = false`,
+  jamais `B1`/`UC1` nu, jamais `[À CHIFFRER]`, jamais « porte », ni tableau de booléens.
+- **Rien d'ouvert persisté.** Aucune liste de trous écrite ; ce qui reste se tranche en session,
+  les réponses sont appliquées **en place**.
 - **Skill indépendant.** Lit et écrit le manifeste, sans orchestrateur.
 
 **Handoff (avant de passer la main).** Committer `manifest.json` (verdict cadrage **scellé**)

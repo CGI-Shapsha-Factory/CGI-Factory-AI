@@ -40,7 +40,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | 5 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`, **direction visuelle délibérée anti-slop — palette dérivée du domaine, jamais le violet/indigo par défaut**), sauvé sous `cadrage-out/prompts/` — **fichier = corps du prompt seul** | vision dispo / retour dispo |
 | 6 | `cadrage-retour-demonstrateur` | ingère le retour client, résout/invalide | retour dispo |
 | 7 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
-| 8 | `cadrage-completude` | **étape terminale ET point de résolution unique** : bilan Definition of Ready (résumé en prose, **jamais de tableau**) + **résolution interactive en place de tous les points ouverts** (découverte, glossaire, acquis remis en cause, hors-périmètre, bloquants), puis relais vers l'architecte | aucune (rejouable) |
+| 8 | `cadrage-completude` | **porte de complétude & cohérence ET point de résolution unique** : relit `cadrage-out/` **en parallèle** (fan-out `cadrage-reader`), **challenge** le pack fonctionnel en **4 lentilles** (Complétude / Cohérence / Qualité des exigences / Validation-prêt-architecte — ancré DoR, INVEST, ISO 29148, BABOK, DDD, MoSCoW, traçabilité ; `references/completude-checklist-guide.md`), rend le verdict Definition of Ready (prose, **jamais de tableau**), et **résout chaque écart comme une décision** (jamais un constat nu : « que veux-tu faire ? » + recommandée/alternative/saisie + application en place), puis relais vers l'architecte | aucune (rejouable) |
 
 Flux : `cadrage-init` → `extraction` → (`vision` ∥ `glossaire`) → `decoupage` →
 **boucle démonstrateur** [`demonstrateur-brief` ⟳ `retour-demonstrateur` → `completude`]
@@ -107,6 +107,10 @@ uniquement — aucun point de découpage ouvert n'y est persisté) ; `prompts[]`
   clé JSON en sortie utilisateur ni dans les refus (table de correspondance fournie).
   Refus en langage naturel. Chaque skill finit par **une ligne « Étape suivante »**.
 - **Langue** : **tout en français** — templates, artefacts, interaction, messages, descriptions de skills. (Les clés du manifeste et valeurs machine — `status`, `pending`, etc. — restent des identifiants.)
+- **Porte de complétude** (`references/completude-checklist-guide.md`) : grille canonique de la
+  porte `cadrage-completude`, ancrée DoR / INVEST / ISO-IEEE 29148 / BABOK / DDD / MoSCoW /
+  traçabilité. Agent de lecture : `agents/cadrage-reader.md` (lecture complète + sortie structurée
+  + signalement d'anomalies, dispatché en parallèle par `cadrage-completude`).
 
 ## Découverte (13 questions)
 `references/discovery-questions.md` (lu par `cadrage-extraction`) ; statuts dans le
