@@ -1,31 +1,35 @@
 ---
 name: designer-atelier
-description: Atelier de couverture design — déroule la checklist (fondation, expérience, technique) pré-remplie par les handoffs, puis produit le prompt Claude Design et le rapport de couverture.
+description: Déroule la checklist de couverture (fondation, expérience, technique), arbitre les choix d'expérience et résout chaque point resté à traiter en session.
 ---
 
 # designer-atelier
 
 Cœur de la phase design : **un atelier de conception dirigé, pas un générateur**. Sa valeur n'est pas de
 rédiger, c'est de **garantir que rien d'important n'a été oublié** avant de lancer Claude Design. Il mène
-l'humain (designer ou PO) à travers **tout ce qu'un front pertinent exige**, en s'appuyant sur les
-handoffs comme matière, et ne produit le **prompt** qu'à la fin, une fois **tout point traité** et la
-**couverture jugée suffisante**. **Le design system naît dans Claude Design** (pas ici) ; son export est
-ensuite **committé dans `designer-out/maquette-de-claude-design/`**.
+l'humain (designer ou PO) à travers **tout ce qu'un front pertinent exige**, en s'appuyant sur la checklist
+**déjà pré-remplie** par `designer-ingestion`, et s'achève quand **plus aucun point n'est « à traiter »** et
+que la **couverture est jugée suffisante**. **Le design system naît dans Claude Design** (pas ici) ; le
+prompt est ensuite produit par `designer-prompt`.
 
-## Porte d'entrée
-`designer-init` a tourné (le manifeste contient le bloc `design` avec la checklist semée). Sinon, orienter
-en clair vers `/designer:designer-init`.
+## Objectif
+Mener l'humain à travers la checklist de couverture jusqu'à ce qu'**aucun item ne reste « à traiter »**
+(tout **validé** ou **sans objet**), puis capter la **couverture jugée suffisante** (geste humain).
 
-## Entrées (matière de la checklist)
-- **Cadrage (C)** : `product-brief.md` (vision, ton), `glossaire.md` (entités/données affichées),
-  `spec-index.md` (**parcours / use cases**), **maquette validée** (`demonstrateur`, `client_validated`)
-  comme **direction, pas cible** — le designer a autorité pour la faire évoluer.
-  > **Lecture seule.** `cadrage-out/spec-index.md` est un **artefact du cadrage** : l'atelier le **lit**
-  > (parcours, use cases) pour nourrir le versant expérience, mais ne le **crée ni ne le modifie jamais**.
-- **Architecte (A)** : **`impact-design.md`** (section *Décisions à impact design* : stack front + style,
-  contrats transverses visibles, conventions d'API qui décident les états d'UI, NFR qui se voient).
-- Conventions : `references/coverage-checklist-guide.md`, `references/states-catalog.md`,
-  `references/question-map.md`, `references/interactive-loop.md`, `references/ux-conventions.md`.
+## Entrées
+- La **checklist pré-remplie** (`design.checklist`, issue de `designer-ingestion`).
+- La même **matière** que l'ingestion, pour appuyer les déductions pendant le déroulé :
+  `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md` (**lecture
+  seule**), `architecte-out/impact-design.md`.
+- Conventions : `references/interactive-loop.md`, `references/coverage-checklist-guide.md`,
+  `references/states-catalog.md`, `references/question-map.md`, `references/ux-conventions.md`.
+
+## Pré-requis (vérification silencieuse)
+`designer-ingestion` a tourné : les drapeaux d'entrée `design.inputs` sont posés **et/ou** la checklist est
+**pré-remplie** (des items en `deduced`). Un seul de ces signaux suffit — ne pas exiger des items déduits
+(un amont maigre peut n'en produire aucun). Sinon, orienter en clair (sans nom de champ) : « les handoffs
+ne sont pas encore ingérés — lance d'abord `/designer:designer-ingestion` ». *(L'ingestion est mécanique et
+idempotente : au moindre doute, un renvoi vers elle est sans effet de bord.)*
 
 ## Affichage des items à l'utilisateur
 Chaque item de la checklist se **désigne par une phrase claire** (ex. « la palette de couleurs, l'échelle
@@ -37,28 +41,7 @@ Les phrases complètes de référence sont dans `templates/coverage-checklist.md
 
 ## Procédure (= déroulé de l'atelier)
 
-### Étape 1 — Ingestion des handoffs (lecture parallèle) & pré-remplissage
-**Toujours (re)lire les handoffs depuis les fichiers committés**, même si tu crois les avoir déjà lus plus
-tôt dans cette session — **ne jamais** t'appuyer sur la mémoire du chat (exécution reproductible par
-n'importe qui). **Lire tous les handoffs pertinents, en parallèle, pour ne rien manquer.** Dispatcher des sous-agents
-lecteurs (`agentType: "designer-reader"`), **un par lot**, chacun avec un **schéma de sortie structuré**,
-en **un seul message** (appels parallèles), puis synthétiser. Lots :
-1. **Cadrage** — `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`.
-   Extraire : ton/vision, entités/données affichées, parcours / use cases, états d'écran impliqués.
-2. **Architecte** — `architecte-out/impact-design.md`. Extraire : stack front + style, contrats
-   transverses visibles, conventions d'API → états d'UI, NFR qui se voient (a11y, responsive, i18n, perf).
-
-*(Garde simple : entrée minuscule → un seul lecteur ; sinon fan-out.)* **Passe de complétude** : vérifier
-qu'aucun élément des handoffs n'a été manqué avant de pré-remplir.
-
-**Pré-remplir la checklist** (`design.checklist`) depuis les retours structurés : items d'origine **C**
-(parcours, états d'écran, hiérarchie…), items d'origine **A** depuis `impact-design.md` (erreurs, async,
-listes, identité/rôles, navigation, accessibilité visée, responsive, i18n, perf ; thématisation). Chaque
-item ainsi rempli passe en interne à `status: deduced` (montré **validé**) avec sa `note`. Marquer
-`design.inputs.cadrage_ok` / `design.inputs.design_impact_ok`. Le pré-remplissage suit
-`references/question-map.md`.
-
-### Étape 2 — Dérouler la checklist par blocs (fondation → expérience → technique)
+### Étape 1 — Dérouler la checklist par blocs (fondation → expérience → technique)
 Pour **chaque** item encore **à traiter**, via la boucle 3-options (`references/interactive-loop.md`), une
 chose à la fois, **désignée par sa phrase claire** :
 - soit **déduit** d'un handoff → en interne `deduced` (origine + source), montré **validé** ;
@@ -69,69 +52,47 @@ chose à la fois, **désignée par sa phrase claire** :
 Rappeler, pour les items techniques, la **contrainte issue de l'architecture** à honorer (ex. le format
 d'erreur API se projette en messages par champ ; l'accessibilité visée fixe contraste/focus/clavier).
 
-### Étape 3 — Co-construction (porte humaine : arbitrage des choix d'expérience)
+### Étape 2 — Co-construction (porte humaine : arbitrage des choix d'expérience)
 L'humain **tranche** les décisions de parcours, de densité, d'états vides, de feedback/confirmation et de
 microcopie. **Le plugin propose et rappelle les contraintes ; il ne décide pas.** C'est la **porte 1**
 (jamais automatisée).
 
-### Étape 4 — Résoudre en session tout point resté « à traiter » (avant toute génération)
+### Étape 3 — Résoudre en session tout point resté « à traiter »
 **Aucun item ne doit rester « à traiter » à la sortie de l'atelier.** Reprendre chaque point encore non
 couvert **un par un**, désigné par sa **phrase claire**, via la boucle 3-options
 (`references/interactive-loop.md`) : **réponse recommandée**, **alternative**, ou **réponse propre de
 l'humain**. La décision est **écrite en place** dans la checklist (l'item passe à `decided` ou
 `sans_objet`). Discipline « marquer, ne pas inventer » et anti-usine-à-gaz : commencer petit (tokens
 essentiels, composants de base, patterns clés), ne pas créer de tokens/composants par anticipation. **On ne
-passe à l'étape 5 que lorsque plus aucun item n'est « à traiter ».**
+clôt l'atelier que lorsque plus aucun item n'est « à traiter ».**
 
-### Étape 5 — Générer les sorties (seulement quand plus rien n'est « à traiter »)
-Quand tout est traité et que l'humain juge la **couverture suffisante** (`design.coverage_sufficient =
-true`, **geste humain**) :
-- **Prompt Claude Design** → `designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md` (fichier plat ; gabarit
-  `templates/claude-design-prompt.md`) : fondation à produire, direction stylistique (maquette =
-  inspiration, marque si présente sinon direction à poser), **stack cible**, et **consignes de discipline**
-  (tous les états par composant, tous les parcours, erreurs + états vides, marquer ce qui manque). Les items
-  **sans objet** sont omis. **Aucun `[À VALIDER]` n'est émis** : tous les points ayant été résolus en
-  session à l'étape 4, le prompt ne contient que des décisions actées.
-  - **Rôle + viser haut (prompt engineering).** Ouvrir le prompt par le **rôle** du gabarit en
-    **remplissant `<domaine>`** depuis le `product-brief.md`/`impact-design.md`, puis reprendre **tel
-    quel** le bloc « Avant de concevoir » (décider la langue visuelle + **un parti pris signature** +
-    décider-puis-appliquer + north-star « viser l'excellence, pas la moyenne »). Rôle **court** (1 ligne) —
-    il signale les priorités mieux qu'une liste.
-  - **Direction visuelle délibérée et CONCRÈTE (anti-slop).** Remplir la section « Direction visuelle »
-    du gabarit avec des **valeurs NOMMÉES, jamais des placeholders** : palette en **hexadécimal + rôle**
-    (`--couleur-primaire: #… (CTA)`, `--fond: #…` légèrement teinté, `--texte: #…`, + succès/erreur/
-    alerte), **polices nommées** (titrage + corps), **unité d'espacement + rayons par composant** —
-    **déduits du domaine, du public et du ton** (ou de la **marque** du client si elle existe).
-    **Jamais** le violet/indigo par défaut ni les polices par défaut (Inter, Roboto, Poppins, Space
-    Grotesk, Geist…). Principe : **« tout choix non spécifié retombe sur un défaut générique »** — ne
-    rien laisser au hasard. Exemples de raisonnement : cabinet d'avocats → encre/bleu nuit + neutres
-    chauds + serif éditoriale (ex. Fraunces) ; santé → teal apaisant + sans-serif humaniste ; finance →
-    anthracite + un accent mesuré. Reprendre **tel quel** le bloc « À éviter absolument » **et la phrase
-    de verrou** du gabarit.
-  > **Le fichier sauvegardé ne contient que le corps du prompt prêt à coller** (le bloc de code rempli du
-  > gabarit) : **pas de titre H1, pas de note en blockquote, pas de métadonnée, pas de pied de page**. La
-  > métadonnée (sujet, date, version) vit dans l'entrée `prompts[]` du manifeste, **jamais** dans le
-  > fichier. Voir `references/ux-conventions.md` §3bis.
-- **Rapport de couverture** → `designer-out/coverage-report.md` (gabarit `.factory/designer/coverage-report.md`).
-- MAJ `design.prompt_path`, `design.coverage_report_path`, `design.phase = "atelier"` **en silence** (ne pas
-  narrer la mise à jour du manifeste ; dire à l'utilisateur **ce qui a été produit** et **la suite**).
+### Clôture de l'atelier (porte humaine : couverture suffisante)
+Quand **plus aucun item n'est « à traiter »** et que l'humain juge la **couverture suffisante**
+(`design.coverage_sufficient = true`, **geste humain, jamais auto**), l'atelier est clos. La génération du
+**prompt Claude Design** et du **rapport de couverture** revient à `designer-prompt` : **aucun fichier n'est
+produit ici**.
 
 ## Porte de sortie
 - Checklist déroulée : **aucun item « à traiter »** ne subsiste (tout validé ou sans objet).
-- Prompt Claude Design + rapport de couverture produits ; `coverage_sufficient` posé **par l'humain**.
+- `coverage_sufficient` posé **par l'humain**.
 - **Traçabilité** : chaque énoncé porte sa source `(src: cadrage | architecte | maquette | atelier)` **dans
-  l'artefact** (jamais dans le prompt sauvegardé). **Rien d'inventé.**
+  l'artefact** (la checklist, reprise ensuite dans le rapport). **Rien d'inventé.**
+
+## Mise à jour du manifeste
+Read-modify-write + revalidation JSON, **en silence** (ne pas narrer la mise à jour ; dire à l'utilisateur
+**où l'on en est** et **la suite**) :
+- `design.checklist.*[].status` → `decided` / `sans_objet` (+ `note`) au fil des décisions.
+- `design.coverage_sufficient = true` — **geste humain uniquement** (jamais auto).
+- `design.phase` reste `"init"`.
 
 ## Règles invariantes
 - **Proposer, ne pas décider.** L'arbitrage des choix d'expérience est humain (porte 1).
 - **Marquer, ne pas inventer** ; « sans objet » plutôt que forcer.
-- **Tout point se résout en session** : on ne génère pas le prompt tant qu'un item est « à traiter ».
+- **Tout point se résout en session** : on ne clôt pas l'atelier tant qu'un item est « à traiter ».
 - **Lecture seule du cadrage** : `spec-index.md` est lu, jamais créé ni écrit (artefact du cadrage).
 - **Le plugin ne génère pas le design system** (il naît dans Claude Design ; son export est committé dans
   `designer-out/maquette-de-claude-design/`).
 - **Pas de fuite de champ** ni de jargon en sortie utilisateur ; **manifeste mis à jour en silence** (voir
   `references/ux-conventions.md`).
 
-Étape suivante : lance **Claude Design** avec le prompt produit, **dépose l'export dans
-`designer-out/maquette-de-claude-design/`** (dossier ou ZIP), puis `/designer:designer-coherence` —
-valider le système généré et préparer le handoff.
+Étape suivante : `/designer:designer-prompt` — générer le prompt Claude Design et le rapport de couverture.

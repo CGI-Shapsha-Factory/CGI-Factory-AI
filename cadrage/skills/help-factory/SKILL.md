@@ -50,7 +50,9 @@ Transforme le besoin fonctionnel en cadre technique et fige la séquence numéro
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
 | `designer-init` | installe les gabarits + sème la checklist de couverture + crée `designer-out/` (`prompts/`, `maquette-de-claude-design/`) | maquette validée + architecture validée + *Décisions à impact design* |
-| `designer-atelier` | atelier de couverture (fondation / expérience / technique) → **prompt Claude Design** (corps seul, dans `designer-out/prompts/`) + rapport de couverture | **arbitrage des choix d'expérience** (humain) |
+| `designer-ingestion` | ingère les handoffs cadrage + architecte **en parallèle** et pré-remplit la checklist de couverture (mécanique, sans décision) | init fait |
+| `designer-atelier` | déroule la checklist (fondation / expérience / technique) + résout en session tout point resté à traiter | **arbitrage des choix d'expérience** (humain) |
+| `designer-prompt` | une fois la couverture suffisante → **prompt Claude Design** (corps seul, dans `designer-out/prompts/`) + rapport de couverture | couverture jugée suffisante |
 | `designer-coherence` | valide le design system (export committé dans `designer-out/maquette-de-claude-design/`) + produit le handoff design (réf. + guidelines) | **validation du système généré** (humain) |
 
 ### Phase 4 — `assembleur` (convergence → paquet SpecKit)
@@ -71,6 +73,8 @@ Pas une phase : mesure **ce que coûterait la fabrication au tarif API** (estima
 | `couts-rapport` | restitue un **tableau par session** (tokens input/output + coût en euros) ; écrit un rapport **versionné** (`rapport-couts.md`, puis `-2`, `-3`… — jamais d'écrasement) | à tout moment |
 
 **Handoff final** : l'équipe prend le paquet de `assembleur-out/` → `/assembleur:premier-alimente-linear` (un ticket Linear `Feature` par feature) → `specify init` → `/speckit.constitution` (depuis `pre-constitution.md`) → les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) → `/speckit.plan` → `/speckit.tasks` → `/assembleur:creation-task-linear` (un sous-ticket `Task` par phase) → `/speckit.implement` (état des tickets via `/assembleur:update-issue-linear`).
+
+**Fabrication en parallèle** : une branche = une feature = un développeur (numéro imposé par le registre, **jamais** d'auto-numérotation), **claim** du ticket `Feature` Linear avant de démarrer, l'avancement vit **dans Linear**, et les features **couplées** (même composant/état) se traitent **en séquence**. SpecKit offre aussi des portes de cohérence **natives optionnelles** (`/speckit.clarify`, `/speckit.analyze`). Règles complètes : `assembleur-out/attack-plan.md`.
 
 **Repère** : pour savoir où tu en es dans une phase, lance son skill de bilan/cohérence
 (`cadrage-completude`, `architecte-coherence`, `designer-coherence`, ou le rapport de cohérence de l'assembleur).

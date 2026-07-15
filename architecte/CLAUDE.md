@@ -40,7 +40,7 @@ quality_attributes, components, stack, conventions_installed, adrs, walking_skel
 feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**, coherence_validated). `conventions/` est créé à la **racine
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
 **Handoff designer** : le skill `architecte-livrables` produit `impact-design.md` (section « Décisions à
-impact design ») — la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer-atelier` ;
+impact design ») — la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer-ingestion` ;
 `check_architecture.py` exige `architecture.design_impact = true`. Les diagrammes sont aussi rendus en
 **images PNG** dans `architecte-out/diagrammes/` (via `scripts/render_diagrams.py`, mermaid-cli) ; le
 rendu est **robuste et auto-installé** (navigateur système, CA d'entreprise respectée sans désactiver

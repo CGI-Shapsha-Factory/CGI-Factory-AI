@@ -7,7 +7,7 @@ description: Amorce l'atelier design : installe les gabarits (checklist de couve
 
 Skill d'amorçage de la phase **design** : **tout premier skill** à lancer après que l'architecte a figé et
 validé le contrat technique **et** produit sa section *Décisions à impact design*. Il prépare l'**atelier de
-couverture** (zéro décision de design) ; les autres skills (`designer`, `designer-coherence`) supposent
+couverture** (zéro décision de design) ; les autres skills (`designer-ingestion`, `designer-atelier`, `designer-prompt`, `designer-coherence`) supposent
 qu'il a tourné. **Le plugin ne génère pas le design system** : il naît dans Claude Design, et son export
 est **committé dans `designer-out/maquette-de-claude-design/`**.
 
@@ -48,11 +48,11 @@ Après le setup, **vérifier l'état de l'amont** dans le cwd et le **signaler**
 - artefacts : `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
   `architecte-out/impact-design.md`.
 
-- **Amont prêt** → rien à signaler ; enchaîner sur `/designer:designer-atelier`.
+- **Amont prêt** → rien à signaler ; enchaîner sur `/designer:designer-ingestion`.
 - **Amont absent ou incomplet** → **ne pas refuser**. Confirmer que l'atelier est amorcé, puis
   **avertir en clair** ce qui manque (flag `false` + skill amont à relancer — maquette →
   `/cadrage:cadrage-retour-demonstrateur`, cohérence archi → `/architecte:architecte-coherence` — ou
-  fichier `…-out/…` absent, par chemin) et indiquer que **l'atelier** (`/designer:designer-atelier`) a
+  fichier `…-out/…` absent, par chemin) et indiquer que **l'ingestion** (`/designer:designer-ingestion`) a
   besoin de ces handoffs pour pré-remplir la checklist.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si `manifest.json`
@@ -130,4 +130,4 @@ des **gestes humains** (jamais auto).*
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/designer:designer-atelier` — dérouler la checklist de couverture (fondation, expérience, technique) et produire le prompt Claude Design.
+Étape suivante : `/designer:designer-ingestion` — ingérer les handoffs cadrage + architecte et pré-remplir la checklist de couverture.

@@ -52,7 +52,7 @@ false ».
 Les marqueurs (`[À VALIDER]`, `[À CHIFFRER]`) vivent dans la mécanique interne. À l'oral on
 dit « à traiter », « à valider », « à chiffrer ». **Le prompt Claude Design sauvegardé ne
 contient aucun `[À VALIDER]`** : tout point est résolu en session avant la génération
-(cf. `skills/designer-atelier`).
+(cf. `skills/designer-prompt`).
 
 ## 3bis. Fichiers prompt sauvegardés = corps seul, prêt à coller
 Tout prompt écrit sous `designer-out/prompts/….md` contient **uniquement le prompt prêt à coller**

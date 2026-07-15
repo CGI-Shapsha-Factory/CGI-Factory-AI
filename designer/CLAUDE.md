@@ -24,15 +24,18 @@ une entrée optionnelle).
   WCAG, ARIA) restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/designer:<skill>` + auto par le modèle.
 
-## Les 3 skills (découpage justifié)
+## Les 5 skills (découpage justifié)
 - `designer-init` — setup (zéro décision) : installe les 4 gabarits + sème la **checklist** dans le
   manifeste. **Jamais bloquant** : amorce le socle **toujours**, puis **signale** (sans refuser) si la
   maquette validée / l'architecture validée / les *Décisions à impact design* manquent.
-- `designer-atelier` — **l'atelier** : ingère les handoffs, pré-remplit la checklist, déroule les 3 blocs
-  (chaque item : `deduced`/`decided`/`sans_objet`/`open` ; affiché **validé** / **à traiter** / **sans
-  objet**), **porte humaine : arbitrage des choix d'expérience**, **résout en session tout point resté à
-  traiter**, puis produit le **prompt Claude Design** + le **rapport de couverture** quand la couverture est
-  jugée suffisante.
+- `designer-ingestion` — **l'ingestion** (mécanique, sans décision) : (re)lit les handoffs cadrage +
+  architecte **en parallèle** (fan-out `designer-reader`) et **pré-remplit** la checklist (items déduits en
+  `deduced`, montrés **validé**) ; pose `design.inputs.{cadrage_ok, design_impact_ok}`. Aucun item montré.
+- `designer-atelier` — **l'atelier** : déroule les 3 blocs (chaque item : `deduced`/`decided`/`sans_objet`/`open` ;
+  affiché **validé** / **à traiter** / **sans objet**), **porte humaine : arbitrage des choix d'expérience**,
+  **résout en session tout point resté à traiter**, puis capte la **couverture jugée suffisante** (geste humain).
+- `designer-prompt` — **la génération** : une fois la couverture suffisante, produit le **prompt Claude Design**
+  (direction visuelle concrète, anti-slop) + le **rapport de couverture**, et bascule `design.phase = "atelier"`.
 - `designer-coherence` — **après Claude Design** : **porte de cohérence stricte et adversariale**. Relit
   l'export + les 3 contrats amont **en parallèle** (fan-out `designer-reader`), puis **challenge** l'export
   (couverture inverse des parcours du cadrage, entités du glossaire affichables, cinq états d'écran,
@@ -52,7 +55,7 @@ dossiers créés par `designer-init`. Les **gabarits** vivent dans `.factory/des
 design_system_ref (chemin de l'export committé), design_validated(H), guidelines_path}`. Écriture = read-modify-write + revalidation JSON.
 
 ## Intégration (entrées) — lecture parallèle exhaustive
-`designer-atelier` lit les handoffs **en parallèle** (fan-out de sous-agents `designer-reader`,
+`designer-ingestion` lit les handoffs **en parallèle** (fan-out de sous-agents `designer-reader`,
 retours structurés complets + passe de complétude) pour pré-remplir la checklist sans rien manquer :
 - **Cadrage** : `product-brief.md` (vision/ton), `glossaire.md` (**entités/données affichées**),
   `spec-index.md` (**parcours/use cases**, lu jamais modifié), **maquette validée** (`demonstrateur`,
@@ -76,7 +79,7 @@ retours structurés complets + passe de complétude) pour pré-remplir la checkl
 `references/states-catalog.md` (états écran/composant + clavier WAI-ARIA APG), `references/question-map.md`
 (d'où chaque item se déduit C/A), `references/interactive-loop.md`, `references/ux-conventions.md`.
 Agent de lecture : `agents/designer-reader.md` (lecture complète + sortie structurée, dispatché en
-parallèle par `designer-atelier`).
+parallèle par `designer-ingestion` et `designer-coherence`).
 Garde-fou déterministe : `scripts/check_design.py` (valide la **couverture** : aucun item `open`, prompt +
 rapport + handoff présents — pas des tokens).
 
