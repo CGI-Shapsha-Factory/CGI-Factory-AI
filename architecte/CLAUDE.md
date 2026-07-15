@@ -19,7 +19,14 @@ il discipline et grave. Ce sont des **skills Markdown** ; pas de build/test.
 ## Les 3 skills (découpage justifié)
 - `architecte-init` — setup (zéro décision IA) : **d'abord (re)pose ce dont la phase a besoin** — gabarits dans `.factory/architecte/` (git-ignoré, absent d'un clone frais) + bloc `architecture` dans le **manifeste committé** `manifest.json` (créé s'il manque) ; puis `conventions/` **+ pose des hooks de l'architecte** (enforcement des tests + formatage `PostToolUse`, déterministe ; **pas de protection de branche locale** — gérée côté GitHub). **Jamais bloquant** : installe le socle **toujours** (même sans cadrage), puis **avertit** (sans refuser) si `cadrage-out/` manque. **`.gitignore` : jamais réécrit** — la première version est générée par le cadrage ; `architecte-init` **ajoute** seulement la ligne `.factory/` (et `architecte-contrat` les lignes `.env`), en le créant **uniquement s'il est absent**.
 - `architecte-contrat` — construction interactive du contrat (porte humaine : **arbitrage des ADR**).
-- `architecte-coherence` — porte humaine : **validation de cohérence** (stricte, adversariale).
+- `architecte-coherence` — **porte de cohérence stricte et adversariale, ancrée méthodes**.
+  Relit tout `architecte-out/` + le cadrage aval **en parallèle** (fan-out `architecte-reader`),
+  puis challenge le contrat en **3 lentilles** (Cohérence / Consistance / Complétude) grillées
+  sur ATAM, scénarios qualité 6-parties, revue ADR, traçabilité bidirectionnelle, walking
+  skeleton sans stub, risque-driven, arc42, AWS WAR (`references/coherence-checklist-guide.md`).
+  **Chaque point trouvé devient une décision** (question « que veux-tu faire ? » + 3 choix +
+  application en place — jamais un constat « bloquant » nu), résolu **un par un** avant le
+  passage au designer. Puis **porte humaine : validation de cohérence**.
 Mappe les deux portes humaines de la définition + un setup déterministe isolé.
 *(Le skill principal s'appelle `architecte-contrat`, pas `architecte` — pour ne pas
 porter le même nom que le plugin.)*
@@ -62,7 +69,10 @@ découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `tem
 
 ## Conventions partagées
 `references/interactive-loop.md` (boucle 3-options), `references/ux-conventions.md`
-(pas de fuite de champ, refus en clair, une ligne « Étape suivante » par skill).
+(pas de fuite de champ, refus en clair, une ligne « Étape suivante » par skill),
+`references/coherence-checklist-guide.md` (grille canonique de la porte de cohérence, ancrée
+ATAM / scénarios qualité 6-parties / revue ADR / traçabilité / walking skeleton / risque-driven
+/ arc42 / AWS WAR — lue par `architecte-coherence`).
 Agent de lecture : `agents/architecte-reader.md` (lecture complète + sortie structurée,
 dispatché en parallèle par `architecte-contrat`).
 Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exactes** de
