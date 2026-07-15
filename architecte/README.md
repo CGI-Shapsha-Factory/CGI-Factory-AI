@@ -12,12 +12,15 @@ ne contient **que des skills** (pas de commande slash). Il lit les artefacts de
 cadrage depuis `cadrage-out/` et écrit ses propres sorties dans `architecte-out/`
 (manifeste et gabarits dans `.factory/`).
 
-## Les 3 skills, dans l'ordre
+## Les 6 skills, dans l'ordre
 | # | Skill | Rôle | Porte d'entrée |
 |---|-------|------|----------------|
 | 0 | `architecte-init` | Installe les gabarits d'archi, crée `conventions/` (`.editorconfig`), étend le manifeste (bloc `architecture`) **+ pose les hooks de l'architecte** (enforcement des tests + formatage `PostToolUse` ; pas de protection de branche locale — gérée côté GitHub) | cadrage prêt |
-| 1 | `architecte-contrat` | Vérifie les réponses (depuis cadrage) → drivers & attributs de qualité → **composants** (dont le **frontend**, interactif) → **stack** (interactif : **options + compromis + arbitrage humain**, **versions exactes**) → conventions → **ADR** (arbitrage, consigné après décision) → walking skeleton + numérotation → diagrammes (rendu robuste) → risques → **fichiers d'env (optionnel)** *(l'enforcement est déjà posé par `architecte-init`)* | init faite |
-| 2 | `architecte-coherence` | **Validation de cohérence** (composants↔stack↔ADR↔diagrammes↔features) + rapport + garde-fou déterministe | contrat produit |
+| 1 | `architecte-fondations` | Vérifie les réponses (depuis cadrage, fan-out `architecte-reader`) → **drivers & attributs de qualité** (deux tableaux) → **composants** (dont le **frontend**, interactif) | init faite |
+| 2 | `architecte-stack` | **stack** (interactif : **options + compromis + arbitrage humain**, **versions exactes**) → conventions (vrais fichiers) → **ADR** (arbitrage, consigné après décision) → walking skeleton + numérotation + séquence de features | fondations faites |
+| 3 | `architecte-livrables` | diagrammes (rendu robuste) → risques → **impact-design** (handoff designer) → **fichiers d'env** → vérification de l'enforcement, puis balayage final de `architecte-out/` | stack faite |
+| 4 | `architecte-coherence` | **Validation de cohérence** (composants↔stack↔ADR↔diagrammes↔features) + rapport + garde-fou déterministe | contrat produit |
+| — | `gen-tests` | **Hors chaîne** : génère les tests manquants (pytest/jest/vitest/go) pour les sources qui n'en ont pas, **puis les exécute et itère jusqu'à la suite verte** | `/architecte:gen-tests [chemin]` |
 
 ## Entrées (depuis `cadrage`)
 `cadrage-out/` : `project-frame.md` (Q1–Q13 + *seeds qualité*), `product-brief.md`,
@@ -53,7 +56,7 @@ numérotée** (convergence des deux découpages). Chaque document porte un **fro
 ## Conventions de code (vrais fichiers)
 Catalogue dans `references/conventions/` : Python → `ruff.toml` ; TS/JS → `biome.json`
 (défaut) **ou** `eslint.config.js`+`.prettierrc` ; C → `.clang-format` ; socle
-universel → `.editorconfig`. `architecte` copie les configs des langages retenus dans
+universel → `.editorconfig`. `architecte-stack` copie les configs des langages retenus dans
 `conventions/`. **Fallback** : langage inconnu → `.editorconfig` + avertissement +
 convention générique `[À VALIDER]`.
 
@@ -65,9 +68,10 @@ cadrage : ~16/17 sont déjà répondues ; seul le **profil d'équipe** est deman
 ```
 architecte/
 ├── .claude-plugin/plugin.json
-├── skills/{architecte-init, architecte-contrat, architecte-coherence}/SKILL.md
+├── agents/      # architecte-reader (lecteur parallèle du cadrage / d'architecte-out)
+├── skills/{architecte-init, architecte-fondations, architecte-stack, architecte-livrables, architecte-coherence, gen-tests}/SKILL.md
 ├── templates/   # facteurs-et-qualite, components, stack-technique, standards, diagrams, adr, risks, impact-design
-├── references/  # interactive-loop, ux-conventions, question-map, conventions/, env-templates/, enforcement/ (catalogues)
-├── scripts/     # check_architecture · render_diagrams · provision_render · bump_doc_version
+├── references/  # interactive-loop, ux-conventions, question-map, coherence-checklist-guide, conventions/, env-templates/, enforcement/ (catalogues)
+├── scripts/     # check_architecture · render_diagrams · provision_render · install_formatter · bump_doc_version
 └── README.md
 ```

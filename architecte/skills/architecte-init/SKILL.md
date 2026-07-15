@@ -8,8 +8,8 @@ description: Amorce la phase architecture : crée le dossier conventions, instal
 Skill d'amorçage de la phase **architecture** : à lancer au démarrage de la phase
 technique (idéalement après le cadrage — mais le socle technique s'installe **même si le
 cadrage n'est pas encore là**). Il prépare le terrain sans prendre aucune décision
-d'architecture (zéro choix IA). Les autres skills (`architecte`,
-`architecte-coherence`) supposent qu'il a tourné.
+d'architecture (zéro choix IA). Les autres skills (`architecte-fondations`,
+`architecte-stack`, `architecte-livrables`, `architecte-coherence`) supposent qu'il a tourné.
 
 ## Objectif
 Rendre un projet **prêt pour la phase technique** : installer les gabarits
@@ -48,14 +48,14 @@ Après le setup, **vérifier l'état du cadrage** dans le cwd (présence, par ch
 `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`, et les
 briefs `cadrage-out/features-fonctionnels-brief/*.md`. Puis :
 
-- **Cadrage présent et prêt** → rien à signaler ; enchaîner sur `/architecte:architecte-contrat`.
+- **Cadrage présent et prêt** → rien à signaler ; enchaîner sur `/architecte:architecte-fondations`.
 - **Cadrage absent ou incomplet** → **ne pas refuser**. Confirmer que le socle technique est posé,
   puis **avertir en clair** ce qui manque (par chemin) et la marche à suivre :
   > « Socle technique installé (gabarits + hooks + conventions). En revanche, le **cadrage n'est pas
   > encore là** dans ce dossier : `cadrage-out/…` manquant(s). La **construction** du contrat technique
-  > (`/architecte:architecte-contrat`) a besoin du cadrage. Lance la phase de cadrage
+  > (`/architecte:architecte-fondations`) a besoin du cadrage. Lance la phase de cadrage
   > (`/cadrage:cadrage-init` → … → `/cadrage:cadrage-completude`), puis reviens à
-  > `/architecte:architecte-contrat`. »
+  > `/architecte:architecte-fondations`. »
 
 But : **poser tout ce qui est installable maintenant**, jamais bloquer sur le cadrage, et laisser
 l'utilisateur décider de la suite.
@@ -76,7 +76,7 @@ l'utilisateur décider de la suite.
 
    **Les autres configs de conventions par langage** (biome/eslint pour TS-JS, clang pour C…) **ne
    sont PAS installées ici** : la stack n'est connue qu'après le workflow stack — c'est
-   `architecte-contrat` qui les déposera (voir son étape conventions).
+   `architecte-stack` qui les déposera (voir son étape conventions).
 3. **Créer `architecte-out/decisions/`** (dossier des ADR, vide).
 4. **Manifeste** `manifest.json` **du dossier courant** :
    - **S'il existe** → ajouter le bloc `architecture` ci-dessous s'il est absent (read-modify-write
@@ -190,4 +190,4 @@ redémarrage est prioritaire (sans lui, l'enforcement ne tourne pas).
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/architecte:architecte-contrat` — construire le contrat technique (drivers, composants, stack, ADR, walking skeleton, diagrammes).
+Étape suivante : `/architecte:architecte-fondations` — poser les fondations du contrat technique (lire le cadrage, drivers & attributs de qualité, composants).

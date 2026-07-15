@@ -16,7 +16,7 @@ AWS Well-Architected) : voir `references/coherence-checklist-guide.md`.
 
 ## Pré-requis (vérification silencieuse)
 Le contrat technique a été produit (le bloc `architecture` est rempli). Vérifier sans
-l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-contrat`.
+l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-fondations`.
 
 ## Étape 0 — Relecture parallèle exhaustive (ne rien manquer)
 **Toujours (re)lire depuis les fichiers committés**, même si tu crois les avoir déjà lus dans
@@ -138,4 +138,4 @@ par feature, une fois le contrat de design figé.)
 **et** `architecte-out/` — la phase suivante lit le **repo committé**, pas ta session ni ta machine. Un
 manifeste non re-committé après la validation ferait échouer `designer-init` (flag à `false`) sur un autre poste.
 
-Étape suivante : `/designer:designer-init` — démarrer le contrat de design (la phase design exige le cadrage ET l'architecture validés). Ou corriger d'abord les points signalés via `/architecte:architecte-contrat`.
+Étape suivante : `/designer:designer-init` — démarrer le contrat de design (la phase design exige le cadrage ET l'architecture validés). Ou corriger d'abord les points signalés en relançant le skill concerné (`/architecte:architecte-fondations`, `/architecte:architecte-stack` ou `/architecte:architecte-livrables`).

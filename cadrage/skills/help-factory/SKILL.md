@@ -38,8 +38,11 @@ Transforme le besoin fonctionnel en cadre technique et fige la séquence numéro
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
 | `architecte-init` | crée `conventions/` + installe les gabarits + bloc manifeste | cadrage prêt |
-| `architecte-contrat` | construit le contrat technique : drivers & attributs de qualité, composants, stack, ADR, walking skeleton, diagrammes (+ images PNG), *Décisions à impact design* | **arbitrage des ADR** (humain) |
+| `architecte-fondations` | lit le cadrage → drivers & attributs de qualité → composants (dont le frontend) | init faite |
+| `architecte-stack` | stack (options + compromis) → conventions → **ADR** → walking skeleton + séquence de features | **arbitrage des ADR** (humain) |
+| `architecte-livrables` | diagrammes (+ images PNG) → risques → *Décisions à impact design* → fichiers d'env → vérif. enforcement | stack faite |
 | `architecte-coherence` | valide la cohérence du contrat technique (stricte, interactive) | **validation de cohérence** (humain) |
+| `gen-tests` | *(hors chaîne)* génère les tests manquants puis les exécute jusqu'à la suite verte | `/architecte:gen-tests [chemin]` |
 
 ### Phase 3 — `designer` (contrat de design)
 **Atelier de couverture** : ne génère pas le design system — il garantit que rien n'est oublié et prépare Claude Design.
