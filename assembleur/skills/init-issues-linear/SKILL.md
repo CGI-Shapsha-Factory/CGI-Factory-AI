@@ -1,0 +1,109 @@
+---
+name: init-issues-linear
+description: Transforme les features approuvées en tickets Linear (un par feature, liste de contrôle pour les grosses), avec confirmation ticket par ticket, via le MCP linear-prism — juste avant install-speckit.
+---
+
+# init-issues-linear
+
+**Pont vers Linear.** À lancer **après `assembleur-convergence`** (le paquet est produit, la
+cohérence validée, les features **déjà approuvées**) et **avant `install-speckit`**. Ce skill lit
+la liste des features, la présente en **tableau de revue**, puis — **ticket par ticket, avec
+confirmation** — crée **un ticket Linear par feature** pour que l'équipe pilote la fabrication
+SpecKit feature par feature.
+
+## Objectif
+Créer, dans Linear, **un ticket par feature approuvée** : un **titre**, une **description d'une
+ligne**, et — pour une feature **volumineuse** — une **liste de contrôle** (cases à cocher dans l'issue) pour suivre
+l'avancement. Chaque ticket est **confirmé avant création**. Idempotent : on ne recrée jamais un
+ticket déjà posé.
+
+## Frontière (exceptions assumées)
+L'assembleur ne produit que son paquet (`assembleur-out/`) et **n'écrit aucun fichier que SpecKit
+génère** dans le repo cible. Ce skill a **deux écritures explicitement bornées** :
+- **Linear** — la création des tickets, via le **MCP du plugin `linear-prism`** ; Linear est un
+  **système externe** (pas le repo cible) ;
+- le **bloc `linear` du manifeste** (`.factory/manifest.json`, à la racine du projet) — le manifeste
+  est le **contrat machine partagé** de la Factory ; y consigner `team`/`project`/`issues` est
+  **assumé**, ce n'est pas un artefact SpecKit.
+
+Voir `references/linear-guide.md`.
+
+## Pré-requis (vérification silencieuse)
+Lire `.factory/manifest.json` **sans l'annoncer** :
+- la convergence a tourné et la **cohérence est validée**, et le paquet est présent
+  (`assembleur-out/feature-map.md` + au moins une graine `assembleur-out/features/*.spec-seed.md`) ;
+- sinon → le dire en clair et orienter vers `/assembleur:assembleur-convergence` :
+  > « Les tickets ne peuvent pas être créés : il faut d'abord la convergence terminée et la
+  > cohérence validée (le paquet de features approuvées). »
+
+Le registre des features est `architecture.feature_sequence` (`{id, ucs, name}` + le
+`walking_skeleton`). **Ne rien inventer** : on ne crée de ticket que pour les features approuvées.
+
+## Étape 1 — Détecter Linear (MCP linear-prism)
+Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-guide.md`).
+- Disponible → continuer.
+- Indisponible → **ne pas bloquer** : expliquer en clair (installer `linear-prism` + `/mcp`), et
+  **proposer le mode brouillon** — préparer les tickets dans `assembleur-out/linear-drafts.md`
+  (titre + description + checklist en cases Markdown) à créer plus tard.
+
+## Étape 2 — Charger et présenter les features (tableau de revue)
+Lire `architecture.feature_sequence`, `assembleur-out/feature-map.md` (ordre, couplage, **Dépend
+de**, parallélisable) et chaque graine `assembleur-out/features/<id>-*.spec-seed.md` (User Stories,
+`FR-xxx`, `SC-xxx`, cas limites). Afficher **un tableau de revue unique** (c'est l'exception au
+« pas de tableau » — une revue, comme `feature-map.md`) :
+
+| Ordre | Feature | Use cases | Walking skeleton | Dépend de | Titre proposé | Description (1 ligne) | Volumineuse ? |
+|-------|---------|-----------|------------------|-----------|---------------|-----------------------|---------------|
+
+Puis **demander (oui/non) : « Créer un ticket par feature ? »**
+- **Oui** → passer à l'Étape 3.
+- **Non** → **boucle d'ajustement** (un point à la fois, cf. `references/interactive-loop.md` :
+  recommandée + alternative + « saisir ») : quelles features **fusionner / renommer / écarter /
+  réordonner** ? Refléter chaque décision (consigner `status: "merged"`/`"skipped"` pour celles
+  écartées), **réafficher** le tableau, et **confirmer l'ensemble** avant de créer.
+
+## Étape 3 — Cible Linear (une seule fois)
+Choisir l'**équipe** (`list_teams` → recommandée + alternative + saisir) et, optionnellement, le
+**projet** (`list_projects`), l'**état initial** (Todo/unstarted). Consigner `team`/`project` dans
+le manifeste **en silence**. Détails : `references/linear-guide.md`.
+
+## Étape 4 — Boucle par ticket (un à la fois, confirmation obligatoire)
+Pour **chaque** feature retenue, **dans l'ordre** :
+1. **Préparer** : un **titre** (intitulé métier, ex. `001 — Recherche Q&A sourcée`), une
+   **description d'une ligne** (parcours principal / rôle de la feature, depuis la graine), et — si
+   la feature est **volumineuse** — une **liste de contrôle** = cases à cocher (`- [ ] …`) à
+   inclure dans la **description** de l'issue (dérivées des `FR-xxx` / scénarios d'acceptation /
+   `SC-xxx`). **Volumineuse** = bundle **> 1 use case** (`ucs`), **ou** ≥ 4 exigences
+   fonctionnelles, **ou** ≥ 2 user stories dans la graine.
+2. **Confirmer** (recommandée + ajuster + saisir) : le **titre**, la **description d'une ligne**,
+   et **la liste de contrôle (seulement si volumineuse)**. **Ne rien créer** tant que ce
+   n'est pas approuvé ; « ajuster »/« saisir » corrige en place.
+3. **Créer** (cf. `references/linear-guide.md`) : `save_issue({team, title, description: <1 ligne
+   + '\n\n**Checklist :**\n- [ ] item…'>, labels, state})` → récupérer `identifier`/`url`. La
+   liste de contrôle est dans la `description` (Markdown `- [ ] item` — Linear les rend
+   interactifs, pas de sous-ticket). Poser les **relations bloquantes** (`blockedBy`) d'après
+   « Dépend de ». Label `feature:<id>` (+ `walking-skeleton` si concerné) — **jamais `MVP`**.
+4. **Consigner** dans `linear.issues[]` (en silence), puis **passer à la feature suivante**.
+   **Répéter jusqu'à ce que toutes soient traitées.**
+
+**Idempotence** : une feature déjà consignée avec un `issue_id` n'est **pas recréée**.
+
+## Vérification avant de conclure
+- Chaque feature approuvée a **son ticket** (ou une décision `skipped`/`merged`, ou un brouillon si
+  MCP absent) ; les grosses features ont leur **liste de contrôle** dans la description ; les **dépendances** sont posées.
+- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/.factory/manifest.json`.
+- Le bloc `linear` du manifeste **reparse sans erreur** ; restitution **en prose** (« j'ai créé N
+  tickets, un par feature »), manifeste mis à jour **en silence**.
+
+## Règles invariantes
+- **Écritures bornées.** Seulement dans Linear (externe) + le bloc `linear` du manifeste
+  (`.factory/manifest.json`, contrat machine partagé de la Factory) ; **aucun fichier que SpecKit génère**.
+- **Confirmer avant de créer.** Chaque ticket est validé par l'humain avant création (action
+  externe, difficile à défaire).
+- **Un point à la fois.** Questions et confirmations en prose, une par une (cf.
+  `interactive-loop.md`) ; le seul tableau autorisé est le tableau de revue de l'Étape 2.
+- **Idempotent.** On ne crée jamais deux fois le même ticket.
+- **Rien d'inventé.** Seulement les features approuvées par la convergence.
+- **Manifeste en silence.** Aucun nom de clé à l'écran ; restitution en prose.
+
+Étape suivante : `/assembleur:install-speckit` — poser SpecKit dans le repo, puis fabriquer feature par feature (chaque ticket Linear pilote un cycle `/speckit.specify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`).
