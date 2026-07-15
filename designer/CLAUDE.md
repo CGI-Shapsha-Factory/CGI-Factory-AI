@@ -33,9 +33,13 @@ une entrée optionnelle).
   objet**), **porte humaine : arbitrage des choix d'expérience**, **résout en session tout point resté à
   traiter**, puis produit le **prompt Claude Design** + le **rapport de couverture** quand la couverture est
   jugée suffisante.
-- `designer-coherence` — **après Claude Design** : **porte humaine : validation du système généré** ;
-  vérifie la couverture (aucun item `open`) ; produit le **handoff design** (réf. du système synchronisé +
-  guidelines : états, patterns d'erreur, socle a11y). → assembleur.
+- `designer-coherence` — **après Claude Design** : **porte de cohérence stricte et adversariale**. Relit
+  l'export + les 3 contrats amont **en parallèle** (fan-out `designer-reader`), puis **challenge** l'export
+  (couverture inverse des parcours du cadrage, entités du glossaire affichables, cinq états d'écran,
+  impact-design honoré, a11y réellement tenue, anti-slop vs démonstrateur, nommage ubiquitaire — pas une
+  checklist de présence). **Chaque point trouvé est remonté puis résolu un par un** (corrigé en place dans
+  guidelines/couverture, ou **renvoyé à Claude Design** si trou structurel). Enfin **porte humaine :
+  validation du système généré**, puis **handoff design**. → assembleur.
 
 ## Workspace & manifeste
 Lit les handoffs cadrage (`cadrage-out/`) et architecte (`architecte-out/`). Écrit tout dans
