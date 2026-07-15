@@ -56,9 +56,9 @@ Après le setup, **vérifier l'état de l'amont** dans le cwd et le **signaler**
   besoin de ces handoffs pour pré-remplir la checklist.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si `manifest.json`
-n'existe pas encore, **créer d'abord le dossier `cadrage-out/` s'il est absent** (même sans cadrage), puis y
-**créer** le manifeste comme objet JSON valide `{ "design": { … } }` (les autres phases le
-complètent par fusion, sans écraser le bloc `design`).
+n'existe pas encore, le **créer à la racine du projet** (le cwd — **jamais** dans `cadrage-out/`) comme
+objet JSON valide `{ "design": { … } }` (les autres phases le complètent par fusion, sans écraser le bloc
+`design`).
 
 ## Procédure
 1. **Installer les gabarits** dans `.factory/designer/` (copier depuis le plugin `templates/`) :

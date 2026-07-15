@@ -84,12 +84,10 @@ qui manque, ce qui se contredit, ce qui a été perdu en route. Au minimum :
 10. **Passe « ce qui manque / ce qui peut casser »** : une **lecture critique finale**, pas une checklist de
     présence.
 
-Garde-fou déterministe (**obligatoire, jamais sauté**) :
-`python "${CLAUDE_PLUGIN_ROOT}/scripts/check_design.py" <racine>/manifest.json` — il échoue notamment s'il
-reste un item `open`, un statut invalide, ou si prompt / rapport / handoff manquent. S'il est **introuvable**
-(chemin plugin non résolu) ou renvoie **exit 1**, **s'arrêter** et **dire en clair** ce qui manque —
-**jamais** de vérification « à la main » silencieuse. *(Le script valide la couverture ; les contrôles 2–10
-ci-dessus sont le travail adversarial que le script ne peut pas faire.)*
+*(Le garde-fou déterministe `check_design.py` n'est **pas** lancé ici : il vérifie aussi le **handoff**
+(`guidelines_path`), produit seulement à l'étape 4. Il constitue la **porte finale**, lancée à l'étape 4
+une fois le handoff écrit — voir §4. Les contrôles 1–10 ci-dessus sont le travail adversarial que le script
+ne peut pas faire.)*
 
 ## Étape 3 — Résolution interactive de chaque point (obligatoire avant d'avancer)
 Tout point relevé — **bloquant ou non** — n'est **pas seulement affiché**. **Énumérer TOUT ce qui a été
@@ -108,17 +106,23 @@ trouvé**, puis les traiter **un par un**, jamais un seul ni une liste en bloc :
 
 **On ne passe pas à la validation humaine ni à l'assembleur tant qu'un point ou un marqueur n'est pas résolu.**
 
-## Étape 4 — Porte humaine & handoff
-1. **Porte humaine : validation du système généré** (porte 2, jamais automatisée). Une fois les points
-   résolus, le designer **valide** le design system (cohérent avec la couverture, la direction stylistique et
-   la stack). Capter la **source** dans `design.design_system_ref` = chemin
-   `designer-out/maquette-de-claude-design/`. Le skill ne passe **jamais** `design.design_validated` à vrai
-   de lui-même ; il le **propose**, l'humain confirme.
-2. **Finaliser le handoff design** → `designer-out/design-guidelines.md` (gabarit
+## Étape 4 — Handoff, garde-fou déterministe & porte humaine
+1. **Finaliser le handoff design** → `designer-out/design-guidelines.md` (gabarit
    `.factory/designer/design-guidelines.md`) : **source du design system validé** = l'export committé,
    **règles d'états** (par écran), **patterns d'erreur** (validation à la sortie du champ, format API →
    messages par champ), **socle d'accessibilité** (niveau visé), et la règle **tout écran dérive de l'export
    committé, aucune valeur de style en dur**. MAJ `design.guidelines_path`.
+2. **Garde-fou déterministe (porte finale, obligatoire, jamais sautée)** :
+   `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_design.py" <racine>/manifest.json`. À ce stade prompt,
+   rapport **et** handoff existent : il échoue s'il reste un item `open`, un statut invalide, ou si
+   prompt / rapport / handoff manquent. S'il est **introuvable** (chemin plugin non résolu) ou renvoie
+   **exit 1**, **s'arrêter** et **dire en clair** ce qui manque — **jamais** de vérification « à la main »
+   silencieuse, **jamais** sceller sur un exit 1.
+3. **Porte humaine : validation du système généré** (porte 2, jamais automatisée). Une fois le garde-fou
+   **vert** et les points résolus, le designer **valide** le design system (cohérent avec la couverture, la
+   direction stylistique et la stack). Capter la **source** dans `design.design_system_ref` = chemin
+   `designer-out/maquette-de-claude-design/`. Le skill ne passe **jamais** `design.design_validated` à vrai
+   de lui-même ; il le **propose**, l'humain confirme.
 
 ## Sortie
 - **Rapport de couverture** à jour (statut par item, dans l'artefact) + points corrigés en place.
