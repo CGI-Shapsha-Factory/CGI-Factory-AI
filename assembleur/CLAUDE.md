@@ -22,7 +22,7 @@ projet** (déploiement, pour qu'ils soient actifs sans copie manuelle).
   SpecKit) restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/assembleur:<skill>` + auto par le modèle.
 
-## Les 7 skills
+## Les 8 skills
 - `assembleur-init` — setup (zéro décision) : installe les gabarits, crée `assembleur-out/`, étend le
   manifeste (bloc `assembly` allégé). **Jamais bloquant** : pose le terrain de convergence **toujours**,
   puis **signale** (sans refuser) si l'un des 3 dossiers de sortie amont (`cadrage-out/`,
@@ -80,6 +80,15 @@ projet** (déploiement, pour qu'ils soient actifs sans copie manuelle).
   Linear** (MCP côté skill) —, bloc manifeste `speckit`). **Exceptions bornées** à « n'écrit jamais dans le repo cible » : `specify init` génère
   `.specify/` (jamais ce skill à la main) ; le registre `extensions.yml` et le bloc manifeste sont de la
   config Factory.
+- `revue-gemini` — **revue de code indépendante (API Gemini) avant PR/merge** : contre l'**exces de
+  confiance de Claude** par un relecteur **externe non biaisé**. Calcule le **diff de branche**
+  (`git diff <base>...HEAD`, temporaire git-ignoré), **fan-out 6 sous-agents `gemini-reviewer` en
+  parallèle** (un par dimension : `security`, `correctness`, `performance`, `architecture`, `quality`,
+  `testing` — chacun lance `scripts/gemini_review.py` sur sa dimension), puis **agrège** (dedup, conflits
+  conservés, classement par sévérité) et **restitue un tableau en session** (aucun fichier de sortie).
+  **Consultatif** (l'humain tranche) ; **jamais bloquant** sur cle/quota/reseau. **Exception bornée** à
+  « pas d'API externe » (Gemini est externe) ; la cle vit dans `.env` (git-ignoré, convention architecte).
+  Agent : `agents/gemini-reviewer.md`. La **revue est faite par Gemini, jamais par Claude**.
 
 ## Le paquet `assembleur-out/` + déploiement `.claude/`
 ```
