@@ -27,13 +27,14 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 - Le **workspace + manifeste** = créés **dans le projet client** par `cadrage-init`.
   Le plugin lit/écrit ces fichiers ; il ne les contient pas.
 
-## Les skills (9 du pipeline + `help-factory`)
+## Les skills (9 du pipeline + `cadrage-ideation` facultatif + `help-factory`)
 `help-factory` (hors pipeline) est l'**aide unique** de la Factory : elle affiche, de façon **statique** (rendu immédiat), la **carte des 4 plugins** (cadrage -> architecte -> designer -> assembleur -> SpecKit) avec **un tableau par plugin** (rôle de chaque skill, ordre, portes humaines). C'est la seule aide - il n'y a plus de `help-cadrage` (son détail est absorbé dans le tableau cadrage).
 
 | # | skill | rôle | porte |
 |---|-------|------|-------|
 | 0 | `cadrage-init` | crée `.factory/` (gabarits, git-ignoré) + `cadrage-out/` (docs) + le **manifeste committé** `manifest.json` **à la racine** (le nom du projet est demandé par `cadrage-extraction`) | aucune |
-| 1 | `cadrage-extraction` | matière brute (fichier/multi/dossier ; .txt/.md/.pdf/.docx) -> `capture-brute.md` (contenu, **sans horodatage ni src**) + **passe découverte** (13 questions, interactive) -> `project-frame.md` | manifeste existe + 1 source |
+| 0bis | `cadrage-ideation` | **facultatif** - atelier d'idéation facilité (posture facilitateur : les idées viennent de l'utilisateur ; catalogue de techniques `references/techniques-ideation.md`) ; le compte rendu va dans `cadrage-out/source-contexte/ideation-<JJ-MM>.md`, ingéré ensuite comme source par `cadrage-extraction` ; n'écrit pas le manifeste, ne conditionne aucune porte | manifeste existe |
+| 1 | `cadrage-extraction` | matière brute (fichier/multi/dossier ; .txt/.md/.pdf/.docx) -> `capture-brute.md` (contenu, **sans horodatage ni src**) + **passe découverte** (19 questions, interactive) -> `project-frame.md` | manifeste existe + 1 source |
 | 2 | `cadrage-vision` | capture -> `product-brief.md` (quoi/pourquoi, sans techno) | capture existe |
 | 3 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
 | 4 | `cadrage-decoupage` | découpage **fonctionnel** (use cases par valeur, **sans MVP**) + couplage (hypothèse) ; **table affichée en chat** ; arbitrage **en session, écrit en place** | `vision_complete` |
@@ -42,7 +43,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | 7 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
 | 8 | `cadrage-completude` | **porte de complétude & cohérence ET point de résolution unique** : relit `cadrage-out/` **en parallèle** (fan-out `cadrage-reader`), **challenge** le pack fonctionnel en **4 lentilles** (Complétude / Cohérence / Qualité des exigences / Validation-prêt-architecte - ancré DoR, INVEST, ISO 29148, BABOK, DDD, MoSCoW, traçabilité ; `references/completude-checklist-guide.md`), rend le verdict Definition of Ready (prose, **jamais de tableau**), et **résout chaque écart comme une décision** (jamais un constat nu : "que veux-tu faire ?" + recommandée/alternative/saisie + application en place), puis relais vers l'architecte | aucune (rejouable) |
 
-Flux : `cadrage-init` -> `extraction` -> (`vision` ∥ `glossaire`) -> `decoupage` ->
+Flux : `cadrage-init` -> [`cadrage-ideation` facultatif si la matière est mince] -> `extraction` -> (`vision` ∥ `glossaire`) -> `decoupage` ->
 **boucle démonstrateur** [`demonstrateur-brief` ⟳ `retour-demonstrateur` -> `completude`]
 jusqu'à convergence -> **revue de couplage humaine** -> `briefs` -> `completude` -> **`/architecte:architecte-init`**.
 `completude` est rejouable à tout moment (mesure le verdict **et** résout les points ouverts). Aide : `/cadrage:help-factory`.
@@ -70,7 +71,7 @@ Créé par `cadrage-init` uniquement. Blocs : `project`/dates ; `phase` ;
 spec_index{arbitrated}, briefs[]) ;
 `demonstrateur{client_validated, iterations[]}` ; `validation_points[]` (boucle démonstrateur
 uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
-`discovery[]` (13 entrées Q1-Q13, statut answered|pending|deferred|na, **sans champ `source`**) + `discovery_complete` ;
+`discovery[]` (19 entrées Q1-Q19, statut answered|pending|deferred|na, **sans champ `source`**) + `discovery_complete` ;
 `definition_of_ready{}` (6 booléens) + `cadrage_complete`. Écriture = read-modify-write
 + revalidation JSON.
 
@@ -103,7 +104,10 @@ uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
 ## Conventions d'interaction (voir `references/`)
 - **Boucle interactive** (`references/interactive-loop.md`) : une question à la fois -
   réponse recommandée puis l'utilisateur accepte ou saisit la sienne (**pas de menu
-  numéroté**). Un point non tranché est **omis**, jamais marqué.
+  numéroté**). Un point non tranché est **omis**, jamais marqué. **Relance unique sur
+  réponse mince** : une réponse vague sur un point structurant est relancée **une seule
+  fois** avec une question plus précise (coacher, pas quizzer) ; si l'utilisateur maintient,
+  on écrit tel quel - jamais de deuxième relance, jamais sur le légal (Q8).
 - **Pas de fuite de champ** (`references/ux-conventions.md`) : aucun nom d'attribut /
   clé JSON en sortie utilisateur ni dans les refus (table de correspondance fournie).
   Refus en langage naturel. Chaque skill finit par **une ligne "Étape suivante"**.
@@ -112,8 +116,13 @@ uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
   porte `cadrage-completude`, ancrée DoR / INVEST / ISO-IEEE 29148 / BABOK / DDD / MoSCoW /
   traçabilité. Agent de lecture : `agents/cadrage-reader.md` (lecture complète + sortie structurée
   + signalement d'anomalies, dispatché en parallèle par `cadrage-completude`).
+- **Porte de régénération** (`references/regeneration-gate.md`) : à la **relance** d'un skill de
+  génération dont les sorties existent déjà, proposer le choix **Repartir de zéro** (supprimer +
+  regénérer) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, regénérer
+  au nom canonique) ; jamais d'écrasement sans choix explicite. Distinct du réjeu incrémental (fusion
+  en place des corrections amont).
 
-## Découverte (13 questions)
+## Découverte (19 questions)
 `references/discovery-questions.md` (lu par `cadrage-extraction`) ; statuts dans le
 bloc `discovery` du manifeste ; garde-fou déterministe `scripts/check_discovery.py`.
 Une question tranchée = `answered` (sans provenance écrite) ; laissée de côté =

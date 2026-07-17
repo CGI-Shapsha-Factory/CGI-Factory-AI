@@ -18,7 +18,11 @@ dans la matière.
 ## Entrée
 
 `cadrage-out/capture-brute.md` et `cadrage-out/project-frame.md`
-(pour reprendre Q1 qui utilise, Q3 rôles, Q9 type de projet). Le gabarit de sortie
+(pour reprendre Q1 qui utilise, Q3 rôles, Q9 type de projet, ainsi que les réponses
+produit de la découverte : Q14 problème et coût du statu quo, Q15 pourquoi maintenant,
+Q17 signaux de succès - reprises comme **suggestions pré-remplies** des sections
+Problème, Objectif business et Critères de succès, à confirmer en session, jamais
+reposées à froid). Le gabarit de sortie
 est `.factory/cadrage/product-brief.md` (copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)
@@ -27,9 +31,16 @@ est `.factory/cadrage/product-brief.md` (copie installée par cadrage-init).
 Sinon, l'indiquer en clair et proposer de faire l'extraction d'abord - sans
 afficher de "porte".
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
+skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
+`version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
+au nom canonique en `version: N+1`) et **attendre** le choix. Premier passage (rien n'existe) :
+générer directement, sans porte.
+
 ## Procédure
 
-1. **Lire** la capture brute, le `project-frame.md` (Q1/Q3/Q9) et le manifeste.
+1. **Lire** la capture brute, le `project-frame.md` (Q1/Q3/Q9 + Q14/Q15/Q17) et le manifeste.
 2. **Remplir le product brief** section par section, en n'utilisant **que** la
    matière de la capture. **Aucune provenance écrite** (pas de `(src:)`, pas
    d'horodatage) ; un élément non soutenu par la matière est **omis** ou **demandé
@@ -71,6 +82,11 @@ vide. Un essentiel manquant se **demande en session** ; tant qu'il manque, la
 vision n'est pas complète.
 
 ## Réjeu incrémental (idempotence)
+
+> **Distinction avec la porte de régénération.** Ce réjeu **incrémental** (fusion ciblée de
+> corrections amont, en place) est un flux distinct de la **relance complète** : il n'ouvre **pas**
+> la porte de régénération. Celle-ci ne s'ouvre que pour une **régénération intégrale** du document
+> demandée par l'utilisateur (cf. `references/regeneration-gate.md`).
 
 Rejoué sur des entrées mises à jour - typiquement une correction issue d'un
 retour de démonstrateur (`cadrage-retour-demonstrateur`) - ce skill **met à

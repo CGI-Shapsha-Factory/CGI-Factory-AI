@@ -15,6 +15,14 @@ inventée : on demande, on ne comble pas.**
   étiquetée "suggestion". L'utilisateur **accepte** cette suggestion **ou** donne directement la
   sienne. **Ne pas afficher de menu numéroté d'options** (pas de "1. ... 2. ... 3. Saisir ma réponse") :
   l'utilisateur sait qu'il peut répondre librement.
+- **Relance unique sur réponse mince.** Quand la réponse à un point structurant reste vague
+  ("ça doit être rapide", "des utilisateurs classiques"), **coacher, pas quizzer** : reformuler
+  concrètement ce que la réponse laisse ouvert et relancer **une seule fois** avec une question
+  plus précise ("rapide pour qui, sur quelle action ?"). Si l'utilisateur confirme ou maintient
+  sa réponse telle quelle, **l'accepter et l'écrire telle quelle** - jamais de deuxième relance,
+  jamais de relance sur un point que l'utilisateur a choisi de laisser de côté, et **jamais**
+  sur la conformité / le légal (règle Q8). Calibrer l'intensité sur l'enjeu du projet : creuser
+  davantage un lancement critique, rester léger sur un outil interne modeste.
 - **Si l'utilisateur ne tranche pas un point** (il préfère le laisser de côté) : **on n'écrit rien**
   pour ce point. Aucun marqueur, aucune liste de points ouverts persistée - le point est simplement
   omis de l'artefact. On peut le lui rappeler oralement en fin de boucle, jamais l'écrire dans un fichier.

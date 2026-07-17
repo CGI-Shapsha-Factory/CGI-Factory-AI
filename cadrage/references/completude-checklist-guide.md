@@ -31,7 +31,7 @@ retranché). Contrat *fonctionnel* : aucune technologie. Aucune notion de MVP.
 Calculés depuis l'état réel des artefacts + manifeste (ET strict - un seul non atteint = verdict
 rouge) : **vision complète** (product-brief : OUT non vide, critères de succès présents) ·
 **glossaire validé** (en bloc) · **découpage arbitré** (revue de couplage tranchée) · **tous les
-briefs complets** · **aucun trou de découverte bloquant** (13 questions - Q8 légal/RGPD optionnelle
+briefs complets** · **aucun trou de découverte bloquant** (19 questions - Q8 légal/RGPD optionnelle
 si laissée à l'équipe) · **démonstrateur convergé** (client a validé la maquette). *(Ancrage :
 Definition of Ready - Scrum ; Atlassian.)* Ces six restent la **condition nécessaire** ; les
 lentilles ci-dessous sont la **condition de qualité** qui les rend honnêtes.
@@ -85,6 +85,14 @@ convergé que lorsque le client a validé la maquette.
 l'ordre est cohérent avec la `coupling-map`. Nommage aligné entre product-brief, spec-index, briefs
 et glossaire.
 
+**B6. Thèse produit (pas un catalogue).** Le product-brief se lit comme une **thèse cohérente**
+(problème -> différenciation -> succès) : on comprend **pourquoi ce produit, pour qui, et à quoi on
+verra qu'il marche** - pas comme un backlog avec des titres de sections. Signal d'alerte : une
+vision interchangeable avec n'importe quel autre projet. De même, chaque **rôle / profil
+utilisateur** cité doit **peser sur au moins une décision** du pack (une story, un périmètre, un
+critère) ; un profil listé qui ne pilote rien est du décor - à retirer ou à raccorder.
+*(Ancrage : cohérence stratégique et anti "persona theater" - revues qualité de PRD.)*
+
 ---
 
 ## Lentille C : Qualité des exigences (bien formées)
@@ -106,6 +114,15 @@ de la techno) ou explicitement "à préciser à l'architecture". Pas d'objectif 
 lecture), **singulière** (pas de "et" cachant deux exigences), **vérifiable** (un test/inspection
 existe), au **bon niveau** (fonctionnel, aucune solution technique prématurée). *(Ancrage :
 ISO/IEC/IEEE 29148 ; BABOK §7.2 - Verify Requirements.)*
+
+**C5. Pas de théâtre d'exigence.** Chasser les exigences **de façade** qui occupent la place d'une
+vraie exigence : un attribut non-fonctionnel **nu et générique** ("scalable", "sécurisé",
+"performant", "fiable") sans seed capté ni orientation tranchée en découverte est du **théâtre
+NFR** - le raccorder à une réponse de découverte, le chiffrer, ou le retirer. Idem pour le
+**"fini" flou** dans les critères d'acceptation ("gère correctement", "de façon conviviale",
+"raisonnable") : si un développeur ne peut pas dire **objectivement** quand c'est fait, le critère
+est reformulé en session. *(Ancrage : revues qualité de PRD - substance vs théâtre ; complète C2
+qui bannit les mots vagues.)*
 
 ---
 

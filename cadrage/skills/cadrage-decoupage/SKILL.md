@@ -39,6 +39,13 @@ La vision produit est disponible (`product_brief` validé sur le plan direction)
 Sinon, le dire en clair et proposer de faire la vision d'abord - sans afficher de
 "porte". Si la direction produit est déjà claire dans la matière, on peut avancer.
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
+skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
+`version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
+au nom canonique en `version: N+1`) et **attendre** le choix. Premier passage (rien n'existe) :
+générer directement, sans porte.
+
 ## Méthode : trois passes
 
 1. **Passe surface.** Lister les grandes capacités du périmètre IN. Vue à plat
@@ -127,6 +134,11 @@ Avant d'écrire le manifeste, vérifier :
   requise.
 
 ## Réjeu incrémental (idempotence)
+
+> **Distinction avec la porte de régénération.** Ce réjeu **incrémental** (fusion ciblée de
+> corrections amont, en place) est un flux distinct de la **relance complète** : il n'ouvre **pas**
+> la porte de régénération. Celle-ci ne s'ouvre que pour une **régénération intégrale** du document
+> demandée par l'utilisateur (cf. `references/regeneration-gate.md`).
 
 Rejoué après une vision corrigée (retour de démonstrateur, point levé en session),
 ce skill **met à jour le découpage en place** :

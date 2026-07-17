@@ -1,7 +1,7 @@
 # Cadre projet : <Nom du projet>
 
 > Document de travail. Contraintes de cadrage du **projet** à cadrer,
-> dérivées de la **passe de découverte** de `cadrage-extraction` (13 questions).
+> dérivées de la **passe de découverte** de `cadrage-extraction` (19 questions).
 > **Contenu uniquement, sans provenance** (pas de `(src:)`) ; un champ non tranché
 > est posé en session, pas marqué `[À VALIDER]`.
 > Ce n'est PAS l'architecture : c'est le cadre à partir duquel l'architecte travaillera. Les
@@ -41,8 +41,24 @@
 ## 10. Authentification & autorisation
 - **Besoins d'authentification (Q13)** : SSO/fournisseur, MFA, modèle d'autorisation, exigences de rôles
 
+## 11. Problème & enjeu
+- **Problème principal résolu (Q14)** : <le problème et ce que coûte la situation actuelle>
+- **Pourquoi maintenant (Q15)** : <l'élément déclencheur du besoin>
+
+## 12. Différenciation
+- **Ce qui distingue des alternatives actuelles (Q16)** : <par rapport aux outils/processus utilisés aujourd'hui>
+
+## 13. Signaux de succès
+- **À quoi verra-t-on le succès (Q17)** : <signaux côté utilisateurs + objectifs mesurables>
+
+## 14. Supports & accès
+- **Supports d'utilisation (Q18)** : web | mobile | desktop | plusieurs - et contexte d'usage
+
+## 15. Risques & hypothèses
+- **Principales incertitudes à vérifier (Q19)** : <hypothèses produit / risques identifiés>
+
 <!--
-Ces champs correspondent aux 13 questions de découverte
+Ces champs correspondent aux 19 questions de découverte
 (skills/cadrage-extraction/references/discovery-questions.md). Demander, ne pas
 inventer : un point non tranché est posé en session ; s'il n'est pas tranché, il
 est omis (pas de `[À VALIDER]`, pas de provenance écrite). Le statut par question

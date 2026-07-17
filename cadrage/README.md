@@ -26,7 +26,7 @@ d'agir et contrôle sa sortie avant d'écrire le manifeste - sans jamais exposer
 | # | Skill | Rôle | Pré-requis |
 |---|-------|------|----------------|
 | 0 | `cadrage-init` | Amorce `.factory/` (gabarits, git-ignoré) + `cadrage-out/` (**+ manifeste committé**) + `cadrage-out/prompts/` | aucune (projet vierge) |
-| 1 | `cadrage-extraction` | Matière brute -> `capture-brute.md` (contenu, sans horodatage ni src) + **passe découverte** (13 questions, interactif) -> `project-frame.md` | manifeste existe + une source déclarée |
+| 1 | `cadrage-extraction` | Matière brute -> `capture-brute.md` (contenu, sans horodatage ni src) + **passe découverte** (19 questions, interactif) -> `project-frame.md` | manifeste existe + une source déclarée |
 | 2 | `cadrage-vision` | Capture -> `product-brief.md` (le quoi, le pourquoi) | capture_brute existe |
 | 3 | `cadrage-glossaire` | Construit le langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes), validé en bloc | capture_brute existe |
 | 4 | `cadrage-decoupage` | Vision -> découpage **fonctionnel** (use cases par valeur) + couplage (**hypothèse**) | vision_complete |
@@ -86,7 +86,7 @@ un brief dérive d'une vision stable.
   place** dans `coupling-map.md` (pas de journal séparé).
 - **Contenu, pas provenance.** Les artefacts contiennent le **contenu décidé** : ni
   horodatage, ni interlocuteur, ni `(src:)`.
-- **Découverte cadrée.** `cadrage-extraction` couvre 13 questions de cadrage
+- **Découverte cadrée.** `cadrage-extraction` couvre 19 questions de cadrage
   (`skills/cadrage-extraction/references/discovery-questions.md`) : extraites du
   transcript, les manquantes posées **une par une**, stockées dans le
   `project-frame.md` et le bloc `discovery` du manifeste. Garde-fou déterministe :

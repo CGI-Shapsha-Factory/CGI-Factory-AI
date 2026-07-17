@@ -72,6 +72,13 @@ poser une question en clair.
    absent : demander en clair au moins une source. N'invente pas de matière. (Le dossier
    `source-contexte/` reste facultatif - son absence ne bloque jamais à elle seule.)
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
+skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
+`version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
+au nom canonique en `version: N+1`) et **attendre** le choix. Premier passage (rien n'existe) :
+générer directement, sans porte.
+
 ## Identité du projet
 
 Avant le dépouillement, **demander à l'utilisateur, en français** (attendre la réponse) :
@@ -83,6 +90,28 @@ boucle interactive (`references/interactive-loop.md`).
 
 **Ne pas demander le nom du client.** Cette information n'est pas collectée par la
 factory - ne pas la poser, ne pas l'écrire dans le manifeste.
+
+## Tour de table à chaud (avant les questions structurées)
+
+Juste après le nom du projet, **avant** le dépouillement et la passe découverte, ouvrir un
+court tour de table libre. Les deux temps sont **facultatifs et jamais insistés** : "rien à
+ajouter" fait passer directement à la suite.
+
+1. **Invitation ouverte (un seul message).** Inviter l'utilisateur à vider son sac : tout ce
+   qui lui semble important et qui n'est pas dans les sources - contexte, intuitions,
+   contraintes, points non négociables, idées encore floues. Attendre la réponse, puis poser
+   **une seule relance** : "quoi d'autre ?" (elle fait souvent remonter ce qu'on a failli
+   oublier). Ne pas entrer dans le détail à ce stade : les questions granulaires viennent
+   après, elles interrompraient le déballage. Ce qui est dit ici est de la **matière brute
+   comme une autre** : ça alimente les sections de la capture et sert de suggestion dans la
+   passe découverte, avec confirmation par le flux normal - rien n'est validé d'office.
+2. **Lecture de l'enjeu (une question).** Demander en clair quel est l'enjeu du projet :
+   outil interne, pilote / expérimentation, ou lancement public / critique. Cette lecture est
+   une **calibration interne uniquement, jamais persistée telle quelle** : elle règle
+   l'intensité de la relance sur réponse mince (cf. `references/interactive-loop.md`) et la
+   richesse des suggestions proposées. Un enjeu fort justifie de creuser davantage ; un outil
+   interne modeste ne mérite pas un interrogatoire. (Le recouvrement avec la question sur le
+   type de projet est normal : c'est elle qui porte la réponse persistée.)
 
 ## Procédure
 
@@ -135,23 +164,23 @@ délais.
 Les outcomes et buts cités.
 ```
 
-## Passe découverte (13 questions de cadrage) : **interactive, une question à la fois**
+## Passe découverte (19 questions de cadrage) : **interactive, une question à la fois**
 
-En plus de la capture, exécuter la **passe découverte** sur les 13 questions de
-`references/discovery-questions.md` (Q1-Q13). Elle remplit
+En plus de la capture, exécuter la **passe découverte** sur les 19 questions de
+`references/discovery-questions.md` (Q1-Q19). Elle remplit
 `cadrage-out/project-frame.md` (gabarit `.factory/cadrage/project-frame.md`)
 et le bloc `discovery` du manifeste.
 
-> ⚠️ **Workflow OBLIGATOIRE, jamais en lot.** On **déroule les 13 questions une par une**, même
+> ⚠️ **Workflow OBLIGATOIRE, jamais en lot.** On **déroule les 19 questions une par une**, même
 > quand le transcript semble déjà répondre : le transcript fournit une **suggestion à confirmer**,
-> pas une réponse validée. **Interdit** : remplir les 13 d'un coup depuis les sources et annoncer un
+> pas une réponse validée. **Interdit** : remplir les 19 d'un coup depuis les sources et annoncer un
 > bilan sans avoir rien demandé à l'utilisateur.
 
 1. **Préparer les suggestions (sans rien écrire, sans rien valider).** Pour chaque Qn, chercher dans
    le transcript/docs une **réponse candidate** et la garder comme **suggestion à confirmer**.
    **Aucune question n'est `answered` à ce stade.**
-2. **Dérouler la boucle interactive - Q1 -> Q13, UNE À LA FOIS** (voir `references/interactive-loop.md`).
-   Pour **chaque** question, en français, afficher le compteur **"Qn/13"**, l'intitulé, puis une
+2. **Dérouler la boucle interactive - Q1 -> Q19, UNE À LA FOIS** (voir `references/interactive-loop.md`).
+   Pour **chaque** question, en français, afficher le compteur **"Qn/19"**, l'intitulé, puis une
    **réponse recommandée** (la suggestion tirée de la matière si elle existe, sinon une suggestion
    plausible, étiquetée "suggestion"). **Pas de menu numéroté** : l'utilisateur accepte la suggestion
    ou donne la sienne. Puis **POSE UNE SEULE QUESTION, ARRÊTE-TOI, et ATTENDS la réponse** avant de
@@ -174,8 +203,10 @@ et le bloc `discovery` du manifeste.
    en particulier pour les *seeds qualité* de charge/disponibilité/performance.
 3. **Écrire** les réponses dans `project-frame.md` (chaque champ = le contenu décidé, **sans `(src:)`** ;
    un champ non tranché est **omis**). Le project-frame vit sous
-   `cadrage-out/project-frame.md`. Les réponses Q1 (qui utilise), Q3 (rôles)
-   et Q9 (type de projet) seront aussi reprises côté vision par `cadrage-vision`.
+   `cadrage-out/project-frame.md`. Les réponses Q1 (qui utilise), Q3 (rôles),
+   Q9 (type de projet), Q14 (problème), Q15 (pourquoi maintenant) et Q17 (signaux
+   de succès) seront aussi reprises côté vision par `cadrage-vision` (suggestions
+   pré-remplies du product-brief, à confirmer, jamais reposées à froid).
 
 Les questions Q2 (charge), Q6 (disponibilité), Q7 (performance) sont des **seeds
 de qualité** : on les capte bruts ici, le plugin **architecte** les transformera

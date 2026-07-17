@@ -140,7 +140,13 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
     { "id": "Q10", "question": "Qui s'occupe de la production ? le client ? nous ?", "status": "pending", "answer": null },
     { "id": "Q11", "question": "Ou est deployee l'appli ? infra existante ou nouvelle ? cloud ?", "status": "pending", "answer": null },
     { "id": "Q12", "question": "Budget pour l'infrastructure ?", "status": "pending", "answer": null },
-    { "id": "Q13", "question": "Besoins particuliers d'authentification / autorisation ?", "status": "pending", "answer": null }
+    { "id": "Q13", "question": "Besoins particuliers d'authentification / autorisation ?", "status": "pending", "answer": null },
+    { "id": "Q14", "question": "Quel probleme principal l'application resout-elle ? que coute la situation actuelle ?", "status": "pending", "answer": null },
+    { "id": "Q15", "question": "Pourquoi ce projet maintenant ? qu'est-ce qui declenche le besoin ?", "status": "pending", "answer": null },
+    { "id": "Q16", "question": "Qu'est-ce qui distinguera l'application des alternatives utilisees aujourd'hui ?", "status": "pending", "answer": null },
+    { "id": "Q17", "question": "A quoi verra-t-on que l'application est un succes ?", "status": "pending", "answer": null },
+    { "id": "Q18", "question": "Sur quels supports l'application sera-t-elle utilisee ? (web, mobile, desktop, plusieurs)", "status": "pending", "answer": null },
+    { "id": "Q19", "question": "Quelles sont les principales incertitudes ou hypotheses a verifier ?", "status": "pending", "answer": null }
   ],
   "discovery_complete": false,
   "definition_of_ready": {

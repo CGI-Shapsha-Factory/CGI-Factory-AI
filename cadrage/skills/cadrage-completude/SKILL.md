@@ -29,6 +29,14 @@ product-brief, glossaire, spec-index, coupling-map, briefs).
 
 **Aucun.** Invocable à tout moment pour prendre la température du projet.
 
+## Porte de régénération (relance)
+Avant de réécrire le rapport, appliquer `references/regeneration-gate.md`. Si `completude-report.md`
+existe déjà, proposer **Repartir de zéro** (supprimer puis régénérer, `version: 1`) ou **Garder les
+deux (versionner)** (archiver l'existant sous `_archives/completude-report-v<N>.md`, régénérer au nom
+canonique en `version: N+1`) et **attendre** le choix. La résolution interactive des points ouverts
+(qui corrige les contrats amont **en place**) n'est **pas** concernée par cette porte : elle ne vise
+que la réécriture du rapport de ce skill. Premier passage : générer directement, sans porte.
+
 ## Étape 0 : Relecture parallèle exhaustive (ne rien manquer)
 
 **Toujours (re)lire depuis les fichiers committés**, même si tu crois les avoir déjà lus dans
@@ -67,14 +75,18 @@ présence :
   sert un objectif** de la vision ; **aucune fuite hors-périmètre** (rien du OUT en IN ; souhaits
   hors périmètre confirmés une fois, jamais poussés) ; **retour démonstrateur résolu** (aucun
   `[REMIS EN CAUSE]` ne survit) ; **dépendances cohérentes** (features citées existent, pas de
-  cycle, aligné à la coupling-map).
+  cycle, aligné à la coupling-map) ; **thèse produit** (le product-brief se lit comme une thèse
+  problème -> différenciation -> succès, pas comme un catalogue ; chaque profil utilisateur cité
+  pèse sur au moins une décision du pack).
 
 - **Lentille C - Qualité des exigences (bien formées)** : **user stories INVEST** (une story qui
   échoue à une lettre est reformulée/scindée/retirée) ; **critères d'acceptation testables**
   (Étant donné/Quand/Alors, pass-fail clair, atomiques, **mots vagues bannis**, ~1-3 par story -
   4+ = story trop grosse) ; **critères de succès mesurables** ou différés à l'architecture ;
   chaque exigence **nécessaire, non ambiguë, singulière, vérifiable**, au bon niveau (aucune
-  solution technique prématurée).
+  solution technique prématurée) ; **pas de théâtre d'exigence** (attribut non-fonctionnel nu et
+  générique sans seed de découverte -> raccordé, chiffré ou retiré ; "fini" flou dans un critère
+  d'acceptation -> reformulé jusqu'à un pass-fail objectif).
 
 - **Lentille D - Validation & prêt-architecte** : chaque **feature délivre de la valeur** (tracée
   à un objectif métier ; une feature bien écrite mais sans valeur = candidate au retrait) ;
@@ -96,7 +108,8 @@ Calculer les booléens à partir de l'état réel des artefacts et du manifeste 
 - **tous les briefs complets** - tous les briefs au statut `complete`.
 - **aucun trou de découverte bloquant** - **toute question de découverte `pending`/`deferred`**
   (bloc `discovery`) maintient le verdict au rouge - **vérifié (obligatoire)** par
-  `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" <racine>/manifest.json` (s'il est
+  `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_discovery.py" --strict <racine>/manifest.json`
+  (le mode `--strict` fait échouer aussi les questions `deferred`, pas seulement `pending` ; s'il est
   **introuvable** ou renvoie **exit 1**, **s'arrêter** et le dire en clair - jamais de vérification
   "à la main"). Une capacité du périmètre IN non couverte se **tranche en session**.
   **Exception - Q8 (contraintes légales / conformité / RGPD) :** optionnelle, gérée **manuellement

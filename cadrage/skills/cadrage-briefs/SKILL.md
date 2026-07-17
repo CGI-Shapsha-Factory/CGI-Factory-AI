@@ -56,6 +56,15 @@ retour-démonstrateur -> complétude) ; s'il manque la revue de
 couplage, renvoyer vers cette revue. Ne **jamais** afficher de nom d'attribut ni de
 statut de gate.
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Ici les sorties sont **les
+briefs par feature** (`features-fonctionnels-brief/<feature>.md`) : si des briefs existent déjà,
+proposer **Repartir de zéro** (supprimer les briefs existants puis régénérer, `version: 1`) ou
+**Garder les deux (versionner)** (archiver chaque brief existant sous
+`_archives/features-fonctionnels-brief-<feature>-v<N>.md`, jamais dans le dossier des briefs, puis
+régénérer au nom canonique en `version: N+1`) et **attendre** le choix. Premier passage : générer
+directement, sans porte.
+
 ## Procédure
 
 Pour **chaque feature** du spec index arbitré, produire

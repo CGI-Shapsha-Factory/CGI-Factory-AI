@@ -41,6 +41,13 @@ Gabarit de sortie : `.factory/cadrage/glossaire.md` (copie installée par cadrag
 `artifacts.capture_brute` existe dans le manifeste. Sinon, indiquer en clair qu'il
 faut d'abord faire l'extraction, sans afficher de "porte".
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
+skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
+`version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
+au nom canonique en `version: N+1`) et **attendre** le choix. Premier passage (rien n'existe) :
+générer directement, sans porte.
+
 ## Procédure
 
 1. **Collecter les termes du projet** depuis la capture (section 5 en priorité,
@@ -88,6 +95,11 @@ Avant d'écrire le manifeste, vérifier :
 - **Aucune `(src:)` ni horodatage** dans l'artefact.
 
 ## Réjeu incrémental (idempotence)
+
+> **Distinction avec la porte de régénération.** Ce réjeu **incrémental** (fusion ciblée de
+> corrections amont, en place) est un flux distinct de la **relance complète** : il n'ouvre **pas**
+> la porte de régénération. Celle-ci ne s'ouvre que pour une **régénération intégrale** du document
+> demandée par l'utilisateur (cf. `references/regeneration-gate.md`).
 
 Rejoué sur des entrées mises à jour - dont les retours de démonstrateur - ce
 skill **met à jour le glossaire en place** :
