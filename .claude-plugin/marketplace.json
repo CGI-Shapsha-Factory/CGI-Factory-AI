@@ -51,6 +51,17 @@
       "description": "Coud les 3 contrats -> repo SpecKit + Linear."
     },
     {
+      "name": "validation",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
+        "path": "validation"
+      },
+      "category": "Validation (recette fonctionnelle)",
+      "tags": ["testeur", "po", "qa", "test-fonctionnel", "navigateur", "non-regression"],
+      "description": "Plan de test derive de la spec -> execution navigateur -> rapport de recette trace, verdict humain."
+    },
+    {
       "name": "recette",
       "source": {
         "source": "git-subdir",

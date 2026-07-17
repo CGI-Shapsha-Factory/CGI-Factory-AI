@@ -12,7 +12,8 @@ rattachée**. Le vrai risque, ce sont les anomalies trouées où il manque l'inf
 permettrait au développeur de travailler : ce skill l'empêche.
 
 C'est aussi la **porte de création unique** : qu'une anomalie soit constatée à la main par le
-PO ou détectée par un outil d'analyse automatique (extension de navigateur, agent de recette),
+PO ou détectée par un outil d'analyse automatique (la validation fonctionnelle du plugin
+`validation` via `/validation:bilan-validation`, une extension de navigateur, un agent de recette),
 elle passe par ce skill. Un appel outillé fournit un contenu déjà structuré : le skill le
 reprend, ne repose que les questions des champs manquants, et la **validation finale reste
 humaine** avant toute création.

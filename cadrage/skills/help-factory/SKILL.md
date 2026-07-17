@@ -1,19 +1,20 @@
 ---
 name: help-factory
-description: Aide unique de la Factory - affiche la carte des 5 plugins (cadrage, architecte, designer, assembleur, recette), un tableau par plugin avec le rôle de chaque skill, l'ordre et les portes humaines.
+description: Aide unique de la Factory - affiche la carte des 6 plugins (cadrage, architecte, designer, assembleur, validation, recette), un tableau par plugin avec le rôle de chaque skill, l'ordre et les portes humaines.
 ---
 
 # help-factory
 
-Skill d'aide - **l'unique aide de la Factory** (couvre les 5 plugins). Quand il est invoqué,
+Skill d'aide - **l'unique aide de la Factory** (couvre les 6 plugins). Quand il est invoqué,
 **affiche immédiatement le contenu ci-dessous TEL QUEL** (les tableaux), sans rien recalculer.
 Il **n'écrit aucun fichier** et ne modifie aucun manifeste.
 
 ## À afficher tel quel
 
-**La Factory IA transforme un atelier en projet spec-driven, en 4 phases amont + la recette.** Chaque
-phase est un plugin qui produit un *contrat* validé par un humain, puis passe le relais :
-**`cadrage -> architecte -> designer -> assembleur -> SpecKit -> recette`**.
+**La Factory IA transforme un atelier en projet spec-driven, en 4 phases amont + la recette (validation
+fonctionnelle puis traitement des écarts).** Chaque phase est un plugin qui produit un *contrat* validé
+par un humain, puis passe le relais :
+**`cadrage -> architecte -> designer -> assembleur -> SpecKit -> validation -> recette`**.
 Chaque skill se termine par une ligne "**Étape suivante**" qui indique quoi lancer ensuite - tu avances
 de proche en proche. Le design system naît dans **Claude Design** ; son export est committé dans `designer-out/maquette-de-claude-design/` et sert de source à la fabrication.
 
@@ -64,10 +65,24 @@ Lit les 3 contrats en parallèle, les converge, et produit un **paquet de handof
 | `assembleur-init` | vérifie que les 3 dossiers de sortie amont (`cadrage-out/`, `architecte-out/`, `designer-out/`) existent et sont complets (pas de statut de validation exigé) + installe les gabarits + crée `assembleur-out/` | 3 dossiers de sortie amont présents |
 | `assembleur-convergence` | lit les 3 contrats **en parallèle** + converge + produit le paquet (pré-constitution, graines spec, carte des features, contexte technique, CLAUDE.md, mémoire) + résout les points en session | **garant de cohérence** (humain) |
 
-### Phase 5 : `recette` (après la livraison d'une feature)
-Quand le PO teste une feature livrée et trouve un écart, tout devient un objet suivi dans Linear
-(anomalie ou évolution), réalisé en orchestrant les commandes SpecKit existantes. Frontière : avant
-livraison rien ne se trace, après livraison tout se trace.
+### Phase 5 : `validation` (recette fonctionnelle d'une feature livrée)
+Quand une feature est livrée et déployée sur l'environnement de recette : dériver le plan de test
+depuis les critères d'acceptation de sa spécification (un cas par critère, tracé), le jouer dans le
+navigateur (extension Chrome en priorité, Playwright en repli, ou mission différée pour Claude
+Cowork), et produire un rapport de recette tracé exigence par exigence. L'IA exécute et rapporte,
+le testeur valide (porte de recette). Les écarts constatés se traitent ensuite côté `recette`.
+
+| skill | rôle | porte / ordre |
+|-------|------|---------------|
+| `validation-init` | installe les gabarits + bloc manifeste + enregistre l'adresse de l'environnement de recette + signale l'amont manquant (`specs/`, Linear, recette) | après la première feature livrée |
+| `plan-de-validation` | dérive le plan de test depuis `specs/<feature>/spec.md` : un cas par critère d'acceptation, tracé à sa source, critère non testable marqué "à clarifier" (jamais interprété), données de test collectées en session | **plan validé par le testeur** (humain) |
+| `execution-validation` | joue le plan dans le navigateur contre l'environnement de recette (choix de l'outil à chaque lancement : extension Chrome recommandée / Playwright / mission Cowork) ; résultats + preuves au format commun | le testeur choisit l'outil ; l'IA constate |
+| `bilan-validation` | rapport tracé (critère -> cas -> verdict -> preuve), tri de chaque écart avec le testeur (anomalie -> `/recette:creation-anomalie`, spec en cause -> `/recette:creation-evolution`, flou -> clarifier ou suivi Linear), scénarios rejouables de non-régression, puis verdict de recette (rapport + commentaire Linear) | **verdict de recette** (humain) |
+
+### Phase 6 : `recette` (traitement des écarts après livraison)
+Quand le PO ou la validation fonctionnelle constate un écart sur une feature livrée, tout devient
+un objet suivi dans Linear (anomalie ou évolution), réalisé en orchestrant les commandes SpecKit
+existantes. Frontière : avant livraison rien ne se trace, après livraison tout se trace.
 
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
@@ -91,7 +106,7 @@ Pas une phase : mesure **ce que coûterait la fabrication au tarif API** (estima
 **Fabrication en parallèle** : une branche = une feature = un développeur (numéro imposé par le registre, **jamais** d'auto-numérotation), **claim** du ticket `Feature` Linear avant de démarrer, l'avancement vit **dans Linear**, et les features **couplées** (même composant/état) se traitent **en séquence**. SpecKit offre aussi des portes de cohérence **natives optionnelles** (`/speckit.clarify`, `/speckit.analyze`). Règles complètes : `assembleur-out/attack-plan.md`.
 
 **Repère** : pour savoir où tu en es dans une phase, lance son skill de bilan/cohérence
-(`cadrage-completude`, `architecte-coherence`, `designer-coherence`, ou le rapport de cohérence de l'assembleur).
+(`cadrage-completude`, `architecte-coherence`, `designer-coherence`, le rapport de cohérence de l'assembleur, ou `bilan-validation` côté validation).
 
 ## Étape suivante
-"Étape suivante : `/cadrage:cadrage-init` pour démarrer depuis le début, ou lance directement la phase qui correspond à ton avancement - `/architecte:architecte-init`, `/designer:designer-init` ou `/assembleur:assembleur-init`."
+"Étape suivante : `/cadrage:cadrage-init` pour démarrer depuis le début, ou lance directement la phase qui correspond à ton avancement - `/architecte:architecte-init`, `/designer:designer-init`, `/assembleur:assembleur-init`, `/validation:validation-init` (feature livrée à recetter) ou `/recette:recette-init` (écarts à traiter)."

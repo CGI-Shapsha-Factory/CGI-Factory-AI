@@ -4,9 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 `recette` plugin** (this directory). Factory-wide overview: `../CLAUDE.md`.
 
 ## Ce qu'est le plugin
-`recette` = **phase 5** de la Factory (après la livraison d'une feature). Il comble le trou
+`recette` = **phase 6** de la Factory (après la livraison d'une feature, en aval de la
+validation fonctionnelle). Il comble le trou
 post-fabrication : quand le PO teste une feature livrée et trouve un écart, tout devient un
-**objet suivi dans Linear** (anomalie ou évolution), et le développeur le réalise en
+**objet suivi dans Linear** (anomalie ou évolution). La **détection amont** peut aussi venir du
+plugin `validation` (recette fonctionnelle : plan de test dérivé de la spec, exécution
+navigateur, rapport tracé) : son bilan **renvoie ici** (contenu pré-rempli pour l'anomalie,
+simple orientation pour l'évolution) - la **porte de création unique** reste
+`creation-anomalie`/`creation-evolution`. Le développeur réalise en
 orchestrant les **commandes SpecKit existantes** (`/speckit.clarify`, `/speckit.plan`,
 `/speckit.tasks`, `/speckit.implement` cadré) - jamais en les réinventant. Ce sont des
 **skills Markdown** ; pas de build/test. **Le plugin n'écrit pas d'artefacts committés** : les
