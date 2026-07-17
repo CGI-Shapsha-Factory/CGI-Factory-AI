@@ -63,7 +63,15 @@ def load_price_table(root):
 def resolve_prices(model, table):
     if not table:
         return None, None
-    ov = (table.get("overrides") or {}).get(model)
+    # Overrides par PREFIXE (cle la plus longue d'abord) : un id date comme
+    # `claude-opus-4-1-20250805` doit matcher l'override `claude-opus-4-1` (sinon il
+    # retomberait en silence sur le tarif de base du tier, sous-facture).
+    overrides = table.get("overrides") or {}
+    ov = None
+    for k in sorted(overrides, key=len, reverse=True):
+        if (model or "").startswith(k):
+            ov = overrides[k]
+            break
     tiers = table.get("tiers") or {}
     tier = next((t for t in TIERS if t in (model or "")), None)
     if ov:
@@ -87,11 +95,15 @@ def cats_of(u):
 
 
 def cost_of(cats, prices, mult_1h):
-    return round(cats["input"] * prices["input"]
-                 + cats["output"] * prices["output"]
-                 + cats["cache_read"] * prices["cache_read"]
-                 + cats["cache_write_5m"] * prices["cache_write_5m"]
-                 + cats["cache_write_1h"] * (prices["input"] * mult_1h), 8)
+    # Tolerant aux categories absentes d'une table de prix editee a la main (le hook est
+    # best-effort et ne doit JAMAIS sortir en erreur) : categorie manquante = 0.
+    def p(cat):
+        return prices.get(cat, 0) or 0
+    return round(cats["input"] * p("input")
+                 + cats["output"] * p("output")
+                 + cats["cache_read"] * p("cache_read")
+                 + cats["cache_write_5m"] * p("cache_write_5m")
+                 + cats["cache_write_1h"] * (p("input") * mult_1h), 8)
 
 
 def collect_messages(raw_lines):
@@ -187,7 +199,7 @@ def main():
     dev = dev_identity(root)
     text = "".join(raw)
 
-    records, last_ts = [], None
+    records = []
     for (mid, req), rec in seen.items():
         cats = cats_of(rec["usage"])
         tier, prices = resolve_prices(rec["model"], table)
@@ -198,10 +210,11 @@ def main():
             "tokens": cats, "attribution": attribution(root, rec["branch"], text),
             "sim_cost_usd": cost, "price_table_date": pdate, "unpriced": prices is None,
         })
-        if rec["ts"]:
-            last_ts = rec["ts"]
 
     records.sort(key=lambda r: r["ts"] or "")
+    # Mois = ts MAXIMAL de la session (l'ordre d'iteration du dict n'est pas chronologique ;
+    # prendre "le dernier itere" pouvait classer la session dans le mauvais mois).
+    last_ts = max((r["ts"] for r in records if r["ts"]), default=None)
     month = (last_ts or "")[:7] or "0000-00"
     out_dir = os.path.join(root, ".factory", "couts", month)
     try:
