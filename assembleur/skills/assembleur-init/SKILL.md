@@ -60,9 +60,10 @@ l'assembleur) - puis le **signaler** (sans bloquer) :
   que **la convergence** (`/assembleur:assembleur-convergence`) a besoin de ces dossiers `-out/`.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si
-`manifest.json` n'existe pas encore, **créer d'abord le dossier `cadrage-out/` s'il est
-absent** (même sans amont), puis y **créer** le manifeste comme objet JSON valide
-`{ "assembly": { ... } }` (les autres phases le complètent par fusion, sans écraser le bloc `assembly`).
+`manifest.json` n'existe pas encore, le **créer à la racine du projet** (le dossier courant,
+**jamais** dans `cadrage-out/` ni ailleurs : il n'existe qu'**un seul** manifeste, à la racine)
+comme objet JSON valide `{ "assembly": { ... } }` (les autres phases le complètent par fusion,
+sans écraser le bloc `assembly`).
 
 ## Procédure
 1. **Installer les gabarits de convergence** dans `.factory/assembleur/` : copier depuis
