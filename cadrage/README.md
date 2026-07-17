@@ -115,7 +115,7 @@ cadrage/
 ├── skills/                        # un dossier SKILL.md par skill (dont cadrage-init)
 ├── references/                    # conventions partagées (boucle interactive, UX)
 ├── scripts/                       # check_discovery.py (garde-fou déterministe)
-├── templates/                     # gabarits EN des artefacts (project-frame, product-brief,
+├── templates/                     # gabarits FR des artefacts (project-frame, product-brief,
 │                                  #   feature-brief <- contrat central, spec-index, coupling-map,
 │                                  #   glossaire)
 └── README.md
@@ -124,7 +124,7 @@ cadrage/
 Le **contrat central** est `templates/feature-brief.md` : l'artefact
 dont tout le pipeline dépend. `cadrage-briefs` le produit, `cadrage-completude`
 le valide, l'architecte puis l'assembleur le reprennent. Il doit être auto-portant.
-**Templates en anglais** (lus par le LLM) ; **interaction en français**.
+**Templates en français** (comme tous les artefacts de la Factory) ; **interaction en français**.
 
 ## Workspace du projet client (créé par `cadrage-init`)
 
