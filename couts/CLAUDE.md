@@ -13,15 +13,21 @@ Python ; pas de build/test. **Pas de coût réel, pas de saisie manuelle, pas de
 - **Tout en français** ; identifiants machine et noms d'outils/formats restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/couts:<skill>` + auto par le modèle.
 
-## Les 2 skills
+## Les 3 skills
 - `couts-init` - pose le compteur **dans le dossier courant** (à lancer tôt, autonome - pas de
-  pré-requis, **aucune question**) : copie `turn_cost.py` en `.claude/hooks/`, **fusionne** le hook
-  `SessionEnd` dans `.claude/settings.json` (sans écraser les hooks existants), installe la table de
-  prix datée dans `.factory/couts/`, crée `.factory/couts/` + **`.gitignore`** (ligne `.factory/` -
-  tout `.factory/` est git-ignoré). Interaction **en français, sans exposer la mécanique**.
+  pré-requis, **aucune question**) : `references/install_cost_hook.py` copie `turn_cost.py` en
+  `.claude/hooks/` **et fusionne** le hook `SessionEnd` dans `.claude/settings.json` (sans écraser
+  les hooks existants ; commande ancrée sur `${CLAUDE_PROJECT_DIR}`, lanceur Python détecté à
+  l'installation), installe la table de prix datée dans `.factory/couts/`, crée `.factory/couts/` +
+  **`.gitignore`** (ligne `.factory/` - tout `.factory/` est git-ignoré). Interaction **en français,
+  sans exposer la mécanique**.
 - `couts-rapport` - restitue un **tableau par session** (tokens input/output + coût en euros) et écrit
   un rapport **versionné** dans `.factory/couts/` (`rapport-couts.md`, puis `-2`, `-3`... - **jamais
   d'écrasement**).
+- `couts-total` - agrège **toutes les sessions locales** en un seul fichier de bilan partageable
+  (`.factory/couts/bilan-couts.md` : dev, période, nombre de sessions, total tokens en 5 catégories,
+  coût estimé en euros) - le fichier à remettre au chef d'équipe ; **écrasé à chaque run** (reflète
+  toujours l'état courant du journal local).
 
 ## Le compteur (`references/turn_cost.py`) : hook `SessionEnd` (écriture en fin de session)
 Best-effort (ne bloque jamais, exit 0). **Un seul comportement**, déclenché par `SessionEnd` : lit
@@ -80,8 +86,10 @@ garde-fou n'ouvre pas le manifeste).
 ## Scripts
 `references/turn_cost.py` (compteur, hook `SessionEnd`, racine ancrée `__file__`),
 `references/cost_report.py` (rapport **par session** versionné + taux figé, dédup globale par `key`,
-localise le journal `.factory/couts/` avec journal, pas le git root), `references/install_cost_hook.py`
-(fusion hook SessionEnd, cible le dossier courant), `references/price-table.json`,
+localise le journal `.factory/couts/` avec journal, pas le git root), `references/cost_total.py`
+(bilan agrégé toutes-sessions -> `.factory/couts/bilan-couts.md`, écrasé à chaque run),
+`references/install_cost_hook.py` (copie `turn_cost.py` en `.claude/hooks/` + fusion hook SessionEnd,
+cible le dossier courant, lanceur Python détecté), `references/price-table.json`,
 `references/OTEL.md` (rollup org). Garde-fou : `scripts/check_costs.py`.
 
 ## Vérifications (à la place des tests)

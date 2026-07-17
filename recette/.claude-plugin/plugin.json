@@ -1,7 +1,7 @@
 {
   "name": "recette",
   "version": "0.1.0",
-  "description": "Phase de recette de la Factory (apres la livraison d'une feature) : le PO cree dans Linear des anomalies et des evolutions completes et bien rattachees a leur feature, le developpeur les realise en orchestrant les commandes SpecKit existantes (clarify, plan, tasks, implement cadre au perimetre). Frontiere de la livraison (avant : rien ne se trace ; apres : tout ecart devient un objet suivi), requalification des evolutions deguisees, analyse d'impact par feature, et discipline de cloture (pas de fermeture tant que la specification, les taches et Linear ne sont pas a jour). 5 skills en francais (recette-init, creation-anomalie, correction-anomalie, creation-evolution, realisation-evolution), via le MCP linear-prism.",
+  "description": "Phase de recette de la Factory (après la livraison d'une feature) : le PO crée dans Linear des anomalies et des évolutions complètes et bien rattachées à leur feature, le développeur les réalise en orchestrant les commandes SpecKit existantes (clarify, plan, tasks, implement cadré au périmètre). Frontière de la livraison (avant : rien ne se trace ; après : tout écart devient un objet suivi), requalification des évolutions déguisées, analyse d'impact par feature, et discipline de clôture (pas de fermeture tant que la spécification, les tâches et Linear ne sont pas à jour). 5 skills en français (recette-init, creation-anomalie, correction-anomalie, creation-evolution, realisation-evolution), via le MCP linear-prism.",
   "author": {
     "name": "IA Factory"
   },
