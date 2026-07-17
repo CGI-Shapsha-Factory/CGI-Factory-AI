@@ -29,7 +29,7 @@ en **langage naturel français**. Correspondance :
 | item `status: open` | "à traiter" |
 | item `status: sans_objet` | "sans objet" |
 | `design.coverage_sufficient` | "la couverture est jugée suffisante" |
-| `design.design_system_ref` | "le design system (Claude Design)" |
+| `design.design_system_ref` | "l'export committé du design system (dans `designer-out/maquette-de-claude-design/`)" |
 | `design.design_validated` | "le système de design est validé" |
 
 Ne jamais afficher de **tableau de booléens** bruts ni de **tableau de contrôles / synthèse**,
@@ -61,9 +61,9 @@ validé - termine d'abord le cadrage et l'architecture." Jamais "⛔ design_vali
 false".
 
 ## 3. Marqueurs internes hors texte utilisateur
-Les marqueurs (`[À VALIDER]`, `[À CHIFFRER]`) vivent dans la mécanique interne. À l'oral on
-dit "à traiter", "à valider", "à chiffrer". **Le prompt Claude Design sauvegardé ne
-contient aucun `[À VALIDER]`** : tout point est résolu en session avant la génération
+Aucun marqueur `[À VALIDER]` n'est écrit dans un artefact : tout point se résout en session.
+À l'oral on dit "à traiter". **Le prompt Claude Design sauvegardé ne contient aucun
+`[À VALIDER]`** : tout point est résolu en session avant la génération
 (cf. `skills/designer-prompt`).
 
 ## 3bis. Fichiers prompt sauvegardés = corps seul, prêt à coller
@@ -92,5 +92,4 @@ Terminer chaque exécution par exactement une phrase :
 
 ## 6. Langue
 **Tout en français** (interaction + artefacts). Seuls les identifiants/valeurs machine du
-manifeste et les noms d'outils/formats (Claude Design, DTCG, Style Dictionary,
-WCAG, ARIA) restent tels quels.
+manifeste et les noms d'outils/formats (Claude Design, WCAG, ARIA) restent tels quels.

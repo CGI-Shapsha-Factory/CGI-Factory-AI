@@ -36,7 +36,7 @@
         "path": "designer"
       },
       "category": "Design (UX/UI)",
-      "tags": ["designer", "front", "ux-ui", "design-system", "dtcg", "accessibilite"],
+      "tags": ["designer", "front", "ux-ui", "design-system", "accessibilite"],
       "description": "Atelier de couverture -> prompt Claude Design."
     },
     {
