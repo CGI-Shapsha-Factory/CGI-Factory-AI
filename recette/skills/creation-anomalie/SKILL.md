@@ -37,8 +37,8 @@ n'appartient pas à ce projet - le traiter comme absent.
 ## Procédure
 1. **Identifier la feature concernée.** Proposer les features du registre (bloc `linear` du
    manifeste : intitulé en langage naturel suivi du numéro entre parenthèses) et laisser le PO
-   désigner la sienne. Résoudre le **ticket Feature parent** (UUID interne, cf.
-   `references/linear-recette.md`). **Règle dure anti-orphelin** : sans ticket Feature
+   désigner la sienne. Résoudre le **ticket Feature parent** (par son identifiant Linear
+   consigné dans le manifeste, cf. `references/linear-recette.md`). **Règle dure anti-orphelin** : sans ticket Feature
    rattachable, ne rien créer - expliquer en clair et renvoyer vers
    `/assembleur:premier-alimente-linear`.
 2. **Compléter le gabarit, section par section** (`.factory/recette/gabarit-anomalie.md`),
@@ -51,6 +51,11 @@ n'appartient pas à ce projet - le traiter comme absent.
    - les **étapes de reproduction** (numérotées, reproductibles par n'importe qui).
    Si un contenu structuré a été fourni (appel outillé), pré-remplir et **faire confirmer**
    chaque section pré-remplie au lieu de la re-demander.
+   **Signal de nature** : si le comportement attendu déclaré ne correspond à **aucune**
+   exigence ni critère de la spécification de la feature (le logiciel fait bien ce que la
+   spécification promet), le dire au PO en clair : cet écart ressemble à une **évolution**
+   (`/recette:creation-evolution`), pas à une anomalie. Le PO tranche - s'il maintient
+   l'anomalie, continuer sans revenir dessus.
 3. **Porte de complétude.** Tant qu'une section du gabarit est vide, **le skill le signale en
    nommant la section en clair et ne crée rien**. Une anomalie incomplète n'existe pas dans
    Linear.
@@ -58,8 +63,9 @@ n'appartient pas à ce projet - le traiter comme absent.
    attendre l'accord explicite du PO avant de créer.
 5. **Créer le ticket** (cf. `references/linear-recette.md`) : `save_issue` avec l'équipe, un
    **titre métier court**, le **ticket Feature en parent**, le **label `Anomalie`**, l'état
-   **Backlog**, et le gabarit rempli en description (Markdown réel). Restituer l'**identifiant
-   Linear** et l'**url** au PO.
+   **Backlog**, et le gabarit rempli en description (Markdown réel). Vérifier dans la réponse
+   que le parent et le label sont bien posés, puis restituer l'**identifiant Linear** et
+   l'**url** au PO.
 
 ## Résultat attendu
 Une anomalie créée dans Linear, complète, rattachée à sa feature, prête à être prise par un

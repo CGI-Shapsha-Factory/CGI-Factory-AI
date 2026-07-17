@@ -27,8 +27,10 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
 
 ## Procédure
 1. **Prendre en charge.** Lire tout le ticket (`get_issue`), dont la proposition de changement,
-   identifier la feature par le ticket parent, puis passer l'évolution **en cours** (`state`
-   de type `started`, idempotent).
+   identifier la feature par le ticket parent, puis passer l'évolution **en cours** : le
+   statut de travail de l'équipe résolu **par son nom** via `list_issue_statuses` (ex. "In
+   Progress" - jamais le type brut `started`, cf. `references/linear-recette.md`), idempotent,
+   état retourné vérifié.
 2. **Le tri de niveau supérieur : propre à la feature, ou vérité partagée ?** Si l'évolution
    ne touche que la spécification et le code de cette feature, continuer. Si elle touche une
    **vérité partagée** (glossaire, constitution, décision d'architecture, donnée commune,
@@ -67,8 +69,9 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
 8. **Refermer proprement.** Refuser la clôture tant que : la **spécification** reflète
    l'évolution (écart + clarifications), le **plan et les tâches** sont régénérés et cohérents,
    les **tests** sont verts (feature + couplées), et **Linear suit** (commentaire de synthèse :
-   ce qui a changé, la preuve de non-régression). Puis passer l'évolution à **terminé**
-   (`state` de type `completed`). Si les phases de `tasks.md` ont changé, rappeler
+   ce qui a changé, la preuve de non-régression). Puis passer l'évolution à **terminé** (le
+   statut de type `completed` de l'équipe, résolu par son nom, ex. "Done", état retourné
+   vérifié). Si les phases de `tasks.md` ont changé, rappeler
    `/assembleur:creation-task-linear` (idempotent) pour réaligner les sous-tickets de phase.
 
 ## Résultat attendu

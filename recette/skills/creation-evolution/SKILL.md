@@ -28,7 +28,8 @@ les chemins (`manifest.json`, `.factory/recette/`, `specs/`) se résolvent **sou
 
 ## Procédure
 1. **Identifier la feature concernée** et résoudre son **ticket Feature parent** (mêmes règles
-   que `creation-anomalie` : registre du manifeste, anti-orphelin, UUID interne en parent).
+   que `creation-anomalie` : registre du manifeste, anti-orphelin, identifiant Linear du
+   ticket Feature en parent).
 2. **Compléter le gabarit, section par section** (`.factory/recette/gabarit-evolution.md`),
    en boucle interactive (`references/interactive-loop.md`) :
    - le **comportement actuel** (conforme à la spécification - c'est le principe d'une

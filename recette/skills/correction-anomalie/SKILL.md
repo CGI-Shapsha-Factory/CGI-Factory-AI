@@ -28,8 +28,11 @@ l'arborescence.**
 
 ## Procédure
 1. **Prendre en charge.** Lire tout le contenu du ticket (`get_issue`), identifier la feature
-   par le ticket parent, puis passer l'anomalie **en cours** (`state` de type `started`,
-   idempotent : ne rien écrire si c'est déjà l'état courant).
+   par le ticket parent, puis passer l'anomalie **en cours** : résoudre le statut de travail
+   de l'équipe **par son nom** via `list_issue_statuses` (ex. "In Progress" - jamais le type
+   brut `started`, qui peut désigner aussi un statut de revue, cf.
+   `references/linear-recette.md`), idempotent (ne rien écrire si c'est déjà l'état courant)
+   et **vérifier l'état retourné** après l'écriture.
 2. **Le tri le plus important : vraie anomalie ou évolution déguisée ?** Comparer le
    comportement constaté à `specs/<feature>/spec.md`.
    - **Le logiciel ne respecte pas sa spécification** -> vraie anomalie, continuer.
@@ -38,9 +41,12 @@ l'arborescence.**
      évolution"** et déposer un commentaire qui explique pourquoi (le code est conforme à la
      spécification ; voici le cas d'usage que la spécification ne couvrait pas), puis
      **s'arrêter là**. Le skill **ne crée pas l'évolution** : c'est au PO de l'ouvrir
-     (`/recette:creation-evolution`), parce que c'est lui qui porte le périmètre. Si le statut
-     de requalification n'existe pas encore dans l'équipe, **ne pas requalifier** : le ticket
-     reste en cours, afficher la marche à suivre manuelle (cf.
+     (`/recette:creation-evolution`), parce que c'est lui qui porte le périmètre. **Vérifier
+     d'abord** que le statut "Requalifiée en évolution" existe (`list_issue_statuses`), puis
+     **vérifier l'état retourné** par l'écriture : un état inconnu est **ignoré en silence**
+     par le MCP (aucune erreur), ne jamais annoncer une requalification non confirmée. Si le
+     statut de requalification n'existe pas encore dans l'équipe, **ne pas requalifier** : le
+     ticket reste en cours, afficher la marche à suivre manuelle (cf.
      `references/linear-recette.md`) et s'arrêter.
 3. **Analyser l'impact.** À partir de la feature (son entrée du registre et ses use cases),
    croiser `assembleur-out/feature-map.md` (dépendances, couplage) et
@@ -71,7 +77,8 @@ l'arborescence.**
    - les **tâches** portent la trace de la correction (régénérées si besoin, cohérentes avec
      le code corrigé) et les **tests de la feature passent** ;
    - **Linear suit** : un commentaire sur le ticket avec la cause racine et le correctif.
-   Une fois tout à jour, passer l'anomalie à **terminé** (`state` de type `completed`).
+   Une fois tout à jour, passer l'anomalie à **terminé** (le statut de type `completed` de
+   l'équipe, résolu par son nom, ex. "Done", état retourné vérifié).
 
 ## Résultat attendu
 Soit une anomalie corrigée et refermée avec sa trace à jour, soit une anomalie refermée en

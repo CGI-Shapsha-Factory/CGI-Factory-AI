@@ -74,8 +74,11 @@ manifeste** : anomalies, évolutions, statuts et commentaires vivent **dans Line
 ## Identité des objets (Linear natif, pas de convention de titre)
 Pas de numérotation `A0x-F0y` / `E0x-F0y` dans les titres : l'**identifiant natif Linear**
 (`<TEAM>-<n>`) porte le numéro. Le **lien à la feature** (clé de l'analyse d'impact) =
-**`parentId` vers le ticket `Feature`** posé par `premier-alimente-linear` (UUID interne,
-jamais l'`identifier`) + labels plats **`Anomalie`** / **`Evolution`** (résolus par nom).
+**`parentId` vers le ticket `Feature`** posé par `premier-alimente-linear` (désigné par son
+`identifier` consigné dans le manifeste, ex. `FAC-12` - `save_issue` l'accepte) + labels plats
+**`Anomalie`** / **`Evolution`** (passés par nom via le paramètre `labels`). Écritures d'état
+**par nom de statut** (jamais le type brut, ambigu) et **vérifiées sur la réponse** (le MCP
+ignore en silence un état inconnu).
 **Règle dure anti-orphelin** : pas de ticket Feature rattachable = pas de création.
 
 ## Frontière SpecKit (wrapper, jamais de réécriture)
