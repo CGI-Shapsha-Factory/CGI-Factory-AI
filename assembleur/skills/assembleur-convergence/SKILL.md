@@ -19,6 +19,16 @@ SpecKit avec ce paquet comme contexte.
 contrats amont sont présents (`cadrage-out/`, `architecte-out/`, `designer-out/`).
 Vérifier sans l'annoncer ; sinon, orienter en clair vers `/assembleur:assembleur-init`.
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si le paquet **de ce skill**
+existe déjà dans `assembleur-out/` (`pre-constitution.md`, `features/<id>-*.md`, `feature-map.md`,
+`technical-context.md`, `coherence-report.md`, `attack-plan.md`), proposer le choix **Repartir de
+zéro** (supprimer puis régénérer, `version: 1`) ou **Garder les deux (versionner)** (archiver
+l'existant sous `_archives/`, régénérer au nom canonique en `version: N+1`) et **attendre** le choix.
+Les écritures **hors `assembleur-out/`** (Linear, `specify init`, `init-cowork.md`, `.claude/` du
+projet) gardent leurs propres règles d'idempotence et ne sont **pas** concernées par cette porte.
+Premier passage (rien n'existe) : générer directement, sans porte.
+
 ## Étape 1 : Lecture parallèle des 3 contrats (map-reduce)
 
 **Toujours (re)lire les 3 contrats depuis les fichiers committés** via les agents, **même si tu crois

@@ -77,7 +77,10 @@ retours structurés complets + passe de complétude) pour pré-remplir la checkl
 ## Conventions partagées
 `references/coverage-checklist-guide.md` (définition canonique + ancrages NN/g & WCAG),
 `references/states-catalog.md` (états écran/composant + clavier WAI-ARIA APG), `references/question-map.md`
-(d'où chaque item se déduit C/A), `references/interactive-loop.md`, `references/ux-conventions.md`.
+(d'où chaque item se déduit C/A), `references/interactive-loop.md`, `references/ux-conventions.md`,
+`references/regeneration-gate.md` (porte de régénération : à la relance d'un skill dont les sorties
+existent déjà, choix **Repartir de zéro** ou **Garder les deux (versionner)**, jamais d'écrasement
+sans choix explicite).
 Agent de lecture : `agents/designer-reader.md` (lecture complète + sortie structurée, dispatché en
 parallèle par `designer-ingestion` et `designer-coherence`).
 Garde-fou déterministe : `scripts/check_design.py` (valide la **couverture** : aucun item `open`, prompt +

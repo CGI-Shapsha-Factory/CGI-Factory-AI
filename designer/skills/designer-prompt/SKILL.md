@@ -27,6 +27,15 @@ La **couverture est jugée suffisante** (`design.coverage_sufficient = true`) et
 traiter". Sinon, orienter en clair (sans nom de champ) : "le prompt ne se génère que lorsque la couverture
 est jugée suffisante - termine d'abord l'atelier via `/designer:designer-atelier`".
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
+skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
+`version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
+au nom canonique en `version: N+1`) et **attendre** le choix. Les prompts sous `prompts/` sont des
+**fichiers plats numérotés** (`<NNN>-<JJ-MM>-...md`) : un nouveau prompt prend le **numéro suivant**
+sans jamais écraser les précédents (déjà non destructif) - la porte ne vise donc que les livrables au
+nom canonique. Premier passage (rien n'existe) : générer directement, sans porte.
+
 ## Procédure : générer les sorties
 - **Prompt Claude Design** -> `designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md` (fichier plat ; gabarit
   `templates/claude-design-prompt.md`) : fondation à produire, direction stylistique (maquette =

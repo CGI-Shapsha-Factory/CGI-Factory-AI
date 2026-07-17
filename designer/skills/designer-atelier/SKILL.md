@@ -31,6 +31,13 @@ Mener l'humain à travers la checklist de couverture jusqu'à ce qu'**aucun item
 ne sont pas encore ingérés - lance d'abord `/designer:designer-ingestion`". *(L'ingestion est mécanique et
 idempotente : au moindre doute, un renvoi vers elle est sans effet de bord.)*
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
+skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
+`version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
+au nom canonique en `version: N+1`) et **attendre** le choix. Premier passage (rien n'existe) :
+générer directement, sans porte.
+
 ## Affichage des items à l'utilisateur
 Chaque item de la checklist se **désigne par une phrase claire** (ex. "la palette de couleurs, l'échelle
 typographique et les espacements de base"), **jamais par un code** : `F1`, `E6`, `T3` restent des **clés

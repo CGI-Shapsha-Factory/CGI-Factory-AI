@@ -76,7 +76,10 @@ découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `tem
 (pas de fuite de champ, refus en clair, une ligne "Étape suivante" par skill),
 `references/coherence-checklist-guide.md` (grille canonique de la porte de cohérence, ancrée
 ATAM / scénarios qualité 6-parties / revue ADR / traçabilité / walking skeleton / risque-driven
-/ arc42 / AWS WAR - lue par `architecte-coherence`).
+/ arc42 / AWS WAR - lue par `architecte-coherence`), `references/regeneration-gate.md` (porte de
+régénération : à la relance d'un skill dont les sorties existent déjà - dont `diagrammes/` -
+choix **Repartir de zéro** ou **Garder les deux (versionner)**, jamais d'écrasement sans choix
+explicite ; **exception ADR** : un ADR accepté reste immuable, non versionné par la porte).
 Agent de lecture : `agents/architecte-reader.md` (lecture complète + sortie structurée,
 dispatché en parallèle par `architecte-fondations` et `architecte-coherence`).
 Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exactes** de

@@ -41,6 +41,16 @@ catalogue `references/env-templates/` ; conventions d'interaction
 > l'interdiction de provenance/horodatage (qui concerne le corps : pas de `(src:)`, pas
 > d'horodatage épars, pas de nom de personne).
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
+skill** existent déjà - `diagrammes.md` **et les images sous `diagrammes/`**, `risques.md`,
+`impact-design.md` - proposer le choix **Repartir de zéro** (supprimer puis générer à neuf ; pour
+les diagrammes, vider `diagrammes/` avant de re-rendre les images) ou **Garder les deux (versionner)**
+(archiver l'existant sous `_archives/` - le dossier `diagrammes/` vers `_archives/diagrammes-v<N>/` -
+puis régénérer au nom canonique en `version: N+1`) et **attendre** le choix. Les fichiers
+d'environnement `.env*`/`.gitignore` restent **complétés, jamais écrasés** (règle propre à l'étape 4).
+Premier passage (rien n'existe) : générer directement, sans porte.
+
 ## Procédure : ordre imposé (chaque étape consomme la précédente)
 
 ### Étape 1 : Diagrammes (+ images SVG/PNG)

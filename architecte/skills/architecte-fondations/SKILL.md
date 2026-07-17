@@ -40,6 +40,13 @@ sans l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-init`.
 > l'interdiction de provenance/horodatage (qui concerne le corps : pas de `(src:)`, pas
 > d'horodatage épars, pas de nom de personne).
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
+skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
+`version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
+au nom canonique en `version: N+1`) et **attendre** le choix. Premier passage (rien n'existe) :
+générer directement, sans porte.
+
 ## Procédure : ordre imposé (chaque étape consomme la précédente)
 
 ### Étape 1 : Lire le cadrage en parallèle (exhaustif), puis vérifier

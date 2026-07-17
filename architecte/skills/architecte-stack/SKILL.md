@@ -43,6 +43,15 @@ contrainte (`cadrage-out/project-frame.md`, `product-brief.md`, `spec-index.md`,
 > l'interdiction de provenance/horodatage (qui concerne le corps : pas de `(src:)`, pas
 > d'horodatage épars, pas de nom de personne).
 
+## Porte de régénération (relance)
+Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
+skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
+`version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
+au nom canonique en `version: N+1`) et **attendre** le choix. **Exception ADR** : un ADR accepté est
+immuable ; la porte ne le supprime ni ne le versionne - il évolue via son champ `Statut` et un ADR
+successeur (cf. la règle de versionnage des documents). Premier passage (rien n'existe) : générer
+directement, sans porte.
+
 ## Procédure : ordre imposé (chaque étape consomme la précédente)
 
 ### Étape 1 : Workflow stack technique (interactif)
