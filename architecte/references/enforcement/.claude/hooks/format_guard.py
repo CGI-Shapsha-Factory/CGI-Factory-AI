@@ -5,7 +5,7 @@ Pourquoi ce hook : Claude Code (Write/Edit) ne lit PAS `.editorconfig` ; et `ruf
 fait le pont. Deux sources de preferences, dans l'ordre :
   1. **Fichier de config ruff dedie** s'il existe (`ruff.toml`/`.ruff.toml`, ou l'emplacement Factory
      `conventions/ruff.toml` / `conventions/python/ruff.toml`) -> `ruff format --config <fichier>`.
-     C'est la source COMPLETE des preferences du formateur (quote-style, line-ending, magic comma…).
+     C'est la source COMPLETE des preferences du formateur (quote-style, line-ending, magic comma...).
   2. **Sinon**, `.editorconfig` applicable (recherche ascendante + fallback `conventions/`, arret sur
      `root = true`, sections en glob) traduit en options `ruff format --config` (les 4 reglages de base).
 
@@ -63,7 +63,7 @@ def _editorconfig_chain(start_dir):
     """Liste des `.editorconfig` du plus HAUT au plus PROCHE (le proche override), arret sur root.
 
     A chaque niveau on regarde `<dir>/.editorconfig` (emplacement standard) ET
-    `<dir>/conventions/.editorconfig` (emplacement de la Factory — `architecte-init` y range le socle,
+    `<dir>/conventions/.editorconfig` (emplacement de la Factory - `architecte-init` y range le socle,
     or la decouverte editorconfig ne fouille QUE les dossiers ancetres, pas un sous-dossier).
     """
     chain = []
@@ -147,7 +147,7 @@ def _find_ruff_config(start_dir):
     (emplacement de la Factory, que ruff ne trouve PAS seul). Renvoie le chemin, ou None.
 
     Ce fichier porte les preferences COMPLETES du formateur (quote-style, magic trailing comma,
-    line-ending, docstring, etc.) — bien plus riches que les 4 reglages de `.editorconfig`.
+    line-ending, docstring, etc.) - bien plus riches que les 4 reglages de `.editorconfig`.
     """
     d = os.path.abspath(start_dir)
     while True:
@@ -200,7 +200,7 @@ def main():
         return 0
 
     sys.stderr.write(
-        "format_guard: ruff introuvable — formatage Python ignore "
+        "format_guard: ruff introuvable - formatage Python ignore "
         "(installe-le : `uv tool install ruff` ou `pip install ruff`).\n"
     )
     return 0

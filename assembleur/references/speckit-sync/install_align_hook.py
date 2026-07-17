@@ -4,7 +4,7 @@
 Deux gestes deterministes (jamais laisses au modele), miroir de l'enforcement architecte et du hook
 sync tasks->Linear :
   1. COPIE `check_speckit_alignment.py` (depuis `assembleur/scripts/`) -> `<racine>/.claude/hooks/`
-     (jamais d'ecrasement — idempotent).
+     (jamais d'ecrasement - idempotent).
   2. FUSIONNE le hook `PostToolUse` (matcher Write|Edit) dans `.claude/settings.json` SANS ecraser un
      hook existant (tests_guard/format_guard de l'architecte, tasks_linear_hook, SessionEnd des couts).
 
@@ -54,7 +54,7 @@ def main(argv):
         try:
             data = json.load(open(settings, encoding="utf-8")) or {}
         except ValueError:
-            print(f"ERREUR: {settings} JSON invalide — abandon (pas d'ecrasement).", file=sys.stderr)
+            print(f"ERREUR: {settings} JSON invalide - abandon (pas d'ecrasement).", file=sys.stderr)
             return 1
 
     arr = data.setdefault("hooks", {}).setdefault("PostToolUse", [])

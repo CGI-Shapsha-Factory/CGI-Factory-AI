@@ -11,11 +11,11 @@ fonctionnel** (use cases / capacités, par valeur), plus la carte de couplage
 
 ## Principe des deux découpages
 
-La captation produit le **découpage fonctionnel** — ce que fait le produit et dans
+La captation produit le **découpage fonctionnel** - ce que fait le produit et dans
 quel ordre d'importance, **depuis la vision PO seule, sans stack ni architecture**.
 La **liste de features numérotées et séquencée** (et le walking skeleton, qui
 dé-risque la stack) se fige **en sortie d'architecture** : l'architecture confronte
-cette coupe fonctionnelle aux contrats et au squelette technique. Ici, IDs (`UC…`)
+cette coupe fonctionnelle aux contrats et au squelette technique. Ici, IDs (`UC...`)
 et ordre sont **provisoires**, le couplage est une **hypothèse**.
 
 ## Objectif
@@ -36,10 +36,10 @@ Gabarits de sortie : `.factory/cadrage/spec-index.md` et
 ## Pré-requis (vérification silencieuse)
 
 La vision produit est disponible (`product_brief` validé sur le plan direction).
-Sinon, le dire en clair et proposer de faire la vision d'abord — sans afficher de
-« porte ». Si la direction produit est déjà claire dans la matière, on peut avancer.
+Sinon, le dire en clair et proposer de faire la vision d'abord - sans afficher de
+"porte". Si la direction produit est déjà claire dans la matière, on peut avancer.
 
-## Méthode — trois passes
+## Méthode : trois passes
 
 1. **Passe surface.** Lister les grandes capacités du périmètre IN. Vue à plat
    des activités utilisateur.
@@ -47,20 +47,20 @@ Sinon, le dire en clair et proposer de faire la vision d'abord — sans afficher
    mapping (backbone d'activités, puis tranches). L'ordre est fonctionnel, pas un
    ordre de fabrication technique. **Aucune notion de MVP / post-MVP.**
 3. **Passe risque.** Repérer les zones de risque et de couplage **pressenties**
-   (hypothèse), pour les signaler à l'architecture — sans trancher les frontières
+   (hypothèse), pour les signaler à l'architecture - sans trancher les frontières
    techniques ici.
 
 **Règles de découpage :**
 - Chaque use case est une **tranche verticale de valeur** : il livre de la valeur
-  de bout en bout, jamais une couche technique (pas de « base de données » ou
-  « API »).
+  de bout en bout, jamais une couche technique (pas de "base de données" ou
+  "API").
 - **Préoccupations transverses ≠ use cases.** Identifier **d'abord** les concerns
-  **transverses** — authentification, **droits / contrôle d'accès / filtrage par
+  **transverses** - authentification, **droits / contrôle d'accès / filtrage par
   droits**, journalisation, audit, i18n, observabilité : ils traversent plusieurs use
   cases et ne livrent pas de valeur isolée. **Ne pas en faire des use cases** ; les
   noter comme **contraintes transverses** (dans `coupling-map.md` et le project-frame),
   reprises ensuite par l'architecte/designer sur toutes les features. **Ne jamais
-  créer un use case « filtrage par droits » pour le supprimer ensuite.**
+  créer un use case "filtrage par droits" pour le supprimer ensuite.**
 - **Walking skeleton candidat** : proposer un use case candidat pour la première
   tranche de bout en bout. Le walking skeleton **définitif** est désigné à
   l'architecture (il dé-risque la stack).
@@ -70,23 +70,23 @@ Sinon, le dire en clair et proposer de faire la vision d'abord — sans afficher
 ## Sorties
 
 ### `spec-index.md`
-En tête, le bandeau en **langage clair** : « **Proposition fonctionnelle — revue
-de couplage pas encore faite** » (cf. `references/ux-conventions.md`). L'artefact
+En tête, le bandeau en **langage clair** : "**Proposition fonctionnelle - revue
+de couplage pas encore faite**" (cf. `references/ux-conventions.md`). L'artefact
 peut conserver un champ machine (`arbitrated: false`) **non affiché** à
 l'utilisateur ; tout texte adressé à l'utilisateur reste en clair. Un use
-case par ligne : `id` (provisoire `UC…`), `nom`, `frontière IN`, `frontière OUT`,
+case par ligne : `id` (provisoire `UC...`), `nom`, `frontière IN`, `frontière OUT`,
 `activités utilisateur couvertes`, `couplage pressenti (hypothèse)`. **Pas de champ
 MVP.** Plus le walking skeleton **candidat** et la **section couverture du périmètre
-IN** (chaque capacité IN du product-brief → use case(s)). **Aucune provenance écrite**
+IN** (chaque capacité IN du product-brief -> use case(s)). **Aucune provenance écrite**
 (pas de `(src:)`) ; les frontières non tranchées par la matière sont **tranchées en
 session** lors de la revue de couplage, pas marquées `[À VALIDER]`.
 
 ### `coupling-map.md`
 États partagés entre features, couplages directs, vue de parallélisme (ce qui
 peut avancer ensemble, ce qui doit attendre, chemin critique). Le walking skeleton
-est défini dans le `spec-index.md` (source unique). **Pas de section « points à
-arbitrer » persistée** : les arbitrages se font en session et les décisions sont
-écrites **en place** dans la carte (cf. « Revue de couplage »).
+est défini dans le `spec-index.md` (source unique). **Pas de section "points à
+arbitrer" persistée** : les arbitrages se font en session et les décisions sont
+écrites **en place** dans la carte (cf. "Revue de couplage").
 
 ## Restituer le découpage en session (corr #10 + #11)
 
@@ -100,7 +100,7 @@ chat sous forme de tableau à TROIS colonnes, en français Product Owner** :
 - **Aucun nom de champ, aucune clé JSON, aucun nom d'attribut du manifeste** dans la
   sortie affichée (pas de `arbitrated`, pas de clés internes). **Les use cases, eux, se
   nomment par leur intitulé complet en langage naturel suivi de leur référence entre
-  parenthèses** — `Intitulé complet du use case (UC1)`, **jamais un `UC1` nu** — pour que
+  parenthèses** - `Intitulé complet du use case (UC1)`, **jamais un `UC1` nu** - pour que
   l'utilisateur garde un repère stable sans mémoriser les numéros (cf.
   `references/ux-conventions.md`, §3ter). Dans le tableau, la colonne `Use case` porte cet
   **intitulé complet suivi de `(UCn)`**.
@@ -120,8 +120,8 @@ Avant d'écrire le manifeste, vérifier :
   product-brief est mappée à ≥1 use case ; une capacité non couverte est **tranchée
   en session** (on demande), pas marquée `[À VALIDER]`.
 - **Aucune provenance écrite** (pas de `(src:)`), **aucune notion de MVP**.
-- **L'arbitrage reste à faire.** La sortie porte la mention « proposition
-  fonctionnelle — revue de couplage pas encore faite » (le champ machine
+- **L'arbitrage reste à faire.** La sortie porte la mention "proposition
+  fonctionnelle - revue de couplage pas encore faite" (le champ machine
   `arbitrated` reste faux, non affiché) ; la numérotation/séquencement définitif
   et le walking skeleton relèvent de l'architecture ; revue de couplage humaine
   requise.
@@ -138,12 +138,12 @@ ce skill **met à jour le découpage en place** :
   `[REMIS EN CAUSE]`, pas supprimée à la dérobée.
 
 **Reset d'arbitrage (règle dure).** Si le réjeu **change matériellement** le
-découpage — feature ajoutée, fusionnée, supprimée, ou frontière/dépendance
-déplacée — le skill **repasse `spec_index.arbitrated` et
-`definition_of_ready.decoupage_arbitrated` à `false`**, avec une note « arbitrage
-à refaire suite à : <cause> ». Un découpage qui a bougé n'est plus arbitré : la
+découpage - feature ajoutée, fusionnée, supprimée, ou frontière/dépendance
+déplacée - le skill **repasse `spec_index.arbitrated` et
+`definition_of_ready.decoupage_arbitrated` à `false`**, avec une note "arbitrage
+à refaire suite à : <cause>". Un découpage qui a bougé n'est plus arbitré : la
 revue de couplage humaine doit le re-trancher. Le skill ne maintient jamais un
-drapeau « arbitré » sur une proposition modifiée. Un réjeu **sans** changement
+drapeau "arbitré" sur une proposition modifiée. Un réjeu **sans** changement
 matériel (reformulation, marqueur levé) laisse l'arbitrage en l'état.
 
 ## Mise à jour du manifeste
@@ -160,9 +160,9 @@ Read-modify-write puis revalidation JSON :
 - `phase = "decoupage"`.
 - `updated_at` à l'horodatage courant.
 
-> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
-> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : phase:
-> decoupage, decoupage_arbitrated: true », toute liste `champ: valeur`). Confirmer seulement, en clair,
+> **Silencieux - jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
+> ni citer un nom de champ ou une valeur `true`/`false` (interdit : "Manifeste à jour : phase:
+> decoupage, decoupage_arbitrated: true", toute liste `champ: valeur`). Confirmer seulement, en clair,
 > **ce qui a été produit** + la prochaine étape (cf. `references/ux-conventions.md`).
 
 > **Aucun point ouvert n'est persisté** : pas de `validation_points[]` de découpage,
@@ -181,12 +181,12 @@ Déroulé :
    (cf. `references/interactive-loop.md`). Pour chaque point (état partagé,
    couplage direct, ce qui peut avancer en parallèle, chemin critique) : exposer
    le point en langage clair et proposer **une décision recommandée** (suggestion,
-   clairement étiquetée). **Chaque mention d'un use case — dans l'énoncé du point, dans la
-   décision recommandée ET dans chaque option — le désigne par son intitulé complet en langage
+   clairement étiquetée). **Chaque mention d'un use case - dans l'énoncé du point, dans la
+   décision recommandée ET dans chaque option - le désigne par son intitulé complet en langage
    naturel suivi de sa référence entre parenthèses** (`l'ingestion documentaire (UC3)`),
    **jamais par un `UC3` nu** : l'utilisateur n'a ainsi pas à se rappeler quel numéro
    correspond à quelle capacité. L'utilisateur accepte ou donne la sienne. **Pas de menu
-   numéroté** (pas de « 3. Saisir ma décision »). **Attendre la réponse** avant le
+   numéroté** (pas de "3. Saisir ma décision"). **Attendre la réponse** avant le
    point suivant.
 2. **Appliquer chaque décision EN PLACE** au fur et à mesure : modifier directement
    `coupling-map.md` (et `spec-index.md` si la frontière/dépendance bouge) pour y
@@ -195,8 +195,8 @@ Déroulé :
    laissé tel quel dans l'hypothèse, sans marqueur.
 3. **Une fois les points résolus**, passer `spec_index.arbitrated` et
    `definition_of_ready.decoupage_arbitrated` à `true`, **et mettre à jour les en-têtes
-   de `spec-index.md` ET de `coupling-map.md`** → « Revue de couplage close
-   (AAAA-MM-JJ) ». Si l'utilisateur n'a pas voulu trancher, la revue reste ouverte.
+   de `spec-index.md` ET de `coupling-map.md`** -> "Revue de couplage close
+   (AAAA-MM-JJ)". Si l'utilisateur n'a pas voulu trancher, la revue reste ouverte.
 
 ## Livrable visuel
 
@@ -217,4 +217,4 @@ code du gabarit), sans titre/date/mode/version (cf. `references/ux-conventions.m
 - **Tranches verticales.** Jamais de découpage en couches techniques.
 - **Skill indépendant.** Pré-requis et mise à jour via le manifeste.
 
-Étape suivante : `/cadrage:cadrage-demonstrateur-brief` — produire le prompt du démonstrateur. La maquette doit être **validée par le client** et la **revue de couplage** faite **avant** les briefs (ordre : découpage + revue de couplage → boucle démonstrateur → briefs).
+Étape suivante : `/cadrage:cadrage-demonstrateur-brief` - produire le prompt du démonstrateur. La maquette doit être **validée par le client** et la **revue de couplage** faite **avant** les briefs (ordre : découpage + revue de couplage -> boucle démonstrateur -> briefs).

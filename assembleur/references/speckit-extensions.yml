@@ -1,4 +1,4 @@
-# SpecKit — registre des hooks d'extension (.specify/extensions.yml)
+# SpecKit : registre des hooks d'extension (.specify/extensions.yml)
 # Pose par /assembleur:install-speckit. Lu par les skills /speckit.* a chaque phase du cycle.
 # Ce fichier n'est PAS genere par `specify init` : c'est la config d'equipe qui branche des
 # automations sur les points du cycle SpecKit (sans lui, les /speckit.* rapportent "No hooks").
@@ -19,7 +19,7 @@ hooks:
       enabled: true
       optional: true
       prompt: "Creer les sous-tickets Task Linear (un par phase de tasks.md), rattaches au ticket Feature ? Lance /assembleur:creation-task-linear."
-      description: "Factory — reflete les phases du tasks.md en sous-tickets Task Linear (skill /assembleur:creation-task-linear)."
+      description: "Factory - reflete les phases du tasks.md en sous-tickets Task Linear (skill /assembleur:creation-task-linear)."
       condition: null
 
   # Apres /speckit.implement : faire avancer l'etat du ticket Linear (feature/phase terminee).
@@ -29,7 +29,7 @@ hooks:
       enabled: true
       optional: true
       prompt: "Mettre a jour l'etat du ticket Linear (feature/phase terminee) ? Lance /assembleur:update-issue-linear."
-      description: "Factory — avance l'etat du ticket Linear apres implementation (skill /assembleur:update-issue-linear)."
+      description: "Factory - avance l'etat du ticket Linear apres implementation (skill /assembleur:update-issue-linear)."
       condition: null
 
 # Points de hook additionnels disponibles (before_/after_ pour chaque phase), a activer au besoin :
@@ -40,5 +40,5 @@ hooks:
 #       command: assembleur.premier-alimente-linear
 #       enabled: false
 #       optional: true
-#       description: "Rappel : alimenter Linear (Feature + Task/FR) — normalement fait avant SpecKit."
+#       description: "Rappel : alimenter Linear (Feature + Task/FR) : normalement fait avant SpecKit."
 #       condition: null

@@ -1,18 +1,18 @@
 #!/usr/bin/env python
-"""Hook PostToolUse (Write|Edit) — sync tasks.md SpecKit -> Linear (declencheur, best-effort).
+"""Hook PostToolUse (Write|Edit) - sync tasks.md SpecKit -> Linear (declencheur, best-effort).
 
 A chaque ecriture/edition d'un `specs/<feature>/tasks.md`, si le fichier contient des **phases**
 (`## Phase N:`), POUSSE l'agent (message `decision:block`) a lancer `/assembleur:creation-task-linear`,
-qui — cote agent, avec le MCP — **verifie sur Linear** (par `parentId` du ticket Feature) et cree les
+qui - cote agent, avec le MCP - **verifie sur Linear** (par `parentId` du ticket Feature) et cree les
 sous-tickets `Task` manquants (label `Task`, Backlog, rattaches au ticket Feature).
 
 **L'etat d'avancement vit DANS Linear, jamais dans le manifeste committe** (pas de conflit de merge
 multi-dev). Le hook n'a pas acces au MCP ; il ne peut donc pas lire l'etat Linear. Il lit seulement :
   - le manifeste committe pour savoir si un **ticket Feature** existe pour la feature (carte amont figee,
-    posee une fois par premier-alimente-linear — donnee single-owner, jamais un etat de dev mutant) ;
+    posee une fois par premier-alimente-linear - donnee single-owner, jamais un etat de dev mutant) ;
   - un **marqueur de debounce PAR DEV**, git-ignore (`.factory/linear/tasks-hook-seen.json`), pour ne
     pousser qu'une fois par jeu de phases et ne pas re-harceler a chaque edition. Ce marqueur est
-    NON autoritatif et regenerable — l'autorite d'idempotence reste **Linear** (interrogee par le skill).
+    NON autoritatif et regenerable - l'autorite d'idempotence reste **Linear** (interrogee par le skill).
 
 Le hook NE PARLE JAMAIS a Linear et n'ecrit jamais le manifeste. Toujours exit 0 (ne casse jamais un
 Write) ; silencieux si le fichier n'est pas un tasks.md, s'il n'a pas de phases, ou si ses phases ont
@@ -107,7 +107,7 @@ def cmd_posttooluse():
 
     phases = _phases_in_file(path)
     if not phases:
-        return 0  # pas encore de phases (tasks.md en cours de generation) — rien a synchroniser
+        return 0  # pas encore de phases (tasks.md en cours de generation) - rien a synchroniser
 
     root = os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd()
     try:
@@ -139,14 +139,14 @@ def cmd_posttooluse():
     already = set(seen.get(feature_dir) or [])
     fresh = sorted(phases - already)
     if not fresh:
-        return 0  # phases deja signalees — silencieux
+        return 0  # phases deja signalees - silencieux
 
     seen[feature_dir] = sorted(already | phases)
     _save_seen(root, seen)
     phases_txt = ", ".join(f"Phase {n}" for n in fresh)
     return _block(
         f"Le tasks.md de la feature '{feature_dir}' a change : {len(fresh)} phase(s) a synchroniser vers "
-        f"Linear ({phases_txt}). Lance /assembleur:creation-task-linear — il verifie sur Linear (par "
+        f"Linear ({phases_txt}). Lance /assembleur:creation-task-linear - il verifie sur Linear (par "
         f"parentId) et cree uniquement les sous-tickets Task manquants (label Task, Backlog, rattaches au "
         f"ticket Feature). L'avancement vit dans Linear, pas dans le manifeste committe."
     )

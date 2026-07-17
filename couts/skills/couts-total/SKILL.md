@@ -7,12 +7,12 @@ description: Agrège toutes les sessions locales en un seul fichier de bilan par
 
 Produit **un seul fichier** (`.factory/couts/bilan-couts.md`) résumant **l'ensemble des sessions**
 locales mesurées par le hook `SessionEnd`. Ce fichier est conçu pour être transmis au **chef d'équipe**
-quand il demande « qu'as-tu consommé ? ».
+quand il demande "qu'as-tu consommé ?".
 
 **Contenu du bilan** : dev, période, nombre de sessions, total tokens (split 5 catégories sur 1 ligne),
 coût estimé € (USD) daté, disclaimer estimation.
 
-> **Note** : `.factory/couts/` est **git-ignoré** — les données sont **individuelles** et ne sont
+> **Note** : `.factory/couts/` est **git-ignoré** - les données sont **individuelles** et ne sont
 > jamais poussées. Ce bilan est le mécanisme de partage prévu (remis à la main, e-mail, etc.).
 >
 > **Pas de pré-requis** : si `.factory/couts/` n'existe pas encore, le script le crée automatiquement
@@ -24,11 +24,11 @@ coût estimé € (USD) daté, disclaimer estimation.
    ```
    python "${CLAUDE_PLUGIN_ROOT}/references/cost_total.py" <racine-projet>
    ```
-   (Adapter `python` → `py -3` si besoin sur Windows.)
+   (Adapter `python` -> `py -3` si besoin sur Windows.)
 
 2. Afficher en chat le contenu produit (sessions, total tokens + split, coût estimé).
 
-3. Indiquer en clair **le chemin absolu du fichier** `.factory/couts/bilan-couts.md` — c'est ce
+3. Indiquer en clair **le chemin absolu du fichier** `.factory/couts/bilan-couts.md` - c'est ce
    fichier qu'on transmet au chef d'équipe.
 
 ## Règles invariantes
@@ -37,7 +37,7 @@ coût estimé € (USD) daté, disclaimer estimation.
 - **Données locales uniquement.** Le dossier `.factory/couts/` étant git-ignoré, ce bilan ne couvre
   que les sessions de **ce développeur** sur **ce poste**. Pour un rollup organisation, voir
   `references/OTEL.md`.
-- **Un seul fichier.** Le script écrase `bilan-couts.md` à chaque run — le fichier reflète toujours
+- **Un seul fichier.** Le script écrase `bilan-couts.md` à chaque run - le fichier reflète toujours
   l'état courant du journal local.
 
 Étape suivante : remettre `.factory/couts/bilan-couts.md` au chef d'équipe.

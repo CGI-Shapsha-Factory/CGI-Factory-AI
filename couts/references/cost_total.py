@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Bilan total de consommation — un seul fichier partageable pour le chef d'equipe.
+"""Bilan total de consommation : un seul fichier partageable pour le chef d'equipe.
 
 Agrege TOUTES les sessions locales (le dossier .factory/couts/ est git-ignore donc
 individuel), calcule le total tokens (5 categories) + le cout estime + le nombre
@@ -16,7 +16,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import cost_report  # noqa: E402 — meme dossier, resolution garantie
+import cost_report  # noqa: E402 - meme dossier, resolution garantie
 
 
 def _fmt_int(n):
@@ -58,7 +58,7 @@ def main(argv):
     # Le taux USD->EUR est une constante datee de cost_report (pas de fichier de config).
     rate = cost_report.USD_EUR
 
-    # Total tokens (5 categories — net-new, cost_report.py ne somme que sim_cost_usd)
+    # Total tokens (5 categories - net-new, cost_report.py ne somme que sim_cost_usd)
     tok = {"input": 0, "output": 0, "cache_read": 0, "cache_write_5m": 0, "cache_write_1h": 0}
     for r in records:
         t = r.get("tokens") or {}
@@ -75,7 +75,7 @@ def main(argv):
         debut, fin = ts_list[0][:10], ts_list[-1][:10]
         periode = f"{debut} -> {fin}" if debut != fin else debut
 
-    lines = ["# Bilan de consommation — Factory"]
+    lines = ["# Bilan de consommation : Factory"]
     if devs:
         lines.append(f"_Dev : {', '.join(devs)}_")
     if periode:
@@ -96,11 +96,11 @@ def main(argv):
         parts.append(f"table {pdate}")
     parts.append(f"FX {rate} au {cost_report.RATE_DATE}")
     dline = ", ".join(parts) if parts else "table de prix locale"
-    lines.append(f"_Estimation au tarif API ({dline}) — pas un montant facturé._")
+    lines.append(f"_Estimation au tarif API ({dline}) - pas un montant facturé._")
     if not records:
         lines.append("")
         lines.append(
-            "_Aucun enregistrement trouvé — lancer `couts-init` puis attendre la fin d'une session._"
+            "_Aucun enregistrement trouvé - lancer `couts-init` puis attendre la fin d'une session._"
         )
 
     md = "\n".join(lines)

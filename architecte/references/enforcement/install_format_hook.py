@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """Installe le hook de FORMATAGE PostToolUse (format_guard.py) dans un projet.
 
-Trois gestes atomiques (jamais laisses au modele — lecon du hook de test) :
+Trois gestes atomiques (jamais laisses au modele - lecon du hook de test) :
   1. COPIE `format_guard.py` -> `<racine>/.claude/hooks/` (sans ecraser un fichier existant).
   2. COPIE la config du formateur `ruff.toml` -> `<racine>/conventions/python/ruff.toml` (sans
-     ecraser) — c'est le fichier que le hook passe a `ruff format --config` (preferences completes).
+     ecraser) - c'est le fichier que le hook passe a `ruff format --config` (preferences completes).
   3. FUSIONNE un hook `PostToolUse` (matcher Write|Edit) dans `.claude/settings.json`, SANS ecraser
      un evenement/hook existant (ex. le PostToolUse de tests_guard, le SessionEnd du compteur de couts).
 Sans l'etape 1, le hook enregistre pointerait vers un script absent (hook mort). Sans l'etape 2, le
@@ -65,7 +65,7 @@ def main(argv):
         try:
             data = json.load(open(settings, encoding="utf-8")) or {}
         except ValueError:
-            print(f"ERREUR: {settings} JSON invalide — abandon (pas d'ecrasement).", file=sys.stderr)
+            print(f"ERREUR: {settings} JSON invalide - abandon (pas d'ecrasement).", file=sys.stderr)
             return 1
 
     arr = data.setdefault("hooks", {}).setdefault("PostToolUse", [])

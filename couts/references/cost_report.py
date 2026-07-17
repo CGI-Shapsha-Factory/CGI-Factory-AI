@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-"""Rapport de couts — cout de SIMULATION seul, un tableau PAR SESSION.
+"""Rapport de couts : cout de SIMULATION seul, un tableau PAR SESSION.
 
 Les tokens du journal .factory/couts/ sont valorises au tarif API (table de prix datee), puis
 convertis en EUR via un taux FIGE dans ce script. Ce n'est PAS un montant facture : c'est une
-estimation « combien cette fabrication couterait au tarif API ».
+estimation "combien cette fabrication couterait au tarif API".
 
 Le tableau donne, par session : date de debut -> date de fin (JJ-MM), tokens d'entree (bruts, hors
 cache), tokens de sortie, et le cout en euros (cout complet : input + output + cache lu + cache ecrit,
@@ -47,8 +47,8 @@ def project_root(hint):
             break
         cur = parent
 
-    # 2. Descendre (profondeur <= 3) : 1er sous-dossier avec un journal (cas « lance depuis le git
-    #    root, journal dans un sous-dossier »). On saute les dossiers lourds.
+    # 2. Descendre (profondeur <= 3) : 1er sous-dossier avec un journal (cas "lance depuis le git
+    #    root, journal dans un sous-dossier"). On saute les dossiers lourds.
     base = start.rstrip(os.sep).count(os.sep)
     for dirpath, dirnames, _ in os.walk(start):
         dirnames[:] = [d for d in dirnames if d not in _SKIP_DIRS]
@@ -134,31 +134,31 @@ def build_report(root):
     sess = sessions_of(records)
     order = sorted(sess, key=lambda sid: sess[sid]["start"] or "")
 
-    lines = ["# Rapport de coûts — Factory", ""]
-    lines.append(f"## Coût de simulation (estimation, tarif API — table du {pdate or '?'})")
+    lines = ["# Rapport de coûts : Factory", ""]
+    lines.append(f"## Coût de simulation (estimation, tarif API - table du {pdate or '?'})")
     lines.append("")
-    lines.append("| Session (début → fin) | Tokens input | Tokens output | Coût (€) |")
+    lines.append("| Session (début -> fin) | Tokens input | Tokens output | Coût (€) |")
     lines.append("|---|---|---|---|")
 
     tot_in = tot_out = 0
     tot_usd = 0.0
     for sid in order:
         s = sess[sid]
-        label = f"{_jjmm(s['start'])} → {_jjmm(s['end'])}"
+        label = f"{_jjmm(s['start'])} -> {_jjmm(s['end'])}"
         e = eur(s["usd"])
-        cout = f"{e:.2f} €" if e is not None else "—"
+        cout = f"{e:.2f} €" if e is not None else "-"
         lines.append(f"| {label} | {_int(s['input'])} | {_int(s['output'])} | {cout} |")
         tot_in += s["input"]
         tot_out += s["output"]
         tot_usd += s["usd"]
 
     te = eur(tot_usd)
-    tot_cout = f"{te:.2f} €" if te is not None else "—"
+    tot_cout = f"{te:.2f} €" if te is not None else "-"
     lines.append(f"| **Total** | **{_int(tot_in)}** | **{_int(tot_out)}** | **{tot_cout}** |")
     lines.append("")
     lines.append(f"_{len(sess)} session(s). Input = tokens d'entrée hors cache ; le coût inclut le "
                  f"cache (lecture + écriture). Taux {USD_EUR} €/$ au {RATE_DATE}. "
-                 f"Devise native USD, estimation au tarif API — pas un montant facturé._")
+                 f"Devise native USD, estimation au tarif API - pas un montant facturé._")
 
     data = {
         "sessions": [

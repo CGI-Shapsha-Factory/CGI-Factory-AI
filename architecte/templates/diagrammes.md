@@ -6,7 +6,7 @@ date: AAAA-MM-JJ
 
 # Diagrammes d'architecture
 
-<!-- Public visé : humains — pour revoir et valider les décisions d'architecture. -->
+<!-- Public visé : humains - pour revoir et valider les décisions d'architecture. -->
 <!-- Tous les diagrammes utilisent la syntaxe D2 (https://d2lang.com), rendue avec le moteur
      de layout ELK : routage orthogonal, sans chevauchement de flèches ni de libellés.
      Remplacer chaque [placeholder] par des noms réels de l'architecture. Ajouter ou retirer
@@ -15,7 +15,7 @@ date: AAAA-MM-JJ
      en marqueur dans le fichier final. Après écriture, les blocs D2 sont rendus en SVG
      (source de vérité, vectoriel) + PNG (best-effort) dans `architecte-out/diagrammes/` par
      `scripts/render_diagrams.py`. Le thème se choisit par bloc via l'info-string du fence
-     (ouvrir le bloc avec « d2 theme=0 » ; thèmes utiles : 0 = neutre par défaut, 303 = C4,
+     (ouvrir le bloc avec "d2 theme=0" ; thèmes utiles : 0 = neutre par défaut, 303 = C4,
      200 = sombre). -->
 <!-- Conventions visuelles C4 conservées ici avec le thème neutre : système = rectangle bleu
      plein ; conteneurs = rectangles bleus ; base de données = shape cylinder ; systèmes
@@ -30,7 +30,7 @@ date: AAAA-MM-JJ
      le sens de l'interaction avec un libellé court (action + protocole entre crochets). -->
 
 ```d2 theme=0
-title: "Contexte système — [Nom du système]" { near: top-center; shape: text; style.font-size: 24; style.bold: true }
+title: "Contexte système - [Nom du système]" { near: top-center; shape: text; style.font-size: 24; style.bold: true }
 direction: down
 
 userA: "[Type d'acteur]\n[Brève description de cet acteur]" { shape: person; width: 96; height: 96 }
@@ -60,7 +60,7 @@ system -> extB: "[Action] [protocole]"
      surcharger les zones où plusieurs flèches convergent. -->
 
 ```d2 theme=0
-title: "Diagramme de conteneurs — [Nom du système]" { near: top-center; shape: text; style.font-size: 24; style.bold: true }
+title: "Diagramme de conteneurs - [Nom du système]" { near: top-center; shape: text; style.font-size: 24; style.bold: true }
 direction: down
 
 user: "[Acteur]\n[Description]" { shape: person; width: 96; height: 96 }
@@ -83,7 +83,7 @@ system.containerB -> ext: "[Action] [HTTPS]"
 
 ---
 
-## 3. Diagramme de flux / séquence — [Nom du parcours critique]
+## 3. Diagramme de flux / séquence : [Nom du parcours critique]
 
 <!-- Trace les données à travers le système pour le parcours utilisateur le plus important.
      L'ordre des messages = l'ordre d'affichage. Répéter cette section pour un second parcours
@@ -91,7 +91,7 @@ system.containerB -> ext: "[Action] [HTTPS]"
      afficher un titre parasite. -->
 
 ```d2 theme=0
-title: "Flux — [Nom du parcours critique]" { near: top-center; shape: text; style.font-size: 22; style.bold: true }
+title: "Flux - [Nom du parcours critique]" { near: top-center; shape: text; style.font-size: 22; style.bold: true }
 
 flow: "" {
   shape: sequence_diagram
@@ -122,7 +122,7 @@ flow: "" {
      entre colonnes (`TABLE_A.id -> TABLE_B.a_id: "libellé"`). -->
 
 ```d2 theme=0
-title: "Modèle de données — [Nom du système]" { near: top-center; shape: text; style.font-size: 22; style.bold: true }
+title: "Modèle de données - [Nom du système]" { near: top-center; shape: text; style.font-size: 22; style.bold: true }
 direction: right
 
 ENTITE_A: {
@@ -161,7 +161,7 @@ ENTITE_B.id -> ENTITE_C.id: "appartient à"
      sont des conteneurs D2 imbriqués ; les datastores sont des `shape: cylinder`. -->
 
 ```d2 theme=0
-title: "Déploiement — [Fournisseur cloud / Région]" { near: top-center; shape: text; style.font-size: 22; style.bold: true }
+title: "Déploiement - [Fournisseur cloud / Région]" { near: top-center; shape: text; style.font-size: 22; style.bold: true }
 direction: down
 
 internet: "Internet" {

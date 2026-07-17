@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Compteur de cout — hook Claude Code `SessionEnd` (ecriture a la FIN de session).
+"""Compteur de cout - hook Claude Code `SessionEnd` (ecriture a la FIN de session).
 
 A la fin de chaque session, lit le transcript COMPLET, produit UN enregistrement par message assistant
 (= une requete/reponse API), tarife par tier, attribue (phase amont XOR feature), et REECRIT (overwrite)

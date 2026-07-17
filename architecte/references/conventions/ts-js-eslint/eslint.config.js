@@ -1,4 +1,4 @@
-// Conventions TS/JS — ESLint « flat config » (v9+), pour les équipes déjà sur ESLint.
+// Conventions TS/JS - ESLint "flat config" (v9+), pour les équipes déjà sur ESLint.
 // Alternative à Biome (choisir l'un OU l'autre, pas les deux). Se combine avec Prettier
 // pour le formatage (.prettierrc). Copié dans conventions/ du projet si retenu.
 import js from '@eslint/js';

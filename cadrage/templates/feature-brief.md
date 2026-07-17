@@ -1,4 +1,4 @@
-# Feature 00X — <Nom>
+# Feature 00X : <Nom>
 Statut : draft | complete   <!-- complete = brief complet ; draft = il reste un point à trancher en session. -->
 
 ## 1. Narratif (quoi et pourquoi)
@@ -14,11 +14,11 @@ chacune testable isolément.
 ## 4. Critères d'acceptation
 Par story, au moins un scénario : Étant donné <contexte>, quand <action>, alors
 <résultat>. Cas nominal et cas limites connus. Énoncés non ambigus (pas de
-« rapide », « simple », « convivial »).
+"rapide", "simple", "convivial").
 
 ## 5. Critères de succès mesurables
 Résultats traduits en métriques avec une cible chiffrée, indépendants de la technologie.
-Si une cible n'est pas captée, l'écrire en clair « cible à préciser à l'architecture ».
+Si une cible n'est pas captée, l'écrire en clair "cible à préciser à l'architecture".
 
 ## 6. Périmètre
 IN : ce que la feature fait. OUT : ce qu'elle ne fait pas, explicitement.
@@ -31,7 +31,7 @@ Contraintes de la pré-constitution / vision applicables à la feature.
 
 ## 9. Glossaire pertinent
 Liste des termes utilisés par la feature (noms seulement). Les définitions vivent
-dans le glossaire global (`glossaire.md`), la **source de vérité** — ne pas
+dans le glossaire global (`glossaire.md`), la **source de vérité** - ne pas
 les copier ici, pour prévenir la dérive.
 
 ## 10. Trous
@@ -41,7 +41,7 @@ tranchent en session). Vide quand le brief est complet.
 <!--
 RÈGLE DE VALIDATION DU BRIEF (cadrage-briefs) :
 sections 1 à 9 présentes, chaque story avec au moins un critère d'acceptation,
-critères de succès chiffrés ou « à préciser à l'architecture », périmètre OUT non vide.
+critères de succès chiffrés ou "à préciser à l'architecture", périmètre OUT non vide.
 
 Ce gabarit EST le contrat central. Ne pas changer sa structure : le skill
 cadrage-completude valide à partir de lui et SpecKit le consomme via

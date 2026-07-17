@@ -1,4 +1,4 @@
-# Cadre projet — <Nom du projet>
+# Cadre projet : <Nom du projet>
 
 > Document de travail. Contraintes de cadrage du **projet** à cadrer,
 > dérivées de la **passe de découverte** de `cadrage-extraction` (13 questions).
@@ -11,7 +11,7 @@
 ## 1. Utilisateurs & rôles
 - **Qui utilise l'application (Q1)** : <profils utilisateurs>
 - **Rôles utilisateurs (Q3)** : <rôles>
-- **Volume d'utilisateurs (Q2) (seed qualité — charge)** : nombre total / nombre concurrent
+- **Volume d'utilisateurs (Q2) (seed qualité - charge)** : nombre total / nombre concurrent
 
 ## 2. Données
 - **Données stockées (Q4)** : quantité, contenu, **sensibilité** (personnelles/réglementées ?)
@@ -19,7 +19,7 @@
 ## 3. Intégrations
 - **Systèmes externes à intégrer (Q5)** : <systèmes + sens du flux>
 
-## 4. Disponibilité & performance *(seeds qualité → architecte)*
+## 4. Disponibilité & performance *(seeds qualité -> architecte)*
 - **Disponibilité requise (Q6)** : <SLA / fenêtres / criticité>
 - **Contraintes de performance (Q7)** : <temps de réponse, débit, volumes>
 
@@ -27,7 +27,7 @@
 - **Contraintes légales (Q8)** : <secteur réglementé, rétention, résidence des données>
 
 ## 6. Type de projet
-- **Type (Q9)** : <ponctuel | long terme | périmètre visé> — et implications
+- **Type (Q9)** : <ponctuel | long terme | périmètre visé> - et implications
 
 ## 7. Exploitation / production
 - **Qui exploite la production (Q10)** : le client | nous | un tiers

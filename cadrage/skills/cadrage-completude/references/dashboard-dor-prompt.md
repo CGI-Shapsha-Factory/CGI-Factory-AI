@@ -1,4 +1,4 @@
-# Prompt Claude Design — Dashboard Definition of Ready
+# Prompt Claude Design : Dashboard Definition of Ready
 
 À coller dans Claude Design, avec l'état du manifeste / le `completude-report.md`
 en matière source. Direction visuelle : une palette délibérée et sobre adaptée au

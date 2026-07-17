@@ -3,7 +3,7 @@
 
 Deux gestes, atomiques et deterministes (jamais laisses au modele) :
   1. COPIE `tests_guard.py` -> `<racine>/.claude/hooks/` et `lefthook.yml` -> `<racine>/`
-     (depuis ce dossier de plugin ; ne jamais ecraser un fichier existant — idempotent).
+     (depuis ce dossier de plugin ; ne jamais ecraser un fichier existant - idempotent).
   2. FUSIONNE le hook `PostToolUse` dans `.claude/settings.json` sans ecraser un evenement
      existant (ex. le hook `SessionEnd` du compteur de couts).
 Sans l'etape 1, le hook enregistre pointerait vers un script absent (hook mort).
@@ -17,7 +17,7 @@ import sys
 
 MARKER = "tests_guard.py"
 # Chemin ANCRE sur la racine du projet via ${CLAUDE_PROJECT_DIR} : un chemin relatif nu
-# (.claude/hooks/...) se resout contre le cwd du hook — casse des qu'un Write cible un
+# (.claude/hooks/...) se resout contre le cwd du hook : casse des qu'un Write cible un
 # sous-dossier (le hook ne tourne pas depuis la racine). Cf. Claude Code hooks reference.
 CMD = 'python "${CLAUDE_PROJECT_DIR}/.claude/hooks/tests_guard.py" posttooluse'
 ENTRIES = {
@@ -26,7 +26,7 @@ ENTRIES = {
 }
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# (source, destination-relative-a-la-racine) — copies deterministes, sans ecrasement
+# (source, destination-relative-a-la-racine) : copies deterministes, sans ecrasement
 FILE_COPIES = [
     (os.path.join(HERE, ".claude", "hooks", "tests_guard.py"),
      os.path.join(".claude", "hooks", "tests_guard.py")),
@@ -64,7 +64,7 @@ def main(argv):
         try:
             data = json.load(open(settings, encoding="utf-8")) or {}
         except ValueError:
-            print(f"ERREUR: {settings} JSON invalide — abandon (pas d'ecrasement).", file=sys.stderr)
+            print(f"ERREUR: {settings} JSON invalide - abandon (pas d'ecrasement).", file=sys.stderr)
             return 1
 
     hooks = data.setdefault("hooks", {})

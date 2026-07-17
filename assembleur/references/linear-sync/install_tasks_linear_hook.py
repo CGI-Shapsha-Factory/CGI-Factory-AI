@@ -3,7 +3,7 @@
 
 Deux gestes deterministes (jamais laisses au modele), miroir de l'enforcement architecte :
   1. COPIE `tasks_linear_hook.py` -> `<racine>/.claude/hooks/` (depuis ce dossier de plugin ;
-     jamais d'ecrasement — idempotent).
+     jamais d'ecrasement - idempotent).
   2. FUSIONNE le hook `PostToolUse` dans `.claude/settings.json` SANS ecraser un hook existant
      (tests_guard/format_guard de l'architecte, SessionEnd du compteur de couts).
 
@@ -52,7 +52,7 @@ def main(argv):
         try:
             data = json.load(open(settings, encoding="utf-8")) or {}
         except ValueError:
-            print(f"ERREUR: {settings} JSON invalide — abandon (pas d'ecrasement).", file=sys.stderr)
+            print(f"ERREUR: {settings} JSON invalide - abandon (pas d'ecrasement).", file=sys.stderr)
             return 1
 
     arr = data.setdefault("hooks", {}).setdefault("PostToolUse", [])

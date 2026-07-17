@@ -2,7 +2,7 @@
 # Installer une fois : `lefthook install`  (https://github.com/evilmartians/lefthook)
 # lefthook = binaire unique, polyglotte. Alternatives : husky (projet JS pur), pre-commit (Python).
 # Note : contournable avec `git commit --no-verify`. La vraie protection non contournable multi-personnes
-# est une protection cote serveur (ruleset GitHub) — a la charge de l'equipe, hors perimetre de la Factory.
+# est une protection cote serveur (ruleset GitHub) : a la charge de l'equipe, hors perimetre de la Factory.
 pre-commit:
   parallel: true
   commands:

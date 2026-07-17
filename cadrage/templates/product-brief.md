@@ -1,4 +1,4 @@
-# Product Brief — <Nom du produit>
+# Product Brief : <Nom du produit>
 Statut : draft | validated
 
 > Document de travail. Synthèse de niveau produit, le quoi et le pourquoi. Aucune
@@ -17,7 +17,7 @@ Le résultat attendu du côté de l'organisation. Pourquoi on investit.
 Qui porte le besoin, qui utilise, qui valide, qui est impacté. Le rôle de chacun.
 
 ## 4. Périmètre IN
-Ce que le produit fait. Les principales capacités couvertes. Une capacité par ligne —
+Ce que le produit fait. Les principales capacités couvertes. Une capacité par ligne -
 ces capacités sont confrontées à la couverture du découpage (`spec-index.md`).
 
 ## 5. Hors périmètre OUT
@@ -30,7 +30,7 @@ organisationnelles.
 
 ## 7. Critères de succès produit
 Résultats traduits en métriques côté usage (pas code). Quand une cible n'a pas été
-captée, écrire le critère et préciser « cible à préciser à l'architecture ».
+captée, écrire le critère et préciser "cible à préciser à l'architecture".
 
 ## 8. Hypothèse produit initiale
 L'hypothèse centrale du produit, présentée comme **à valider par le prototype**

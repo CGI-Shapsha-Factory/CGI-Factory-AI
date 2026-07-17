@@ -1,10 +1,10 @@
-# Glossaire — Langage ubiquitaire du projet
+# Glossaire : Langage ubiquitaire du projet
 
 > Document de travail. Construit et maintenu par `cadrage-glossaire`. Il fixe **les
-> termes du projet** — les entités et concepts métier autour desquels le produit
-> sera construit — dans **les mots du client**, jamais reformulés en jargon
-> technique. On retient le vocabulaire de construction (« Dossier », « Paralegal »…)
-> et on **écarte** les outils / acronymes de l'existant (GED, SharePoint…).
+> termes du projet** - les entités et concepts métier autour desquels le produit
+> sera construit - dans **les mots du client**, jamais reformulés en jargon
+> technique. On retient le vocabulaire de construction ("Dossier", "Paralegal"...)
+> et on **écarte** les outils / acronymes de l'existant (GED, SharePoint...).
 
 ## Termes
 

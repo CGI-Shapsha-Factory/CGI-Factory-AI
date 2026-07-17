@@ -17,10 +17,10 @@ de composant** (interactifs) et **états d'écran** (data-driven).
 | empty | aucune donnée | état vide explicite |
 
 ## États d'écran (UI Stack)
-initial/vide · chargement · partiel · **erreur** · idéal/succès — tout écran data-driven
+initial/vide · chargement · partiel · **erreur** · idéal/succès - tout écran data-driven
 doit traiter ces cinq états.
 
-## Interaction clavier (WAI-ARIA APG — patterns courants)
+## Interaction clavier (WAI-ARIA APG : patterns courants)
 | Composant | Clavier attendu |
 |-----------|-----------------|
 | Bouton | Entrée / Espace active |

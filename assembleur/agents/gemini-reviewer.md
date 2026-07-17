@@ -26,7 +26,7 @@ ses findings tels quels**.
 - **Ton message final EST la donnee** renvoyee a l'orchestrateur : renvoie **uniquement l'objet JSON**
   imprime par le script (dimension, status, findings, et le cas echeant reason/error), sans prose autour.
 - Si le script sort en `status:"failed"` (cle absente/invalide, quota, reseau, modele, etc.), **relaie
-  le JSON d'echec tel quel** — ne tente pas de contourner, ne fabrique pas de findings, ne bascule pas
+  le JSON d'echec tel quel** - ne tente pas de contourner, ne fabrique pas de findings, ne bascule pas
   sur ta propre analyse.
 - Si stdout n'est pas du JSON exploitable, renvoyer
   `{"dimension":"<dimension>","status":"failed","reason":"parse","error":"sortie du script non-JSON","findings":[]}`.

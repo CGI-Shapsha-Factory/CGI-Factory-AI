@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Garde-fou "tests ecrits avec le code" — hook Claude Code + pre-commit (multi-langage).
+"""Garde-fou "tests ecrits avec le code" - hook Claude Code + pre-commit (multi-langage).
 
 Sous-commandes :
   posttooluse  : (hook PostToolUse) lit le JSON stdin ; si la source editee n'a pas de test,
@@ -123,7 +123,7 @@ def cmd_check(files):
         files = _git(root, ["diff", "--cached", "--name-only", "--diff-filter=ACM"])
     miss = missing_tests(root, files)
     if miss:
-        sys.stderr.write("Commit bloque — source sans test associe :\n  - " + "\n  - ".join(miss) +
+        sys.stderr.write("Commit bloque - source sans test associe :\n  - " + "\n  - ".join(miss) +
                          "\nAjoute le(s) test(s) puis recommite (ou --no-verify en dernier recours).\n")
         return 1
     return 0

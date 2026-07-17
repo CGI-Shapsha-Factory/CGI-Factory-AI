@@ -1,6 +1,6 @@
-# Découpage fonctionnel — use cases / capacités
+# Découpage fonctionnel : use cases / capacités
 
-> ⚠️ **PROPOSITION FONCTIONNELLE — revue de couplage pas encore faite**
+> ⚠️ **PROPOSITION FONCTIONNELLE - revue de couplage pas encore faite**
 > Découpage **par valeur**, à partir de la seule vision produit (le savoir du PO),
 > **sans stack ni architecture**. Les **IDs et l'ordre sont provisoires** et la
 > carte de couplage n'est qu'une **hypothèse**. La **liste numérotée et séquencée des features,
@@ -17,12 +17,12 @@ Méthode : trois passes (surface, parcours, risque). Chaque use case est une
 
 | id  | nom | frontière IN | frontière OUT | activités utilisateur couvertes | couplage suspecté (hypothèse) |
 |-----|------|-------------|--------------|----------------------------------|----------------------------------|
-| UC1 | <use case> | … | … | … | — |
-| UC2 | <use case> | … | … | … | UC1 ? |
-| UC3 | <use case> | … | … | … | UC1 ? |
+| UC1 | <use case> | ... | ... | ... | - |
+| UC2 | <use case> | ... | ... | ... | UC1 ? |
+| UC3 | <use case> | ... | ... | ... | UC1 ? |
 
 > Une ligne par use case. `couplage suspecté` est une **hypothèse** à confronter
-> à l'architecture, pas un ordre de construction. Les IDs (`UC…`) sont provisoires :
+> à l'architecture, pas un ordre de construction. Les IDs (`UC...`) sont provisoires :
 > la numérotation finale `feature 00X` est fixée par l'architecture. **Aucune
 > notion de MVP**, **aucune provenance écrite** (pas de `(src:)`). Les frontières
 > non tranchées par la matière se tranchent **en session** lors de la revue de

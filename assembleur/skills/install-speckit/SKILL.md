@@ -1,6 +1,6 @@
 ---
 name: install-speckit
-description: Installe et initialise GitHub Spec Kit (specify) dans le repo cible — uv auto-installé sans admin, specify init non-interactif — pour que l'équipe lance tout de suite les /speckit.*.
+description: Installe et initialise GitHub Spec Kit (specify) dans le repo cible - uv auto-installé sans admin, specify init non-interactif - pour que l'équipe lance tout de suite les /speckit.*.
 ---
 
 # install-speckit
@@ -8,7 +8,7 @@ description: Installe et initialise GitHub Spec Kit (specify) dans le repo cible
 **Pont vers la phase SpecKit.** À lancer **après `assembleur-convergence`** (et, si l'équipe crée des
 tickets, après `premier-alimente-linear`), quand le paquet de handoff (`assembleur-out/`) est prêt et que
 l'équipe s'apprête à fabriquer. Ce skill **automatise l'étape `specify init`** du `attack-plan.md` : il vérifie si SpecKit est déjà posé dans le repo et,
-sinon, l'installe **complètement et sans aucune manip** — pour que les commandes `/speckit.*`
+sinon, l'installe **complètement et sans aucune manip** - pour que les commandes `/speckit.*`
 soient disponibles **immédiatement**. Principe directeur : **rien ne doit bloquer l'installation**.
 
 ## Objectif
@@ -17,8 +17,8 @@ acquis via `uv` (auto-installé si absent, en **espace utilisateur, sans admin**
 init` est joué en **non-interactif** pour l'agent Claude Code. À la fin, `.specify/` (constitution,
 scripts, templates) et les commandes `/speckit.*` existent dans le repo, **et le registre de hooks
 `.specify/extensions.yml` est posé** (config d'équipe **non générée par `specify init`** ; sans elle
-les `/speckit.*` rapportent « No hooks ») — il branche les automations Linear de la Factory en
-**hooks optionnels** (ex. `after_tasks` → `creation-task-linear`, `after_implement` →
+les `/speckit.*` rapportent "No hooks") - il branche les automations Linear de la Factory en
+**hooks optionnels** (ex. `after_tasks` -> `creation-task-linear`, `after_implement` ->
 `update-issue-linear`). **Et** le **hook `PostToolUse` `tasks_linear_hook.py`** est posé dans
 `.claude/hooks/` : il détecte **toute édition d'un `specs/<feature>/tasks.md`** et pousse l'agent à
 lancer `creation-task-linear` pour synchroniser les sous-tickets `Task` (le hook ne parle jamais à Linear).
@@ -30,15 +30,15 @@ main aucun contenu produit par `specify init`** (constitution, scripts, template
 Factory sont : le bloc `speckit` du **manifeste committé** `manifest.json`, **le registre de hooks
 `.specify/extensions.yml`**, **la numérotation figée `.specify/init-options.json`**, **et les hooks
 `.claude/hooks/{tasks_linear_hook,check_speckit_alignment}.py`** (+ leurs entrées dans
-`.claude/settings.json`) — aucun n'est un artefact généré par `specify init` : ce sont la **config /
+`.claude/settings.json`) - aucun n'est un artefact généré par `specify init` : ce sont la **config /
 l'enforcement d'équipe** qui branchent les automations Factory sur le cycle SpecKit (posés par le
-script, idempotents). Exceptions **explicitement bornées** à l'invariant « paquet seul » — pas une violation.
+script, idempotents). Exceptions **explicitement bornées** à l'invariant "paquet seul" - pas une violation.
 
 ## Pré-requis (vérification silencieuse)
 Lire `manifest.json` **sans l'annoncer**, uniquement pour situer la racine (dossier
 contenant `.factory/`) et l'état d'avancement. **Aucune porte dure** ici :
 - si `.factory/` est absent : on n'est pas dans un workspace Factory ; le dire en clair, mais
-  **ne pas refuser** — l'installation reste possible dans le dossier courant (best-effort) ;
+  **ne pas refuser** - l'installation reste possible dans le dossier courant (best-effort) ;
 - si le bloc `assembly` manque ou que la cohérence n'est pas validée : ajouter **une** ligne de
   prose invitant à finir la convergence d'abord, **puis continuer quand même**.
 
@@ -65,19 +65,19 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
    manifeste, et affiche un statut clair en français.
 2. **Relayer le résultat en prose** (voir `references/ux-conventions.md`) : dire **ce qui s'est
    passé** et **la prochaine étape** ; ne jamais afficher de nom de clé du manifeste ni de tableau.
-3. Si le script **sort en échec** : relayer son message **actionnable** tel quel (ex. « Git est
-   requis : installe Git puis relance »), **sans** dumper de trace. Au besoin, le relancer avec
+3. Si le script **sort en échec** : relayer son message **actionnable** tel quel (ex. "Git est
+   requis : installe Git puis relance"), **sans** dumper de trace. Au besoin, le relancer avec
    `--verbose` pour le détail.
 
 ## Vérification avant de conclure
 - `.specify/` existe à la racine du repo cible (généré par `specify init` : `memory/constitution.md`,
   `scripts/`, `templates/`).
 - Au moins une commande `/speckit.*` est présente sous `.claude/` (commandes ou skills selon la version).
-- Le registre de hooks `.specify/extensions.yml` existe (posé par le script, ou déjà présent — idempotent).
+- Le registre de hooks `.specify/extensions.yml` existe (posé par le script, ou déjà présent - idempotent).
 - Le hook `.claude/hooks/tasks_linear_hook.py` existe et son entrée `PostToolUse` est dans `.claude/settings.json`.
 - La numérotation est figée en séquentiel (`.specify/init-options.json` : `feature_numbering: sequential`).
 - Le garde-fou `.claude/hooks/check_speckit_alignment.py` existe et son entrée `PostToolUse` est dans `.claude/settings.json`.
-- Le CLI `specify` est disponible (installation persistante) — `specify check` a pu tourner (informatif).
+- Le CLI `specify` est disponible (installation persistante) - `specify check` a pu tourner (informatif).
 - Le manifeste contient le bloc `speckit` (installé + initialisé) et **reparse sans erreur**.
 - **Idempotence** : si `.specify/` préexistait, rien n'a été réinitialisé ni écrasé.
 - **Aucun fichier SpecKit rédigé à la main** : tout `.specify/` provient de `specify init`.
@@ -87,15 +87,15 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
 ## Règles invariantes
 - **N'écrit aucun fichier généré par SpecKit à la main.** Seul `specify init` produit `.specify/`
   (constitution, scripts, templates) et les `/speckit.*`. Le script ne pose que des fichiers **de
-  config / enforcement** — bloc `speckit` du manifeste, registre `.specify/extensions.yml`, numérotation
-  `.specify/init-options.json`, hooks `tasks_linear_hook.py` + `check_speckit_alignment.py` —, aucun
-  généré par `specify init`. Exceptions bornées à l'invariant « paquet seul ».
+  config / enforcement** - bloc `speckit` du manifeste, registre `.specify/extensions.yml`, numérotation
+  `.specify/init-options.json`, hooks `tasks_linear_hook.py` + `check_speckit_alignment.py` -, aucun
+  généré par `specify init`. Exceptions bornées à l'invariant "paquet seul".
 - **Hooks non bloquants.** Les hooks du registre sont `optional: true` : ils **invitent** l'agent à
   lancer un skill Factory (`/assembleur:*`) à la bonne étape, sans jamais bloquer la phase SpecKit.
 - **Rien ne bloque l'installation.** `uv` auto-installé sans admin ; PATH rafraîchi en cours de
   processus ; flags construits par introspection ; sous-processus bornés par timeout ; échecs
   réseau attrapés proprement.
-- **Idempotent.** `.specify/` déjà présent → ne réinitialise pas, ne réécrit rien.
+- **Idempotent.** `.specify/` déjà présent -> ne réinitialise pas, ne réécrit rien.
 - **Manifeste en silence.** Le bloc `speckit` est écrit sans le narrer ; restitution en prose.
 - **TLS jamais désactivé.** On respecte la CA système (proxys d'entreprise) ; jamais `--skip-tls`.
 

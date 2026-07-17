@@ -1,4 +1,4 @@
-# CLAUDE.md — plugin `designer`
+# CLAUDE.md : plugin `designer`
 
 This file provides guidance to Claude Code (claude.ai/code) when working **on the
 `designer` plugin** (this directory). Factory-wide overview: `../CLAUDE.md`.
@@ -25,24 +25,24 @@ une entrée optionnelle).
 - **Skills uniquement, pas de `commands/`**. Invocation : `/designer:<skill>` + auto par le modèle.
 
 ## Les 5 skills (découpage justifié)
-- `designer-init` — setup (zéro décision) : installe les 4 gabarits + sème la **checklist** dans le
+- `designer-init` - setup (zéro décision) : installe les 4 gabarits + sème la **checklist** dans le
   manifeste. **Jamais bloquant** : amorce le socle **toujours**, puis **signale** (sans refuser) si la
   maquette validée / l'architecture validée / les *Décisions à impact design* manquent.
-- `designer-ingestion` — **l'ingestion** (mécanique, sans décision) : (re)lit les handoffs cadrage +
+- `designer-ingestion` - **l'ingestion** (mécanique, sans décision) : (re)lit les handoffs cadrage +
   architecte **en parallèle** (fan-out `designer-reader`) et **pré-remplit** la checklist (items déduits en
   `deduced`, montrés **validé**) ; pose `design.inputs.{cadrage_ok, design_impact_ok}`. Aucun item montré.
-- `designer-atelier` — **l'atelier** : déroule les 3 blocs (chaque item : `deduced`/`decided`/`sans_objet`/`open` ;
+- `designer-atelier` - **l'atelier** : déroule les 3 blocs (chaque item : `deduced`/`decided`/`sans_objet`/`open` ;
   affiché **validé** / **à traiter** / **sans objet**), **porte humaine : arbitrage des choix d'expérience**,
   **résout en session tout point resté à traiter**, puis capte la **couverture jugée suffisante** (geste humain).
-- `designer-prompt` — **la génération** : une fois la couverture suffisante, produit le **prompt Claude Design**
+- `designer-prompt` - **la génération** : une fois la couverture suffisante, produit le **prompt Claude Design**
   (direction visuelle concrète, anti-slop) + le **rapport de couverture**, et bascule `design.phase = "atelier"`.
-- `designer-coherence` — **après Claude Design** : **porte de cohérence stricte et adversariale**. Relit
+- `designer-coherence` - **après Claude Design** : **porte de cohérence stricte et adversariale**. Relit
   l'export + les 3 contrats amont **en parallèle** (fan-out `designer-reader`), puis **challenge** l'export
   (couverture inverse des parcours du cadrage, entités du glossaire affichables, cinq états d'écran,
-  impact-design honoré, a11y réellement tenue, anti-slop vs démonstrateur, nommage ubiquitaire — pas une
+  impact-design honoré, a11y réellement tenue, anti-slop vs démonstrateur, nommage ubiquitaire - pas une
   checklist de présence). **Chaque point trouvé est remonté puis résolu un par un** (corrigé en place dans
   guidelines/couverture, ou **renvoyé à Claude Design** si trou structurel). Enfin **porte humaine :
-  validation du système généré**, puis **handoff design**. → assembleur.
+  validation du système généré**, puis **handoff design**. -> assembleur.
 
 ## Workspace & manifeste
 Lit les handoffs cadrage (`cadrage-out/`) et architecte (`architecte-out/`). Écrit tout dans
@@ -54,7 +54,7 @@ dossiers créés par `designer-init`. Les **gabarits** vivent dans `.factory/des
 {id,label,origin,status,note}), coverage_sufficient(H), prompt_path, coverage_report_path,
 design_system_ref (chemin de l'export committé), design_validated(H), guidelines_path}`. Écriture = read-modify-write + revalidation JSON.
 
-## Intégration (entrées) — lecture parallèle exhaustive
+## Intégration (entrées) : lecture parallèle exhaustive
 `designer-ingestion` lit les handoffs **en parallèle** (fan-out de sous-agents `designer-reader`,
 retours structurés complets + passe de complétude) pour pré-remplir la checklist sans rien manquer :
 - **Cadrage** : `product-brief.md` (vision/ton), `glossaire.md` (**entités/données affichées**),
@@ -65,14 +65,14 @@ retours structurés complets + passe de complétude) pour pré-remplir la checkl
   le contrat propre qui alimente le **versant technique** de la checklist.
 
 ## Sorties (3)
-1. **Prompt Claude Design** (`designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md`, **fichier plat**, **corps seul prêt à coller — plein texte, aucun Markdown**) — fait naître le design system. **Direction visuelle délibérée et CONCRÈTE (anti-slop)** : valeurs **nommées** écrites dans le prompt — palette en **hex + rôle**, **polices nommées**, espacement/rayons — déduites du domaine (ou marque client), **jamais** le violet/indigo par défaut ni polices par défaut, **jamais** les clichés d'IA (bloc « À éviter absolument » + phrase de verrou « tout choix non spécifié = un défaut générique »). *« Silence = Claude defaults »* : on ne laisse aucun choix esthétique au défaut.
-2. **Rapport de couverture** (`designer-out/coverage-report.md`) — la trace de la rigueur.
-3. **Handoff design** (`designer-out/design-guidelines.md`) — réf. du système synchronisé +
-   guidelines, consommé par l'Assembleur (qui grave la règle « tout écran dérive de l'export committé » en constitution/claude.md).
+1. **Prompt Claude Design** (`designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md`, **fichier plat**, **corps seul prêt à coller - plein texte, aucun Markdown**) - fait naître le design system. **Direction visuelle délibérée et CONCRÈTE (anti-slop)** : valeurs **nommées** écrites dans le prompt - palette en **hex + rôle**, **polices nommées**, espacement/rayons - déduites du domaine (ou marque client), **jamais** le violet/indigo par défaut ni polices par défaut, **jamais** les clichés d'IA (bloc "À éviter absolument" + phrase de verrou "tout choix non spécifié = un défaut générique"). *"Silence = Claude defaults"* : on ne laisse aucun choix esthétique au défaut.
+2. **Rapport de couverture** (`designer-out/coverage-report.md`) - la trace de la rigueur.
+3. **Handoff design** (`designer-out/design-guidelines.md`) - réf. du système synchronisé +
+   guidelines, consommé par l'Assembleur (qui grave la règle "tout écran dérive de l'export committé" en constitution/claude.md).
 
 ## Portes humaines (2, jamais automatisées)
-1. **Arbitrage des choix d'expérience** (pendant l'atelier) — `coverage_sufficient`.
-2. **Validation du système généré** (après Claude Design, sur l'export committé) — `design_validated`.
+1. **Arbitrage des choix d'expérience** (pendant l'atelier) - `coverage_sufficient`.
+2. **Validation du système généré** (après Claude Design, sur l'export committé) - `design_validated`.
 
 ## Conventions partagées
 `references/coverage-checklist-guide.md` (définition canonique + ancrages NN/g & WCAG),
@@ -81,7 +81,7 @@ retours structurés complets + passe de complétude) pour pré-remplir la checkl
 Agent de lecture : `agents/designer-reader.md` (lecture complète + sortie structurée, dispatché en
 parallèle par `designer-ingestion` et `designer-coherence`).
 Garde-fou déterministe : `scripts/check_design.py` (valide la **couverture** : aucun item `open`, prompt +
-rapport + handoff présents — pas des tokens).
+rapport + handoff présents - pas des tokens).
 
 ## Vérifications (à la place des tests)
 ```bash
@@ -94,4 +94,4 @@ python scripts/check_design.py <projet>/manifest.json
 Proposer/pas décider (arbitrage expérience + validation système = humain) ; **marquer/pas inventer**
 (`sans objet` plutôt que forcer) ; **ne pas générer le design system** (Claude Design + export committé) ;
 commencer petit (anti-usine-à-gaz) ; traçabilité `(src: cadrage | architecte | maquette | atelier)` ;
-accessibilité = item de checklist + gravée en fabrication par l'assembleur ; refus en langage naturel.
+accessibilité = item de checklist + gravée en fabrication par l'assembleur ; refus en langage naturel ; **typographie humaine** : aucun glyphe de style IA dans les artefacts/prompts (pas de tiret cadratin, de points de suspension unicode, de flèches unicode, de guillemets à chevrons, ni de coche/croix ; équivalents clavier, cf. la section Typographie de `references/ux-conventions.md`).

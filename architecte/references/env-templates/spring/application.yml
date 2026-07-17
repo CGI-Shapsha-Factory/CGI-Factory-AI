@@ -1,5 +1,5 @@
 # Aucun secret en dur : les valeurs sensibles viennent des variables d'environnement.
-# Syntaxe ${VAR:defaut} — la partie ':defaut' sert de repli en développement.
+# Syntaxe ${VAR:defaut} : la partie ':defaut' sert de repli en développement.
 # DB_PASSWORD n'a PAS de valeur par défaut : elle doit être fournie via l'environnement.
 spring:
   datasource:

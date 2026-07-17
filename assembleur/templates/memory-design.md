@@ -1,13 +1,13 @@
-# Design — système, états, accessibilité
+# Design : système, états, accessibilité
 
 <!-- Fichier mémoire (.claude/memory/design.md), lu par Claude au besoin. Digest du handoff
      design pour la fabrication. Contenu seul. -->
 
 ## Design system (opposable)
 - **Source** : le design system = l'**export committé** dans `designer-out/maquette-de-claude-design/`
-  (dossier ou ZIP), auto-portable — tout vit dans le repo.
+  (dossier ou ZIP), auto-portable - tout vit dans le repo.
 - **Règle non négociable** : tout écran dérive de l'export committé du design system ; **aucune valeur de
-  style en dur** — on utilise les **tokens et composants**.
+  style en dur** - on utilise les **tokens et composants**.
 
 ## États par écran
 [La checklist des états à couvrir : chargement, vide (message + action), erreur, succès, et tout

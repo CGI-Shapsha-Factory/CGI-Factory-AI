@@ -1,10 +1,10 @@
-# Architecture — stack, composants, décisions
+# Architecture : stack, composants, décisions
 
 <!-- Fichier mémoire (.claude/memory/architecture.md), lu par Claude au besoin. Digest du
      contrat technique pour la fabrication. Contenu seul. -->
 
 ## Stack
-[Langages, frameworks, base de données, style d'API — la matrice composant × techno en bref.]
+[Langages, frameworks, base de données, style d'API - la matrice composant × techno en bref.]
 
 ## Composants
 [Les composants du système et leur rôle en une phrase chacun, par leur nom en clair.]

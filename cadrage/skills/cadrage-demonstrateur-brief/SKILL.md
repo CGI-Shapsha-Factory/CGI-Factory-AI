@@ -15,10 +15,10 @@ Donner un prompt prêt à coller dans Claude Design pour obtenir (mode initial) 
 faire évoluer (mode adaptatif) un démonstrateur qui sert à **valider la direction
 produit avec le client**, pas à figer le design.
 
-## Règle de calibrage — rendu professionnel
+## Règle de calibrage : rendu professionnel
 
 Le démonstrateur sert à **valider la direction produit avec le client** : il doit
-**paraître fini et crédible**, comme un vrai produit — pas un wireframe. Le prompt
+**paraître fini et crédible**, comme un vrai produit - pas un wireframe. Le prompt
 demande à Claude Design une **maquette propre et professionnelle** : vraie mise en
 page, hiérarchie visuelle claire, espacements réguliers, contenu réaliste du domaine,
 **une direction visuelle délibérée adaptée au domaine** (jamais le violet/indigo par défaut des
@@ -26,13 +26,13 @@ interfaces générées par IA), sans emoji.
 
 Ce **n'est pas** le design system définitif (il naît plus tard dans le plugin
 `designer`) : on ne fige pas une charte exhaustive ni tous les composants. Mais le
-rendu doit être **convaincant** — on valide la direction sur quelque chose qui a l'air
+rendu doit être **convaincant** - on valide la direction sur quelque chose qui a l'air
 fini, pas sur un brouillon.
 
 ## Gabarit de référence
 
 Le prompt s'appuie sur `references/demonstrateur-prompt.md` (gabarit statique, deux
-variantes : initial et adaptatif). Le modèle **remplit tous les `<…>`** avec le
+variantes : initial et adaptatif). Le modèle **remplit tous les `<...>`** avec le
 contenu réel tiré des entrées et produit un prompt **auto-portant** (Claude Design n'a
 aucun contexte projet).
 
@@ -40,37 +40,37 @@ aucun contexte projet).
 
 Un prompt médiocre donne une maquette médiocre. Pour produire un **prompt excellent** :
 - **Assigner un rôle + viser haut (prompt engineering).** Ouvrir le prompt par le **rôle** du gabarit
-  en **remplissant `<domaine>`** depuis le `product-brief.md` (ex. « interfaces juridiques »,
-  « santé »), puis reprendre **tel quel** le bloc « Avant de dessiner » (décider la langue visuelle +
-  **un parti pris signature** + décider-puis-appliquer + north-star « viser l'excellence, pas la
-  moyenne »). Le rôle **signale les priorités** mieux qu'une liste ; le garder **court** (1 ligne).
+  en **remplissant `<domaine>`** depuis le `product-brief.md` (ex. "interfaces juridiques",
+  "santé"), puis reprendre **tel quel** le bloc "Avant de dessiner" (décider la langue visuelle +
+  **un parti pris signature** + décider-puis-appliquer + north-star "viser l'excellence, pas la
+  moyenne"). Le rôle **signale les priorités** mieux qu'une liste ; le garder **court** (1 ligne).
 - **Lister explicitement les écrans à produire** (3 à 6), un par parcours clé du
   `spec-index.md`, avec pour chacun ce qu'on y fait.
 - **Injecter du contenu réaliste du domaine** (libellés, noms, données plausibles tirés
-  du `glossaire.md` et de la vision) — **jamais** de « lorem ipsum ».
+  du `glossaire.md` et de la vision) - **jamais** de "lorem ipsum".
 - **Demander les états utiles** sur les écrans clés : contenu chargé, état vide (message
   + action), un cas d'erreur/chargement si pertinent.
 - **Cadrer le style** : navigation persistante, hiérarchie typo, **palette délibérée adaptée au
   domaine (jamais le violet/indigo par défaut)**, responsive, ton professionnel, aucun emoji.
-  Reprendre tel quel le bloc « Style — direction visuelle délibérée » du gabarit (interdictions
-  incluses), en remplissant les `<…>` par la palette et le duo de polices dérivés (voir ci-dessous).
+  Reprendre tel quel le bloc "Style - direction visuelle délibérée" du gabarit (interdictions
+  incluses), en remplissant les `<...>` par la palette et le duo de polices dérivés (voir ci-dessous).
 - **Auto-portance** : tout le contexte nécessaire est dans le prompt ; aucune référence
   à un fichier ou au manifeste.
 
-## Direction visuelle — dériver une palette délibérée (anti-slop)
+## Direction visuelle : dériver une palette délibérée (anti-slop)
 
-Le « violet partout » des maquettes IA vient d'un **défaut** (la médiane des données d'entraînement,
+Le "violet partout" des maquettes IA vient d'un **défaut** (la médiane des données d'entraînement,
 l'indigo Tailwind). On le corrige en **décidant** : le modèle **déduit** du `product-brief.md`
-(domaine, public, ton — et d'éventuelles **couleurs de marque** du client dans le brief/glossaire)
-une **palette concrète** et **l'inscrit dans le prompt** (dans les `<…>` du bloc Style) :
-- **3 teintes en OKLCH (+ hex)** — dominante / neutre / accent — **adaptées au domaine**, **jamais**
+(domaine, public, ton - et d'éventuelles **couleurs de marque** du client dans le brief/glossaire)
+une **palette concrète** et **l'inscrit dans le prompt** (dans les `<...>` du bloc Style) :
+- **3 teintes en OKLCH (+ hex)** - dominante / neutre / accent - **adaptées au domaine**, **jamais**
   le violet/indigo/mauve par défaut (sauf si c'est vraiment la marque du client) ;
-- **un duo de polices** (titrage + corps) choisi pour le domaine — **jamais** les polices par défaut
+- **un duo de polices** (titrage + corps) choisi pour le domaine - **jamais** les polices par défaut
   (Inter, Roboto, Poppins, Space Grotesk, Geist, Arial, system-ui).
 
-Exemples de **raisonnement** (décider, pas subir la médiane) : cabinet d'avocats → encre / bleu nuit
-+ neutres chauds + **un seul** accent sobre ; santé → teal / vert apaisant + neutres clairs ; finance
-→ vert sobre ou anthracite + accent mesuré. Le client valide ensuite la direction **via la maquette**
+Exemples de **raisonnement** (décider, pas subir la médiane) : cabinet d'avocats -> encre / bleu nuit
++ neutres chauds + **un seul** accent sobre ; santé -> teal / vert apaisant + neutres clairs ; finance
+-> vert sobre ou anthracite + accent mesuré. Le client valide ensuite la direction **via la maquette**
 (la charte définitive naît plus tard dans le plugin `designer`).
 
 ## Mode INITIAL (étape 3)
@@ -86,7 +86,7 @@ du `cadrage-out/spec-index.md`.
 **démonstrateur de validation de direction** : couvre les parcours clés (walking
 skeleton + premiers use cases de valeur), matérialise le problème résolu et la valeur,
 avec un **rendu propre et professionnel** (mise en page réelle, contenu réaliste,
-**direction visuelle délibérée adaptée au domaine — jamais le violet par défaut**).
+**direction visuelle délibérée adaptée au domaine - jamais le violet par défaut**).
 
 ## Mode ADAPTATIF (étape 8b)
 
@@ -100,10 +100,10 @@ un retour récent) et la maquette courante est référencée
 adressés.
 
 **Sortie.** Un **prompt DELTA** (variante **adaptatif** du gabarit) : il référence
-explicitement la maquette existante (« à partir de la maquette vX… »), décrit
+explicitement la maquette existante ("à partir de la maquette vX..."), décrit
 **uniquement les changements** demandés par le client (écrans à corriger, parcours à
 ajuster, éléments à retirer), et **préserve ce qui a été validé** (mise en page,
-palette, niveau de finition). Pas de régénération à blanc — l'itération doit rester
+palette, niveau de finition). Pas de régénération à blanc - l'itération doit rester
 rapide et ne pas casser l'acquis.
 
 ## Sauvegarde du prompt
@@ -113,15 +113,15 @@ prochain numéro par plugin (incrément du dernier `prompts[].n` du manifeste ; 
 date du jour, et `<nom>` le sujet (ex. `demonstrateur-initial`, `demonstrateur-delta-v2`).
 
 **Le fichier sauvegardé ne contient QUE le corps du prompt prêt à coller** (le bloc de
-code du gabarit, rempli) : **aucun titre, aucune ligne `Date : … | Mode : … | Version :
-…`, aucun `---` d'en-tête** (cf. `references/ux-conventions.md`). La métadonnée (mode,
+code du gabarit, rempli) : **aucun titre, aucune ligne `Date : ... | Mode : ... | Version :
+...`, aucun `---` d'en-tête** (cf. `references/ux-conventions.md`). La métadonnée (mode,
 version, date, sujet) vit dans l'entrée `prompts[]` du manifeste, jamais dans le
 fichier. L'utilisateur doit pouvoir ouvrir le fichier et tout copier sans rien nettoyer.
 
 ## Vérification (commune)
 
 - Le prompt vise un **rendu propre et professionnel** (mise en page réelle, contenu
-  réaliste, **palette délibérée non-générique — pas de violet/indigo par défaut**), pas un wireframe.
+  réaliste, **palette délibérée non-générique - pas de violet/indigo par défaut**), pas un wireframe.
 - Le prompt est **auto-portant** : tout le contexte est dedans, aucun renvoi à un
   fichier.
 - Mode initial : les **parcours clés sont couverts**, avec une liste d'écrans explicite.
@@ -144,9 +144,9 @@ Read-modify-write puis revalidation JSON :
 - `updated_at`.
 
 > **Silencieux, sans nom de champ (impératif).** Ne **jamais narrer** la mise à jour du manifeste ni
-> citer un nom de champ (`prompts`, `iterations`, `current_version`, `external_ref`…) ni un chemin
-> technique à l'utilisateur. Confirmer en clair ce qui a été **produit** (« Le prompt du démonstrateur
-> est prêt, sauvegardé dans le dossier des prompts. ») — cf. `references/ux-conventions.md` §1.
+> citer un nom de champ (`prompts`, `iterations`, `current_version`, `external_ref`...) ni un chemin
+> technique à l'utilisateur. Confirmer en clair ce qui a été **produit** ("Le prompt du démonstrateur
+> est prêt, sauvegardé dans le dossier des prompts.") - cf. `references/ux-conventions.md` §1.
 
 ## Règles invariantes appliquées ici
 
@@ -161,4 +161,4 @@ Read-modify-write puis revalidation JSON :
 - **Skill indépendant.** Lit la vision / le retour et le manifeste, sans
   orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-retour-demonstrateur` — confronter la maquette au client puis ingérer son retour.
+Étape suivante : `/cadrage:cadrage-retour-demonstrateur` - confronter la maquette au client puis ingérer son retour.

@@ -1,4 +1,4 @@
-# init-cowork — contexte de supervision (PO / Quark)
+# init-cowork : contexte de supervision (PO / Quark)
 
 <!-- Genere par `create-cowork-md` a la RACINE du projet. Document de contexte UNIQUE avec lequel le
      PO INITIALISE un projet dans Quark/Cowork pour superviser. Il porte TOUT le contexte utile issu
@@ -13,24 +13,24 @@
 
 ## Où chercher quoi (l'état vivant n'est PAS dans ce document)
 
-- **Avancement, tâches, issues terminées / en cours, qui fait quoi, planning** → **Linear** (lien plus bas).
-- **Code, fichiers, spécifications (`spec.md`), features implémentées, détails techniques, pull requests** → **dépôt GitHub** (lien plus bas).
-- **Le « pourquoi », le périmètre et les contraintes du produit** → **ce document** (sections ci-dessous, figées à la convergence).
+- **Avancement, tâches, issues terminées / en cours, qui fait quoi, planning** -> **Linear** (lien plus bas).
+- **Code, fichiers, spécifications (`spec.md`), features implémentées, détails techniques, pull requests** -> **dépôt GitHub** (lien plus bas).
+- **Le "pourquoi", le périmètre et les contraintes du produit** -> **ce document** (sections ci-dessous, figées à la convergence).
 
 ## Projet
 
 - **Nom** : [nom du produit]
-- **Problème** : [le besoin auquel le produit répond — le *pourquoi*, en 1–3 phrases, tiré du product-brief §Problème]
-- **Objectif** : [le résultat métier visé — product-brief §Objectif métier]
-- **Utilisateurs & rôles clés** : [pour qui + les rôles principaux — product-brief §Parties prenantes / project-frame §Utilisateurs & rôles]
-- **Proposition de valeur** : [une phrase — ce que le produit apporte concrètement]
-- **Critères de succès** : [ce qui définit la réussite, à haut niveau — product-brief §Critères de succès]
+- **Problème** : [le besoin auquel le produit répond - le *pourquoi*, en 1-3 phrases, tiré du product-brief §Problème]
+- **Objectif** : [le résultat métier visé - product-brief §Objectif métier]
+- **Utilisateurs & rôles clés** : [pour qui + les rôles principaux - product-brief §Parties prenantes / project-frame §Utilisateurs & rôles]
+- **Proposition de valeur** : [une phrase - ce que le produit apporte concrètement]
+- **Critères de succès** : [ce qui définit la réussite, à haut niveau - product-brief §Critères de succès]
 
 ## Périmètre
 
-- **Inclus** : [les grandes capacités couvertes — puces, synthèse du product-brief §Périmètre IN]
-- **Hors périmètre** : [ce qui n'est explicitement PAS fait dans cette version — puces, product-brief §Hors périmètre OUT]
-- **Contraintes clés** : [légal / RGPD, sécurité, sensibilité des données, hébergement, disponibilité, performance — puces, product-brief §Contraintes + project-frame §Légal / Données / Disponibilité / Hébergement]
+- **Inclus** : [les grandes capacités couvertes - puces, synthèse du product-brief §Périmètre IN]
+- **Hors périmètre** : [ce qui n'est explicitement PAS fait dans cette version - puces, product-brief §Hors périmètre OUT]
+- **Contraintes clés** : [légal / RGPD, sécurité, sensibilité des données, hébergement, disponibilité, performance - puces, product-brief §Contraintes + project-frame §Légal / Données / Disponibilité / Hébergement]
 
 ## Dépôt GitHub
 
@@ -40,40 +40,40 @@
 > **features développées** ou les **détails techniques**, consulte le dépôt GitHub ci-dessus.
 
 <!-- Si aucun remote GitHub n'est encore configuré : mettre `<à renseigner>` + garder cette note :
-     « Le dépôt n'a pas encore de remote GitHub ; renseigner l'URL dès qu'il est créé. » -->
+     "Le dépôt n'a pas encore de remote GitHub ; renseigner l'URL dès qu'il est créé." -->
 
 ## Projet Linear
 
 [URL du projet Linear, ex. `https://linear.app/<workspace>/project/<slug>`]
 
-> Pour l'**avancement du projet** — issues **terminées**, tâches **en cours**, qui travaille sur quoi
-> et les dernières livraisons — consulte Linear ci-dessus.
+> Pour l'**avancement du projet** - issues **terminées**, tâches **en cours**, qui travaille sur quoi
+> et les dernières livraisons - consulte Linear ci-dessus.
 
 <!-- Si le projet Linear n'est pas détecté (MCP absent, ou tickets pas encore créés) : mettre
-     `<à renseigner>` + la note d'installation (section « Accès Linear pour Quark » ci-dessous),
-     et — si aucun ticket n'existe — orienter vers `/assembleur:premier-alimente-linear`. -->
+     `<à renseigner>` + la note d'installation (section "Accès Linear pour Quark" ci-dessous),
+     et - si aucun ticket n'existe - orienter vers `/assembleur:premier-alimente-linear`. -->
 
 ## Périmètre & features
 
 <!-- Depuis `architecture.feature_sequence` (id, name) + `assembleur-out/feature-map.md` (description,
-     dépendances, walking skeleton). La colonne « Ticket Linear » n'est remplie que si
-     `premier-alimente-linear` a déjà tourné (bloc manifeste `linear`) ; sinon « à créer via
-     premier-alimente-linear ». -->
+     dépendances, walking skeleton). La colonne "Ticket Linear" n'est remplie que si
+     `premier-alimente-linear` a déjà tourné (bloc manifeste `linear`) ; sinon "à créer via
+     premier-alimente-linear". -->
 
 | Feature | Intitulé | Description courte | Dépend de | Ticket Linear | Lien |
 |---------|----------|--------------------|-----------|---------------|------|
-| 001 | [intitulé] | [ce que la feature apporte, en une ligne] | — | [ENG-123 / à créer] | [url ou —] |
-| 002 | [intitulé] | [une ligne] | 001 | [ENG-124 / à créer] | [url ou —] |
+| 001 | [intitulé] | [ce que la feature apporte, en une ligne] | - | [ENG-123 / à créer] | [url ou -] |
+| 002 | [intitulé] | [une ligne] | 001 | [ENG-124 / à créer] | [url ou -] |
 
 > **Walking skeleton** : la feature [00X] est la tranche de bout en bout à livrer d'abord (socle
 > technique traversant), avant les features qui en dépendent.
 
 ## Contexte technique (synthèse)
 
-- **Stack** : [langages / frameworks / base de données / style d'API — architecte-out/stack-technique.md, en bref]
-- **Intégrations** : [systèmes externes, SSO, connecteurs — project-frame §Intégrations]
-- **Hébergement** : [cible de déploiement — project-frame §Hébergement]
-- **Cibles de qualité** : [attributs prioritaires + cibles chiffrées si connues — architecte-out/facteurs-et-qualite.md]
+- **Stack** : [langages / frameworks / base de données / style d'API - architecte-out/stack-technique.md, en bref]
+- **Intégrations** : [systèmes externes, SSO, connecteurs - project-frame §Intégrations]
+- **Hébergement** : [cible de déploiement - project-frame §Hébergement]
+- **Cibles de qualité** : [attributs prioritaires + cibles chiffrées si connues - architecte-out/facteurs-et-qualite.md]
 
 > Synthèse : le détail vit dans le dépôt GitHub (code + specs).
 
@@ -91,11 +91,11 @@ Pour que Quark puisse **agir** sur Linear (créer / mettre à jour des issues), 
 1. **Ajouter la marketplace** : `/plugin marketplace add shinpr/linear-prism`
 2. **Installer le plugin** : `/plugin install linear-prism@linear-prism`
 3. **Redémarrer** Claude Code (pour charger le serveur MCP).
-4. **S'authentifier** : `/mcp` → serveur `linear` → login OAuth (aucune clé à gérer).
+4. **S'authentifier** : `/mcp` -> serveur `linear` -> login OAuth (aucune clé à gérer).
 
 **Ou par clé API** (environnement sans OAuth) :
-1. Linear → **Settings → Security & access → Personal API keys → New API key**.
+1. Linear -> **Settings -> Security & access -> Personal API keys -> New API key**.
 2. Nommer la clé, choisir un **accès en écriture** (*Write* / *Create issues*), la **restreindre à
-   l'équipe** du projet, puis **Create** (la clé n'est affichée **qu'une fois** — la copier).
-3. La stocker dans un fichier **`.env`** (jamais commité) : `LINEAR_API_KEY=lin_api_…`.
+   l'équipe** du projet, puis **Create** (la clé n'est affichée **qu'une fois** - la copier).
+3. La stocker dans un fichier **`.env`** (jamais commité) : `LINEAR_API_KEY=lin_api_...`.
 4. Le MCP `linear-prism` lit alors `LINEAR_API_KEY` pour s'authentifier.

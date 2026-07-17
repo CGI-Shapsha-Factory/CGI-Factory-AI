@@ -24,8 +24,8 @@ est `.factory/cadrage/product-brief.md` (copie installée par cadrage-init).
 ## Pré-requis (vérification silencieuse)
 
 `artifacts.capture_brute` existe dans le manifeste (le fichier est présent).
-Sinon, l'indiquer en clair et proposer de faire l'extraction d'abord — sans
-afficher de « porte ».
+Sinon, l'indiquer en clair et proposer de faire l'extraction d'abord - sans
+afficher de "porte".
 
 ## Procédure
 
@@ -40,13 +40,13 @@ afficher de « porte ».
    OUT ne doit jamais rester vide ; on n'y écrit que ce qui est confirmé.
 4. **Critères de succès produit.** Traduire les objectifs en métriques d'usage
    (pas de code). Si une cible n'a pas été captée, écrire le critère et préciser
-   en clair « cible à préciser à l'architecture » (pas de marqueur).
+   en clair "cible à préciser à l'architecture" (pas de marqueur).
 5. **Hypothèse produit initiale.** Formuler l'hypothèse centrale en précisant
    qu'elle **se valide par le prototype** (boucle démonstrateur), jamais comme
    acquise.
 6. **Demander, ne pas inventer.** Tout élément essentiel absent de la capture est
    **posé en session** ; s'il n'est pas tranché, il est **omis** (pas de marqueur,
-   pas de section « Trous »).
+   pas de section "Trous").
 
 ### Sections du product brief
 
@@ -72,15 +72,15 @@ vision n'est pas complète.
 
 ## Réjeu incrémental (idempotence)
 
-Rejoué sur des entrées mises à jour — typiquement une correction issue d'un
-retour de démonstrateur (`cadrage-retour-demonstrateur`) — ce skill **met à
+Rejoué sur des entrées mises à jour - typiquement une correction issue d'un
+retour de démonstrateur (`cadrage-retour-demonstrateur`) - ce skill **met à
 jour le product brief en place**, il ne le régénère pas à l'aveugle :
 - **Préserve** le contenu déjà validé ou inchangé.
 - **Applique** les corrections venues des entrées mises à jour.
 - **Pose en session** les éléments essentiels nouvellement manquants.
 - **N'écrase jamais en silence un élément contredit** : un acquis remis en cause
   par un retour est marqué `[REMIS EN CAUSE]` avec sa raison, puis tranché par
-  l'humain — jamais supprimé ni réécrit en douce.
+  l'humain - jamais supprimé ni réécrit en douce.
 
 Réconciliation par identité de section / de point : aucune duplication. Recalcule
 `vision_complete` à partir de l'état réconcilié.
@@ -96,9 +96,9 @@ Read-modify-write puis revalidation JSON :
 - `phase = "vision"` (si la phase courante est `extraction`).
 - `updated_at` à l'horodatage courant.
 
-> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
-> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : phase: vision,
-> vision_complete: true », toute liste `champ: valeur`). Confirmer seulement, en clair, **ce qui a été
+> **Silencieux - jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
+> ni citer un nom de champ ou une valeur `true`/`false` (interdit : "Manifeste à jour : phase: vision,
+> vision_complete: true", toute liste `champ: valeur`). Confirmer seulement, en clair, **ce qui a été
 > produit** + la prochaine étape (cf. `references/ux-conventions.md`).
 
 ## Livrable visuel
@@ -110,7 +110,7 @@ effectivement utilisé est sauvegardé sous `cadrage-out/prompts/<NNN>-<JJ-MM>-c
 et tracé dans `prompts[]` du manifeste. Le fichier sauvegardé ne contient **que le
 corps du prompt** (le bloc de code du gabarit), sans titre/date/mode/version
 (cf. `references/ux-conventions.md`). C'est un livrable de communication, pas
-une porte — il n'altère pas les autres champs du manifeste.
+une porte - il n'altère pas les autres champs du manifeste.
 
 ## Règles invariantes appliquées ici
 
@@ -121,4 +121,4 @@ une porte — il n'altère pas les autres champs du manifeste.
 - **Skill indépendant.** Pré-requis vérifié via le manifeste, pas via un
   orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-glossaire` — fixer le vocabulaire du projet porté par la vision avant le découpage.
+Étape suivante : `/cadrage:cadrage-glossaire` - fixer le vocabulaire du projet porté par la vision avant le découpage.

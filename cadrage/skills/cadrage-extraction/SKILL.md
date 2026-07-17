@@ -14,12 +14,12 @@ capture.
 
 Transformer une ou plusieurs sources brutes en une **capture structurée et
 lisible**, centrée sur le **contenu** (ce qui doit être fait, les besoins, les
-contraintes) — **pas** sur qui a dit quoi ni à quel moment. Le skill n'est pas un
+contraintes) - **pas** sur qui a dit quoi ni à quel moment. Le skill n'est pas un
 formulaire de saisie : la matière existe déjà, on la transforme et on la range.
 
-**Jamais d'horodatage, jamais de tour de parole, jamais de `(src: …)` dans
-l'artefact.** On extrait le fond, on ne trace pas la forme. La règle « ne rien
-inventer » reste un garde-fou interne (on ne s'appuie que sur la matière), sans
+**Jamais d'horodatage, jamais de tour de parole, jamais de `(src: ...)` dans
+l'artefact.** On extrait le fond, on ne trace pas la forme. La règle "ne rien
+inventer" reste un garde-fou interne (on ne s'appuie que sur la matière), sans
 écrire la provenance.
 
 ## Entrées
@@ -29,18 +29,18 @@ accepter **un seul chemin de fichier**, **plusieurs chemins**, **ou un dossier**
 (dans ce cas, ingérer tous les fichiers de format supporté qu'il contient).
 
 Les chemins peuvent être **passés en argument** à l'invocation
-(`/cadrage:cadrage-extraction <chemins>` → disponibles via `$ARGUMENTS`) **ou** déclarés
+(`/cadrage:cadrage-extraction <chemins>` -> disponibles via `$ARGUMENTS`) **ou** déclarés
 dans le chat. Si `$ARGUMENTS` est non vide, l'utiliser comme sources.
 
 **Emplacement central par défaut** : `cadrage-out/source-contexte/` (créé par `cadrage-init`).
 Si aucune source n'est passée en argument ni déclarée dans le chat, **regarder d'abord dans
 `cadrage-out/source-contexte/`** et ingérer les fichiers de format supporté qui s'y trouvent.
 Ce dossier est **facultatif** : s'il est vide (ou absent), continuer normalement en demandant
-les sources — il n'est **jamais** obligatoire ni une porte de validation.
+les sources - il n'est **jamais** obligatoire ni une porte de validation.
 
-- **Pages Notion** (hubs réunion, transcripts) — via les outils Notion
+- **Pages Notion** (hubs réunion, transcripts) - via les outils Notion
   disponibles (`notion-fetch`, `notion-search`).
-- **Fichiers fournis** — formats supportés : `.txt`, `.md`, transcripts, `.pdf`,
+- **Fichiers fournis** - formats supportés : `.txt`, `.md`, transcripts, `.pdf`,
   `.docx`.
   - `.pdf` : lu via l'outil Read.
   - `.docx` : convertir avec `python-docx` ; si le fichier reste illisible,
@@ -50,14 +50,14 @@ les sources — il n'est **jamais** obligatoire ni une porte de validation.
 
 Les documents du cadrage vivent dans `cadrage-out/` à la racine du projet client, et le
 manifeste `manifest.json` est le contrat machine entre les skills.
-**Les deux sont créés par `cadrage-init`** (skill d'amorçage) — `cadrage-extraction`
+**Les deux sont créés par `cadrage-init`** (skill d'amorçage) - `cadrage-extraction`
 ne bootstrappe plus rien. Toute écriture du manifeste est un **read-modify-write**
 suivi d'une **revalidation JSON** (le fichier doit reparser sans erreur).
 
 ## Pré-requis (vérification silencieuse)
 
 Vérifier sans l'annoncer : **le manifeste existe ET au moins une source est
-déclarée.** Ne jamais afficher de statut de « porte » ; si un pré-requis manque,
+déclarée.** Ne jamais afficher de statut de "porte" ; si un pré-requis manque,
 poser une question en clair.
 
 1. Si `manifest.json` est absent : indiquer en clair qu'il faut
@@ -70,19 +70,19 @@ poser une question en clair.
    `ref`, `ingested_at`.
 3. Si aucune source n'est déclarée **et** que `cadrage-out/source-contexte/` est vide ou
    absent : demander en clair au moins une source. N'invente pas de matière. (Le dossier
-   `source-contexte/` reste facultatif — son absence ne bloque jamais à elle seule.)
+   `source-contexte/` reste facultatif - son absence ne bloque jamais à elle seule.)
 
 ## Identité du projet
 
 Avant le dépouillement, **demander à l'utilisateur, en français** (attendre la réponse) :
-- « Quel est le **nom du projet** ? » (le nom usuel, lisible).
+- "Quel est le **nom du projet** ?" (le nom usuel, lisible).
 
 Écrire la réponse dans `project` du manifeste (laissé `null` par `cadrage-init`).
 **Ne jamais le déduire** du nom du dossier. Si l'utilisateur ne répond pas, suivre la
 boucle interactive (`references/interactive-loop.md`).
 
 **Ne pas demander le nom du client.** Cette information n'est pas collectée par la
-factory — ne pas la poser, ne pas l'écrire dans le manifeste.
+factory - ne pas la poser, ne pas l'écrire dans le manifeste.
 
 ## Procédure
 
@@ -94,19 +94,19 @@ factory — ne pas la poser, ne pas l'écrire dans le manifeste.
    sources. Extraire le **contenu**, reformulé clair et lisible.
 3. **Rester fidèle à la matière.** Ne s'appuyer que sur ce que disent les
    sources ; ne jamais ajouter de sens absent. **Ne pas écrire de provenance**
-   (ni horodatage, ni interlocuteur, ni `(src: …)`).
+   (ni horodatage, ni interlocuteur, ni `(src: ...)`).
 4. **Ne pas combler un blanc.** Si une section n'a pas de matière, la laisser
-   présente avec une courte mention « non abordé ». Un élément incertain n'est
+   présente avec une courte mention "non abordé". Un élément incertain n'est
    **pas écrit comme un fait** ; en cas de doute réel, on l'omet plutôt que de
    l'inventer. Aucune extrapolation.
 
 ### Structure de `capture-brute.md`
 
-Sept sections fixes, toutes présentes même vides — **contenu uniquement, sans
+Sept sections fixes, toutes présentes même vides - **contenu uniquement, sans
 trace de source** :
 
 ```
-# Capture brute — <projet>
+# Capture brute : <projet>
 Statut : draft
 
 ## 1. Parties prenantes
@@ -135,10 +135,10 @@ délais.
 Les outcomes et buts cités.
 ```
 
-## Passe découverte (13 questions de cadrage) — **interactive, une question à la fois**
+## Passe découverte (13 questions de cadrage) : **interactive, une question à la fois**
 
 En plus de la capture, exécuter la **passe découverte** sur les 13 questions de
-`references/discovery-questions.md` (Q1–Q13). Elle remplit
+`references/discovery-questions.md` (Q1-Q13). Elle remplit
 `cadrage-out/project-frame.md` (gabarit `.factory/cadrage/project-frame.md`)
 et le bloc `discovery` du manifeste.
 
@@ -150,26 +150,26 @@ et le bloc `discovery` du manifeste.
 1. **Préparer les suggestions (sans rien écrire, sans rien valider).** Pour chaque Qn, chercher dans
    le transcript/docs une **réponse candidate** et la garder comme **suggestion à confirmer**.
    **Aucune question n'est `answered` à ce stade.**
-2. **Dérouler la boucle interactive — Q1 → Q13, UNE À LA FOIS** (voir `references/interactive-loop.md`).
-   Pour **chaque** question, en français, afficher le compteur **« Qn/13 »**, l'intitulé, puis une
+2. **Dérouler la boucle interactive - Q1 -> Q13, UNE À LA FOIS** (voir `references/interactive-loop.md`).
+   Pour **chaque** question, en français, afficher le compteur **"Qn/13"**, l'intitulé, puis une
    **réponse recommandée** (la suggestion tirée de la matière si elle existe, sinon une suggestion
-   plausible, étiquetée « suggestion »). **Pas de menu numéroté** : l'utilisateur accepte la suggestion
+   plausible, étiquetée "suggestion"). **Pas de menu numéroté** : l'utilisateur accepte la suggestion
    ou donne la sienne. Puis **POSE UNE SEULE QUESTION, ARRÊTE-TOI, et ATTENDS la réponse** avant de
    passer à la suivante. **Jamais** plusieurs questions dans un même message ; **jamais**
    d'auto-complétion ; **jamais** `answered` sans réponse explicite. Ne jamais remplir de valeur démo.
-   - Réponse explicite (suggestion acceptée ou saisie) → statut `answered`. **Aucune `(src:)` écrite.**
-   - L'utilisateur laisse de côté → le champ est **omis** (statut `deferred`, rien d'écrit dans
+   - Réponse explicite (suggestion acceptée ou saisie) -> statut `answered`. **Aucune `(src:)` écrite.**
+   - L'utilisateur laisse de côté -> le champ est **omis** (statut `deferred`, rien d'écrit dans
      l'artefact, pas de marqueur).
    - **Q8 (contraintes légales / conformité / RGPD) est OPTIONNELLE.** La proposer **une seule fois**,
-     sans insister. Si l'utilisateur la décline / la laisse à l'équipe (« on gère nous-mêmes ») →
+     sans insister. Si l'utilisateur la décline / la laisse à l'équipe ("on gère nous-mêmes") ->
      statut **`na`** (traité hors cadrage), **pas `deferred`** : elle ne doit **jamais** bloquer la
      complétude ni revenir. **Ne jamais pousser la conformité** (cf. `references/discovery-questions.md`,
      note Q8, et `references/ux-conventions.md` §2bis).
-   - Décisions groupées (l'utilisateur tranche plusieurs questions d'un coup) → **relire la liste parsée et
+   - Décisions groupées (l'utilisateur tranche plusieurs questions d'un coup) -> **relire la liste parsée et
      faire confirmer** avant d'écrire (cf. interactive-loop) ; sinon, une question à la fois.
-   À la fin de la boucle, annoncer **en clair** que tout est complété — « **toutes les questions de
-   cadrage sont répondues** » — (ou rappeler oralement les points laissés de côté). **Jamais** de nom
-   de champ (« discovery_complete = true ») ni de code de question (`Q8`, `Q11`…), et **aucun caveat
+   À la fin de la boucle, annoncer **en clair** que tout est complété - "**toutes les questions de
+   cadrage sont répondues**" - (ou rappeler oralement les points laissés de côté). **Jamais** de nom
+   de champ ("discovery_complete = true") ni de code de question (`Q8`, `Q11`...), et **aucun caveat
    d'architecture** sur un point déjà tranché (cf. `references/ux-conventions.md` §2ter, §3ter). Vaut
    en particulier pour les *seeds qualité* de charge/disponibilité/performance.
 3. **Écrire** les réponses dans `project-frame.md` (chaque champ = le contenu décidé, **sans `(src:)`** ;
@@ -180,19 +180,19 @@ et le bloc `discovery` du manifeste.
 Les questions Q2 (charge), Q6 (disponibilité), Q7 (performance) sont des **seeds
 de qualité** : on les capte bruts ici, le plugin **architecte** les transformera
 en drivers / scénarios de qualité. Une réponse **directionnelle / non chiffrée** à Q2/Q6/Q7
-(ex. « fiabilité avant la vitesse ») se note telle quelle comme orientation ; ne **jamais** la
+(ex. "fiabilité avant la vitesse") se note telle quelle comme orientation ; ne **jamais** la
 présenter comme une cible chiffrée.
 
 ## Auto-contrôle (avant écriture)
 
 Pour **chaque ligne** de la capture, poser la question : *est-ce bien soutenu par la
 matière source ?* Si non, la ligne disparaît (on ne l'invente pas). C'est le
-garde-fou anti-hallucination — interne, sans écrire de provenance.
+garde-fou anti-hallucination - interne, sans écrire de provenance.
 
 ## Vérification avant écriture
 
 Avant d'écrire le manifeste, vérifier :
-- Les **sept sections sont présentes** (vides autorisées, avec une courte mention « non abordé »).
+- Les **sept sections sont présentes** (vides autorisées, avec une courte mention "non abordé").
 - **Aucune invention** (auto-contrôle passé), **aucune `(src:)` ni horodatage** dans l'artefact.
 - **Chaque question de découverte tranchée est écrite** ; les questions laissées de côté sont
   simplement absentes. Vérifiable par
@@ -208,15 +208,15 @@ Read-modify-write puis revalidation JSON :
 - `sources[]` complété par les sources dépouillées (si pas déjà fait au pré-requis).
 - `artifacts.project_frame.status`.
 - `discovery[]` : mettre à jour chaque entrée Qn (`status`, `answer`). **Pas de champ
-  `source`.** Une question tranchée → `answered` ; laissée de côté → `deferred` ; **Q8 légal/conformité
-  laissée à l'équipe → `na`** (terminal, non bloquant).
-- `discovery_complete` : `true` si aucune question n'est `pending`/`deferred` (un `na` — dont un Q8
-  légal laissé à l'équipe — **n'empêche pas** la complétude).
+  `source`.** Une question tranchée -> `answered` ; laissée de côté -> `deferred` ; **Q8 légal/conformité
+  laissée à l'équipe -> `na`** (terminal, non bloquant).
+- `discovery_complete` : `true` si aucune question n'est `pending`/`deferred` (un `na` - dont un Q8
+  légal laissé à l'équipe - **n'empêche pas** la complétude).
 - `updated_at` à l'horodatage courant.
 
-> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
-> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : phase:
-> extraction, discovery_complete: true », toute liste `champ: valeur`). Confirmer seulement, en clair,
+> **Silencieux - jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
+> ni citer un nom de champ ou une valeur `true`/`false` (interdit : "Manifeste à jour : phase:
+> extraction, discovery_complete: true", toute liste `champ: valeur`). Confirmer seulement, en clair,
 > **ce qui a été produit** + la prochaine étape (cf. `references/ux-conventions.md`).
 
 ## Règles invariantes appliquées ici
@@ -228,4 +228,4 @@ Read-modify-write puis revalidation JSON :
 - **Skill indépendant.** Invocable seul ; la cohérence passe par le manifeste,
   pas par un orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-vision` — transformer la capture en vision produit.
+Étape suivante : `/cadrage:cadrage-vision` - transformer la capture en vision produit.

@@ -25,12 +25,12 @@ date: AAAA-MM-JJ
 
 <!-- Ce qui ORIENTE l'architecture pour CE produit, classé par priorité (1 = le plus
      structurant). Un driver est de l'une de ces 3 espèces, JAMAIS une -ilité :
-       - un OBJECTIF MÉTIER (ex. « zéro réponse non sourcée est éliminatoire ») ;
-       - une CONTRAINTE légale / organisationnelle / technique / d'usage (ex. « hébergement UE
-         obligatoire », « équipe de 3,5 personnes », « 3 sources documentaires hétérogènes ») ;
+       - un OBJECTIF MÉTIER (ex. "zéro réponse non sourcée est éliminatoire") ;
+       - une CONTRAINTE légale / organisationnelle / technique / d'usage (ex. "hébergement UE
+         obligatoire", "équipe de 3,5 personnes", "3 sources documentaires hétérogènes") ;
        - un RISQUE majeur.
-     Une -ilité (fiabilité, sécurité, performance, disponibilité, maintenabilité…) n'est PAS un
-     driver : elle va dans « Attributs de qualité » ci-dessous (elle en DÉCOULE). Désigner chaque
+     Une -ilité (fiabilité, sécurité, performance, disponibilité, maintenabilité...) n'est PAS un
+     driver : elle va dans "Attributs de qualité" ci-dessous (elle en DÉCOULE). Désigner chaque
      driver par son NOM en clair, jamais par un code. -->
 
 | Priorité | Driver                                  | Pourquoi il pèse sur l'architecture                     |
@@ -62,7 +62,7 @@ date: AAAA-MM-JJ
 
 <!-- Classer du plus prioritaire au moins prioritaire. Une cible non chiffrée se précise
      en session avec l'utilisateur (réponse recommandée + alternative + saisir), écrite
-     en place — jamais laissée indéfinie. -->
+     en place - jamais laissée indéfinie. -->
 
 ## Scénarios de qualité testables (QAW)
 
@@ -72,7 +72,7 @@ date: AAAA-MM-JJ
      et chiffrée (ex. p95 < X ms à N utilisateurs simultanés), sinon le scénario n'est
      pas testable. -->
 
-### Scénario 1 — [Attribut : ex. Efficacité de performance]
+### Scénario 1 : [Attribut : ex. Efficacité de performance]
 
 - **Source du stimulus** : [qui/quoi génère le stimulus : ex. un utilisateur]
 - **Stimulus** : [la condition : ex. demande l'historique de ses commandes]
@@ -81,7 +81,7 @@ date: AAAA-MM-JJ
 - **Réponse** : [activité déclenchée : ex. l'historique est renvoyé]
 - **Mesure de réponse** : [mesurable : ex. p95 < 200 ms à 500 utilisateurs simultanés]
 
-### Scénario 2 — [Attribut : ex. Fiabilité / disponibilité]
+### Scénario 2 : [Attribut : ex. Fiabilité / disponibilité]
 
 - **Source du stimulus** : [ex. une instance applicative]
 - **Stimulus** : [ex. tombe en panne]
@@ -90,7 +90,7 @@ date: AAAA-MM-JJ
 - **Réponse** : [ex. l'instance est retirée, bascule sur une autre]
 - **Mesure de réponse** : [ex. aucune requête en échec, bascule < 5 s]
 
-### Scénario 3 — [Attribut : ex. Sécurité]
+### Scénario 3 : [Attribut : ex. Sécurité]
 
 - **Source du stimulus** : [ex. un client non authentifié]
 - **Stimulus** : [ex. envoie une requête sans jeton valide]

@@ -1,8 +1,8 @@
-# Conventions Python — Ruff (lint + format), standard 2026.
+# Conventions Python : Ruff (lint + format), standard 2026.
 # Ruff remplace flake8 + black + isort + pyupgrade en un seul outil.
 # Copié dans `conventions/` du projet quand Python fait partie de la stack.
 # C'est ce fichier que le hook `format_guard.py` passe à `ruff format --config` (préférences
-# complètes du formateur — les 4 réglages de `.editorconfig` n'en sont qu'un sous-ensemble).
+# complètes du formateur : les 4 réglages de `.editorconfig` n'en sont qu'un sous-ensemble).
 # Aligné sur `conventions/.editorconfig` : line-length 100, indent 4 espaces, fins de ligne LF.
 line-length = 100
 indent-width = 4

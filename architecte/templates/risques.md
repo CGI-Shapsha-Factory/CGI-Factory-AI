@@ -12,7 +12,7 @@ date: AAAA-MM-JJ
      là où une valeur manque.  -->
 
 > Les risques qui nécessitent un spike avant de s'engager sont signalés (colonne
-> « Spike/POC nécessaire ? » = Oui) ; le walking skeleton en dérisque une partie en
+> "Spike/POC nécessaire ?" = Oui) ; le walking skeleton en dérisque une partie en
 > traversant de bout en bout le chemin technique le plus incertain.
 
 ## Registre
@@ -25,18 +25,18 @@ date: AAAA-MM-JJ
 | [ex. La latence du fournisseur tiers dépasse le budget] | Moyenne | Élevé | [ex. cache + circuit breaker ; POC de charge] | Oui                    | Ouvert  |
 | [ex. Le volume de données dépasse la capacité du moteur retenu] | Faible | Critique | [ex. partitionnement ; valider à N lignes]  | Oui                    | Ouvert  |
 | [ex. Montée en compétence de l'équipe sur le framework] | Élevée | Moyen | [ex. pairing + spike d'apprentissage]        | Non                    | En cours|
-| [risque — 4]                            | [...]       | [...]    | [...]                                        | [Oui / Non]            | [...]   |
+| [risque - 4]                            | [...]       | [...]    | [...]                                        | [Oui / Non]            | [...]   |
 
 <!-- Ajouter une ligne par risque identifié. Tout risque dont la probabilité ou l'impact
      n'est pas évalué porte [À VALIDER]. -->
 
 ## Spikes / POC à mener avant engagement
 
-<!-- Détailler chaque ligne marquée « Oui » ci-dessus : ce qu'on cherche à prouver et le
+<!-- Détailler chaque ligne marquée "Oui" ci-dessus : ce qu'on cherche à prouver et le
      critère d'arrêt (ce qui permet de déclarer le risque dérisqué). -->
 
-- **[Risque X]** — Hypothèse à valider : [...]. Critère de succès : [mesurable, ex. p95 < X ms à N req/s]. [À CHIFFRER]
-- **[Risque Y]** — Hypothèse à valider : [...]. Critère de succès : [...].
+- **[Risque X]** - Hypothèse à valider : [...]. Critère de succès : [mesurable, ex. p95 < X ms à N req/s]. [À CHIFFRER]
+- **[Risque Y]** - Hypothèse à valider : [...]. Critère de succès : [...].
 
 ## Lien avec le walking skeleton
 

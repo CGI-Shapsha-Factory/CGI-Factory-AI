@@ -1,4 +1,4 @@
-# Prompt Claude Design — Carte de découpage et dépendances
+# Prompt Claude Design : Carte de découpage et dépendances
 
 À coller dans Claude Design, avec les données du `spec-index.md` et du
 `coupling-map.md` en matière source. Sert de support à la revue de couplage.

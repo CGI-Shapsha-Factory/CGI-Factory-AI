@@ -1,4 +1,4 @@
-# Suivi des coûts au niveau organisation — OpenTelemetry (sans hook par machine)
+# Suivi des coûts au niveau organisation : OpenTelemetry (sans hook par machine)
 
 Ce guide explique comment suivre les coûts **au niveau de l'organisation** avec la télémétrie **native** de
 Claude Code (OpenTelemetry), en **alternative ou en complément** du journal **local** git-ignoré (`.factory/couts/`).
@@ -6,18 +6,18 @@ C'est **de la doc**, pas un composant du plugin : rien à installer côté proje
 poste/org via des variables d'environnement (idéalement un `settings.json` géré par l'admin).
 
 ## Pourquoi OTel plutôt qu'un hook, pour l'org
-- **Natif et hookless** : Claude Code instrumente déjà chaque requête et émet des **métriques** — aucun hook
+- **Natif et hookless** : Claude Code instrumente déjà chaque requête et émet des **métriques** - aucun hook
   par machine à poser, aucune latence par tour.
 - **Coût déjà chiffré** : la métrique `claude_code.cost.usage` est émise **en USD** par Claude Code (pas
   besoin de table de prix locale). C'est plus proche du **réel** côté API que la simulation du journal.
 - **Rollup temps réel** : les métriques partent vers un collecteur OTLP (Honeycomb, Datadog, Grafana,
-  Prometheus, collecteur auto-hébergé…) et alimentent des dashboards par **user / modèle / équipe**.
+  Prometheus, collecteur auto-hébergé...) et alimentent des dashboards par **user / modèle / équipe**.
 
-## Les 2 métriques de coût (vérifiées — `code.claude.com/docs/en/monitoring-usage`)
-- **`claude_code.token.usage`** (tokens) — attributs : `type` (`input` | `output` | `cacheRead` |
+## Les 2 métriques de coût (vérifiées : `code.claude.com/docs/en/monitoring-usage`)
+- **`claude_code.token.usage`** (tokens) - attributs : `type` (`input` | `output` | `cacheRead` |
   `cacheCreation`), `model`, `query_source` (`main`|`subagent`|`auxiliary`), `plugin.name`, `skill.name`,
   `agent.name`, `mcp_server.name`, `mcp_tool.name`, + attributs standard.
-- **`claude_code.cost.usage`** (USD) — attributs : `model`, `query_source`, `plugin.name`, `skill.name`,
+- **`claude_code.cost.usage`** (USD) - attributs : `model`, `query_source`, `plugin.name`, `skill.name`,
   `agent.name`, `marketplace.name`, + attributs standard.
 - **Attributs standard** (toutes métriques) : `session.id`, `app.version`, `organization.id`,
   `user.account_uuid`, `user.email`, `terminal.type`, + `OTEL_RESOURCE_ATTRIBUTES` personnalisés.
@@ -52,7 +52,7 @@ peuvent pas être surchargées par l'utilisateur.
   }
 }
 ```
-`OTEL_RESOURCE_ATTRIBUTES` ajoute des étiquettes d'équipe/centre de coût sur **toutes** les métriques →
+`OTEL_RESOURCE_ATTRIBUTES` ajoute des étiquettes d'équipe/centre de coût sur **toutes** les métriques ->
 ventilation par équipe côté dashboard.
 
 ## Ce qu'OTel fait / ne fait pas (vs le journal `.factory/couts/`)
@@ -67,10 +67,10 @@ ventilation par équipe côté dashboard.
 
 ## Recommandation
 - **Journal local git-ignoré** (défaut du plugin) : suivi **par session**, données individuelles
-  (jamais poussées), fonctionne hors-ligne — **coût de simulation** (estimation au tarif API). Partage
-  au chef d'équipe en remettant un `rapport-couts.md` (fichier versionné). C'est le livrable « coût de
-  fabrication d'un projet ».
-- **OTel** (ce guide) : suivi **transversal org**, dashboards temps réel, coût USD natif — à activer par
+  (jamais poussées), fonctionne hors-ligne - **coût de simulation** (estimation au tarif API). Partage
+  au chef d'équipe en remettant un `rapport-couts.md` (fichier versionné). C'est le livrable "coût de
+  fabrication d'un projet".
+- **OTel** (ce guide) : suivi **transversal org**, dashboards temps réel, coût USD natif - à activer par
   l'admin quand on veut agréger tous les développeurs/projets (les journaux locaux étant git-ignorés, OTel
   est la voie d'agrégation cross-dev).
 
@@ -78,4 +78,4 @@ Les deux sont **complémentaires** : OTel pour le pilotage org, le journal pour 
 
 ## Source
 - `code.claude.com/docs/en/monitoring-usage` (métriques `claude_code.token.usage` / `claude_code.cost.usage`,
-  attributs, variables d'environnement, `settings.json` géré) — vérifié le 2026-07-02.
+  attributs, variables d'environnement, `settings.json` géré) - vérifié le 2026-07-02.

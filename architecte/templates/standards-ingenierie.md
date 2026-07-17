@@ -34,7 +34,7 @@ fichier de config, pas une table de nommage dupliquée.
 
 <!-- Ne garder que les lignes correspondant aux langages réellement présents dans la
      stack (voir stack-technique.md). Pour JS/TS, choisir UNE approche : soit Biome (tout-en-un),
-     soit le couple ESLint + Prettier — pas les deux. Ajouter une ligne par langage
+     soit le couple ESLint + Prettier - pas les deux. Ajouter une ligne par langage
      supplémentaire et pointer vers le fichier de config correspondant dans `conventions/`. -->
 
 Règles transverses :
@@ -53,46 +53,46 @@ Règles transverses :
 
 ## Journalisation (logging)
 
-- Format : [JSON structuré / texte brut] — champs : `timestamp`, `level`, `service`, `traceId`, `message`, plus les champs spécifiques au contexte.
+- Format : [JSON structuré / texte brut] - champs : `timestamp`, `level`, `service`, `traceId`, `message`, plus les champs spécifiques au contexte.
 - Niveaux utilisés : `debug` (dev uniquement), `info` (fonctionnement normal), `warn` (problèmes récupérables), `error` (action requise).
 - **Ne jamais journaliser :** mots de passe, jetons, clés d'API, données personnelles complètes (nom + email + adresse ensemble), données de cartes de paiement.
 - **Toujours journaliser :** l'identifiant de requête / trace ID sur chaque ligne de log dans le périmètre d'une requête, le nom du composant.
-- Les logs doivent être écrits sur stdout — aucun puits de fichier (file sink) dans le code applicatif.
+- Les logs doivent être écrits sur stdout - aucun puits de fichier (file sink) dans le code applicatif.
 
 ## Socle de sécurité
 
 - Toutes les entrées de sources externes (corps HTTP, paramètres de requête, en-têtes, messages de file) doivent être validées et assainies avant usage.
-- Les secrets sont chargés exclusivement depuis les variables d'environnement ou le gestionnaire de secrets désigné ([outil]) — jamais codés en dur ni commités.
+- Les secrets sont chargés exclusivement depuis les variables d'environnement ou le gestionnaire de secrets désigné ([outil]) - jamais codés en dur ni commités.
 - Les dépendances sont scannées à la recherche de vulnérabilités connues en CI via [outil] ; les builds échouent sur les findings HIGH ou CRITICAL.
 - Toutes les réponses HTTP doivent positionner les en-têtes de sécurité appropriés ([CSP, HSTS, X-Frame-Options, ...]).
-- [Toute règle de sécurité spécifique au projet — ex. « toutes les requêtes base de données utilisent des requêtes paramétrées »]
+- [Toute règle de sécurité spécifique au projet - ex. "toutes les requêtes base de données utilisent des requêtes paramétrées"]
 
 ## Exigences de test (stratégie)
 
 **Écrire les tests EN MÊME TEMPS que le code.** Dès qu'une fonction est créée, son test est écrit dans
-le même changement — aucune source ne part sans son test. (Appliqué par des garde-fous déterministes :
-hooks Claude Code + pre-commit — voir la constitution du projet.)
+le même changement - aucune source ne part sans son test. (Appliqué par des garde-fous déterministes :
+hooks Claude Code + pre-commit - voir la constitution du projet.)
 
-**Tests unitaires — un par règle métier.** Chaque règle métier implémentée par une fonction a un test
+**Tests unitaires - un par règle métier.** Chaque règle métier implémentée par une fonction a un test
 unitaire couvrant **le cas passant, le(s) cas d'échec et les cas limites** (valeurs aux bornes, entrées
 vides/nulles, erreurs attendues). La couverture chiffrée est un plancher, pas la stratégie.
 
-**Tests d'intégration — composants complets, dépendances externes MOCKÉES** (pas d'« infrastructure
-réelle » dans le test). Pour chaque composant livrable :
+**Tests d'intégration - composants complets, dépendances externes MOCKÉES** (pas d'"infrastructure
+réelle" dans le test). Pour chaque composant livrable :
 - **Frontend** : tester en **simulant les interactions utilisateur** et en **mockant les appels d'API
   externes** (le réseau ne sort jamais du test).
 - **API / pipelines / batch** : couvrir **toutes les fonctionnalités exposées** en **mockant toutes les
   dépendances externes** (base, files, services tiers, horloge).
 
 **Frameworks & mocking par langage** (selon la stack de `stack-technique.md`) :
-- Python → pytest (+ `pytest-mock`/`monkeypatch`, `responses`/`respx` pour HTTP).
-- TS/JS → Vitest ou Jest (+ `msw` pour le réseau).
-- Angular → TestBed + `HttpTestingController` (ou Jest) ; spies pour les services.
-- .NET → xUnit + Moq/NSubstitute. Java/Spring → JUnit 5 + Mockito. Go → `testing` + `httptest`.
+- Python -> pytest (+ `pytest-mock`/`monkeypatch`, `responses`/`respx` pour HTTP).
+- TS/JS -> Vitest ou Jest (+ `msw` pour le réseau).
+- Angular -> TestBed + `HttpTestingController` (ou Jest) ; spies pour les services.
+- .NET -> xUnit + Moq/NSubstitute. Java/Spring -> JUnit 5 + Mockito. Go -> `testing` + `httptest`.
 
 **Hygiène :**
 - Les fichiers de test résident [à côté du code source / dans un dossier `tests/` dédié].
-- Nommage : `[unité testée].[scénario].[résultat attendu]` — ex. `createOrder.withInvalidPayload.throwsValidationError`.
+- Nommage : `[unité testée].[scénario].[résultat attendu]` - ex. `createOrder.withInvalidPayload.throwsValidationError`.
 - Chaque test met en place et démonte son propre état ; aucun état partagé entre tests.
 - Aucun code de production ne référence d'utilitaires ou modules réservés aux tests.
 - (Optionnel) Tests E2E des parcours critiques : [parcours listés], à passer avant tout déploiement.
@@ -100,7 +100,7 @@ réelle » dans le test). Pour chaque composant livrable :
 ## Règles de conception d'API
 
 - Versionnage : [préfixe d'URL `/v1/` / en-tête `API-Version` / ...].
-- Pagination : [par curseur / par offset] — champs : `[data, nextCursor / data, total, page, pageSize]`.
+- Pagination : [par curseur / par offset] - champs : `[data, nextCursor / data, total, page, pageSize]`.
 - Format de réponse d'erreur :
   ```json
   {
@@ -124,18 +124,18 @@ réelle » dans le test). Pour chaque composant livrable :
 
 ## Workflow Git
 
-- Nommage des branches : `[type]/[courte-description]` — types : `feat`, `fix`, `chore`, `docs`, `refactor`.
-- Les messages de commit suivent les [Conventional Commits] : `type(scope): description à l'impératif` — ex. `feat(orders): add cancellation endpoint`.
+- Nommage des branches : `[type]/[courte-description]` - types : `feat`, `fix`, `chore`, `docs`, `refactor`.
+- Les messages de commit suivent les [Conventional Commits] : `type(scope): description à l'impératif` - ex. `feat(orders): add cancellation endpoint`.
 - Les pull requests doivent compter [N] fichiers ou moins ; les changements plus volumineux sont découpés en PR empilées (stacked PRs).
 - Aucun push direct sur `main` ou `master` ; tout changement passe par une PR avec au moins [N] approbation(s).
   Cette règle est appliquée par un **ruleset serveur GitHub** (require PR + review + check CI, block
-  force-push/delete) — la seule garantie non contournable multi-personnes. *(Pas de hook de branche local :
+  force-push/delete) - la seule garantie non contournable multi-personnes. *(Pas de hook de branche local :
   contournable `--no-verify` et par-clone, donc géré côté serveur.)*
 - La CI doit être verte avant fusion.
 
 ## Règles de documentation
 
-- Chaque fonction/méthode publique doit avoir un commentaire de doc expliquant **pourquoi** elle existe (pas quoi — le code le montre), plus tout invariant ou effet de bord non évident.
+- Chaque fonction/méthode publique doit avoir un commentaire de doc expliquant **pourquoi** elle existe (pas quoi - le code le montre), plus tout invariant ou effet de bord non évident.
 - Les décisions de niveau architecture vont dans `architecture/decisions/` ; les commentaires en ligne n'expliquent que le comportement local non évident.
 - Le `README.md` à la racine du dépôt doit toujours contenir : objet, prérequis, comment lancer en local, comment lancer les tests, comment déployer.
-- Les commentaires obsolètes doivent être supprimés, pas laissés avec un « TODO: remove ».
+- Les commentaires obsolètes doivent être supprimés, pas laissés avec un "TODO: remove".

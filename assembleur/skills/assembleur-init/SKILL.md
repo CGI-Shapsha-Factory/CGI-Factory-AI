@@ -19,20 +19,20 @@ aucun repo cible à capturer** : l'assembleur produit un **paquet** dans `assemb
 il n'écrit jamais dans un repo SpecKit.
 
 ## Ancrage du répertoire (impératif)
-**La racine du projet est le dossier courant** — celui où la session est lancée (le cwd) —
+**La racine du projet est le dossier courant** - celui où la session est lancée (le cwd) -
 **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé
 plus haut. Tous les chemins de ce skill (`manifest.json`, `.factory/assembleur/`,
 `assembleur-out/`, et les 3 dossiers amont lus `cadrage-out/` / `architecte-out/` /
 `designer-out/`) se résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** :
 un `.factory/` ou un dossier `-out/` situé dans un dossier **parent** n'appartient **pas** à
-ce projet — le traiter comme **absent** (ne jamais le lire ; on crée/étend le manifeste **du
+ce projet - le traiter comme **absent** (ne jamais le lire ; on crée/étend le manifeste **du
 cwd**). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
-## `.factory/` d'abord — clone frais, `.factory/` git-ignoré (impératif)
+## `.factory/` d'abord : clone frais, `.factory/` git-ignoré (impératif)
 `.factory/` est **entièrement git-ignoré** : il ne voyage **jamais** avec le repo. Cette phase peut être
 menée par **une autre personne**, sur une **autre machine**, à partir d'un **clone frais** où **aucun
 `.factory/` n'existe encore**. Ce skill ne présuppose donc **jamais** un `.factory/` déjà présent :
-**avant toute autre chose**, il (re)pose dans `.factory/` **tout ce dont la convergence a besoin** — les
+**avant toute autre chose**, il (re)pose dans `.factory/` **tout ce dont la convergence a besoin** - les
 gabarits de convergence (`.factory/assembleur/`) et le bloc `assembly` du manifeste
 `manifest.json` (créé s'il manque). Le **handoff** entre phases passe **uniquement** par les
 dossiers `-out/` committés, jamais par `.factory/` (régénérable en relançant ce `-init`).
@@ -43,9 +43,9 @@ dossiers `-out/` committés, jamais par `.factory/` (régénérable en relançan
 **déterministes et sans dépendance à l'amont** : ils s'installent **toujours**, dans le dossier
 courant. **Ne jamais refuser** au motif que les dossiers `-out/` amont manquent.
 
-Après le setup, **vérifier l'état des 3 dossiers de sortie amont** — présence et complétude,
+Après le setup, **vérifier l'état des 3 dossiers de sortie amont** - présence et complétude,
 **sur le disque**, sans lire aucun flag de validation (validé ou non n'est pas le problème de
-l'assembleur) — puis le **signaler** (sans bloquer) :
+l'assembleur) - puis le **signaler** (sans bloquer) :
 - **cadrage** : `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`,
   `cadrage-out/spec-index.md`, et **au moins un** brief sous
   `cadrage-out/features-fonctionnels-brief/*.md`.
@@ -53,8 +53,8 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
   `architecte-out/impact-design.md`, et le dossier `architecte-out/decisions/`.
 - **designer** : `designer-out/design-guidelines.md`.
 
-- **Amont complet** → rien à signaler ; enchaîner sur `/assembleur:assembleur-convergence`.
-- **Amont absent, vide ou incomplet** → **ne pas refuser**. Confirmer que le terrain de
+- **Amont complet** -> rien à signaler ; enchaîner sur `/assembleur:assembleur-convergence`.
+- **Amont absent, vide ou incomplet** -> **ne pas refuser**. Confirmer que le terrain de
   convergence est posé, puis **avertir en clair** ce qui manque ou est vide (**par chemin**) et la
   **phase amont** qui doit le produire/compléter (cadrage / architecte / designer), en indiquant
   que **la convergence** (`/assembleur:assembleur-convergence`) a besoin de ces dossiers `-out/`.
@@ -62,7 +62,7 @@ l'assembleur) — puis le **signaler** (sans bloquer) :
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si
 `manifest.json` n'existe pas encore, **créer d'abord le dossier `cadrage-out/` s'il est
 absent** (même sans amont), puis y **créer** le manifeste comme objet JSON valide
-`{ "assembly": { … } }` (les autres phases le complètent par fusion, sans écraser le bloc `assembly`).
+`{ "assembly": { ... } }` (les autres phases le complètent par fusion, sans écraser le bloc `assembly`).
 
 ## Procédure
 1. **Installer les gabarits de convergence** dans `.factory/assembleur/` : copier depuis
@@ -71,8 +71,8 @@ absent** (même sans amont), puis y **créer** le manifeste comme objet JSON val
    `memory-architecture.md`, `memory-design.md`, `memory-features.md`,
    `coherence-report.md`, `attack-plan.md`, `init-cowork.md`.
 2. **Git-ignore `.factory/` (compléter, jamais réécrire)** : le **`.gitignore` est généré en premier
-   par le cadrage** et **committé** — présent dans un clone frais. **Ne jamais le réécrire ni l'écraser** :
-   s'assurer seulement qu'il **contient** la ligne `.factory/` — l'**ajouter** si elle manque (sans
+   par le cadrage** et **committé** - présent dans un clone frais. **Ne jamais le réécrire ni l'écraser** :
+   s'assurer seulement qu'il **contient** la ligne `.factory/` - l'**ajouter** si elle manque (sans
    dupliquer), en **préservant** le reste. **Le créer uniquement s'il est absent** (clone où le cadrage
    n'a pas tourné ici). Tout `.factory/` est local, non versionné.
 3. **Créer le dossier de sortie** `assembleur-out/` avec ses sous-dossiers `features/`
@@ -103,7 +103,7 @@ absent** (même sans amont), puis y **créer** le manifeste comme objet JSON val
 - **Aucune décision de convergence.** Ce skill prépare ; il ne converge rien.
 - **Jamais bloquant.** Le terrain de convergence se pose toujours ; un `-out/` amont manquant
   **avertit**, ne refuse pas.
-- **Vérification, pas validation.** L'assembleur ne juge pas si l'amont est « validé » : il
+- **Vérification, pas validation.** L'assembleur ne juge pas si l'amont est "validé" : il
   vérifie seulement que les fichiers de sortie sont **là et non vides**, et le **signale**. Aucun
   flag de validation lu ni exigé.
 - **Aucun hook à poser.** L'assembleur n'a **pas de hook ni d'enforcement propre** à installer :
@@ -116,4 +116,4 @@ absent** (même sans amont), puis y **créer** le manifeste comme objet JSON val
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/assembleur:assembleur-convergence` — lire les 3 contrats en parallèle, les converger et produire le paquet de handoff SpecKit.
+Étape suivante : `/assembleur:assembleur-convergence` - lire les 3 contrats en parallèle, les converger et produire le paquet de handoff SpecKit.

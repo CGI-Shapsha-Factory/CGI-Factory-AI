@@ -1,4 +1,4 @@
-# Guidelines de design — handoff pour l'Assembleur
+# Guidelines de design : handoff pour l'Assembleur
 
 > Les **règles à graver dans le projet** pour rendre le contrat de design **opposable en fabrication**.
 > Consommées par l'Assembleur (constitution + `claude.md`). Le design system naît dans Claude Design ;
@@ -7,8 +7,8 @@
 
 ## Source du design system
 - Design system **validé** : **export committé** dans `designer-out/maquette-de-claude-design/`
-  (dossier ou archive ZIP, ex. `tokens.css`) — c'est la source unique, le repo est auto-portable.
-- Stack front cible : … `(src: impact-design §1)`
+  (dossier ou archive ZIP, ex. `tokens.css`) - c'est la source unique, le repo est auto-portable.
+- Stack front cible : ... `(src: impact-design §1)`
 
 ## Règles d'états (par écran)
 Chaque écran couvre ses **états canoniques** : **chargement, vide, erreur, succès** (1re utilisation ≠
@@ -16,7 +16,7 @@ aucun résultat). État vide = message clair + une action. *(NN/g)*
 
 ## Patterns d'erreur
 - Validation **à la sortie du champ** (pas pendant la frappe), message **explicite et actionnable**.
-- **Format d'erreur de l'API → messages par champ** `(src: impact-design §3)`.
+- **Format d'erreur de l'API -> messages par champ** `(src: impact-design §3)`.
 - Erreur serveur et perte de connexion traitées ; focus porté sur le **1er champ en erreur**.
 
 ## Socle d'accessibilité
@@ -25,7 +25,7 @@ aucun résultat). État vide = message clair + une action. *(NN/g)*
 
 ## Discipline d'implémentation (à forcer en fabrication)
 - **Tout écran dérive de l'export committé du design system** (`designer-out/maquette-de-claude-design/`) ;
-  **aucune valeur de style en dur** → tokens et composants uniquement.
+  **aucune valeur de style en dur** -> tokens et composants uniquement.
 - On ne construit qu'à partir des tokens/composants de l'export committé.
 
 ---

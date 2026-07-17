@@ -1,4 +1,4 @@
-# Prompt Claude Design — Canvas vision produit
+# Prompt Claude Design : Canvas vision produit
 
 À coller dans Claude Design, avec le `product-brief.md` en matière source.
 Direction visuelle : une palette délibérée et sobre adaptée au contenu

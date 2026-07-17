@@ -8,15 +8,15 @@ date: AAAA-MM-JJ
 
 <!-- Public visé : Claude Code + humains. -->
 <!-- Remplir chaque [placeholder]. La matrice composant × techno doit lister CHAQUE
-     composant de composants.md — garder les deux fichiers synchronisés. -->
-<!-- VERSION EXACTE OBLIGATOIRE : chaque ligne d'une table à colonne « Version » porte
-     une version exacte et épinglée (ex. « Python 3.12.10 », « PostgreSQL 17.2 »,
-     « React 19.1.0 »). INTERDIT : vide, « latest », « stable », « current »,
-     « nightly », « dernière version », « — ». Pour un service managé sans numéro de
+     composant de composants.md - garder les deux fichiers synchronisés. -->
+<!-- VERSION EXACTE OBLIGATOIRE : chaque ligne d'une table à colonne "Version" porte
+     une version exacte et épinglée (ex. "Python 3.12.10", "PostgreSQL 17.2",
+     "React 19.1.0"). INTERDIT : vide, "latest", "stable", "current",
+     "nightly", "dernière version", "-". Pour un service managé sans numéro de
      version (ex. Azure Container Apps), inscrire le SKU / palier ou
-     « service managé (pas de version épinglée) » — jamais « latest ». -->
+     "service managé (pas de version épinglée)" - jamais "latest". -->
 <!-- Une version encore inconnue se tranche EN SESSION (on demande la version exacte à
-     l'utilisateur, on l'écrit en place) — jamais laissée en marqueur dans le fichier final. -->
+     l'utilisateur, on l'écrit en place) - jamais laissée en marqueur dans le fichier final. -->
 
 ## Langages & runtimes
 
@@ -60,16 +60,16 @@ date: AAAA-MM-JJ
 
 ## Matrice composant × techno
 
-<!-- Marquer chaque cellule : ✓ runtime/langage principal · DB stockage de données ·
-     🔗 appel externe · — non utilisé. -->
+<!-- Marquer chaque cellule : Oui = runtime/langage principal · DB = stockage de données ·
+     API = appel externe · "-" = non utilisé. -->
 <!-- Colonnes = technologies des sections ci-dessus. Lignes = chaque composant de
      composants.md. RÈGLE : une ligne de la matrice par composant. -->
 
 | Composant       | [Lang] | [Framework] | [DB 1] | [DB 2] | [Cache] | [File] | [Svc auth] |
 |-----------------|--------|-------------|--------|--------|---------|--------|-----------|
-| [ComposantA]    | ✓      | ✓           | DB     | —      | 🔗      | —      | 🔗        |
-| [ComposantB]    | ✓      | ✓           | —      | DB     | —       | 🔗     | 🔗        |
-| [WorkerC]       | ✓      | —           | DB     | —      | —       | 🔗     | —         |
+| [ComposantA]    | Oui    | Oui         | DB     | -      | API     | -      | API       |
+| [ComposantB]    | Oui    | Oui         | -      | DB     | -       | API    | API       |
+| [WorkerC]       | Oui    | -           | DB     | -      | -       | API    | -         |
 
 ## Politique de versions
 
@@ -80,10 +80,10 @@ date: AAAA-MM-JJ
      délai d'application des correctifs de sécurité. -->
 
 - Toutes les dépendances directes sont épinglées à une version exacte ; ces versions exactes figurent dans les tables ci-dessus.
-- [cadence de mise à jour — ex. via PR automatisées]
-- [délai d'application des correctifs de sécurité — ex. 72 h après divulgation]
+- [cadence de mise à jour - ex. via PR automatisées]
+- [délai d'application des correctifs de sécurité - ex. 72 h après divulgation]
 
 ## Justification des décisions
 
-Toutes les décisions techniques majeures — y compris les options considérées et la
-justification de chaque choix — sont consignées dans `architecte-out/decisions/` (ADR).
+Toutes les décisions techniques majeures - y compris les options considérées et la
+justification de chaque choix - sont consignées dans `architecte-out/decisions/` (ADR).

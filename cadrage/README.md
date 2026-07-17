@@ -1,7 +1,7 @@
 # Cadrage Amont
 
 Plugin Claude qui **industrialise la phase amont d'un projet spec-driven**. Il
-transforme de la matière brute — transcripts Notion, fichiers texte — en un **pack
+transforme de la matière brute - transcripts Notion, fichiers texte - en un **pack
 fonctionnel** repris par l'architecte : vision, glossaire, découpage, un brief par
 feature. Tout est écrit dans `cadrage-out/` (la mécanique interne vit dans `.factory/`).
 
@@ -9,7 +9,7 @@ Il couvre deux travaux distincts : **capter la vision produit**, puis la
 **découper en features cohérentes et fabricables**.
 
 > Le plugin n'est pas un outil de saisie. La matière existe déjà dans les
-> transcripts. Les skills transforment, valident et structurent — ils ne
+> transcripts. Les skills transforment, valident et structurent - ils ne
 > ressaisissent rien.
 
 ## Principe : une ligne de production, un manifeste partagé
@@ -18,29 +18,29 @@ Chaque skill fait une chose et est **invocable seul**. La cohérence ne vient pa
 d'un orchestrateur, elle vient d'un fichier d'état unique, le **manifeste**
 (`manifest.json`), que tous les skills lisent et mettent à
 jour en read-modify-write. Chaque skill vérifie ses **pré-requis** en silence avant
-d'agir et contrôle sa sortie avant d'écrire le manifeste — sans jamais exposer de
-« porte » à l'utilisateur.
+d'agir et contrôle sa sortie avant d'écrire le manifeste - sans jamais exposer de
+"porte" à l'utilisateur.
 
 ## Les dix skills, dans l'ordre du pipeline
 
 | # | Skill | Rôle | Pré-requis |
 |---|-------|------|----------------|
 | 0 | `cadrage-init` | Amorce `.factory/` (gabarits, git-ignoré) + `cadrage-out/` (**+ manifeste committé**) + `cadrage-out/prompts/` | aucune (projet vierge) |
-| 1 | `cadrage-extraction` | Matière brute → `capture-brute.md` (contenu, sans horodatage ni src) + **passe découverte** (13 questions, interactif) → `project-frame.md` | manifeste existe + une source déclarée |
-| 2 | `cadrage-vision` | Capture → `product-brief.md` (le quoi, le pourquoi) | capture_brute existe |
+| 1 | `cadrage-extraction` | Matière brute -> `capture-brute.md` (contenu, sans horodatage ni src) + **passe découverte** (13 questions, interactif) -> `project-frame.md` | manifeste existe + une source déclarée |
+| 2 | `cadrage-vision` | Capture -> `product-brief.md` (le quoi, le pourquoi) | capture_brute existe |
 | 3 | `cadrage-glossaire` | Construit le langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes), validé en bloc | capture_brute existe |
-| 4 | `cadrage-decoupage` | Vision → découpage **fonctionnel** (use cases par valeur) + couplage (**hypothèse**) | vision_complete |
+| 4 | `cadrage-decoupage` | Vision -> découpage **fonctionnel** (use cases par valeur) + couplage (**hypothèse**) | vision_complete |
 | 5 | `cadrage-demonstrateur-brief` | Prompt Claude Design du démonstrateur (mode initial / adaptatif) | vision dispo. / retour dispo. |
 | 6 | `cadrage-retour-demonstrateur` | Ingère le retour client, résout et **invalide** les points | retour disponible |
 | 7 | `cadrage-briefs` | Un brief auto-portant par feature (contrat central) | **decoupage_arbitrated ET demonstrateur_converged** |
 | 8 | `cadrage-completude` | **Étape terminale ET point de résolution unique** : bilan Definition of Ready + **résolution en session de tous les points ouverts**, puis relais vers l'architecte | aucune (rejouable) |
-| — | `help-factory` | Aide unique : carte des 4 plugins, un tableau par plugin (rôle, ordre, décisions humaines) | aucune |
+| - | `help-factory` | Aide unique : carte des 4 plugins, un tableau par plugin (rôle, ordre, décisions humaines) | aucune |
 
-Flux nominal : extraction → vision & glossaire → decoupage → **prompt
-démonstrateur → maquette (Claude Design) → balayage client → atelier de
-validation → retour → réjeu incrémental → prompt adaptatif → maquette**, en
-boucle jusqu'à `demonstrateur_converged` → **revue de couplage humaine** → briefs
-→ completude → **`/architecte:architecte-init`**. Il n'y a **plus de skill handoff** :
+Flux nominal : extraction -> vision & glossaire -> decoupage -> **prompt
+démonstrateur -> maquette (Claude Design) -> balayage client -> atelier de
+validation -> retour -> réjeu incrémental -> prompt adaptatif -> maquette**, en
+boucle jusqu'à `demonstrateur_converged` -> **revue de couplage humaine** -> briefs
+-> completude -> **`/architecte:architecte-init`**. Il n'y a **plus de skill handoff** :
 l'architecte (puis l'assembleur) lisent directement les fichiers de `cadrage-out/`.
 
 ### La boucle démonstrateur (incrémentale)
@@ -61,18 +61,18 @@ Design). Deux propriétés clés :
 
 ## Trois décisions humaines structurantes, jamais automatisées
 
-- **Direction produit** — la boucle démonstrateur. Le client valide la
+- **Direction produit** - la boucle démonstrateur. Le client valide la
   maquette (`demonstrateur.client_validated`, geste humain), ce qui, avec aucun
   point bloquant ouvert, allume `demonstrateur_converged`.
-- **Revue de couplage** — entre `decoupage` et `briefs`. L'humain arbitre la
+- **Revue de couplage** - entre `decoupage` et `briefs`. L'humain arbitre la
   proposition **en session** ; les décisions sont écrites **en place** dans la
   carte de couplage, puis `arbitrated` passe à vrai. Un réjeu de découpage qui
   change matériellement la proposition **réinitialise** cet arbitrage.
-- **Cadrage terminé** — `cadrage_complete`, calculée par `completude` : c'est la
+- **Cadrage terminé** - `cadrage_complete`, calculée par `completude` : c'est la
   dernière étape avant l'architecte, qui lit ensuite directement `cadrage-out/`.
 
-Ces conditions sont vérifiées **en silence**, jamais affichées comme des « portes ».
-`cadrage-briefs` requiert `decoupage_arbitrated` **et** `demonstrateur_converged` —
+Ces conditions sont vérifiées **en silence**, jamais affichées comme des "portes".
+`cadrage-briefs` requiert `decoupage_arbitrated` **et** `demonstrateur_converged` -
 un brief dérive d'une vision stable.
 
 ## Règles invariantes
@@ -99,7 +99,7 @@ un brief dérive d'une vision stable.
   dans un artefact (acquis contredit par un retour).
 - **Deux altitudes de validation.** La direction produit se valide une fois, par
   le prototype, hors plugin. La spécification se valide par feature, plus tard dans
-  la chaîne (architecte → assembleur → SpecKit).
+  la chaîne (architecte -> assembleur -> SpecKit).
 - **Frontière des artefacts.** Tous les documents du cadrage (vision, glossaire,
   découpage, briefs) sont dans `cadrage-out/`, et le **manifeste committé** (`manifest.json`)
   est **à la racine** du projet ; seuls les **gabarits** vivent dans `.factory/` (git-ignoré). L'architecte puis l'assembleur lisent directement
@@ -116,7 +116,7 @@ cadrage/
 ├── references/                    # conventions partagées (boucle interactive, UX)
 ├── scripts/                       # check_discovery.py (garde-fou déterministe)
 ├── templates/                     # gabarits EN des artefacts (project-frame, product-brief,
-│                                  #   feature-brief ← contrat central, spec-index, coupling-map,
+│                                  #   feature-brief <- contrat central, spec-index, coupling-map,
 │                                  #   glossaire)
 └── README.md
 ```
@@ -129,9 +129,9 @@ le valide, l'architecte puis l'assembleur le reprennent. Il doit être auto-port
 ## Workspace du projet client (créé par `cadrage-init`)
 
 ```
-.factory/                          # caché, git-ignoré — gabarits seulement
+.factory/                          # caché, git-ignoré - gabarits seulement
 └── cadrage/                       # gabarits FR du cadrage (copies projet)
-manifest.json                      # contrat machine — COMMITTÉ à la racine, voyage avec le repo
+manifest.json                      # contrat machine - COMMITTÉ à la racine, voyage avec le repo
 cadrage-out/                       # documents générés, COMMITTÉ (à la racine)
 ├── source-contexte/               # matière brute déposée par l'utilisateur (facultatif)
 ├── capture-brute, project-frame, product-brief, glossaire,

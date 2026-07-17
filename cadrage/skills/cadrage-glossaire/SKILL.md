@@ -7,7 +7,7 @@ description: Construit et valide le glossaire du langage ubiquitaire du projet, 
 
 Construit le **langage ubiquitaire du projet** : les termes qu'on utilisera tout
 au long de la construction du produit. C'est la référence qui fixe **le mot à
-employer** (« Dossier », « Note juridique », « Paralegal ») pour qu'on ne parle
+employer** ("Dossier", "Note juridique", "Paralegal") pour qu'on ne parle
 jamais d'un même concept avec deux mots différents.
 
 ## Objectif
@@ -18,12 +18,12 @@ sémantique à toute la suite (vision, découpage, briefs) et de vocabulaire de
 référence au développement.
 
 **Ce qu'on retient / ce qu'on exclut.**
-- **Retenir** : les termes du **domaine** qui deviendront des concepts du produit —
-  entités, objets manipulés, rôles utilisateurs, actions métier (ex. « Dossier »,
-  « Note juridique », « Paralegal », « Réponse sourcée »).
+- **Retenir** : les termes du **domaine** qui deviendront des concepts du produit -
+  entités, objets manipulés, rôles utilisateurs, actions métier (ex. "Dossier",
+  "Note juridique", "Paralegal", "Réponse sourcée").
 - **Exclure** : les **acronymes, outils et systèmes existants** qui décrivent le
   contexte ou l'infrastructure et **ne seront pas des composants du produit**
-  (ex. « GED », « GED maison », « SharePoint », noms de logiciels en place). Ils ne
+  (ex. "GED", "GED maison", "SharePoint", noms de logiciels en place). Ils ne
   font pas partie du langage de construction.
 
 ## Entrée
@@ -39,19 +39,19 @@ Gabarit de sortie : `.factory/cadrage/glossaire.md` (copie installée par cadrag
 ## Pré-requis (vérification silencieuse)
 
 `artifacts.capture_brute` existe dans le manifeste. Sinon, indiquer en clair qu'il
-faut d'abord faire l'extraction, sans afficher de « porte ».
+faut d'abord faire l'extraction, sans afficher de "porte".
 
 ## Procédure
 
 1. **Collecter les termes du projet** depuis la capture (section 5 en priorité,
    puis tout terme métier récurrent dans la matière) et la vision. **Filtrer** :
    ne garder que les **termes du domaine** qui deviendront des concepts du produit ;
-   **écarter** les acronymes / outils / systèmes existants (GED, SharePoint…) qui
-   décrivent le contexte et ne seront pas des composants (cf. « Ce qu'on retient /
-   ce qu'on exclut »).
+   **écarter** les acronymes / outils / systèmes existants (GED, SharePoint...) qui
+   décrivent le contexte et ne seront pas des composants (cf. "Ce qu'on retient /
+   ce qu'on exclut").
 2. **Définir chaque terme dans les mots du client.** La définition reprend la
    formulation de la source, elle ne la traduit pas en jargon technique. **Ne pas
-   écrire de provenance** (ni horodatage, ni `(src: …)`).
+   écrire de provenance** (ni horodatage, ni `(src: ...)`).
 3. **Contrôle de dérive.** Si un terme apparaît avec **deux sens divergents** : ne
    pas trancher en silence. Le poser **comme question** à l'utilisateur au moment
    de la validation en bloc (il choisit le sens), sans persister de marqueur.
@@ -61,11 +61,11 @@ faut d'abord faire l'extraction, sans afficher de « porte ».
 5. **Afficher le glossaire en session, puis valider EN BLOC.**
    Une fois le glossaire généré et écrit dans `cadrage-out/glossaire.md` :
    - **Afficher le glossaire dans le chat sous forme de tableau en français**
-     (terme, définition dans les mots du client) — en langage clair, sans exposer
+     (terme, définition dans les mots du client) - en langage clair, sans exposer
      de nom de colonne du manifeste ni d'identifiant technique
      (cf. `references/ux-conventions.md`).
-   - **Demander une seule validation pour l'ensemble** : « Ce glossaire te convient ?
-     Indique-moi les termes à corriger ou retirer, sinon je valide tout. »
+   - **Demander une seule validation pour l'ensemble** : "Ce glossaire te convient ?
+     Indique-moi les termes à corriger ou retirer, sinon je valide tout."
      **Ne pas valider terme par terme.** S'il y a une ambiguïté de sens, poser la
      ou les questions correspondantes dans le même échange.
    - **Appliquer les corrections demandées tout de suite**, puis marquer l'ensemble
@@ -77,19 +77,19 @@ faut d'abord faire l'extraction, sans afficher de « porte ».
 
 Conforme à `.factory/cadrage/glossaire.md` : table (terme, définition dans les
 mots du client, statut). **Pas de colonne source ni `structurant`**, pas de section
-« oui/non ». Une ambiguïté de sens se tranche en session, elle n'est pas persistée
+"oui/non". Une ambiguïté de sens se tranche en session, elle n'est pas persistée
 comme conflit ouvert.
 
 ## Vérification avant écriture
 
 Avant d'écrire le manifeste, vérifier :
 - **Chaque terme retenu a une définition.** Pas de terme orphelin (sinon on le retire).
-- **Aucun acronyme / outil de contexte** n'a survécu au filtre (GED, SharePoint…).
+- **Aucun acronyme / outil de contexte** n'a survécu au filtre (GED, SharePoint...).
 - **Aucune `(src:)` ni horodatage** dans l'artefact.
 
 ## Réjeu incrémental (idempotence)
 
-Rejoué sur des entrées mises à jour — dont les retours de démonstrateur — ce
+Rejoué sur des entrées mises à jour - dont les retours de démonstrateur - ce
 skill **met à jour le glossaire en place** :
 - **Préserve** les termes déjà validés et leurs définitions.
 - **Fusionne par identité de terme** : un terme déjà présent est mis à jour, pas
@@ -111,10 +111,10 @@ Read-modify-write puis revalidation JSON :
   eu lieu, c'est `false`. Le skill ne force jamais cette validation de lui-même.
 - `updated_at` à l'horodatage courant.
 
-> **Silencieux — jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
-> ni citer un nom de champ ou une valeur `true`/`false` (interdit : « Manifeste à jour : …,
-> glossary_validated: true », toute liste `champ: valeur`). Confirmer seulement, en clair, **ce qui a
-> été produit** (« le glossaire est validé ») + la prochaine étape (cf. `references/ux-conventions.md`).
+> **Silencieux - jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,
+> ni citer un nom de champ ou une valeur `true`/`false` (interdit : "Manifeste à jour : ...,
+> glossary_validated: true", toute liste `champ: valeur`). Confirmer seulement, en clair, **ce qui a
+> été produit** ("le glossaire est validé") + la prochaine étape (cf. `references/ux-conventions.md`).
 
 ## Règles invariantes appliquées ici
 
@@ -125,4 +125,4 @@ Read-modify-write puis revalidation JSON :
   `glossary_validated` ne s'allume pas tout seul.
 - **Contenu, pas provenance.** Aucune `(src:)` dans l'artefact.
 
-Étape suivante : `/cadrage:cadrage-decoupage` — découper la vision en use cases de valeur une fois le vocabulaire figé.
+Étape suivante : `/cadrage:cadrage-decoupage` - découper la vision en use cases de valeur une fois le vocabulaire figé.

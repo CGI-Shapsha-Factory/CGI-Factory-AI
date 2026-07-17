@@ -16,20 +16,20 @@ Rendre un projet **prêt pour l'atelier design** : installer les gabarits et ét
 avec un bloc `design` orienté **couverture** (checklist pré-remplie par les handoffs).
 
 ## Ancrage du répertoire (impératif)
-**La racine du projet est le dossier courant** — celui où la session est lancée (le cwd) — **jamais** un
+**La racine du projet est le dossier courant** - celui où la session est lancée (le cwd) - **jamais** un
 dossier parent, **jamais** un `.factory/` / `factory-docs/` / `*-out/` situé plus haut. Tous les chemins de
 ce skill (`manifest.json`, `.factory/designer/`, `designer-out/`, `designer-out/prompts/`,
 `designer-out/maquette-de-claude-design/`) se
 résolvent **sous ce dossier**. **Ne jamais remonter l'arborescence** pour trouver le manifeste ou les
 dossiers `-out/` amont : un `manifest.json` (ou un `cadrage-out/` / `architecte-out/`) situé dans
-un dossier **parent** n'appartient **pas** à ce projet — le traiter comme **absent** (ne jamais le lire ;
+un dossier **parent** n'appartient **pas** à ce projet - le traiter comme **absent** (ne jamais le lire ;
 on crée/étend le manifeste **du cwd**). En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
-## `.factory/` d'abord — clone frais, `.factory/` git-ignoré (impératif)
+## `.factory/` d'abord : clone frais, `.factory/` git-ignoré (impératif)
 `.factory/` est **entièrement git-ignoré** : il ne voyage **jamais** avec le repo. Cette phase peut être
 menée par **une autre personne**, sur une **autre machine**, à partir d'un **clone frais** où **aucun
 `.factory/` n'existe encore**. Ce skill ne présuppose donc **jamais** un `.factory/` déjà présent :
-**avant toute autre chose**, il (re)pose dans `.factory/` **tout ce dont l'atelier a besoin** — les
+**avant toute autre chose**, il (re)pose dans `.factory/` **tout ce dont l'atelier a besoin** - les
 gabarits de couverture (`.factory/designer/`) et le bloc `design` du manifeste `manifest.json`
 (créé s'il manque). Le **handoff** entre phases passe **uniquement** par les dossiers `-out/` committés,
 jamais par `.factory/` (régénérable en relançant ce `-init`).
@@ -48,30 +48,30 @@ Après le setup, **vérifier l'état de l'amont** dans le cwd et le **signaler**
 - artefacts : `cadrage-out/product-brief.md`, `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
   `architecte-out/impact-design.md`.
 
-- **Amont prêt** → rien à signaler ; enchaîner sur `/designer:designer-ingestion`.
-- **Amont absent ou incomplet** → **ne pas refuser**. Confirmer que l'atelier est amorcé, puis
-  **avertir en clair** ce qui manque (flag `false` + skill amont à relancer — maquette →
-  `/cadrage:cadrage-retour-demonstrateur`, cohérence archi → `/architecte:architecte-coherence` — ou
-  fichier `…-out/…` absent, par chemin) et indiquer que **l'ingestion** (`/designer:designer-ingestion`) a
+- **Amont prêt** -> rien à signaler ; enchaîner sur `/designer:designer-ingestion`.
+- **Amont absent ou incomplet** -> **ne pas refuser**. Confirmer que l'atelier est amorcé, puis
+  **avertir en clair** ce qui manque (flag `false` + skill amont à relancer - maquette ->
+  `/cadrage:cadrage-retour-demonstrateur`, cohérence archi -> `/architecte:architecte-coherence` - ou
+  fichier `...-out/...` absent, par chemin) et indiquer que **l'ingestion** (`/designer:designer-ingestion`) a
   besoin de ces handoffs pour pré-remplir la checklist.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si `manifest.json`
-n'existe pas encore, le **créer à la racine du projet** (le cwd — **jamais** dans `cadrage-out/`) comme
-objet JSON valide `{ "design": { … } }` (les autres phases le complètent par fusion, sans écraser le bloc
+n'existe pas encore, le **créer à la racine du projet** (le cwd - **jamais** dans `cadrage-out/`) comme
+objet JSON valide `{ "design": { ... } }` (les autres phases le complètent par fusion, sans écraser le bloc
 `design`).
 
 ## Procédure
 1. **Installer les gabarits** dans `.factory/designer/` (copier depuis le plugin `templates/`) :
    `coverage-checklist.md`, `coverage-report.md`, `claude-design-prompt.md`, `design-guidelines.md`.
    **Créer le dossier de sortie `designer-out/`** à la racine du projet, avec ses deux sous-dossiers :
-   - `designer-out/prompts/` — recevra le prompt Claude Design (fichier plat) ;
-   - `designer-out/maquette-de-claude-design/` — créé **vide** ; l'humain y déposera l'export du design
+   - `designer-out/prompts/` - recevra le prompt Claude Design (fichier plat) ;
+   - `designer-out/maquette-de-claude-design/` - créé **vide** ; l'humain y déposera l'export du design
      system produit par Claude Design.
 
-   Après création, **afficher à l'utilisateur, en gras**, cette invitation : **« Déposez l'export du
+   Après création, **afficher à l'utilisateur, en gras**, cette invitation : **"Déposez l'export du
    design system généré par Claude Design directement dans `designer-out/maquette-de-claude-design/`.
    Format attendu : le dossier de fichiers DÉZIPPÉ (fichiers et assets tels quels), pas une archive ZIP.
-   Si vous n'avez qu'un `.zip`, dézippez-le dans ce dossier. »** *(Raison : l'export reste directement
+   Si vous n'avez qu'un `.zip`, dézippez-le dans ce dossier."** *(Raison : l'export reste directement
    consultable et lisible dans le repo ; un `.zip` est un blob binaire que git ne sait pas comparer et
    que `designer-coherence` / l'assembleur devraient extraire.)*
 
@@ -102,12 +102,12 @@ objet JSON valide `{ "design": { … } }` (les autres phases le complètent par 
 par `designer-coherence`. Source unique désormais : plus de distinction `claude_design_ref` /
 `committed_export`.*
 
-*Statut de chaque item : `open` → `deduced` (rempli depuis un handoff) | `decided` (tranché par l'humain) |
+*Statut de chaque item : `open` -> `deduced` (rempli depuis un handoff) | `decided` (tranché par l'humain) |
 `sans_objet` (sans objet, marqué pas forcé). Les portes `coverage_sufficient` et `design_validated` sont
 des **gestes humains** (jamais auto).*
 3. **Git-ignore `.factory/` (compléter, jamais réécrire)** : le **`.gitignore` est généré en premier par
-   le cadrage** et **committé** — présent dans un clone frais. **Ne jamais le réécrire ni l'écraser** :
-   s'assurer seulement qu'il **contient** la ligne `.factory/` — l'**ajouter** si elle manque (sans
+   le cadrage** et **committé** - présent dans un clone frais. **Ne jamais le réécrire ni l'écraser** :
+   s'assurer seulement qu'il **contient** la ligne `.factory/` - l'**ajouter** si elle manque (sans
    dupliquer), en **préservant** le reste. **Le créer uniquement s'il est absent** (clone où le cadrage
    n'a pas tourné ici). Tout `.factory/` est local, non versionné.
 
@@ -130,4 +130,4 @@ des **gestes humains** (jamais auto).*
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/designer:designer-ingestion` — ingérer les handoffs cadrage + architecte et pré-remplir la checklist de couverture.
+Étape suivante : `/designer:designer-ingestion` - ingérer les handoffs cadrage + architecte et pré-remplir la checklist de couverture.

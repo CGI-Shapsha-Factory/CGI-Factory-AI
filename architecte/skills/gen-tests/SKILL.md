@@ -1,6 +1,6 @@
 ---
 name: gen-tests
-description: Generate missing pytest/jest/vitest/go tests for source files that have none, then RUN them and iterate until the whole suite is green. Real assertions only — no stubs.
+description: Generate missing pytest/jest/vitest/go tests for source files that have none, then RUN them and iterate until the whole suite is green. Real assertions only - no stubs.
 ---
 
 # gen-tests
@@ -24,7 +24,7 @@ contrat de sortie est une **suite verte** (tous les tests passent), pas juste de
 
 ## Procédure
 
-### Étape 1 — Découverte des fichiers sans test
+### Étape 1 : Découverte des fichiers sans test
 
 **Avec argument :**
 - Vérifier que le fichier est un fichier source géré (pas `__init__.py`, pas un fichier de config,
@@ -41,20 +41,20 @@ contrat de sortie est une **suite verte** (tous les tests passent), pas juste de
   fichiers de config (`.config.js`, `.d.ts`), et tout fichier déjà dans `tests/` / `__tests__/`
   / nommé `test_*` / `*_test.*` / `*.test.*` / `*.spec.*`.
 
-### Étape 2 — Lecture du contexte de test
+### Étape 2 : Lecture du contexte de test
 
 Lire `architecte-out/standards-ingenierie.md` (si présent) pour connaître :
-- Le **framework de test** du projet (pytest, jest, vitest, go testing, xUnit, JUnit…).
+- Le **framework de test** du projet (pytest, jest, vitest, go testing, xUnit, JUnit...).
 - Les conventions : dossier de tests, conventions de nommage, mocking, fixtures.
 
 Si `standards-ingenierie.md` est absent, **inférer** :
-- Python → `pytest` (toujours)
-- TypeScript/JavaScript → chercher `jest` ou `vitest` dans `package.json` ; défaut `vitest`
-- Go → `testing` natif
-- C# → `xUnit`
-- Java → `JUnit 5`
+- Python -> `pytest` (toujours)
+- TypeScript/JavaScript -> chercher `jest` ou `vitest` dans `package.json` ; défaut `vitest`
+- Go -> `testing` natif
+- C# -> `xUnit`
+- Java -> `JUnit 5`
 
-### Étape 3 — Layout miroir
+### Étape 3 : Layout miroir
 
 Calculer le chemin du fichier de test **en miroir** du fichier source :
 
@@ -68,9 +68,9 @@ Calculer le chemin du fichier de test **en miroir** du fichier source :
 Règles :
 - Conserver l'intégralité du sous-dossier.
 - Préfixer par `tests/` sauf pour Go (convention Go = même package, même dossier).
-- Ne jamais écraser un fichier de test existant — si le fichier cible existe déjà, **passer au suivant**.
+- Ne jamais écraser un fichier de test existant - si le fichier cible existe déjà, **passer au suivant**.
 
-### Étape 4 — Génération du contenu
+### Étape 4 : Génération du contenu
 
 Lire le fichier source en entier, puis générer le fichier de test avec :
 
@@ -78,8 +78,8 @@ Lire le fichier source en entier, puis générer le fichier de test avec :
 2. Au moins **3 cas de test**, chacun avec un nom explicite :
    - **Golden path** : usage nominal, assertion sur la valeur de retour ou l'effet.
    - **Cas d'erreur** : entrée invalide, erreur attendue (`pytest.raises`, `expect().toThrow()`, etc.).
-   - **Cas limite** : valeur vide, zéro, None/null, liste vide, chaîne très longue…
-3. **Vraies assertions** — jamais de `pytest.skip`, `todo`, `pass` seul, ou `assert True`.
+   - **Cas limite** : valeur vide, zéro, None/null, liste vide, chaîne très longue...
+3. **Vraies assertions** - jamais de `pytest.skip`, `todo`, `pass` seul, ou `assert True`.
 4. Commentaires uniquement si le WHY n'est pas évident (pas de description du WHAT).
 
 **Exemples de structure par langage :**
@@ -134,15 +134,15 @@ func TestBar_Negatif(t *testing.T) {
 }
 ```
 
-### Étape 5 — Écriture
+### Étape 5 : Écriture
 
 - Créer les dossiers intermédiaires si nécessaires.
 - Écrire chaque fichier de test (ne jamais écraser un existant).
 
-### Étape 6 — Exécution (obligatoire, jamais optionnelle)
+### Étape 6 : Exécution (obligatoire, jamais optionnelle)
 
 Après avoir écrit **chaque** fichier de test, **le lancer** avec le runner du framework. Commandes
-par framework (adapter au projet — lire `standards-ingenierie.md`/`package.json`/`Makefile` si un runner custom
+par framework (adapter au projet - lire `standards-ingenierie.md`/`package.json`/`Makefile` si un runner custom
 existe) :
 
 | Framework | Commande (un fichier) | Commande (toute la suite) |
@@ -155,21 +155,21 @@ existe) :
 | junit     | `mvn -q test -Dtest=<Classe>` | `mvn -q test` |
 
 Si le runner est **absent** (ex. `pytest` non installé) : le dire en clair, indiquer la commande
-d'installation (`pip install pytest`, `npm i -D vitest`…), et **ne pas prétendre** que les tests
-passent — un test non exécuté n'est **pas** un test qui passe.
+d'installation (`pip install pytest`, `npm i -D vitest`...), et **ne pas prétendre** que les tests
+passent - un test non exécuté n'est **pas** un test qui passe.
 
-### Étape 7 — Itération jusqu'au vert (le cœur du skill)
+### Étape 7 : Itération jusqu'au vert (le cœur du skill)
 
 Un test qui échoue est **diagnostiqué**, jamais ignoré. Pour chaque échec, décider de la cause :
 
-- **Test faux** (mauvaise attente, mauvais import, mauvaise fixture, valeur attendue erronée) →
+- **Test faux** (mauvaise attente, mauvais import, mauvaise fixture, valeur attendue erronée) ->
   **corriger le test**, puis relancer.
-- **Vrai bug dans le code source** (le test correct révèle un comportement faux) → **NE PAS affaiblir
+- **Vrai bug dans le code source** (le test correct révèle un comportement faux) -> **NE PAS affaiblir
   le test pour le faire passer**. Corriger le **code source** si le comportement attendu est certain ;
   sinon **s'arrêter et remonter le bug en clair** à l'utilisateur (fichier, fonction, écart
-  attendu/obtenu) — c'est un résultat de valeur, pas un échec du skill.
+  attendu/obtenu) - c'est un résultat de valeur, pas un échec du skill.
 
-**Boucle** : relancer la commande de suite → lire les échecs → corriger (test ou source) → relancer.
+**Boucle** : relancer la commande de suite -> lire les échecs -> corriger (test ou source) -> relancer.
 Répéter jusqu'à **0 échec** ou jusqu'à ce qu'un vrai bug source non tranchable soit remonté. **Plafond
 de 5 itérations** : au-delà, s'arrêter et exposer précisément ce qui reste rouge (ne jamais boucler à
 l'infini, ne jamais maquiller un vert).
@@ -178,15 +178,15 @@ Discipline anti-triche : **interdit** de rendre un test vert en le vidant, en re
 par `assert True`, en l'entourant d'un `try/except pass`, ou en le marquant `skip`/`xfail`. Le vert
 doit être **réel**.
 
-### Étape 8 — Récapitulatif
+### Étape 8 : Récapitulatif
 
-Afficher, avec le **résultat d'exécution** (pas seulement « généré ») :
+Afficher, avec le **résultat d'exécution** (pas seulement "généré") :
 
 ```
 Tests générés et exécutés :
-  ✓ tests/src/foo/test_bar.py       3 cas — PASS
-  ✓ tests/src/api/test_user.py      4 cas — PASS (2 itérations : import corrigé)
-  ⚠ tests/src/utils/test_config.py  déjà présent — ignoré
+  Oui tests/src/foo/test_bar.py       3 cas - PASS
+  Oui tests/src/api/test_user.py      4 cas - PASS (2 itérations : import corrigé)
+  ⚠ tests/src/utils/test_config.py  déjà présent - ignoré
 Suite complète : 12 passed, 0 failed.
 ```
 En cas d'arrêt sur un vrai bug source : le dire clairement au lieu d'annoncer un faux succès.
@@ -201,13 +201,13 @@ En cas d'arrêt sur un vrai bug source : le dire clairement au lieu d'annoncer u
 - **Jamais d'écrasement** d'un fichier de test existant.
 - **Un fichier source = un fichier de test** (pas de regroupements multi-sources).
 - **Lire le source en entier** avant de générer (pas de génération à l'aveugle).
-- **Inférer le framework** si `standards-ingenierie.md` est absent — ne jamais demander.
+- **Inférer le framework** si `standards-ingenierie.md` est absent - ne jamais demander.
 - **Plafond de 5 itérations** par cycle, puis exposer ce qui reste rouge (jamais de boucle infinie).
 
 ## Étape suivante
 
 Une fois la suite **verte** (Étape 7 confirmée par une exécution réelle), relancer
 `python .claude/hooks/tests_guard.py check` pour confirmer qu'aucune source ne reste sans test, puis
-committer (`git add` + `git commit`) via ton flux git habituel — en respectant les **règles de branche**
+committer (`git add` + `git commit`) via ton flux git habituel - en respectant les **règles de branche**
 de ton dépôt (ruleset serveur GitHub : pas de commit/push direct sur `main`). Si un vrai bug source a été
 remonté, le traiter d'abord.

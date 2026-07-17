@@ -7,8 +7,8 @@ description: Ingère le retour client sur la maquette et propage les corrections
 
 Le pivot de la boucle. Transforme un retour client sur la maquette en corrections
 propagées : des points résolus, des acquis remis en cause, des artefacts à
-rejouer, des points neufs. C'est la variante d'entrée typée « retour de
-démonstrateur » de l'ingestion.
+rejouer, des points neufs. C'est la variante d'entrée typée "retour de
+démonstrateur" de l'ingestion.
 
 ## Objectif
 
@@ -18,7 +18,7 @@ démonstrateur, en distinguant ce qui **complète** de ce qui **contredit**.
 ## Entrée
 
 - Le **transcript de retour**, déclaré comme source de type `retour` (retour de
-  démonstrateur) — distinct d'un transcript d'atelier classique.
+  démonstrateur) - distinct d'un transcript d'atelier classique.
 - Le registre `validation_points` du manifeste (points ouverts à confronter).
 - L'état `demonstrateur` du manifeste (`current_version`, `external_ref`).
 
@@ -28,12 +28,12 @@ démonstrateur, en distinguant ce qui **complète** de ce qui **contredit**.
 déclarée). Sinon, indiquer en clair qu'il faut d'abord un transcript de retour, sans
 exposer de mécanique interne de pré-requis.
 
-## Traitement — capter ET invalider
+## Traitement : capter ET invalider
 
 1. **Rapprocher.** Pour chaque réponse du client, retrouver le(s) point(s)
    ouvert(s) correspondants dans `validation_points`. Marquer `answered`,
    consigner la réponse dans `answer`. Un point **non couvert** par le retour
-   **reste `open`** — jamais comblé.
+   **reste `open`** - jamais comblé.
 2. **Détecter les invalidations.** Un élément **déjà capté** (vision, glossaire,
    découpage) que le client **remet en cause** au vu de la maquette : créer / mettre
    à jour un `validation_point` de type `contradiction`, statut `invalidated`,
@@ -47,7 +47,7 @@ exposer de mécanique interne de pré-requis.
    (`cadrage-vision`, `cadrage-glossaire`, `cadrage-decoupage`), qui
    appliqueront corrections et `[REMIS EN CAUSE]` en place (bloc idempotence).
 4. **Faire émerger les nouveaux points.** Toute nouvelle question ou souhait né du
-   retour → nouveau `validation_point` (`open`), qui sera **résolu en session** au
+   retour -> nouveau `validation_point` (`open`), qui sera **résolu en session** au
    point de complétude (`cadrage-completude`).
 
 ## Vérification
@@ -68,18 +68,18 @@ Read-modify-write puis revalidation JSON :
   nouveaux points (`open`).
 - `demonstrateur.iterations[]` : met à jour l'itération courante avec les compteurs
   `resolved`, `invalidated`, `new_points`, et `feedback_source`.
-- **Ne touche pas** `demonstrateur.client_validated` (geste humain) — **et ce geste exige une
+- **Ne touche pas** `demonstrateur.client_validated` (geste humain) - **et ce geste exige une
   maquette réelle** : `client_validated` ne peut passer à vrai **que si `demonstrateur.external_ref`
-  est non nul** (une maquette a été générée et référencée). Une validation **verbale** (« tout est
-  ok ») **sans maquette référencée** ne converge PAS : **demander d'abord la référence de la
-  maquette** (lien Claude Design) avant d'enregistrer la validation. Pas de maquette → pas de
+  est non nul** (une maquette a été générée et référencée). Une validation **verbale** ("tout est
+  ok") **sans maquette référencée** ne converge PAS : **demander d'abord la référence de la
+  maquette** (lien Claude Design) avant d'enregistrer la validation. Pas de maquette -> pas de
   convergence. **Aucune validation fantôme.**
 - `updated_at`.
 
 > **Silencieux, sans nom de champ (impératif).** La mise à jour du manifeste ne se **narre jamais** à
 > l'utilisateur. En **enregistrant la référence de la maquette**, ne cite **jamais**
 > `demonstrateur.current_version` / `external_ref` ni le chemin de fichier technique. Pour confirmer,
-> dire en clair : « **La maquette (v1) est bien enregistrée.** » — aucun nom de variable, aucun chemin
+> dire en clair : "**La maquette (v1) est bien enregistrée.**" - aucun nom de variable, aucun chemin
 > (cf. `references/ux-conventions.md` §1).
 
 ## Règles invariantes appliquées ici
@@ -93,4 +93,4 @@ Read-modify-write puis revalidation JSON :
 - **Skill indépendant.** Il propage via le registre et recommande les réjeux ; il
   n'orchestre pas les autres skills.
 
-Étape suivante : `/cadrage:cadrage-completude` — résoudre en session les points résolus, contredits et neufs, et faire le point d'état (verdict Definition of Ready).
+Étape suivante : `/cadrage:cadrage-completude` - résoudre en session les points résolus, contredits et neufs, et faire le point d'état (verdict Definition of Ready).

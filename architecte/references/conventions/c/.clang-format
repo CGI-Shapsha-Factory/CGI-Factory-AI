@@ -1,4 +1,4 @@
-# Conventions C — clang-format. Copié dans conventions/ du projet si C dans la stack.
+# Conventions C : clang-format. Copié dans conventions/ du projet si C dans la stack.
 # (Complément lint disponible via .clang-tidy si besoin.)
 BasedOnStyle: LLVM
 IndentWidth: 4

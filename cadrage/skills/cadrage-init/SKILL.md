@@ -21,12 +21,12 @@ matière brute du projet (emplacement central, **facultatif**), un dossier
 démonstrateur** générée par Claude Design, et un manifeste initialisé.
 
 ## Ancrage du répertoire (impératif)
-**La racine du projet est le dossier courant** — celui où la session est lancée (le
-cwd) — **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` /
+**La racine du projet est le dossier courant** - celui où la session est lancée (le
+cwd) - **jamais** un dossier parent, **jamais** un `.factory/` / `factory-docs/` /
 `*-out/` situé plus haut. Tout ce que ce skill installe (`.factory/`, `cadrage-out/`,
 `cadrage-out/source-contexte/`, `cadrage-out/maquette-de-claude-design/`, `cadrage-out/prompts/`) est créé **sous ce dossier**. **Ne jamais remonter l'arborescence**
 pour trouver un workspace existant : un `.factory/` (ou `factory-docs/`) trouvé dans un
-dossier **parent** n'appartient **pas** à ce projet — l'ignorer et créer le workspace
+dossier **parent** n'appartient **pas** à ce projet - l'ignorer et créer le workspace
 dans le cwd. En cas de doute sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
 
 ## Pré-requis (vérification silencieuse)
@@ -37,7 +37,7 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 ## Procédure
 
 > **Ce skill ne demande PAS le nom du projet.** Cette question est posée par
-> `cadrage-extraction`, en tête de sa passe (avec les questions de découverte) —
+> `cadrage-extraction`, en tête de sa passe (avec les questions de découverte) -
 > c'est plus cohérent. Ici, `project` reste `null` dans le manifeste, à renseigner
 > par `cadrage-extraction`. **Le nom du client n'est jamais demandé ni stocké.**
 
@@ -45,29 +45,29 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
    sous-dossier de `cadrage-out/`, jamais un dossier à la racine** (chemin exact :
    `cadrage-out/prompts/`) :
    ```
-   .factory/                        (caché, git-ignoré — gabarits seulement)
-   └── cadrage/                     (gabarits du cadrage — copies blanches installées)
-   manifest.json                    (contrat machine — COMMITTÉ à la racine, voyage avec le repo)
+   .factory/                        (caché, git-ignoré - gabarits seulement)
+   └── cadrage/                     (gabarits du cadrage - copies blanches installées)
+   manifest.json                    (contrat machine - COMMITTÉ à la racine, voyage avec le repo)
    cadrage-out/                     (documents générés, COMMITTÉ, à la racine)
-   ├── source-contexte/             (matière brute du projet — déposée par l'utilisateur, facultatif)
+   ├── source-contexte/             (matière brute du projet - déposée par l'utilisateur, facultatif)
    ├── features-fonctionnels-brief/ (un brief par feature)
-   ├── maquette-de-claude-design/   (maquette du démonstrateur collée par l'utilisateur — vide au départ)
-   └── prompts/                     (prompts générés — bien SOUS cadrage-out/)
+   ├── maquette-de-claude-design/   (maquette du démonstrateur collée par l'utilisateur - vide au départ)
+   └── prompts/                     (prompts générés - bien SOUS cadrage-out/)
    ```
 2. **Installer les gabarits** dans `.factory/cadrage/` : copier les gabarits
    du plugin (`project-frame.md`, `product-brief.md`, `feature-brief.md`,
    `spec-index.md`, `coupling-map.md`, `glossaire.md`). Ce sont les copies de
-   travail du projet — les skills les lisent depuis là. Copier aussi la référence
+   travail du projet - les skills les lisent depuis là. Copier aussi la référence
    des questions de découverte (`discovery-questions.md`) dans `.factory/cadrage/`.
    Puis **créer `cadrage-out/` (avec ses sous-dossiers `source-contexte/`,
    `features-fonctionnels-brief/` et `maquette-de-claude-design/`) vide** ; les artefacts s'y
    déposeront au fil des skills, et l'utilisateur collera la maquette du démonstrateur dans
    `maquette-de-claude-design/`.
 3. **Écrire le manifeste** `manifest.json` (squelette ci-dessous ;
-   laisser `project` à `null` — il sera renseigné par `cadrage-extraction` ; pas de
+   laisser `project` à `null` - il sera renseigné par `cadrage-extraction` ; pas de
    champ `client` ; dates en ISO 8601, laisser le reste neutre).
    **Si le manifeste existe déjà** (par ex. un `-init` de phase aval l'a créé avec un bloc
-   `architecture`), **ne pas repartir de zéro ni écraser** : le lire et **fusionner** — ajouter
+   `architecture`), **ne pas repartir de zéro ni écraser** : le lire et **fusionner** - ajouter
    uniquement les clés de cadrage **manquantes** (project, dates, phase, sources, artifacts,
    demonstrateur, validation_points, prompts, discovery, discovery_complete,
    definition_of_ready), en **préservant** tout bloc déjà présent (dont `architecture`), puis
@@ -75,13 +75,13 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 4. **Laisser `cadrage-out/prompts/` vide** : il se remplit au fil des prompts générés
    (voir `cadrage-demonstrateur-brief` et les autres skills à prompt).
 5. **Git-ignore `.factory/` (première version du `.gitignore` du projet)** : le cadrage **génère la
-   première version** du `.gitignore` du projet — le seul `-init` qui le crée normalement. S'assurer
+   première version** du `.gitignore` du projet - le seul `-init` qui le crée normalement. S'assurer
    qu'il **contient** la ligne `.factory/` : le **créer s'il est absent**, sinon **ajouter** la ligne
    manquante (sans dupliquer si déjà présente), en **préservant** le reste. Les phases aval (architecte,
-   designer, assembleur) ne font ensuite que **compléter** ce même fichier — elles ne le réécrivent
+   designer, assembleur) ne font ensuite que **compléter** ce même fichier - elles ne le réécrivent
    jamais. Tout `.factory/` est local, non versionné.
 6. **Inviter à centraliser le contexte** : afficher en clair, **en gras**, l'invitation
-   suivante à l'utilisateur —
+   suivante à l'utilisateur -
    > **Déposez tous vos fichiers de contexte du projet dans `cadrage-out/source-contexte/` : transcriptions, comptes rendus, fichiers Markdown, PDF, DOCX ou tout autre format.**
    >
    > C'est l'emplacement central de la matière brute, repris automatiquement par `cadrage-extraction`.
@@ -91,10 +91,10 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
    **jamais** une porte de validation ni une source obligatoire.
 
 7. **Inviter à coller la maquette du démonstrateur** : afficher en clair, **en gras**, l'invitation
-   suivante à l'utilisateur —
-   > **Collez la maquette du démonstrateur — l'export généré par Claude Design — directement dans le dossier `cadrage-out/maquette-de-claude-design/`.**
+   suivante à l'utilisateur -
+   > **Collez la maquette du démonstrateur - l'export généré par Claude Design - directement dans le dossier `cadrage-out/maquette-de-claude-design/`.**
    >
-   > **Format attendu : le dossier de fichiers DÉZIPPÉ** (les fichiers HTML/CSS/JS et les assets tels quels) — **pas une archive ZIP**. Si vous n'avez qu'un `.zip`, **dézippez-le dans ce dossier**.
+   > **Format attendu : le dossier de fichiers DÉZIPPÉ** (les fichiers HTML/CSS/JS et les assets tels quels) - **pas une archive ZIP**. Si vous n'avez qu'un `.zip`, **dézippez-le dans ce dossier**.
    >
    > *(Raison : la maquette reste ainsi directement consultable et lisible dans le repo ; un `.zip` est un blob binaire que git ne sait pas comparer et que les étapes suivantes devraient extraire.)*
    >
@@ -107,8 +107,8 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 ```json
 {
   "project": null,
-  "created_at": "<ISO 8601 — horodaté à l'exécution>",
-  "updated_at": "<ISO 8601 — horodaté à l'exécution>",
+  "created_at": "<ISO 8601 - horodaté à l'exécution>",
+  "updated_at": "<ISO 8601 - horodaté à l'exécution>",
   "phase": "init",
   "sources": [],
   "artifacts": {
@@ -157,7 +157,7 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 
 Le bloc `prompts` trace les prompts générés (démonstrateur et livrables visuels),
 sauvegardés sous `cadrage-out/prompts/`. Le bloc `demonstrateur` porte la boucle
-d'itération ; `validation_points[]` ne sert qu'aux points actifs de cette boucle —
+d'itération ; `validation_points[]` ne sert qu'aux points actifs de cette boucle -
 **aucun point de découpage ouvert ou laissé de côté n'y est persisté** (rien
 d'irrésolu n'est écrit). Toute écriture du manifeste est un **read-modify-write**
 suivi d'une **revalidation JSON**.
@@ -173,12 +173,12 @@ création/mise à jour du manifeste, pas la date d'une source.
   `cadrage-out/` (avec `source-contexte/`, `features-fonctionnels-brief/`,
   `maquette-de-claude-design/` et `prompts/`) existent.
 - `.factory/cadrage/` contient les 6 gabarits installés (git-ignoré).
-- Le **manifeste vit sous `manifest.json`** (committé, voyage avec le repo) — plus jamais
+- Le **manifeste vit sous `manifest.json`** (committé, voyage avec le repo) - plus jamais
   sous `.factory/`.
 - L'utilisateur a reçu l'invitation **en gras** à déposer sa matière brute dans
-  `cadrage-out/source-contexte/` (facultatif — n'empêche jamais de démarrer).
+  `cadrage-out/source-contexte/` (facultatif - n'empêche jamais de démarrer).
 - L'utilisateur a reçu l'invitation **en gras** à coller la maquette du démonstrateur (générée par
-  Claude Design) dans `cadrage-out/maquette-de-claude-design/` (facultatif — dossier créé **vide**).
+  Claude Design) dans `cadrage-out/maquette-de-claude-design/` (facultatif - dossier créé **vide**).
 - `.gitignore` contient la ligne `.factory/`.
 - `manifest.json` reparse sans erreur, `phase = "init"`.
 - `project` est à `null` (il sera renseigné par `cadrage-extraction`) ; pas de champ `client`.
@@ -196,4 +196,4 @@ création/mise à jour du manifeste, pas la date d'une source.
 - **Frontière claire.** Les gabarits installés appartiennent au projet ; le plugin
   reste la source canonique mais n'est pas modifié par le projet.
 
-Étape suivante : `/cadrage:cadrage-extraction` — dépouiller la matière brute de l'atelier en capture structurée.
+Étape suivante : `/cadrage:cadrage-extraction` - dépouiller la matière brute de l'atelier en capture structurée.
