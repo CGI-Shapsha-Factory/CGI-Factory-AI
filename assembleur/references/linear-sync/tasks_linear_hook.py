@@ -6,10 +6,11 @@ A chaque ecriture/edition d'un `specs/<feature>/tasks.md`, si le fichier contien
 qui - cote agent, avec le MCP - **verifie sur Linear** (par `parentId` du ticket Feature) et cree les
 sous-tickets `Task` manquants (label `Task`, Backlog, rattaches au ticket Feature).
 
-**L'etat d'avancement vit DANS Linear, jamais dans le manifeste committe** (pas de conflit de merge
-multi-dev). Le hook n'a pas acces au MCP ; il ne peut donc pas lire l'etat Linear. Il lit seulement :
-  - le manifeste committe pour savoir si un **ticket Feature** existe pour la feature (carte amont figee,
-    posee une fois par premier-alimente-linear - donnee single-owner, jamais un etat de dev mutant) ;
+**Les tickets et l'etat d'avancement vivent DANS Linear, jamais dans le manifeste committe** (pas de
+conflit de merge multi-dev). Le hook n'a pas acces au MCP ; il ne peut donc rien lire de Linear. Il
+lit seulement :
+  - le manifeste committe pour savoir si le pont Linear est CONFIGURE (bloc `linear` avec `team`,
+    pose une fois par premier-alimente-linear) - jamais une carte de tickets ;
   - un **marqueur de debounce PAR DEV**, git-ignore (`.factory/linear/tasks-hook-seen.json`), pour ne
     pousser qu'une fois par jeu de phases et ne pas re-harceler a chaque edition. Ce marqueur est
     NON autoritatif et regenerable - l'autorite d'idempotence reste **Linear** (interrogee par le skill).
@@ -41,7 +42,7 @@ def _feature_dir(path):
     return m.group(2) if m else None
 
 
-def _feature_id(feature_dir):
+def _feature_id(feature_dir):  # conserve pour compat (plus utilise par le nudge)
     """Prefixe numerique NNN du dossier feature (ex. '001' pour '001-recherche'), sinon le dossier entier."""
     m = re.match(r"(\d+)\b", feature_dir)
     return m.group(1) if m else feature_dir
@@ -77,17 +78,6 @@ def _save_seen(root, data):
         pass  # best-effort : le marqueur est regenerable, ne jamais casser un Write
 
 
-def _find_issue(linear, fid, feature_dir):
-    for it in linear.get("issues") or []:
-        if not isinstance(it, dict):
-            continue
-        if str(it.get("id")) == str(fid):
-            return it
-    # repli : matcher par nom de dossier (NNN-...) sur le nom de la feature
-    for it in linear.get("issues") or []:
-        if isinstance(it, dict) and feature_dir and feature_dir.lower() in str(it.get("name", "")).lower():
-            return it
-    return None
 
 
 def _block(reason):
@@ -115,21 +105,13 @@ def cmd_posttooluse():
     except (OSError, ValueError):
         manifest = {}
 
-    fid = _feature_id(feature_dir)
     linear = manifest.get("linear")
-    if not isinstance(linear, dict) or not linear.get("issues"):
+    if not isinstance(linear, dict) or not linear.get("team"):
         return _block(
-            f"Le fichier tasks.md de la feature '{feature_dir}' a change, mais aucun ticket Linear n'est "
-            f"encore consigne. Lance /assembleur:premier-alimente-linear (ticket Feature) puis "
+            f"Le fichier tasks.md de la feature '{feature_dir}' a change, mais le pont Linear n'est pas "
+            f"encore configure. Lance /assembleur:premier-alimente-linear (tickets Feature) puis "
             f"/assembleur:creation-task-linear pour creer les sous-tickets Task (un par phase, label Task, "
             f"en Backlog, rattaches au ticket Feature)."
-        )
-
-    issue = _find_issue(linear, fid, feature_dir)
-    if issue is None:
-        return _block(
-            f"Le tasks.md de la feature '{feature_dir}' a change, mais aucun ticket Feature Linear ne lui "
-            f"correspond. Lance /assembleur:creation-task-linear (il verifiera le rattachement au ticket Feature)."
         )
 
     # Debounce PAR DEV (git-ignore) : ne pousser que pour des phases pas encore signalees. L'autorite

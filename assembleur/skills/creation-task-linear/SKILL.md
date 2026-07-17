@@ -16,7 +16,7 @@ skill lit les **phases** de chaque `tasks.md` et crée, dans Linear, **un sous-t
 > Feature, **un `Task` par phase** (niveau implémentation). Les Task par FR sont consignés dans le
 > manifeste (carte amont figée, single-owner) ; les Task **par phase vivent uniquement dans Linear** -
 > l'avancement de fabrication ne s'écrit **jamais** dans le manifeste committé (deux développeurs sur
-> deux branches réécriraient le même `linear.issues[]` -> conflit de merge).
+> deux branches réécriraient le même registre committé -> conflit de merge).
 
 > **Déclenchement automatique (hook).** Le hook `PostToolUse` `tasks_linear_hook.py` (posé par
 > `install-speckit` dans `.claude/hooks/`) détecte **chaque édition d'un `specs/<feature>/tasks.md`** et,
@@ -45,13 +45,14 @@ Comme `premier-alimente-linear` : créer des tickets Linear est une **exception 
 à "pas de Linear". Linear est un **système externe** (pas le repo cible, pas un fichier que SpecKit
 génère). **Les sous-tickets de phase vivent uniquement dans Linear** - ce skill **n'écrit rien dans le
 manifeste committé** : l'avancement de fabrication n'y est jamais consigné (deux développeurs sur deux
-branches réécriraient le même `linear.issues[]` -> conflit). On **lit** `specs/<feature>/tasks.md`
+branches réécriraient le même registre committé -> conflit). On **lit** `specs/<feature>/tasks.md`
 (fichier généré par SpecKit) **sans jamais le modifier**.
 
 ## Pré-requis (vérification silencieuse)
 Lire `manifest.json` **sans l'annoncer** :
-- `premier-alimente-linear` a tourné : `linear.issues[]` contient des tickets `Feature` avec un
-  `issue_id` (l'UUID interne, nécessaire comme `parentId`) ;
+- `premier-alimente-linear` a tourné : le bloc `linear` porte la configuration (`team`) - les tickets
+  `Feature` eux-mêmes se vérifient **dans Linear** (`list_issues({team, label Feature})`), jamais dans
+  le manifeste ;
 - au moins un `specs/<feature>/tasks.md` existe dans le repo de fabrication ;
 - sinon -> le dire en clair et orienter :
   > "Les sous-tickets de phase ne peuvent pas être créés : il faut d'abord les tickets par feature
@@ -80,7 +81,8 @@ Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-gui
   `references/linear-guide.md`.
 
 ## Étape 3 : Rattraper le label `Feature` sur les tickets de feature (additif)
-Pour chaque ticket de feature (`linear.issues[]` avec `issue_id`), s'assurer qu'il porte le label
+Pour chaque ticket de feature (relevé via `list_issues({team, label Feature})`, complété au besoin
+d'une recherche par titre pour les tickets sans label), s'assurer qu'il porte le label
 `Feature` **sans perdre ses labels existants** : lire ses labels via `get_issue({id})`, puis
 `save_issue({id, labelIds: <union des labelIds existants + Feature>})`. **Additif** : ne jamais
 retirer un label existant (ex. `walking-skeleton`). Idempotent : si `Feature` est déjà présent, ne
@@ -89,10 +91,11 @@ rien écrire.
 ## Étape 4 : Boucle par feature puis par phase (confirmation obligatoire)
 Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
 
-1. **Rattacher** : retrouver le ticket `Feature` de la feature dans `linear.issues[]` (carte amont
-   figée) - jointure par `id` (`001...`) et par nom de dossier/branche `NNN-slug`. Récupérer son
-   **`issue_id` (UUID)** = le futur `parentId`. Si aucun ticket `Feature` ne correspond -> le signaler et
-   passer (ne pas créer d'orphelin).
+1. **Rattacher** : retrouver le ticket `Feature` de la feature **dans Linear** -
+   `list_issues({team, label Feature})` (ou `list_issues({query})`) et jointure par **titre** (l'id
+   `001...` figure en tête du titre, ex. `001 - ...`) ou par nom de dossier/branche `NNN-slug`.
+   Récupérer son **`issue_id` (UUID)** = le futur `parentId`. Si aucun ticket `Feature` ne
+   correspond -> le signaler et passer (ne pas créer d'orphelin).
 2. **Lister l'existant DANS Linear (autorité d'idempotence)** : `list_issues({parentId: "<issue_id>"})`
    pour récupérer les sous-tickets `Task` déjà créés sous cette Feature. **Linear est la source de
    vérité** (pas le manifeste - l'avancement de fabrication n'y est jamais écrit). La ré-identification

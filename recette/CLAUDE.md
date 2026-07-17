@@ -63,7 +63,8 @@ spécification commande et le reste se régénère. Tout est détaillé dans
 ## Workspace & manifeste
 Lit `specs/<feature>/` (SpecKit), `assembleur-out/feature-map.md`,
 `architecte-out/composants.md`, `.specify/memory/constitution.md` et le bloc `linear` du
-manifeste (carte des tickets Feature). Les **gabarits** vivent dans `.factory/recette/`
+manifeste (configuration : équipe - les tickets Feature se relèvent dans Linear via
+`list_issues({team, label Feature})`). Les **gabarits** vivent dans `.factory/recette/`
 (git-ignoré, reposés par `recette-init`) ; le **manifeste** est **committé** dans
 `manifest.json`. Bloc `recette` (configuration statique **seulement**) :
 `{phase, team, labels{anomalie, evolution}, statut_requalification{name, present}}`.
@@ -75,7 +76,7 @@ manifeste** : anomalies, évolutions, statuts et commentaires vivent **dans Line
 Pas de numérotation `A0x-F0y` / `E0x-F0y` dans les titres : l'**identifiant natif Linear**
 (`<TEAM>-<n>`) porte le numéro. Le **lien à la feature** (clé de l'analyse d'impact) =
 **`parentId` vers le ticket `Feature`** posé par `premier-alimente-linear` (désigné par son
-`identifier` consigné dans le manifeste, ex. `FAC-12` - `save_issue` l'accepte) + labels plats
+`identifier` retrouvé dans Linear, ex. `FAC-12` - `save_issue` l'accepte) + labels plats
 **`Anomalie`** / **`Evolution`** (passés par nom via le paramètre `labels`). Écritures d'état
 **par nom de statut** (jamais le type brut, ambigu) et **vérifiées sur la réponse** (le MCP
 ignore en silence un état inconnu).

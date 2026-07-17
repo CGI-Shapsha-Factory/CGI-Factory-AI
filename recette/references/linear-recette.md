@@ -26,15 +26,15 @@ Revalider ensuite avec la détection ci-dessus (`list_teams` répond).
 ## Cible (équipe et tickets Feature)
 - **Équipe** : celle du bloc `linear` du manifeste (posée par `premier-alimente-linear`, côté
   assembleur). Si le bloc est vide, `list_teams` et confirmation avec l'utilisateur.
-- **Tickets Feature** : la carte amont figée vit dans `linear.issues` du manifeste (un ticket
-  `Feature` par feature du registre, avec son `identifier` type `FAC-12` et son `url`). C'est là
-  que se résout le **ticket parent** d'une anomalie ou d'une évolution. Si le manifeste ne suffit
-  pas (clone partiel), retrouver le ticket par `list_issues({query, team})` label `Feature`.
+- **Tickets Feature** : ils vivent **dans Linear** (aucune carte dans le manifeste). Le **ticket
+  parent** d'une anomalie ou d'une évolution se résout par `list_issues({team, label Feature})`
+  (jointure par titre : l'id de feature `001...` figure en tête, ex. `001 - ...`) ou
+  `list_issues({query, team})`.
 
 ## Rattachement à la feature (règle dure, anti-orphelin)
 Une anomalie ou une évolution est **toujours un sous-ticket du ticket `Feature`** de sa
 feature : `parentId` = le ticket Feature, désigné par son **`identifier`** (ex. `FAC-12`, tel
-que consigné dans le manifeste) ou par son id interne si on l'a - `save_issue` accepte les
+que retrouvé dans Linear) ou par son id interne si on l'a - `save_issue` accepte les
 deux. C'est ce rattachement (plus le registre `architecture.feature_sequence`) qui permet
 l'analyse d'impact : un objet sans feature rattachable est un orphelin -> **refuser de le
 créer**. Aucune convention de numérotation dans le titre : l'identifiant natif Linear

@@ -33,8 +33,10 @@ description** - chaque "chose à faire" est un vrai sous-ticket `Task`.
 L'assembleur ne produit que son paquet (`assembleur-out/`) et **n'écrit jamais dans le repo cible**.
 Créer des tickets Linear est une **exception explicitement bornée** à "pas de Linear" : Linear est
 un **système externe** (pas le repo cible, pas un fichier que SpecKit génère). La seule écriture
-propre à la Factory est le bloc `linear` du manifeste. La création passe par le **MCP du plugin
-`linear-prism`** (externe à la Factory) - voir `references/linear-guide.md`.
+propre à la Factory est le bloc `linear` du manifeste - **configuration seule** (équipe, projet) :
+**les tickets eux-mêmes ne sont jamais consignés dans le manifeste**, Linear est leur unique source
+de vérité. La création passe par le **MCP du plugin `linear-prism`** (externe à la Factory) - voir
+`references/linear-guide.md`.
 
 ## Pré-requis (vérification silencieuse)
 Lire `manifest.json` **sans l'annoncer** :
@@ -71,16 +73,19 @@ Puis **demander (oui/non) : "Créer un ticket Feature par feature, avec ses sous
 - **Oui** -> passer à l'Étape 3.
 - **Non** -> **boucle d'ajustement** (un point à la fois, cf. `references/interactive-loop.md` :
   recommandée + alternative + "saisir") : quelles features **fusionner / renommer / écarter /
-  réordonner** ? Refléter chaque décision (consigner `status: "merged"`/`"skipped"` pour celles
-  écartées), **réafficher** le tableau, et **confirmer l'ensemble** avant de créer.
+  réordonner** ? Refléter chaque décision dans le tableau (une feature écartée ou fusionnée n'aura
+  simplement **pas de ticket** - la décision se prend et se confirme **en session**), **réafficher**
+  le tableau, et **confirmer l'ensemble** avant de créer.
 
 ## Étape 3 : Cible Linear (une seule fois)
 Choisir l'**équipe** (`list_teams` -> recommandée + alternative + saisir) et, optionnellement, le
 **projet** (`list_projects`). **État initial = Backlog** : `list_issue_statuses({team})` -> viser le
 type **`backlog`** (toute nouvelle issue - Feature comme Task - est créée en **Backlog**, jamais Todo).
 Résoudre aussi les labels **`Feature`** et **`Task`** par nom (`list_issue_labels`, insensible à la
-casse ; ne pas les créer). Consigner `team`/`project` dans le manifeste **en silence**. Détails :
-`references/linear-guide.md`.
+casse ; ne pas les créer). Consigner `team`/`project` dans le manifeste **en silence** (configuration
+seule - jamais de tickets). Puis **relever l'existant dans Linear** (base d'idempotence) :
+`list_issues({team, label Feature})` -> la liste des tickets `Feature` déjà présents, comparés par
+**titre exact**. Détails : `references/linear-guide.md`.
 
 ## Étape 4 : Boucle par feature : la Feature puis ses Task (confirmation obligatoire)
 Pour **chaque** feature retenue, **dans l'ordre** :
@@ -93,28 +98,41 @@ Pour **chaque** feature retenue, **dans l'ordre** :
 2. **Confirmer** (recommandée + ajuster + saisir) : le **titre** + **description** de la Feature **et
    la liste des Task (FR)**. **Ne rien créer** tant que ce n'est pas approuvé ; "ajuster"/"saisir"
    corrige en place.
-3. **Créer la Feature** (cf. `references/linear-guide.md`) : `save_issue({team, title, description,
+3. **Réconcilier avec Linear avant de créer** : si un ticket `Feature` au **titre exact** existe déjà
+   dans le relevé de l'Étape 3 (relancer `list_issues({team, label Feature})` au besoin), **l'adopter**
+   (récupérer son `issue_id` / `identifier` / `url`, il servira de `parentId`) et **ne pas le
+   recréer** ; sinon **créer la Feature** (cf. `references/linear-guide.md`) : `save_issue({team, title, description,
    labelIds:[<Feature>(+<walking-skeleton> si 001/walking skeleton)], state:<Backlog>})` -> récupérer
    `issue_id` (UUID) / `identifier` / `url`. Poser les **relations bloquantes** (`blockedBy`) d'après
    "Dépend de" (la dépendance est une feature **antérieure**, déjà créée). Label **`Feature` seul** -
    **jamais** `feature:<id>`, **jamais** `MVP`.
-4. **Créer chaque Task** (sous-ticket de la Feature) : `save_issue({team, title:"FR-00x - ...",
+4. **Créer chaque Task** (sous-ticket de la Feature) : d'abord `list_issues({parentId:<issue_id UUID
+   de la Feature>})` -> un Task dont le titre commence par le **jeton `FR-00x -`** existe déjà ->
+   **ne pas le recréer**. Sinon `save_issue({team, title:"FR-00x - ...",
    parentId:<issue_id UUID de la Feature>, labelIds:[<Task>], description:"<énoncé du FR>",
-   state:<Backlog>})` -> récupérer `issue_id` / `identifier` / `url`. Le **`parentId` est l'UUID
-   interne** de la Feature (pas l'`identifier`).
-5. **Consigner** (en silence) : la Feature dans `linear.issues[]` ; chaque Task dans son
-   `sub_issues[]` avec `{fr:"FR-001", title, issue_id, identifier, url, status:"created"}`. Puis
-   **passer à la feature suivante**. **Répéter jusqu'à ce que toutes soient traitées.**
+   state:<Backlog>})`. Le **`parentId` est l'UUID interne** de la Feature (pas l'`identifier`).
+5. **Passer à la feature suivante.** **Répéter jusqu'à ce que toutes soient traitées.** **Rien n'est
+   consigné dans le manifeste** : ni ticket, ni sous-ticket, ni statut - **Linear est la seule source
+   de vérité** de la carte des tickets.
 
-**Idempotence** : une feature déjà consignée avec un `issue_id` n'est **pas recréée** ; un Task déjà
-consigné (même `id` de feature + même `fr`) avec un `issue_id` n'est **pas recréé**.
+**Idempotence (via Linear, jamais via le manifeste)** : une Feature est ré-identifiée par son **titre
+exact** dans `list_issues({team, label Feature})` ; un Task par le **jeton `FR-00x -`** dans
+`list_issues({parentId})`. Un ticket trouvé est **adopté**, jamais recréé - y compris si le skill est
+relancé par un autre développeur ou depuis un autre clone (le manifeste ne porte aucune carte de
+tickets à désynchroniser).
 
 ## Vérification avant de conclure
-- Chaque feature approuvée a **son ticket `Feature`** (ou une décision `skipped`/`merged`), en
-  **Backlog**, label **`Feature`** (sans `feature:<id>`) ; les **dépendances** (`blockedBy`) sont posées.
+- Chaque feature approuvée a **son ticket `Feature`** (ou a été explicitement écartée/fusionnée en
+  session), en **Backlog**, label **`Feature`** (sans `feature:<id>`) ; les **dépendances**
+  (`blockedBy`) sont posées.
 - Chaque `Feature` porte **un sous-ticket `Task` par FR** (rattaché par `parentId`), en **Backlog**,
   label `Task`.
-- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/manifest.json`.
+- **Vérifier dans Linear** (pas dans le manifeste) : relancer `list_issues({team, label Feature})` et
+  confirmer que chaque feature retenue a son ticket ; contrôler quelques `list_issues({parentId})` au
+  hasard pour les Task par FR.
+- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/manifest.json`
+  (il valide la **configuration** du bloc `linear` - équipe posée - pas les tickets, qui vivent dans
+  Linear).
 - Le bloc `linear` du manifeste **reparse sans erreur** ; restitution **en prose** ("j'ai créé N
   tickets Feature et M sous-tickets Task, en Backlog"), manifeste mis à jour **en silence**.
 

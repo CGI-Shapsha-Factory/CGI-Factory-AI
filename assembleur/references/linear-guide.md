@@ -83,12 +83,13 @@ Feature>", labelIds: ["<UUID Task>"], description: "<énoncé du FR, 1 ligne>", 
 
 - **`parentId` = l'UUID interne** (`issue_id`) de la Feature, **pas** l'`identifier` (`ENG-123`).
 - **State = Backlog** (comme la Feature). Label **`Task`** seul.
-- Récupérer `issue_id` / `identifier` / `url` et consigner dans `linear.issues[].sub_issues[]` avec le
-  champ **`fr`** (clé stable = `id` de feature + `fr`).
+- **Idempotence via Linear** : avant de créer, `list_issues({parentId})` - un Task dont le titre
+  commence par le jeton **`FR-00x -`** existe déjà -> ne pas recréer. **Rien n'est consigné dans le
+  manifeste.**
 
 *(Niveau distinct, plus tard : `creation-task-linear` crée en plus un `Task` par **phase** de
 `tasks.md` après SpecKit - voir ci-dessous. Les deux niveaux coexistent sous la même Feature,
-distingués dans le manifeste par `fr` vs `phase`.)*
+distingués par leur jeton de titre : `FR-00x -` vs `Phase N -`.)*
 
 ## Dépendances entre features -> relations bloquantes
 La carte `assembleur-out/feature-map.md` porte la colonne **"Dépend de"**. Les features sont
@@ -114,7 +115,8 @@ par phase** (contrairement à la checklist-dans-la-description du ticket de feat
   **description est un résumé d'une ligne** (pas d'énumération des `Txxx`).
 - **Rattraper le label `Feature`** sur le ticket de feature sans écraser ses labels : `get_issue({id})`
   -> union des `labelIds` existants + `Feature` -> `save_issue({id, labelIds: <union>})`.
-- Récupérer `issue_id` / `identifier` / `url` et consigner dans `linear.issues[].sub_issues[]`.
+- **Rien n'est consigné dans le manifeste** : la ré-identification passe par `list_issues({parentId})`
+  + le jeton `Phase N -` en tête de titre.
 
 ## Mettre à jour un ticket (statut / cases à cocher)
 Pour `update-issue-linear`. Un seul outil `save_issue` **crée ou met à jour** : passer un **`id`**
@@ -137,41 +139,29 @@ Pour `update-issue-linear`. Un seul outil `save_issue` **crée ou met à jour** 
 - **Pas de commentaire** par défaut (on ne change que l'état / la case). `save_comment({issueId, body})`
   existe mais n'est pas utilisé ici.
 
-## Idempotence (bloc manifeste `linear` = carte amont figée seulement)
-Le manifeste committé porte **uniquement la carte amont figée** : les tickets `Feature` et leurs
-sous-tickets `Task` **par FR**, posés **une seule fois** par `premier-alimente-linear` (phase
-single-owner, **avant tout branchement** - aucune concurrence). Avant de créer, lire `linear.issues` :
-une feature déjà consignée avec un `issue_id` est **déjà créée** -> ne pas recréer.
+## Idempotence (Linear est la seule source de vérité des tickets)
+**Aucun ticket n'est consigné dans le manifeste committé** - ni Feature, ni Task, ni statut. La carte
+des tickets et l'état d'avancement vivent **dans Linear** ; le manifeste ne porte que la
+**configuration** du pont Linear (équipe, projet). Raison : la fabrication est concurrente (une
+branche par développeur) et un registre de tickets dans le fichier committé unique se désynchronise
+et provoque des conflits de merge.
 
-**Ce qui n'est PLUS dans le manifeste (vit dans Linear) :** les sous-tickets **par phase**
-(`creation-task-linear`) et l'**état d'avancement** (`update-issue-linear`). L'avancement de fabrication
-est concurrent (une branche par développeur) ; l'écrire dans le fichier committé unique provoquerait des
-conflits de merge. **Linear est la source de vérité** : idempotence via `list_issues({parentId})` + le
-jeton `Phase N -` en tête de titre.
+Ré-identification (avant toute création) :
+- **Feature** : `list_issues({team, label Feature})` -> comparaison par **titre exact** ; un ticket
+  trouvé est **adopté** (réutiliser son `issue_id` comme `parentId`), jamais recréé.
+- **Task par FR** (`premier-alimente-linear`) : `list_issues({parentId})` + jeton **`FR-00x -`** en
+  tête de titre.
+- **Task par phase** (`creation-task-linear`) : `list_issues({parentId})` + jeton **`Phase N -`** en
+  tête de titre.
+- **État d'avancement** (`update-issue-linear`) : `get_issue({id})` avant d'écrire.
+
 Vue d'ensemble des règles multi-développeurs (numérotation, couplage, merge, constitution) :
 `fabrication-parallele.md`.
-Bloc :
+Bloc manifeste (configuration seule, écrit en silence par `premier-alimente-linear`) :
 ```json
 "linear": {
-  "phase": "init", "team": null, "project": null,
-  "issues": [
-    { "id": "001", "ucs": ["UC2"], "name": "...",
-      "issue_id": "...", "identifier": "ENG-123", "url": "https://linear.app/...",
-      "status": "created",
-      "sub_issues": [
-        { "fr": "FR-001", "title": "FR-001 - Recherche en langage naturel",
-          "issue_id": "...", "identifier": "ENG-124", "url": "https://linear.app/...", "status": "created" }
-      ]
-    }
-  ],
-  "all_issues_created": false
+  "phase": "init", "team": null, "project": null
 }
 ```
-Statuts (ticket **et** sous-ticket FR) : `created` (posé, exige `issue_id`), `skipped` (écarté en
-session), `merged` (fusionné). Dans le manifeste, `sub_issues[]` ne porte **qu'une nature**, en **Backlog** :
-- **`{fr, ...}`** - un par Functional Requirement, posé par **`premier-alimente-linear`** (clé stable =
-  `id` de feature + `fr`).
-
-Les sous-tickets **`{phase, ...}`** (posés par `creation-task-linear`) et l'état d'avancement vivent
-**dans Linear**, jamais dans ce bloc. Écriture **silencieuse** (read-modify-write + revalidation JSON),
-jamais narrée.
+Une feature écartée ou fusionnée pendant la revue n'a simplement **pas de ticket** (décision prise et
+confirmée en session). Écriture **silencieuse** (read-modify-write + revalidation JSON), jamais narrée.

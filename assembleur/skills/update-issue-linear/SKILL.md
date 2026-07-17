@@ -23,16 +23,16 @@ L'assembleur **n'écrit jamais dans le repo cible** : tout sort dans `assembleur
 un ticket Linear est la **même exception bornée** que `premier-alimente-linear` : Linear est un **système
 externe** (pas le repo cible, pas un fichier que SpecKit génère). **L'état d'avancement vit dans Linear**
 - ce skill **n'écrit rien dans le manifeste committé** (deux développeurs mettant à jour en parallèle
-réécriraient le même `linear.issues[]` -> conflit de merge). Le dialogue passe par le **MCP du plugin
+réécriraient le même registre committé -> conflit de merge). Le dialogue passe par le **MCP du plugin
 `linear-prism`** (externe à la Factory) - voir `references/linear-guide.md`.
 
 ## Pré-requis (vérification silencieuse)
-Lire `manifest.json` **sans l'annoncer** : le bloc `linear` liste les tickets déjà créés
-(`issues[]` : `identifier`, `id` de feature, `name`, `url`).
-- **Des tickets existent** -> s'en servir comme index (résolution rapide et précise).
-- **Aucun ticket / pas de bloc `linear`** -> **ne pas bloquer** : on peut chercher directement dans
-  Linear ; mais si l'équipe n'a jamais créé de tickets, l'orienter en clair vers
-  `/assembleur:premier-alimente-linear` ("il n'y a pas encore de tickets à mettre à jour").
+Lire `manifest.json` **sans l'annoncer** : le bloc `linear` fournit la configuration (`team`,
+`project`). **Les tickets vivent dans Linear** (aucune carte dans le manifeste) : toute résolution
+passe par `list_issues` / `get_issue`.
+- **Pas de bloc `linear`** -> **ne pas bloquer** : on peut chercher directement dans Linear
+  (`list_teams` puis `list_issues`) ; mais si l'équipe n'a jamais créé de tickets, l'orienter en
+  clair vers `/assembleur:premier-alimente-linear` ("il n'y a pas encore de tickets à mettre à jour").
 
 ## Étape 1 : Détecter Linear (MCP linear-prism)
 Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-guide.md`).
@@ -54,8 +54,9 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
   de verbe clair, supposer **terminé** (usage principal), mais **confirmer**.
 
 ## Étape 3 : Identifier le ticket
-- **Tâche nommée** -> chercher d'abord dans `linear.issues[]` (par `identifier`, `id` de feature, ou
-  mot-clé du `name`) - c'est la **carte amont figée**. Quand l'indice vise une **phase** ("phase 2",
+- **Tâche nommée** -> chercher **dans Linear** : `get_issue({id})` si un `identifier` (`LIN-123`) est
+  donné, sinon `list_issues({query: "<mots-clés>", team})` (titre + description ; les tickets Feature
+  portent l'id `001...` en tête de titre). Quand l'indice vise une **phase** ("phase 2",
   "la partie tests", un titre de phase), les sous-tickets de phase **vivent dans Linear** (pas dans le
   manifeste) : les retrouver via `list_issues({parentId: "<issue_id de la Feature>"})` (jeton
   `Phase N -` en tête de titre) ou `list_issues({query: "<mots-clés>", team})` (titre + description).
@@ -65,7 +66,7 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
     l'`identifier` (ex. `lin-123-...`) : signal fort ;
   - `git log -1 --format=%s%n%b` (dernier commit), `git diff --name-only` et `git status --porcelain`
     (fichiers récemment touchés) -> en extraire des mots-clés ;
-  - croiser ces mots-clés avec `linear.issues[]` (et au besoin `list_issues`) -> **candidats**.
+  - croiser ces mots-clés avec `list_issues({query, team})` -> **candidats**.
   - Pas de git ou rien de sûr -> **proposer une courte liste** (tickets ouverts : `list_issues`
     `assignee: "me"`, états `unstarted`/`started`) et **demander** lequel (un point à la fois).
 - `get_issue({id})` pour lire l'**état courant** et la **description** (nécessaire pour les cases).

@@ -47,8 +47,9 @@ Lire `manifest.json` **sans l'annoncer** :
   > "Le contexte de supervision ne peut pas être produit : il faut d'abord la convergence (le
   > paquet de features approuvées)."
 
-Le bloc `linear` (s'il existe) fournit `team`/`project` et les tickets déjà créés
-(`issues[]` : `identifier`, `url`) ; le registre des features est `architecture.feature_sequence`.
+Le bloc `linear` (s'il existe) fournit `team`/`project` ; les tickets déjà créés se relèvent
+**dans Linear** (`list_issues({team, label Feature})`) ; le registre des features est
+`architecture.feature_sequence`.
 **Ne rien inventer** : uniquement du contenu réellement présent en amont.
 
 ## Étape 1 : Détecter le dépôt GitHub
@@ -64,10 +65,11 @@ Best-effort, sans bloquer :
 ## Étape 2 : Détecter le projet Linear (MCP linear-prism)
 Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-guide.md`).
 - **Disponible** :
-  - lire le bloc `linear` du manifeste (`team`, `project`, `issues[]`) ;
+  - lire le bloc `linear` du manifeste (`team`, `project`) ;
   - **URL du projet** : `get_project({id})` (ou retrouver via `list_projects({team})`) -> champ `url` ;
-  - **repli d'URL** : si le projet n'est pas résolu mais qu'au moins une `issues[].url` existe,
-    dériver l'URL du **workspace** (`https://linear.app/<workspace>/...`) et la donner avec une note.
+  - **repli d'URL** : si le projet n'est pas résolu, relever un ticket `Feature` via
+    `list_issues({team, label Feature})` et dériver l'URL du **workspace** depuis son `url`
+    (`https://linear.app/<workspace>/...`), avec une note.
 - **Indisponible** -> **ne pas bloquer** : mettre `<à renseigner>` dans la section Linear + embarquer
   les **instructions d'installation** (section "Installation du plugin linear-prism" de
   `references/linear-guide.md`). Si **aucun ticket** n'existe encore, ajouter la note "tickets à
@@ -86,7 +88,8 @@ Sources = **sorties amont uniquement**, en **synthèse** (pas de copie ; source 
     disponibilité, performance).
 - **Périmètre & features** : `architecture.feature_sequence` (`{id, name}`) + `assembleur-out/feature-map.md`
   -> tableau feature avec **description courte** + **dépendances** + **walking skeleton** ; colonne
-  **Ticket Linear** = `identifier` + `url` depuis `linear.issues[]` **si créés**, sinon "à créer via
+  **Ticket Linear** = `identifier` + `url` relevés dans Linear (`list_issues({team, label Feature})`,
+  jointure par titre) **si créés**, sinon "à créer via
   premier-alimente-linear". (Glossaire `cadrage-out/glossaire.md` / use cases `cadrage-out/spec-index.md`
   pour nommer juste.)
 - **Contexte technique** : synthèse de la stack (`architecte-out/stack-technique.md`) + **intégrations**

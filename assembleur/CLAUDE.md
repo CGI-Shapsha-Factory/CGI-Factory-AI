@@ -144,8 +144,9 @@ couplage, merge, constitution ; **couche autour de SpecKit, jamais de réécritu
 création **et mise à jour d'état**, `list_issue_statuses`, `blockedBy`, refus + instructions
 d'installation si le MCP est absent).
 Garde-fous déterministes : `scripts/check_assembly.py` (présence du paquet + aucun marqueur résiduel +
-couverture des features), `scripts/check_linear.py` (une feature = un ticket ou une décision
-explicite, tickets créés porteurs d'identifiant) et `scripts/check_cowork.py` (bloc `cowork` +
+couverture des features), `scripts/check_linear.py` (configuration du pont Linear posée - équipe
+définie ; les tickets et leur état se vérifient dans Linear, seule source de vérité) et
+`scripts/check_cowork.py` (bloc `cowork` +
 `init-cowork.md` à la racine exposant une section GitHub et une section Linear). Gabarit :
 `templates/init-cowork.md`. Installeur : `scripts/install_speckit.py` (pose
 SpecKit dans le repo, best-effort, timeouts, PATH rafraîchi en cours de processus, flags version-proof

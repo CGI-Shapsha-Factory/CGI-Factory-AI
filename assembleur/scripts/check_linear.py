@@ -1,22 +1,19 @@
 #!/usr/bin/env python
-"""Garde-fou deterministe (sans IA) de la creation des tickets Linear (premier-alimente-linear).
+"""Garde-fou deterministe (sans IA) du pont Linear (premier-alimente-linear).
 
-Le skill `premier-alimente-linear` cree, UNE fois et en amont (single-owner), UN ticket `Feature` par
-feature approuvee + UN sous-ticket `Task` par Functional Requirement (via le MCP linear-prism), et
-consigne cette **carte amont figee** dans le bloc `linear` du manifeste committe. Ce garde-fou lit le
-manifeste (`manifest.json` a la racine par defaut ; repli `cadrage-out/manifest.json` legacy) et echoue si :
-  - le bloc `linear` est absent (le skill n'a pas tourne) ;
-  - une feature de `architecture.feature_sequence` n'est PAS traitee (ni ticket, ni decision
-    explicite skipped/merged dans `linear.issues`) ;
-  - un ticket marque `status: "created"` n'a pas d'identifiant Linear (`issue_id`/`identifier`) ;
-  - un sous-ticket `{fr, …}` marque `status: "created"` n'a pas d'identifiant Linear.
+**Les tickets vivent dans Linear, jamais dans le manifeste.** La carte des tickets (Feature, Task
+par FR, Task par phase) et l'etat d'avancement ont Linear pour SEULE source de verite : idempotence
+via `list_issues` (titre exact pour une Feature, jetons `FR-00x -` / `Phase N -` pour les Task).
+Un script local ne peut pas interroger le MCP : ce garde-fou ne valide donc QUE ce qui est
+verifiable hors-ligne, honnetement :
+  - le bloc `linear` est absent -> le skill n'a pas tourne (exit 1) ;
+  - le bloc `linear` est present mais sans equipe (`team`) -> configuration incomplete (exit 1).
 
-**Etat de dev hors manifeste.** Les sous-tickets **par phase** (`creation-task-linear`) et l'etat
-d'avancement (`update-issue-linear`) vivent dans **Linear**, pas dans le manifeste committe (la
-fabrication est concurrente — une branche par developpeur — et un fichier unique committe entrerait en
-conflit). Le garde-fou ne les exige donc PAS : la verification des sous-tickets reste INDULGENTE (ne
-valide que ce qui est present ; l'absence de `sub_issues` n'echoue jamais ; une eventuelle entree
-`{phase, …}` d'un ancien manifeste est validee comme les autres). Exit 0 si tout est coherent, sinon 1.
+La verification des tickets eux-memes est le travail du skill (relire `list_issues` avant de
+conclure) - jamais celui d'un script hors-ligne. Exit 0 si la configuration est posee, sinon 1.
+
+Compatibilite : un manifeste historique portant encore `linear.issues[]` reste valide (le champ est
+ignore - Linear fait foi).
 
 Usage:
     python check_linear.py [chemin/vers/manifest.json]
@@ -24,9 +21,6 @@ Usage:
 import json
 import os
 import sys
-
-# statuts consideres comme "traites" sans exiger d'identifiant Linear.
-NON_CREATED_STATUSES = {"skipped", "merged"}
 
 
 def _manifest_path(argv):
@@ -53,61 +47,13 @@ def main(argv):
         print("ERREUR: bloc `linear` absent (lancer premier-alimente-linear).", file=sys.stderr)
         return 1
 
-    issues = linear.get("issues") or []
-    by_id = {it.get("id"): it for it in issues if isinstance(it, dict) and it.get("id")}
-    problems = []
-
-    # 1. Couverture : chaque feature de la sequence est traitee (ticket OU decision explicite).
-    seq = (manifest.get("architecture") or {}).get("feature_sequence") or []
-    for it in seq:
-        fid = it.get("id") if isinstance(it, dict) else it
-        if fid and fid not in by_id:
-            problems.append(f"feature '{fid}' non traitee par premier-alimente-linear (ni ticket, ni skip/merge)")
-
-    # 2. Coherence : un ticket "created" doit porter un identifiant Linear.
-    for it in issues:
-        if not isinstance(it, dict):
-            continue
-        status = (it.get("status") or "created").lower()
-        if status in NON_CREATED_STATUSES:
-            continue
-        if not (it.get("issue_id") or it.get("identifier")):
-            fid = it.get("id") or it.get("name") or "?"
-            problems.append(f"ticket feature '{fid}' marque cree sans identifiant Linear")
-
-    # 3. Sous-tickets Task consignes (par `fr`, poses en amont par premier-alimente-linear ; les
-    #    sous-tickets par `phase` vivent dans Linear, pas ici) : INDULGENT - ne valide que les entrees
-    #    presentes. Un sous-ticket "created" doit porter un identifiant ; l'absence n'echoue jamais.
-    for it in issues:
-        if not isinstance(it, dict):
-            continue
-        fid = it.get("id") or it.get("name") or "?"
-        for sub in it.get("sub_issues") or []:
-            if not isinstance(sub, dict):
-                continue
-            status = (sub.get("status") or "created").lower()
-            if status in NON_CREATED_STATUSES:
-                continue
-            if not (sub.get("issue_id") or sub.get("identifier")):
-                ref = sub.get("fr") or (f"phase {sub.get('phase')}" if sub.get("phase") is not None else "?")
-                problems.append(
-                    f"sous-ticket feature '{fid}' ({ref}) marque cree sans identifiant Linear"
-                )
-
-    if problems:
-        print("TICKETS LINEAR INCOMPLETS - points bloquants :", file=sys.stderr)
-        for p in problems:
-            print(f"  - {p}", file=sys.stderr)
+    if not linear.get("team"):
+        print("PONT LINEAR INCOMPLET - points bloquants :", file=sys.stderr)
+        print("  - aucune equipe Linear configuree (relancer premier-alimente-linear)", file=sys.stderr)
         return 1
 
-    n = sum(1 for it in issues if (it.get("status") or "created").lower() not in NON_CREATED_STATUSES)
-    nsub = sum(
-        1
-        for it in issues
-        for sub in (it.get("sub_issues") or [])
-        if isinstance(sub, dict) and (sub.get("status") or "created").lower() not in NON_CREATED_STATUSES
-    )
-    print(f"TICKETS LINEAR OK - {n} ticket(s) cree(s), {nsub} sous-ticket(s) de phase, une feature = une decision.")
+    print("PONT LINEAR OK - configuration posee (equipe definie) ; "
+          "les tickets et leur etat se verifient dans Linear, pas ici.")
     return 0
 
 
