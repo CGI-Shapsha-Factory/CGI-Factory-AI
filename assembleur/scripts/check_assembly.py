@@ -95,8 +95,8 @@ def main(argv):
     scan.append(os.path.join(claude_dir, "CLAUDE.md"))
     for md in scan:
         try:
-            text = open(md, encoding="utf-8").read()
-        except OSError:
+            text = open(md, encoding="utf-8-sig").read()
+        except (OSError, UnicodeDecodeError):
             continue
         if MARKER_RE.search(text):
             problems.append(f"marqueur residuel dans {os.path.relpath(md, root)} (a trancher en session)")
