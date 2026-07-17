@@ -16,10 +16,25 @@ import shutil
 import sys
 
 MARKER = "tests_guard.py"
+
+
+def _launcher():
+    """Detecte le lanceur Python disponible (baked dans la commande du hook au moment de
+    l'installation) : un `python` en dur casse en silence sur les machines qui n'ont que
+    `py` (Windows frais) ou `python3` (macOS/Linux)."""
+    if shutil.which("python"):
+        return "python"
+    if shutil.which("py"):
+        return "py -3"
+    if shutil.which("python3"):
+        return "python3"
+    return "python"
+
+
 # Chemin ANCRE sur la racine du projet via ${CLAUDE_PROJECT_DIR} : un chemin relatif nu
 # (.claude/hooks/...) se resout contre le cwd du hook : casse des qu'un Write cible un
 # sous-dossier (le hook ne tourne pas depuis la racine). Cf. Claude Code hooks reference.
-CMD = 'python "${CLAUDE_PROJECT_DIR}/.claude/hooks/tests_guard.py" posttooluse'
+CMD = _launcher() + ' "${CLAUDE_PROJECT_DIR}/.claude/hooks/tests_guard.py" posttooluse'
 ENTRIES = {
     "PostToolUse": {"matcher": "Write|Edit",
                     "hooks": [{"type": "command", "command": CMD, "timeout": 30}]},

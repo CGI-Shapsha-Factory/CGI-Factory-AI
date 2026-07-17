@@ -18,9 +18,24 @@ import shutil
 import sys
 
 MARKER = "format_guard.py"
+
+
+def _launcher():
+    """Detecte le lanceur Python disponible (baked dans la commande du hook au moment de
+    l'installation) : un `python` en dur casse en silence sur les machines qui n'ont que
+    `py` (Windows frais) ou `python3` (macOS/Linux)."""
+    if shutil.which("python"):
+        return "python"
+    if shutil.which("py"):
+        return "py -3"
+    if shutil.which("python3"):
+        return "python3"
+    return "python"
+
+
 # Chemin ANCRE sur la racine via ${CLAUDE_PROJECT_DIR} (un chemin relatif nu casse quand le
 # hook tourne depuis un sous-dossier). Cf. install_test_hooks.py.
-CMD = 'python "${CLAUDE_PROJECT_DIR}/.claude/hooks/format_guard.py"'
+CMD = _launcher() + ' "${CLAUDE_PROJECT_DIR}/.claude/hooks/format_guard.py"'
 ENTRY = {
     "matcher": "Write|Edit",
     "hooks": [{"type": "command", "command": CMD, "timeout": 30}],
