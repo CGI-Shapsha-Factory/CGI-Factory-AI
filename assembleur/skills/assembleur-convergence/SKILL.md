@@ -25,8 +25,12 @@ existe déjà dans `assembleur-out/` (`pre-constitution.md`, `features/<id>-*.md
 `technical-context.md`, `coherence-report.md`, `attack-plan.md`), proposer le choix **Repartir de
 zéro** (supprimer puis régénérer, `version: 1`) ou **Garder les deux (versionner)** (archiver
 l'existant sous `_archives/`, régénérer au nom canonique en `version: N+1`) et **attendre** le choix.
-Les écritures **hors `assembleur-out/`** (Linear, `specify init`, `init-cowork.md`, `.claude/` du
-projet) gardent leurs propres règles d'idempotence et ne sont **pas** concernées par cette porte.
+**La porte couvre aussi le déploiement `.claude/`** : si `.claude/CLAUDE.md` ou `.claude/memory/`
+existent déjà, poser le même choix **avant** de les réécrire (Repartir de zéro = les régénérer ;
+Garder les deux = archiver l'existant sous `.claude/_archives/` puis régénérer au nom canonique) -
+ils peuvent porter des **modifications manuelles de l'équipe** et ne sont jamais écrasés en silence.
+Les autres écritures **hors `assembleur-out/`** (Linear, `specify init`, `init-cowork.md`) gardent
+leurs propres règles d'idempotence et ne sont **pas** concernées par cette porte.
 Premier passage (rien n'existe) : générer directement, sans porte.
 
 ## Étape 1 : Lecture parallèle des 3 contrats (map-reduce)

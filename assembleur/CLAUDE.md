@@ -136,8 +136,10 @@ et le **principe de test** : tests écrits avec le code, intégration mockée).
 ## Conventions partagées
 `references/interactive-loop.md`, `references/ux-conventions.md`, `references/speckit-mapping.md`,
 `references/regeneration-gate.md` (porte de régénération : à la relance de `assembleur-convergence`
-quand le paquet `assembleur-out/` existe déjà, choix **Repartir de zéro** ou **Garder les deux
-(versionner)** ; ne vise **que** `assembleur-out/`, pas Linear/`specify init`/`init-cowork.md`/`.claude/`),
+quand le paquet `assembleur-out/` **ou** le déploiement `.claude/` (CLAUDE.md, memory/) existent déjà,
+choix **Repartir de zéro** ou **Garder les deux (versionner)** - le `.claude/` déployé peut porter des
+modifications manuelles de l'équipe, jamais écrasées en silence ; ne vise pas Linear/`specify
+init`/`init-cowork.md`),
 `references/fabrication-parallele.md` (règles multi-développeurs consolidées - numérotation, Linear,
 couplage, merge, constitution ; **couche autour de SpecKit, jamais de réécriture**),
 `references/linear-guide.md` (usage du MCP linear-prism : détection, installation, `save_issue`
