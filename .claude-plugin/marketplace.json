@@ -51,6 +51,17 @@
       "description": "Coud les 3 contrats -> repo SpecKit + Linear."
     },
     {
+      "name": "recette",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
+        "path": "recette"
+      },
+      "category": "Recette (post-livraison)",
+      "tags": ["po", "developpeur", "anomalie", "evolution", "linear", "speckit"],
+      "description": "Anomalies et evolutions apres livraison -> Linear + SpecKit orchestre."
+    },
+    {
       "name": "couts",
       "source": {
         "source": "git-subdir",
