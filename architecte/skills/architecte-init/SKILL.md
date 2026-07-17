@@ -109,10 +109,11 @@ l'utilisateur décider de la suite.
 
 5. **Provisionner le rendu des diagrammes** (silencieux, best-effort, sans prompt) : lancer
    `py -3 "${CLAUDE_PLUGIN_ROOT}/scripts/provision_render.py" <projet>/.factory` (ou `python`
-   si `py` est absent). Il détecte un navigateur système (Edge/Chrome) et écrit
-   `.factory/puppeteer.json`, puis installe **mermaid-cli épinglé sans télécharger Chromium**
-   (la CA du système est respectée, TLS jamais désactivé). S'il ne peut rien installer (hors
-   ligne, Node absent), il le dit et **continue** — `render_diagrams.py` retentera au rendu.
+   si `py` est absent). Il détecte un navigateur système (Edge/Chrome — pour le PNG optionnel),
+   puis installe le **binaire D2 épinglé** en espace utilisateur (`.factory/d2/`, **sans admin**,
+   sans télécharger de Chromium ; la CA du système est respectée, TLS jamais désactivé). S'il ne
+   peut rien installer (hors ligne), il le dit et **continue** — `render_diagrams.py` retentera au
+   rendu (repli Kroki local).
 6. **Poser l'enforcement (déterministe — TOUS les hooks de l'architecte, dès l'init)** depuis le
    catalogue `references/enforcement/` :
    - **Hook de test** : lancer **une seule commande**
@@ -149,8 +150,8 @@ l'utilisateur décider de la suite.
 - `.gitignore` contient la ligne `.factory/`.
 - `architecte-out/decisions/` existe.
 - Le manifeste contient le bloc `architecture` (`phase: "init"`), et reparse sans erreur.
-- Rendu diagrammes provisionné (best-effort) : `.factory/puppeteer.json` écrit si un
-  navigateur système est présent, mermaid-cli installé si possible — non bloquant.
+- Rendu diagrammes provisionné (best-effort) : binaire **D2** installé dans `.factory/d2/` si
+  possible (sans admin), navigateur système détecté pour le PNG optionnel — non bloquant.
 - **Enforcement posé** : `.claude/hooks/tests_guard.py` + `.claude/hooks/format_guard.py` + **deux**
   hooks `PostToolUse` (test + formatage) dans `.claude/settings.json` ; manifeste `test_enforcement: true`.
   *(Aucune protection de branche locale — gérée côté GitHub.)*

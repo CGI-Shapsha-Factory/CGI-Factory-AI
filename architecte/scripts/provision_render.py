@@ -1,21 +1,27 @@
 #!/usr/bin/env python
-"""Provisionne (silencieusement) de quoi rendre les diagrammes Mermaid — appele par architecte-init.
+"""Provisionne (silencieusement) de quoi rendre les diagrammes D2 — appele par architecte-init.
 
-Idempotent, best-effort, sans prompt : detecte le navigateur systeme et ecrit
-.factory/puppeteer.json ; installe mermaid-cli epingle SANS telecharger Chromium ; fait
-confiance a la CA du systeme (NODE_USE_SYSTEM_CA=1) sans desactiver TLS. N'echoue JAMAIS
-la phase : ce qui manque sera de toute facon retente par render_diagrams.py.
+Idempotent, best-effort, sans prompt : detecte un navigateur systeme (pour le PNG optionnel)
+et installe le binaire D2 epingle en espace utilisateur (.factory/d2/), SANS admin, SANS
+telecharger de Chromium. Fait confiance a la CA du systeme (contexte SSL par defaut, qui lit le
+magasin de certificats Windows) sans desactiver TLS ; honore HTTPS_PROXY/HTTP_PROXY. N'echoue
+JAMAIS la phase : ce qui manque sera de toute facon retente par render_diagrams.py (repli Kroki).
 
 Usage:
     py -3 provision_render.py [chemin/vers/.factory]   (defaut: ./.factory)
 """
-import json
+import io
 import os
+import platform
 import shutil
-import subprocess
+import ssl
+import subprocess  # noqa: F401 - conserve pour parite/outillage eventuel
 import sys
+import tarfile
+import urllib.request
 
-MERMAID_CLI_SPEC = os.environ.get("MERMAID_CLI_SPEC", "@mermaid-js/mermaid-cli@11")
+# Version epinglee de D2. Surchargeable par l'env.
+D2_VERSION = os.environ.get("D2_VERSION", "v0.7.1")
 
 BROWSERS = [
     r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
@@ -39,13 +45,68 @@ def find_browser():
     return None
 
 
-def _adjust_for_windows(args):
-    """Sur Windows, un shim .cmd/.bat (npm) doit passer par cmd.exe pour s'executer."""
-    exe = shutil.which(args[0]) or args[0]
-    out = [exe] + list(args[1:])
-    if os.name == "nt" and exe.lower().endswith((".cmd", ".bat")):
-        return ["cmd", "/c"] + out
-    return out
+def d2_asset():
+    """(nom d'archive GitHub, nom du binaire cible) selon l'OS/arch courant."""
+    machine = platform.machine().lower()
+    arch = "arm64" if machine in ("arm64", "aarch64") else "amd64"
+    if os.name == "nt":
+        return f"d2-{D2_VERSION}-windows-{arch}.tar.gz", "d2.exe"
+    plat = "macos" if platform.system().lower() == "darwin" else "linux"
+    return f"d2-{D2_VERSION}-{plat}-{arch}.tar.gz", "d2"
+
+
+def find_d2(factory):
+    """Binaire D2 deja disponible : env D2_PATH -> PATH -> .factory/d2/, sinon None."""
+    env = os.environ.get("D2_PATH") or os.environ.get("D2_EXECUTABLE_PATH")
+    if env and os.path.isfile(env):
+        return env
+    found = shutil.which("d2")
+    if found:
+        return found
+    for name in ("d2.exe", "d2"):
+        cand = os.path.join(factory, "d2", name)
+        if os.path.isfile(cand):
+            return cand
+    return None
+
+
+def provision_d2(factory):
+    """Installe le binaire D2 dans .factory/d2/ (best-effort, sans admin, sans bloquer)."""
+    existing = find_d2(factory)
+    if existing:
+        print(f"provision-render: d2 deja disponible ({existing}).")
+        return
+
+    asset, binname = d2_asset()
+    url = f"https://github.com/terrastruct/d2/releases/download/{D2_VERSION}/{asset}"
+    dest_dir = os.path.join(factory, "d2")
+    try:
+        os.makedirs(dest_dir, exist_ok=True)
+        ctx = ssl.create_default_context()   # magasin de certificats systeme ; TLS jamais desactive
+        req = urllib.request.Request(url, headers={"User-Agent": "factory-provision"})
+        with urllib.request.urlopen(req, timeout=120, context=ctx) as resp:
+            data = resp.read()
+        with tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as tar:
+            member = next(
+                (m for m in tar.getmembers()
+                 if m.isfile() and os.path.basename(m.name) in ("d2.exe", "d2")),
+                None,
+            )
+            if member is None:
+                print("provision-render: binaire d2 introuvable dans l'archive.", file=sys.stderr)
+                return
+            out = os.path.join(dest_dir, binname)
+            with tar.extractfile(member) as src, open(out, "wb") as f:
+                shutil.copyfileobj(src, f)
+        if os.name != "nt":
+            os.chmod(out, 0o755)
+        print(f"provision-render: d2 {D2_VERSION} installe -> {out}")
+    except Exception as exc:  # noqa: BLE001 - best-effort : on ne bloque jamais l'init
+        print(
+            f"provision-render: d2 non telecharge ({str(exc).strip()[:150]}). "
+            "Kroki (local) prendra le relais au rendu si disponible.",
+            file=sys.stderr,
+        )
 
 
 def main(argv):
@@ -54,38 +115,15 @@ def main(argv):
         print(f"provision-render: dossier .factory introuvable ({factory}) - ignore.", file=sys.stderr)
         return 0
 
-    # 1) navigateur systeme -> puppeteer.json (evite le telechargement de Chromium)
+    # 1) navigateur systeme (rasterisation PNG optionnelle du SVG ; aucun telechargement Chromium)
     browser = find_browser()
-    cfg = os.path.join(factory, "puppeteer.json")
-    if browser and not os.path.isfile(cfg):
-        try:
-            with open(cfg, "w", encoding="utf-8") as f:
-                json.dump({"executablePath": browser, "headless": True, "args": ["--no-sandbox"]}, f)
-            print(f"provision-render: navigateur systeme -> {cfg}")
-        except OSError:
-            pass
-    elif browser:
-        print("provision-render: puppeteer.json deja present.")
+    if browser:
+        print(f"provision-render: navigateur systeme detecte ({browser}) - PNG possible.")
     else:
-        print("provision-render: aucun navigateur systeme detecte (Kroki local possible en repli).")
+        print("provision-render: aucun navigateur systeme (PNG desactive ; le SVG reste produit).")
 
-    # 2) mermaid-cli epingle, SANS Chromium, CA systeme
-    if shutil.which("mmdc"):
-        print("provision-render: mmdc deja installe.")
-    elif shutil.which("npm"):
-        env = dict(os.environ)
-        env["PUPPETEER_SKIP_DOWNLOAD"] = "1"
-        env.setdefault("NODE_USE_SYSTEM_CA", "1")
-        try:
-            subprocess.run(_adjust_for_windows(["npm", "install", "-g", MERMAID_CLI_SPEC]),
-                           check=True, capture_output=True, text=True, env=env)
-            print(f"provision-render: mermaid-cli installe ({MERMAID_CLI_SPEC}, sans Chromium).")
-        except (subprocess.CalledProcessError, OSError) as exc:
-            msg = getattr(exc, "stderr", "") or str(exc)
-            print(f"provision-render: install mermaid-cli differee ({str(msg).strip()[:150]}). "
-                  "npx / Kroki prendront le relais au rendu.", file=sys.stderr)
-    else:
-        print("provision-render: Node/npm absents - le rendu utilisera Kroki local si dispo.", file=sys.stderr)
+    # 2) binaire D2 epingle, en espace utilisateur, sans admin
+    provision_d2(factory)
 
     return 0   # best-effort : ne bloque jamais l'init
 

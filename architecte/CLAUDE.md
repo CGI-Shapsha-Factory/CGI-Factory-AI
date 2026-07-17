@@ -20,7 +20,7 @@ il discipline et grave. Ce sont des **skills Markdown** ; pas de build/test.
 - `architecte-init` — setup (zéro décision IA) : **d'abord (re)pose ce dont la phase a besoin** — gabarits dans `.factory/architecte/` (git-ignoré, absent d'un clone frais) + bloc `architecture` dans le **manifeste committé** `manifest.json` (créé s'il manque) ; puis `conventions/` **+ pose des hooks de l'architecte** (enforcement des tests + formatage `PostToolUse`, déterministe ; **pas de protection de branche locale** — gérée côté GitHub). **Jamais bloquant** : installe le socle **toujours** (même sans cadrage), puis **avertit** (sans refuser) si `cadrage-out/` manque. **`.gitignore` : jamais réécrit** — la première version est générée par le cadrage ; `architecte-init` **ajoute** seulement la ligne `.factory/` (et `architecte-livrables` les lignes `.env`), en le créant **uniquement s'il est absent**.
 - `architecte-fondations` — lit **tout le cadrage** en parallèle (fan-out `architecte-reader`), puis pose les **fondations** : drivers & attributs de qualité (deux tableaux clairs), puis composants (Frontend/UI compris). Portes humaines : validation des drivers/qualité et des composants.
 - `architecte-stack` — **stack technique** (2-4 options + compromis par domaine, **sans biais fournisseur**, versions **exactes épinglées**), activation des **conventions/linters** (vrais fichiers + install best-effort), **ADR** (consignés après décision) et **walking skeleton + séquence de features** (couverture 1:1, proposée — figée par l'assembleur). Portes humaines : **choix de stack** et **arbitrage des ADR**.
-- `architecte-livrables` — livrables **dérivés** des décisions déjà prises : diagrammes (+ images PNG), registre de risques, **`impact-design.md`** (handoff designer), fichiers d'environnement (`.env`+`.env.example`), vérification de l'enforcement ; puis **balayage final** de tout `architecte-out/` (rien laissé d'indéfini) avant la porte de cohérence.
+- `architecte-livrables` — livrables **dérivés** des décisions déjà prises : diagrammes D2 (+ images SVG/PNG), registre de risques, **`impact-design.md`** (handoff designer), fichiers d'environnement (`.env`+`.env.example`), vérification de l'enforcement ; puis **balayage final** de tout `architecte-out/` (rien laissé d'indéfini) avant la porte de cohérence.
 - `architecte-coherence` — **porte de cohérence stricte et adversariale, ancrée méthodes**.
   Relit tout `architecte-out/` + le cadrage aval **en parallèle** (fan-out `architecte-reader`),
   puis challenge le contrat en **3 lentilles** (Cohérence / Consistance / Complétude) grillées
@@ -41,11 +41,13 @@ feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**,
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
 **Handoff designer** : le skill `architecte-livrables` produit `impact-design.md` (section « Décisions à
 impact design ») — la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer-ingestion` ;
-`check_architecture.py` exige `architecture.design_impact = true`. Les diagrammes sont aussi rendus en
-**images PNG** dans `architecte-out/diagrammes/` (via `scripts/render_diagrams.py`, mermaid-cli) ; le
-rendu est **robuste et auto-installé** (navigateur système, CA d'entreprise respectée sans désactiver
-TLS, replis mermaid-cli → npx → Kroki local), pré-provisionné par `architecte-init`
-(`scripts/provision_render.py`), sans prompt.
+`check_architecture.py` exige `architecture.design_impact = true`. Les diagrammes sont écrits en
+**syntaxe D2** (moteur ELK : routage orthogonal, sans chevauchement) et rendus en **SVG** (source de
+vérité, vectoriel) **+ PNG** (best-effort) dans `architecte-out/diagrammes/` (via
+`scripts/render_diagrams.py`, binaire **D2**) ; le rendu est **robuste et auto-installé** (SVG sans
+navigateur ; PNG via navigateur système, CA d'entreprise respectée sans désactiver TLS ; repli D2 →
+Kroki local), pré-provisionné par `architecte-init` (`scripts/provision_render.py` installe le binaire
+D2 épinglé dans `.factory/d2/`, sans admin), sans prompt.
 
 ## Intégration cadrage (entrées) — lecture parallèle exhaustive
 Lit `cadrage-out/{project-frame, product-brief, glossaire, spec-index, coupling-map}.md` et les
@@ -80,7 +82,7 @@ dispatché en parallèle par `architecte-fondations` et `architecte-coherence`).
 Scripts : `scripts/check_architecture.py` (garde-fou : présence, **versions exactes** de
 `stack-technique.md`, **front-matter `version`/`date`** de chaque doc, **stratégie de test** de
 `standards-ingenierie.md`, **existence réelle des fichiers d'env à la racine** (`env_files.files` + `.env` gitignoré) / flag `test_enforcement`, marqueurs résiduels) ;
-`scripts/render_diagrams.py` (rendu Mermaid robuste, auto-install, replis, sans prompt) ;
+`scripts/render_diagrams.py` (rendu D2 robuste → SVG+PNG, auto-install, replis Kroki, sans prompt) ;
 `scripts/provision_render.py` (pré-installe le rendu à l'init) ; `scripts/bump_doc_version.py`
 (incrément du compteur de version des documents) ; `scripts/install_formatter.py` (**installe l'outil
 de formatage retenu à l'Étape 4** — `ruff` via pip, `@biomejs/biome` ou `eslint`+`prettier` via npm local ;

@@ -43,20 +43,23 @@ catalogue `references/env-templates/` ; conventions d'interaction
 
 ## Procédure — ordre imposé (chaque étape consomme la précédente)
 
-### Étape 1 — Diagrammes (+ images PNG)
+### Étape 1 — Diagrammes (+ images SVG/PNG)
 Produire `architecte-out/diagrammes.md` (gabarit `templates/diagrammes.md`) :
-C4 contexte, C4 conteneurs, flux d'un parcours critique, ERD, déploiement (Mermaid),
-avec les noms réels (pas de placeholders).
+C4 contexte, C4 conteneurs, flux d'un parcours critique, ERD, déploiement — en **syntaxe D2**
+(moteur de layout **ELK** : routage orthogonal, sans chevauchement de flèches ni de libellés),
+avec les noms réels (pas de placeholders). Garder les libellés de flèche courts là où plusieurs
+flèches convergent (sinon les libellés se serrent).
 Puis **générer les images** : lancer
 `py -3 "${CLAUDE_PLUGIN_ROOT}/scripts/render_diagrams.py" <projet>/architecte-out/diagrammes.md`
-(remplacer `py -3` par `python` si `py` est absent) — il rend un **PNG par diagramme** (nom
-déterministe `NN-slug.png`) dans **`architecte-out/diagrammes/`**. Le script **installe
-silencieusement ce qui manque** (mermaid-cli épinglé, **sans télécharger Chromium** — il
-réutilise le navigateur système), respecte la CA d'entreprise **sans désactiver TLS**, et
-**bascule automatiquement** entre méthodes de rendu (mermaid-cli → npx → Kroki local) — **sans
-jamais demander de permission**. Les prérequis ont normalement été pré-installés par
-`architecte-init`. Confirmer en clair les images produites. **Si tout échoue malgré les replis**,
-le dire en clair et continuer — ne jamais bloquer la phase pour ça ; le markdown reste la source.
+(remplacer `py -3` par `python` si `py` est absent) — il rend un **SVG par diagramme** (source de
+vérité, vectoriel) **+ un PNG best-effort** (nom déterministe `NN-slug.svg` / `NN-slug.png`) dans
+**`architecte-out/diagrammes/`**. Le SVG est produit par le binaire **D2** (aucun navigateur requis) ;
+le PNG rasterise le SVG via le **navigateur système** (Edge/Chrome) **sans télécharger Chromium**. Le
+script respecte la CA d'entreprise **sans désactiver TLS** et **bascule automatiquement** (D2 →
+Kroki local) — **sans jamais demander de permission**. Les prérequis (binaire D2) ont normalement été
+pré-installés par `architecte-init`. Confirmer en clair les images produites. **Si tout échoue malgré
+les replis**, le dire en clair et continuer — ne jamais bloquer la phase pour ça ; le markdown reste la
+source.
 
 ### Étape 2 — Registre de risques
 Produire `architecte-out/risques.md` (gabarit `templates/risques.md`) : risques
