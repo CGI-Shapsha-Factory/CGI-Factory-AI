@@ -2,7 +2,7 @@
 
 <!-- Graine produite par l'assembleur dans `assembleur-out/features/`, mappée sur le spec.md de
      SpecKit. L'équipe l'étend via /speckit.specify. Un trou = NEEDS CLARIFICATION (convention
-     SpecKit) — mais l'assembleur RÉSOUT ces points EN SESSION avant de conclure, donc une graine
+     SpecKit) - mais l'assembleur RÉSOUT ces points EN SESSION avant de conclure, donc une graine
      livrée ne contient pas de marqueur. Contenu seul : aucune provenance. -->
 
 **Feature**: `NNN-feature`
@@ -10,7 +10,7 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 — [titre] (Priority: P1)
+### User Story 1 : [titre] (Priority: P1)
 [Parcours en langage clair.]
 
 **Independent Test**: [comment le tester seul, valeur livrée]
@@ -28,18 +28,21 @@
 - **FR-002**: [capacité]
 
 ### Key Entities
-- **[Entité]**: [ce qu'elle représente]  <!-- voir memory/domain.md -->
+- **[Entité]**: [ce qu'elle représente]  <!-- voir memory/domain.md ; relations <- ERD architecte -->
 
 ## Success Criteria *(mandatory)*
 - **SC-001**: [mesurable, techno-agnostique]
+
+## Hors périmètre *(cette feature)*
+- [exclusion locale explicite : ce que CETTE feature ne fait pas]
 
 ## Assumptions
 - [hypothèses / dépendances]
 
 ---
 
-## Annexe — Face technique (pour `/speckit.plan` → Technical Context)
+## Annexe : Face technique (pour `/speckit.plan` -> Technical Context)
 Composants : [...] · Stack : [...] · ADR : [ADR-00X]  <!-- voir technical-context.md -->
 
-## Annexe — Face design
+## Annexe : Face design
 Parcours : [...] · Composants & états : [...] · Accessibilité : [niveau visé]  <!-- voir memory/design.md -->
