@@ -43,8 +43,9 @@ numérotée** (convergence des deux découpages). Chaque document porte un **fro
   biais fournisseur, et l'expérience avec une techno ne vaut pas décision.
 - **Versions exactes** : toute techno de `stack-technique.md` porte une version épinglée (jamais
   "latest") - vérifié par le garde-fou déterministe.
-- **Diagrammes fiables sans intervention** : rendu auto-installé (mermaid-cli + navigateur
-  système, CA d'entreprise respectée **sans** désactiver TLS), replis automatiques, zéro prompt.
+- **Diagrammes fiables sans intervention** : sources **D2** (moteur ELK) rendues en SVG + PNG
+  via un binaire D2 épinglé auto-installé sans admin (PNG via le navigateur système, CA
+  d'entreprise respectée **sans** désactiver TLS), repli Kroki local, zéro prompt.
 - **Drivers ≠ attributs de qualité** : les drivers sont les **objectifs métier + contraintes +
   risques** ; les attributs de qualité sont les **-ilités mesurées qui en découlent** (cible +
   scénario) - pas de doublon entre les deux.
@@ -57,8 +58,9 @@ numérotée** (convergence des deux découpages). Chaque document porte un **fro
 Catalogue dans `references/conventions/` : Python -> `ruff.toml` ; TS/JS -> `biome.json`
 (défaut) **ou** `eslint.config.js`+`.prettierrc` ; C -> `.clang-format` ; socle
 universel -> `.editorconfig`. `architecte-stack` copie les configs des langages retenus dans
-`conventions/`. **Fallback** : langage inconnu -> `.editorconfig` + avertissement +
-convention générique `[À VALIDER]`.
+`conventions/`. **Fallback** : langage sans config cataloguée -> socle `.editorconfig` + les
+règles se tranchent **en session** avec l'utilisateur (jamais de marqueur `[À VALIDER]` écrit :
+le garde-fou déterministe échoue sur tout marqueur résiduel).
 
 ## Vérification optimisée des réponses
 `references/question-map.md` mappe chaque question d'architecture à un champ de
