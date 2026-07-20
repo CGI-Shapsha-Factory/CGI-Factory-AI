@@ -36,6 +36,9 @@ d'ouvrir l'évolution, parce que c'est lui qui porte le périmètre.
 2. **On ne touche pas à une vérité partagée dans le coin d'une feature.** Si le changement
    concerne quelque chose que plusieurs features ont en commun, il remonte au niveau central
    au lieu d'être réglé dans la feature. Sinon la même vérité finit recopiée et désynchronisée.
+   **Remonter veut dire arbitrer et amender au niveau central, pas abandonner** : la remontée
+   se termine toujours par une décision humaine (amender maintenant, ou parquer avec une
+   condition de reprise nommée), jamais par un arrêt sans issue.
 3. **On ne referme jamais sans avoir mis la trace à jour.** Une correction ou une évolution est
    finie quand la spécification reflète le comportement, que les tâches sont à jour, et que
    Linear suit. Chaque skill refuse la clôture tant que ces trois mises à jour ne sont pas faites.
@@ -51,8 +54,26 @@ d'architecture** (ADR, composant partagé), une **donnée métier** manipulée p
 features, une **règle d'erreur ou de design** commune (guidelines). Le repérage se fait par la
 feature : son entrée du registre (`architecture.feature_sequence`, champ `ucs`), la carte
 `assembleur-out/feature-map.md` (dépendances et couplage) et `architecte-out/composants.md`
-(composants touchés). Si le changement touche une vérité partagée : **alerter, commenter le
-ticket, signaler la remontée** (amont + assemblage), ne pas traiter seul.
+(composants touchés). Ces sources se **lisent** avant de trancher : le tri est un jugement,
+il ne se fait pas de mémoire.
+
+**Comment se résout une vérité partagée.** Ne pas traiter seul ne veut pas dire s'arrêter là.
+Le constat est **exposé en clair** (ce que dit le contrat partagé et où, ce que demande le
+changement, pourquoi les deux s'opposent), commenté sur le ticket, puis **tranché par
+l'humain** - avec une voie recommandée annoncée, et sans menu numéroté (cf.
+`interactive-loop.md`). Trois issues, jamais un arrêt nu :
+- **Faux positif** : ce n'en est pas une. Tracer le motif en commentaire, continuer.
+- **Arbitrage déjà rendu** : la référence de la décision est fournie et vérifiée, citée en
+  commentaire, on continue.
+- **Arbitrage à rendre** : soit **amender maintenant** (voie recommandée) - le contrat est
+  mis à jour **avant** la spécification, via `/speckit.constitution`, sur confirmation
+  explicite ; soit **remonter et parquer** - commentaire d'escalade nommant ce qui doit être
+  arbitré, ticket remis en Backlog, et **condition de reprise nommée** (relancer le skill sur
+  le même ticket une fois le contrat amendé).
+
+**L'ordre compte** : le contrat partagé s'amende **avant** la spécification. Une
+spécification qui porte une exigence encore interdite par la constitution devance une
+décision non prise, et sera rejetée à la prochaine Constitution Check.
 
 ## La discipline chirurgicale d'une évolution (4 disciplines, dans cet ordre)
 Implémenter une évolution, c'est modifier du code qui existe et qui marche. Laissé libre,

@@ -57,8 +57,11 @@ spécification commande et le reste se régénère. Tout est détaillé dans
   que l'anomalie, plus la section clé **proposition de mise à jour de la spécification** = un
   **écart précis et circonscrit** (exigences nommées, ancré sur `specs/<feature>/spec.md`),
   jamais une réécriture. Label `Evolution`. Lien best-effort vers une anomalie requalifiée.
-- `realisation-evolution` - **le développeur réalise, chirurgical** : tri propre/partagé (une
-  vérité partagée remonte, jamais traitée seule), **réouverture volontaire et tracée**
+- `realisation-evolution` - **le développeur réalise, chirurgical** : tri propre/partagé
+  (sources lues, jamais jugé de mémoire) qui se termine **toujours par une décision humaine**,
+  jamais par un arrêt nu - faux positif tracé, arbitrage déjà rendu et cité, ou arbitrage à
+  rendre (**amender le contrat avant la spec** via `/speckit.constitution`, voie recommandée ;
+  ou parquer en Backlog avec la condition de reprise nommée), **réouverture volontaire et tracée**
   (confirmation + commentaire Linear - point d'accroche de la future protection
   anti-écrasement côté assembleur), **spec d'abord** (écart seul) -> `/speckit.clarify` ->
   `/speckit.plan` (**plan validé par l'humain**, alerte périmètre) -> `/speckit.tasks` ->

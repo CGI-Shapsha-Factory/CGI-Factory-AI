@@ -31,20 +31,58 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
    statut de travail de l'équipe résolu **par son nom** via `list_issue_statuses` (ex. "In
    Progress" - jamais le type brut `started`, cf. `references/linear-recette.md`), idempotent,
    état retourné vérifié.
-2. **Le tri de niveau supérieur : propre à la feature, ou vérité partagée ?** Si l'évolution
-   ne touche que la spécification et le code de cette feature, continuer. Si elle touche une
-   **vérité partagée** (glossaire, constitution, décision d'architecture, donnée commune,
-   règle d'erreur ou de design - cf. `references/regles-recette.md`), **ne pas la traiter
-   seul** : commenter le ticket, signaler qu'elle doit remonter au niveau central et impliquer
-   l'amont (architecture, cadrage) et l'assemblage, et s'arrêter. Sans ce tri, ce skill
-   deviendrait une porte par laquelle on modifierait des contrats partagés feature par feature.
+2. **Le tri de niveau supérieur : propre à la feature, ou vérité partagée ?** Sans ce tri, ce
+   skill deviendrait une porte par laquelle on modifierait des contrats partagés feature par
+   feature. **Lire avant de juger** (ne jamais trancher de mémoire) : la constitution
+   `.specify/memory/constitution.md`, la carte `assembleur-out/feature-map.md` (dépendances
+   et couplage), `architecte-out/composants.md` (composants touchés) et le glossaire du
+   cadrage. Si l'évolution ne touche que la spécification et le code de cette feature,
+   continuer en 3.
+
+   Si elle touche une **vérité partagée** (glossaire, principe de constitution, décision
+   d'architecture, donnée commune, règle d'erreur ou de design - cf.
+   `references/regles-recette.md`) : **ne rien écrire**, et **exposer le conflit en clair** -
+   ce que dit le contrat partagé et où il le dit, ce que demande l'évolution, pourquoi les
+   deux sont incompatibles. Puis **poser la décision au développeur** en annonçant la voie
+   recommandée, et **attendre sa réponse**. Ce point est une **décision, jamais un arrêt
+   nu** : ne pas se contenter de signaler et de s'interrompre. Trois issues :
+   - **Faux positif** : le développeur établit que ce n'est pas une vérité partagée (le tri
+     est un jugement, il peut se tromper). Déposer un commentaire Linear qui trace le motif,
+     puis continuer en 3.
+   - **Arbitrage déjà rendu** : le développeur fournit la référence de la décision (ADR
+     accepté, amendement de constitution déjà voté). Vérifier qu'elle couvre bien l'écart
+     demandé, la citer en commentaire Linear, puis continuer en 3.
+   - **Arbitrage à rendre** : deux voies, au choix du développeur.
+     - **Amender maintenant** (voie recommandée) : sur **confirmation explicite**, le contrat
+       partagé est mis à jour **avant** la spécification, via **`/speckit.constitution`** -
+       jamais à la main, jamais d'écriture directe dans `.specify/`. Tracer l'amendement en
+       commentaire Linear, puis continuer en 3.
+     - **Remonter et parquer** : déposer un commentaire d'escalade qui **nomme** le contrat
+       touché et ce qui doit être arbitré, **remettre le ticket en Backlog** (statut résolu
+       par son nom, état retourné vérifié - cf. `references/linear-recette.md`), et
+       s'arrêter. **Dire explicitement comment on reprend** : une fois le contrat amendé au
+       niveau central, il suffit de relancer `/recette:realisation-evolution` sur ce même
+       ticket - le tri repassera et laissera continuer.
+
+   *(Suivre `references/interactive-loop.md` : exposer le point, annoncer la recommandation,
+   attendre. Pas de menu numéroté - le développeur répond librement.)*
 3. **Réouverture volontaire et tracée (première règle d'or).** Rouvrir une feature livrée est
    un geste délibéré, légitime parce que l'évolution est décidée par le PO. Demander la
    **confirmation explicite du développeur**, puis déposer un **commentaire Linear** :
    "Réouverture de la feature <intitulé (numéro)> pour <identifiant de l'évolution>". *(Ce
    commentaire est le point d'accroche de la future protection anti-écrasement côté
    assemblage : la réouverture est visible, jamais un effet de bord silencieux.)*
-4. **La spécification d'abord.** Mettre à jour `specs/<feature>/spec.md` selon la proposition
+4. **Le contrat partagé d'abord, puis la spécification.** Si l'étape 2 a conclu à un
+   amendement, celui-ci est **déjà fait** : la spécification vient après, alignée sur le
+   contrat amendé - **jamais l'inverse**. Une spécification qui porte une exigence que la
+   constitution interdit encore est une spécification qui devance une décision non prise :
+   la prochaine Constitution Check du plan la rejettera. Signaler aussi, sans l'écrire, la
+   **divergence amont** que l'amendement laisse derrière lui : `/speckit.constitution` ne
+   touche pas `architecte-out/`, donc l'ADR d'origine reste "Accepté" alors qu'il est
+   dépassé - nommer l'ADR concerné et le successeur à produire côté architecte, et le tracer
+   en commentaire Linear. Ce skill n'écrit jamais dans `architecte-out/`.
+
+   Mettre à jour `specs/<feature>/spec.md` selon la proposition
    du PO, en n'écrivant **que l'écart prévu** (les exigences nommées, rien d'autre). Puis,
    comme toute intention nouvelle contient des zones floues, lancer **`/speckit.clarify`** pour
    poser au développeur les questions qui les lèvent et graver les réponses dans la
@@ -80,6 +118,11 @@ avec sa trace à jour, et l'évolution refermée dans Linear. Rien dans le manif
 dans Linear).
 
 ## Règles invariantes
+- **Une vérité partagée ne se règle jamais en silence** : elle est **exposée, tranchée par
+  l'humain, et tracée** dans Linear - amendée ou parquée, jamais ignorée, et jamais un arrêt
+  sans issue nommée.
+- **Le contrat partagé s'amende avant la spécification**, et **uniquement** via
+  `/speckit.constitution` (jamais à la main, jamais d'écriture directe dans `.specify/`).
 - **La spécification commande, le reste se régénère** : jamais d'édition manuelle du plan ou
   des tâches.
 - **Plan validé par l'humain avant tout code** ; **implémentation toujours cadrée**.
@@ -87,4 +130,4 @@ dans Linear).
 - **Typographie humaine** dans la spécification, les commentaires et les sorties (cf. la
   section Typographie de `references/ux-conventions.md`).
 
-Étape suivante : `/recette:creation-anomalie` ou `/recette:creation-evolution` - tracer le prochain écart constaté en recette.
+Étape suivante : si l'évolution a été parquée en attente d'arbitrage, **relancer ce même skill** sur le ticket une fois le contrat partagé amendé. Sinon, `/recette:creation-anomalie` ou `/recette:creation-evolution` - tracer le prochain écart constaté en recette.
