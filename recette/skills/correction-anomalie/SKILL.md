@@ -69,7 +69,12 @@ l'arborescence.**
    règles : rappeler et faire respecter celles qui existent. Si le plan ou les tâches sont
    devenus faux, les **régénérer** depuis la spécification inchangée (`/speckit.plan`,
    `/speckit.tasks`) - jamais d'édition manuelle (la spécification commande, le reste se
-   régénère).
+   régénère). *(Si la régénération crée une **phase** dans `tasks.md`, son titre doit **nommer
+   ce ticket d'anomalie** : `## Phase N: Anomalie <identifiant> - <intitulé>`. Corriger le
+   titre si `/speckit.tasks` ne l'a pas produit ainsi. Sans ce marqueur, l'outillage aval
+   proposera de créer un sous-ticket `Task` pour cette phase : un doublon de ce ticket. **Ne
+   pas appeler** `/assembleur:creation-task-linear` - ce ticket est l'objet suivi de la
+   correction. Cf. `assembleur/references/linear-guide.md`, 4e clé de jointure.)*
 6. **Refermer proprement (garde-fou clé).** Refuser la clôture tant que ces trois choses ne
    sont pas faites :
    - la **spécification** de la feature reflète bien le comportement (inchangée ici, mais

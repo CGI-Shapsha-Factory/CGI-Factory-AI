@@ -105,7 +105,22 @@ Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
    - tâches d'une phase : lignes `^- \[[ xX]\] (T\d{3})(?: \[P\])?(?: \[US\d+\])? (.+)$`, groupées
      sous la phase courante (les IDs `T001...` sont **séquentiels sur tout le fichier**) ;
    - **retirer les emoji** (🎯 ⚠️ ...) des titres de phase, puis **collapser les espaces** doublés.
-4. **Par phase manquante** (celles sans sous-ticket dans Linear, dans l'ordre), préparer :
+3bis. **Écarter les phases déjà possédées par un ticket de recette.** Une phase née d'une anomalie ou
+   d'une évolution **nomme son ticket propriétaire dans son titre** :
+   `^\s*(Évolution|Evolution|Anomalie)\s+(<identifiant>)\b` - ex.
+   `## Phase 7: Évolution RAG-12 - Ingestion des pièces PNG`. Ce travail **est déjà suivi** par ce
+   ticket ; lui créer un sous-ticket `Task` produirait un **doublon** (frère du ticket d'origine sous
+   la même Feature, deux états à synchroniser, et "Linear est la seule source de vérité" tombe).
+   **Deux conditions, jamais une seule** : le marqueur est présent **et** l'identifiant **résout** via
+   `get_issue`. Si les deux tiennent -> **énoncer** en clair ("Phase 7 déjà suivie par RAG-12, rien à
+   créer") et passer à la phase suivante : **ne jamais la proposer, ne jamais poser la question**. Si le
+   marqueur est là mais que l'identifiant **ne résout pas** (marqueur erroné) -> **c'est le seul cas à
+   remonter à l'humain** ; ne jamais créer en silence sur un marqueur douteux.
+   *(Le mot littéral `Évolution`/`Anomalie` est **obligatoire** avant l'identifiant : un motif large
+   `[A-Z]+-\d+` matcherait `FR-006`, `ADR-010`, `SC-001`, `TC-001` et ferait disparaître en silence les
+   sous-tickets de phases de fabrication normales.)*
+4. **Par phase manquante** (celles sans sous-ticket dans Linear **et** non écartées en 3bis, dans
+   l'ordre), préparer :
    - un **titre** = **jeton stable `Phase N - `** + intitulé **descriptif** (voir Objectif) - enrichir
      les phases génériques à partir de leurs tâches ; reprendre l'intitulé des phases "User Story N" ;
      suffixer par le nom de la feature pour lever l'ambiguïté. Ex. `Phase 1 - Mise en place :
@@ -126,6 +141,8 @@ Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
 **Idempotence (via Linear).** Une phase dont le sous-ticket existe **déjà dans Linear** (jeton
 `Phase N -` présent sous le bon `parentId`) n'est **pas recréée**. On ne s'appuie **pas** sur le
 manifeste : l'avancement de fabrication n'y est jamais écrit (multi-développeurs, sans conflit).
+**Une phase qui nomme son ticket propriétaire** (`Évolution <id> -`, `Anomalie <id> -`) n'est **ni
+recréée ni proposée** : son travail est déjà suivi par ce ticket (cf. étape 3bis).
 
 ## Vérification avant de conclure
 - Chaque feature avec un `tasks.md` a **un sous-ticket par phase dans Linear** (ou une phase
@@ -148,6 +165,10 @@ manifeste : l'avancement de fabrication n'y est jamais écrit (multi-développeu
 - **Labels résolus, pas inventés.** `Feature`/`Task` sont résolus par nom ; jamais recréés.
 - **Idempotent via Linear.** On liste les sous-tickets existants (`parentId`) avant de créer ; jamais
   deux fois la même phase.
+- **Un travail, un ticket, un propriétaire.** Une phase qui **nomme son ticket propriétaire**
+  (`Évolution <id> -`, `Anomalie <id> -`) est **déjà suivie** : on ne la recrée pas, et surtout **on ne
+  la propose pas**. On l'énonce et on passe. La seule question légitime est un marqueur qui **ne résout
+  pas** dans Linear.
 - **Restitution en prose.** Aucun nom de clé à l'écran.
 
 Étape suivante : reprendre la fabrication SpecKit de la feature (`/speckit.implement`), puis

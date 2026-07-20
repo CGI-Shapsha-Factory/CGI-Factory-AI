@@ -155,6 +155,30 @@ Ré-identification (avant toute création) :
   tête de titre.
 - **État d'avancement** (`update-issue-linear`) : `get_issue({id})` avant d'écrire.
 
+### Phase déjà possédée par un ticket de recette (4e clé de jointure)
+Les trois clés ci-dessus rattachent un objet à un sous-ticket **que la fabrication a créé**. Il manquait
+la clé inverse : une phase dont le travail est **déjà suivi par un ticket d'anomalie ou d'évolution**,
+créé en aval par `recette`. Sans elle, `creation-task-linear` voit la phase comme manquante et crée un
+**doublon** - frère du ticket d'origine sous la même Feature, deux états à synchroniser, et la source de
+vérité unique tombe.
+
+Clé : la phase **nomme son propriétaire dans son titre**, dans `tasks.md`.
+
+```
+## Phase 7: Évolution RAG-12 - Ingestion des pièces scannées au format PNG
+## Phase 8: Anomalie RAG-31 - Correction du chevauchement de réservations
+```
+
+Motif : `^\s*(Évolution|Evolution|Anomalie)\s+([A-Za-z][A-Za-z0-9]*-\d+)\b` appliqué au titre qui suit
+`## Phase N:`. Le mot littéral est **obligatoire** avant l'identifiant - un motif large `[A-Z]+-\d+`
+matcherait `FR-006`, `ADR-010`, `SC-001`, `TC-001` et supprimerait en silence des sous-tickets légitimes.
+
+Règle : une phase marquée **et** dont l'identifiant **résout** (`get_issue`) n'est **ni créée ni
+proposée** - elle est énoncée ("Phase 7 déjà suivie par RAG-12"). Un marqueur qui ne résout pas est le
+seul cas à remonter à l'humain. Posé par `recette` (`realisation-evolution`, `correction-anomalie`), lu
+par `creation-task-linear` et par le hook `linear-sync/tasks_linear_hook.py` (qui, lui, ne peut que
+reconnaître le motif : il ne parle jamais à Linear).
+
 Vue d'ensemble des règles multi-développeurs (numérotation, couplage, merge, constitution) :
 `fabrication-parallele.md`.
 Bloc manifeste (configuration seule, écrit en silence par `premier-alimente-linear`) :

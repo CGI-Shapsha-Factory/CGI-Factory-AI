@@ -15,9 +15,15 @@ lit seulement :
     pousser qu'une fois par jeu de phases et ne pas re-harceler a chaque edition. Ce marqueur est
     NON autoritatif et regenerable - l'autorite d'idempotence reste **Linear** (interrogee par le skill).
 
+**Une phase deja possedee par un ticket de recette n'est jamais poussee.** Quand une anomalie ou une
+evolution fait regenerer tasks.md, la phase creee nomme son ticket proprietaire dans son titre
+(`## Phase 7: Evolution RAG-12 - ...`). Ce travail est deja suivi par RAG-12 : pousser a creer un
+sous-ticket Task produirait un doublon, frere du ticket d'origine sous la meme Feature, avec deux
+etats a synchroniser. Ces phases sont donc filtrees ici (cf. OWNED_PHASE_RE).
+
 Le hook NE PARLE JAMAIS a Linear et n'ecrit jamais le manifeste. Toujours exit 0 (ne casse jamais un
-Write) ; silencieux si le fichier n'est pas un tasks.md, s'il n'a pas de phases, ou si ses phases ont
-deja ete signalees.
+Write) ; silencieux si le fichier n'est pas un tasks.md, s'il n'a pas de phases a synchroniser (aucune,
+ou toutes deja possedees), ou si ses phases ont deja ete signalees.
 
 Usage : hook PostToolUse. Lit le JSON du tool sur stdin.
     python tasks_linear_hook.py posttooluse
@@ -28,7 +34,18 @@ import re
 import sys
 
 TASKS_RE = re.compile(r"(^|[\\/])specs[\\/]([^\\/]+)[\\/]tasks\.md$", re.IGNORECASE)
-PHASE_RE = re.compile(r"^##\s+Phase\s+(\d+)\s*:", re.IGNORECASE | re.MULTILINE)
+PHASE_RE = re.compile(r"^##\s+Phase\s+(\d+)\s*:(.*)$", re.IGNORECASE | re.MULTILINE)
+
+# Phase DEJA POSSEDEE par un ticket de recette (anomalie / evolution). Le titre nomme son
+# proprietaire, ex. `## Phase 7: Evolution RAG-12 - Ingestion des pieces PNG`. Une telle phase
+# est deja suivie : ne jamais pousser a creer un sous-ticket Task pour elle (ce serait un
+# doublon, frere du ticket d'origine sous la meme Feature, avec deux etats a synchroniser).
+# Le mot litteral Evolution/Anomalie est OBLIGATOIRE avant l'identifiant : un motif large
+# `[A-Z]+-\d+` matcherait FR-006, ADR-010, SC-001, TC-001 et ferait disparaitre en silence
+# les tickets de phases de fabrication normales.
+OWNED_PHASE_RE = re.compile(
+    r"^\s*(?:Évolution|Evolution|Anomalie)\s+([A-Za-z][A-Za-z0-9]*-\d+)\b", re.IGNORECASE
+)
 
 
 def _manifest_path(root):
@@ -49,11 +66,15 @@ def _feature_id(feature_dir):  # conserve pour compat (plus utilise par le nudge
 
 
 def _phases_in_file(tasks_path):
+    """Numeros des phases A SYNCHRONISER : les phases deja possedees par un ticket de recette
+    (titre `Evolution <id> -` / `Anomalie <id> -`) sont exclues - leur travail est deja suivi."""
     try:
         text = open(tasks_path, encoding="utf-8").read()
     except OSError:
         return set()
-    return {int(n) for n in PHASE_RE.findall(text)}
+    return {
+        int(n) for n, titre in PHASE_RE.findall(text) if not OWNED_PHASE_RE.match(titre)
+    }
 
 
 def _seen_path(root):

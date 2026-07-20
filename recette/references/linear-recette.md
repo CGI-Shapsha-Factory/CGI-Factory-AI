@@ -40,6 +40,30 @@ l'analyse d'impact : un objet sans feature rattachable est un orphelin -> **refu
 créer**. Aucune convention de numérotation dans le titre : l'identifiant natif Linear
 (`<TEAM>-<n>`) porte déjà le numéro.
 
+## Marquer une phase de `tasks.md` possédée par un ticket de recette
+Quand une anomalie ou une évolution fait **régénérer** `specs/<feature>/tasks.md`, la phase
+créée doit **nommer son ticket propriétaire** dans son titre :
+
+```
+## Phase 7: Évolution RAG-12 - Ingestion des pièces scannées au format PNG
+## Phase 8: Anomalie RAG-31 - Correction du chevauchement de réservations
+```
+
+Sans ce marqueur, `/assembleur:creation-task-linear` et le hook `tasks.md` voient une phase
+sans sous-ticket et proposent d'en créer un : ce serait un **doublon** du ticket de recette,
+son **frère** sous la même Feature, avec deux états à synchroniser - et "Linear est la seule
+source de vérité" tombe. Marquée, la phase est **énoncée et passée**, jamais proposée. Règle
+complète et motif exact : `assembleur/references/linear-guide.md`, 4e clé de jointure.
+
+**Ce marqueur ne contredit pas la règle ci-dessus.** L'interdit de numérotation porte sur le
+**titre d'un ticket Linear** (l'identifiant natif y suffit). Le marqueur, lui, vit dans un
+**titre de phase markdown** dans `tasks.md` : objet différent, besoin différent (un fichier
+committé n'a aucun moyen natif de désigner un ticket). Les deux règles coexistent.
+
+**Corollaire** : un skill de recette **n'appelle jamais** `/assembleur:creation-task-linear`.
+Le ticket d'anomalie ou d'évolution **est** l'objet suivi ; la phase en est un détail
+d'implémentation, et son avancement se trace par le statut et les commentaires de ce ticket.
+
 ## Labels de recette
 Deux labels plats : **`Anomalie`** et **`Evolution`**. `save_issue` prend le paramètre
 **`labels`** (une liste de **noms** ou d'ids - passer les noms exacts, ex. `["Anomalie"]`).

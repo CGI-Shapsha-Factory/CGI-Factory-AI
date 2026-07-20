@@ -95,6 +95,16 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
    fichiers, des composants non concernés), **le dire explicitement** : c'est le signal
    d'alerte, visible avant que le code ne bouge. Une fois le plan validé, lancer
    **`/speckit.tasks`**.
+
+   **Marquer la phase créée (impératif).** `/speckit.tasks` ajoute une phase à
+   `specs/<feature>/tasks.md`. Son titre doit **nommer ce ticket d'évolution** :
+   `## Phase N: Évolution <identifiant> - <intitulé>` (ex. `## Phase 7: Évolution RAG-12 -
+   Ingestion des pièces scannées au format PNG`). Si `/speckit.tasks` ne l'a pas produit ainsi,
+   **corriger le titre de la phase** - c'est la seule écriture de ce skill dans `tasks.md`, et
+   elle porte sur le titre seul. Sans ce marqueur, l'outillage aval (le skill
+   `/assembleur:creation-task-linear` et le hook `tasks.md`) proposera de créer un sous-ticket
+   `Task` pour cette phase : un **doublon** de ce ticket, frère sous la même Feature, avec deux
+   états à synchroniser (cf. `assembleur/references/linear-guide.md`, 4e clé de jointure).
 6. **Implémentation cadrée (troisième discipline).** Lancer **`/speckit.implement`** en le
    **cadrant explicitement** : donner le périmètre de l'évolution (les exigences qui changent,
    les fichiers concernés du plan validé) et la consigne de **ne toucher que ça**. Jamais une
@@ -109,8 +119,11 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
    les **tests** sont verts (feature + couplées), et **Linear suit** (commentaire de synthèse :
    ce qui a changé, la preuve de non-régression). Puis passer l'évolution à **terminé** (le
    statut de type `completed` de l'équipe, résolu par son nom, ex. "Done", état retourné
-   vérifié). Si les phases de `tasks.md` ont changé, rappeler
-   `/assembleur:creation-task-linear` (idempotent) pour réaligner les sous-tickets de phase.
+   vérifié). **Ne pas appeler `/assembleur:creation-task-linear`** : ce ticket d'évolution
+   **est** l'objet suivi de ce travail, et la phase de `tasks.md` en est un détail
+   d'implémentation. Lui créer un sous-ticket de phase produirait un doublon frère sous la même
+   Feature. L'avancement se trace ici, par le statut et les commentaires de ce ticket - comme
+   le fait déjà `correction-anomalie`.
 
 ## Résultat attendu
 Une feature dont la spécification et le code ont évolué de façon cohérente et circonscrite,
