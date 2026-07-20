@@ -26,124 +26,153 @@ retranché). Contrat *fonctionnel* : aucune technologie. Aucune notion de MVP.
 
 ---
 
+## Comment se déroule cette checklist
+
+Chaque item est une **question de qualité**, jamais un test de présence - c'est la discipline des
+"tests unitaires de l'exigence" : on n'écrit pas "le brief existe", on écrit "le brief dit-il
+quelque chose de vérifiable ?". Les verbes d'action d'implémentation (vérifier que ça marche,
+tester le comportement) n'ont pas leur place ici : c'est le **texte** qu'on met à l'épreuve.
+
+Format d'un item :
+
+```
+- [ ] CHK### Question de qualité ? [Dimension, source de traçabilité]
+```
+
+Règles de déroulé :
+- **Un item à la fois, dans l'ordre.** On ne saute pas, on ne groupe pas.
+- **Coché = la question a reçu une réponse satisfaisante** sur l'artefact réel, pas "le fichier
+  existe". Un item dont la réponse est "non" ou "je ne sais pas" **reste décoché** et devient une
+  décision en session (boucle 3-options), puis se coche une fois la correction appliquée en place.
+- **Sans objet** : cocher en annotant `[SANS OBJET : raison]` sur la ligne. Jamais de case cochée
+  sans que la raison soit lisible.
+- **IDs stables.** `CHK###` ne se renumérote jamais : on ajoute à la suite, on ne réordonne pas.
+  Le code de lentille historique (`A1`, `B3`...) est conservé entre parenthèses comme ancre pour
+  les renvois existants.
+- **Traçabilité.** Chaque item nomme la source à confronter (fichier, section, question de
+  découverte). C'est ce qui empêche de cocher de mémoire.
+- Cette checklist est un **gabarit** : l'état coché vit le temps de la session de porte, et la
+  synthèse de ce qui a été trouvé et corrigé part dans `cadrage-out/completude-report.md`.
+
+---
+
 ## Les 6 critères Definition of Ready (le socle, conservé)
 
 Calculés depuis l'état réel des artefacts + manifeste (ET strict - un seul non atteint = verdict
-rouge) : **vision complète** (product-brief : OUT non vide, critères de succès présents) ·
-**glossaire validé** (en bloc) · **découpage arbitré** (revue de couplage tranchée) · **tous les
-briefs complets** · **aucun trou de découverte bloquant** (19 questions - Q8 légal/RGPD optionnelle
-si laissée à l'équipe) · **démonstrateur convergé** (client a validé la maquette). *(Ancrage :
-Definition of Ready - Scrum ; Atlassian.)* Ces six restent la **condition nécessaire** ; les
-lentilles ci-dessous sont la **condition de qualité** qui les rend honnêtes.
+rouge). Ce ne sont **pas** des items de jugement : ce sont les **booléens de sortie de phase**,
+alimentés par les lentilles ci-dessous.
+
+- [ ] DOR1 **Vision complète** - le product-brief porte-t-il un périmètre OUT non vide et des
+      critères de succès présents ? [Socle, product-brief.md]
+- [ ] DOR2 **Glossaire validé** - la validation en bloc a-t-elle été prononcée par l'humain ?
+      [Socle, glossaire.md]
+- [ ] DOR3 **Découpage arbitré** - la revue de couplage a-t-elle été tranchée ? (le skill **ne
+      relève jamais ce critère lui-même**, il le lit) [Socle, coupling-map.md]
+- [ ] DOR4 **Tous les briefs complets** - chaque brief est-il sorti de l'état d'ébauche ?
+      [Socle, features-fonctionnels-brief/]
+- [ ] DOR5 **Aucun trou de découverte bloquant** - les 19 questions sont-elles couvertes (Q8
+      légal/RGPD optionnelle si laissée à l'équipe) ? [Socle, check_discovery.py --strict]
+- [ ] DOR6 **Démonstrateur convergé** - le client a-t-il validé la maquette ? [Socle,
+      manifeste `demonstrateur`]
+
+*(Ancrage : Definition of Ready - Scrum ; Atlassian.)* Ces six restent la **condition
+nécessaire** ; les lentilles ci-dessous sont la **condition de qualité** qui les rend honnêtes.
 
 ---
 
 ## Lentille A : Complétude (rien d'essentiel manquant)
 
-**A1. Couverture use case -> brief.** Chaque use case du découpage (`spec-index.md`) a **son brief**
-dans `features-fonctionnels-brief/` ; aucun use case laissé sans brief.
+- [ ] CHK001 (A1) Chaque use case du découpage a-t-il son brief, sans exception ?
+      [Complétude, spec-index.md -> features-fonctionnels-brief/]
+- [ ] CHK002 (A2) Chaque brief a-t-il ses sections 1 à 9 réellement remplies - narratif,
+      utilisateurs, user stories, critères d'acceptation, critères de succès, périmètre,
+      dépendances, contraintes héritées, glossaire pertinent ? [Complétude, briefs §1-9]
+- [ ] CHK003 (A2) La section 10 (Trous) est-elle vide dans chaque brief ?
+      [Complétude, briefs §10]
+- [ ] CHK004 (A2) Le périmètre OUT est-il non vide dans chaque brief, ou son absence est-elle
+      justifiée ? [Complétude, briefs §6]
+- [ ] CHK005 (A2) Les critères de succès sont-ils chiffrés, ou explicitement marqués "à préciser
+      à l'architecture" ? [Mesurabilité, briefs §5]
+- [ ] CHK006 (A3) Chaque terme employé dans un brief (§9) ou dans le product-brief a-t-il une
+      définition dans le glossaire global ? [Cohérence, glossaire.md]
+- [ ] CHK007 (A4) Les seeds qualité destinés à l'architecte sont-ils captés ou explicitement
+      différés - charge (Q2), disponibilité (Q6), performance (Q7) ? [Complétude, découverte
+      Q2/Q6/Q7]
+- [ ] CHK008 (A5) Chaque capacité annoncée dans le périmètre IN est-elle couverte par au moins un
+      use case ? [Couverture, project-frame.md + product-brief.md -> spec-index.md]
 
-**A2. Brief complet section par section.** Chaque brief porte ses **sections 1 à 9** remplies
-(narratif, utilisateurs, user stories, critères d'acceptation, critères de succès, périmètre,
-dépendances, contraintes héritées, glossaire pertinent) ; **section 10 (Trous) vide** ; **périmètre
-OUT non vide** ; critères de succès **chiffrés** ou explicitement "à préciser à l'architecture".
-
-**A3. Glossaire couvrant.** Chaque terme employé dans un brief (section 9) et dans le product-brief
-a une **définition dans le glossaire global** (`glossaire.md`, source de vérité). Une entité citée
-sans définition = trou.
-
-**A4. Seeds qualité pour l'architecte.** Les questions de découverte **charge (Q2)**,
-**disponibilité (Q6)**, **performance (Q7)** sont captées ou explicitement différées - l'architecte
-en dérive les attributs de qualité ; un trou ici pénalise la phase suivante. *(Ancrage : DoR - les
-critères non-fonctionnels doivent être définis avant le pull.)*
-
-**A5. Périmètre IN couvert.** Chaque capacité annoncée dans le périmètre IN (project-frame /
-product-brief) est couverte par ≥1 use case / brief. Une capacité IN sans feature = trou à trancher.
+*(Ancrage : DoR - les critères non-fonctionnels doivent être définis avant le pull.)*
 
 ---
 
 ## Lentille B : Cohérence (rien ne se contredit)
 
-**B1. Langage ubiquitaire cohérent.** **Un terme = un sens** partout (pas de terme employé dans
-deux sens) ; **un concept = un terme** (pas de synonymes pour un même acteur/objet : "client" vs
-"utilisateur" vs "usager"). Le pack "parle" le glossaire. *(Ancrage : Ubiquitous Language -
-Evans ; Fowler.)*
+- [ ] CHK009 (B1) Un terme porte-t-il partout un seul sens, et un concept est-il désigné partout
+      par un seul terme (pas "client" vs "utilisateur" vs "usager") ? [Cohérence, glossaire.md]
+- [ ] CHK010 (B2) Chaque use case sert-il un objectif explicite de la vision, sans use case
+      orphelin ni contradiction avec le narratif produit ? [Cohérence, product-brief.md ->
+      spec-index.md]
+- [ ] CHK011 (B3) Est-on certain que rien de déclaré hors périmètre (OUT) n'a fuité dans un brief
+      comme fonctionnalité IN ? [Périmètre, briefs §6]
+- [ ] CHK012 (B3) Chaque souhait hors périmètre repéré a-t-il été confirmé une fois - rester OUT,
+      ou basculer IN par décision explicite ? [Périmètre, briefs §6]
+- [ ] CHK013 (B4) Ne subsiste-t-il aucun acquis marqué `[REMIS EN CAUSE]` non retranché ?
+      [Complétude, tous artefacts cadrage-out/]
+- [ ] CHK014 (B5) Les features citées en dépendances existent-elles, sans cycle, dans un ordre
+      cohérent avec la carte de couplage ? [Cohérence, briefs §7 + coupling-map.md]
+- [ ] CHK015 (B6) Le product-brief se lit-il comme une thèse (problème -> différenciation ->
+      succès) plutôt que comme un catalogue de sections ? Signal d'alerte : une vision
+      interchangeable avec n'importe quel autre projet. [Substance, product-brief.md]
+- [ ] CHK016 (B6) Chaque rôle ou profil utilisateur cité pèse-t-il sur au moins une décision du
+      pack (une story, un périmètre, un critère) ? Un profil qui ne pilote rien est du décor.
+      [Substance, product-brief.md + briefs §2]
 
-**B2. Vision <-> use cases.** Chaque use case sert un **objectif** de la vision (product-brief) ;
-aucun use case orphelin d'objectif. Rien qui contredit le narratif produit.
-
-**B3. Périmètre respecté (pas de fuite OUT->IN).** Rien de ce qui est déclaré **hors périmètre**
-(OUT) n'a **fuité** dans un brief comme fonctionnalité IN. Les souhaits hors périmètre repérés sont
-**confirmés une fois** (rester OUT, ou basculer IN par décision explicite) - **jamais poussés**.
-*(Ancrage : MoSCoW / Won't-Have ; détection de scope creep.)*
-
-**B4. Retour démonstrateur résolu.** Aucun acquis `[REMIS EN CAUSE]` ne survit : chacun est
-**retranché** en session (corrigé ou retiré, en place). Un projet sans boucle démonstrateur n'est
-convergé que lorsque le client a validé la maquette.
-
-**B5. Dépendances cohérentes.** Les features citées en "Dépendances" **existent** ; pas de cycle ;
-l'ordre est cohérent avec la `coupling-map`. Nommage aligné entre product-brief, spec-index, briefs
-et glossaire.
-
-**B6. Thèse produit (pas un catalogue).** Le product-brief se lit comme une **thèse cohérente**
-(problème -> différenciation -> succès) : on comprend **pourquoi ce produit, pour qui, et à quoi on
-verra qu'il marche** - pas comme un backlog avec des titres de sections. Signal d'alerte : une
-vision interchangeable avec n'importe quel autre projet. De même, chaque **rôle / profil
-utilisateur** cité doit **peser sur au moins une décision** du pack (une story, un périmètre, un
-critère) ; un profil listé qui ne pilote rien est du décor - à retirer ou à raccorder.
-*(Ancrage : cohérence stratégique et anti "persona theater" - revues qualité de PRD.)*
+*(Ancrages : Ubiquitous Language - Evans, Fowler ; MoSCoW / Won't-Have ; anti "persona theater".)*
 
 ---
 
 ## Lentille C : Qualité des exigences (bien formées)
 
-**C1. User stories INVEST.** Chaque story est **Indépendante · Négociable · Valorisable ·
-Estimable · Petite · Testable**. Une story qui échoue à une lettre est **reformulée, scindée ou
-retirée** (pas laissée telle quelle). *(Ancrage : INVEST - Bill Wake ; Agile Alliance.)*
+- [ ] CHK017 (C1) Chaque user story satisfait-elle INVEST - Indépendante, Négociable,
+      Valorisable, Estimable, Petite, Testable ? Une story qui échoue à une lettre est reformulée,
+      scindée ou retirée. [Clarté, briefs §3]
+- [ ] CHK018 (C2) Chaque critère d'acceptation suit-il Étant donné / Quand / Alors, avec un
+      pass/fail clair, observable et atomique ? [Testabilité, briefs §4]
+- [ ] CHK019 (C2) Les mots vagues ("rapide", "simple", "convivial", "robuste") ont-ils été
+      remplacés par une valeur mesurable ? [Clarté, briefs §4]
+- [ ] CHK020 (C2) La discipline de nombre est-elle tenue - environ 1 à 3 critères par story, 4 et
+      plus signalant une story à scinder ? [Granularité, briefs §3-4]
+- [ ] CHK021 (C3) Les critères de succès sont-ils traduits en métriques chiffrées indépendantes
+      de la techno, sans objectif invérifiable ? [Mesurabilité, briefs §5 + product-brief.md]
+- [ ] CHK022 (C4) Chaque exigence est-elle nécessaire, non ambiguë, singulière (pas de "et"
+      cachant deux exigences), vérifiable et au bon niveau fonctionnel - sans solution technique
+      prématurée ? [Qualité, briefs §3-4]
+- [ ] CHK023 (C5) Les attributs non-fonctionnels nus et génériques ("scalable", "sécurisé",
+      "performant", "fiable") sont-ils raccordés à une réponse de découverte, chiffrés, ou
+      retirés ? [Anti-théâtre, briefs + découverte]
+- [ ] CHK024 (C5) Le "fini" flou a-t-il disparu des critères ("gère correctement", "de façon
+      conviviale", "raisonnable") - un développeur peut-il dire objectivement quand c'est fait ?
+      [Anti-théâtre, briefs §4]
 
-**C2. Critères d'acceptation testables.** Chaque critère suit **Étant donné / Quand / Alors**
-(Given-When-Then), avec un **pass/fail clair et observable**, **atomique** et autonome. **Mots
-vagues bannis** ("rapide", "simple", "convivial", "robuste") -> remplacés par une **valeur
-mesurable**. Discipline de nombre : **~1 à 3 critères** par story ; **4+ = signal** que la story est
-trop grosse, à scinder. *(Ancrage : acceptance criteria / Gherkin - AltexSoft, TestQuality.)*
-
-**C3. Critères de succès mesurables.** Résultats traduits en **métriques chiffrées** (indépendantes
-de la techno) ou explicitement "à préciser à l'architecture". Pas d'objectif de succès invérifiable.
-
-**C4. Chaque exigence bien écrite.** **Nécessaire** (rien de superflu), **non ambiguë** (une seule
-lecture), **singulière** (pas de "et" cachant deux exigences), **vérifiable** (un test/inspection
-existe), au **bon niveau** (fonctionnel, aucune solution technique prématurée). *(Ancrage :
-ISO/IEC/IEEE 29148 ; BABOK §7.2 - Verify Requirements.)*
-
-**C5. Pas de théâtre d'exigence.** Chasser les exigences **de façade** qui occupent la place d'une
-vraie exigence : un attribut non-fonctionnel **nu et générique** ("scalable", "sécurisé",
-"performant", "fiable") sans seed capté ni orientation tranchée en découverte est du **théâtre
-NFR** - le raccorder à une réponse de découverte, le chiffrer, ou le retirer. Idem pour le
-**"fini" flou** dans les critères d'acceptation ("gère correctement", "de façon conviviale",
-"raisonnable") : si un développeur ne peut pas dire **objectivement** quand c'est fait, le critère
-est reformulé en session. *(Ancrage : revues qualité de PRD - substance vs théâtre ; complète C2
-qui bannit les mots vagues.)*
+*(Ancrages : INVEST - Bill Wake ; Given-When-Then ; ISO/IEC/IEEE 29148 ; BABOK §7.2.)*
 
 ---
 
 ## Lentille D : Validation & prêt pour l'architecte (valeur + handoff)
 
-**D1. Chaque feature délivre de la valeur (validation).** Chaque feature **trace vers un objectif
-métier** et apporte une **valeur** à un besoin de partie prenante ; une feature bien écrite **mais
-sans valeur** est candidate au retrait. *(Ancrage : BABOK §7.3 - Validate Requirements ; distinct de
-"bien écrite".)*
+- [ ] CHK025 (D1) Chaque feature trace-t-elle vers un objectif métier et apporte-t-elle une
+      valeur à un besoin de partie prenante ? Une feature bien écrite mais sans valeur est
+      candidate au retrait. [Valeur, product-brief.md -> briefs]
+- [ ] CHK026 (D2) Sens avant : chaque feature remonte-t-elle à un objectif, sans orpheline ni
+      scope creep ? [Traçabilité, matrice objectifs x features]
+- [ ] CHK027 (D2) Sens couverture : chaque objectif de la vision est-il couvert par au moins une
+      feature, sans objectif sans enfant ? [Traçabilité, matrice objectifs x features]
+- [ ] CHK028 (D3) Les cinq artefacts que l'architecte va lire directement sont-ils présents et
+      mutuellement cohérents - project-frame, product-brief, glossaire, spec-index (use cases +
+      walking skeleton candidat + hypothèse de couplage) et les briefs ? **Vérifié en priorité.**
+      [Handoff, cadrage-out/]
 
-**D2. Traçabilité bidirectionnelle objectifs <-> features.** **Sens avant** : chaque feature remonte à
-un objectif (aucune **orpheline** / scope creep). **Sens couverture** : chaque objectif de la vision
-est couvert par ≥1 feature (aucun objectif **sans enfant**). Construire mentalement la matrice
-objectifs × features et chasser les **lignes vides** (objectif non couvert) et **colonnes vides**
-(feature injustifiée). *(Ancrage : matrice de traçabilité des exigences.)*
-
-**D3. Prêt pour l'architecte (handoff direct).** L'architecte lit **directement** `cadrage-out/`
-(pas d'intermédiaire) : vérifier que **project-frame**, **product-brief**, **glossaire**,
-**spec-index** (use cases + walking skeleton candidat + hypothèse de couplage) et les **briefs** sont
-présents et **mutuellement cohérents**. C'est ce que la phase 2 va consommer - donc vérifié **en
-priorité**.
+*(Ancrages : BABOK §7.3 - Validate Requirements ; matrice de traçabilité des exigences.)*
 
 ---
 
@@ -151,6 +180,8 @@ priorité**.
 
 - Definition of Ready - Scrum PLoP (scrumbook.org) ; Atlassian
   (https://www.atlassian.com/agile/project-management/definition-of-ready) ; Scrum.org.
+- Checklists comme "tests unitaires de l'exigence" - GitHub Spec Kit, `/speckit.checklist`
+  (https://github.com/github/spec-kit/blob/main/templates/commands/checklist.md).
 - INVEST - Bill Wake ; Agile Alliance (https://agilealliance.org/glossary/invest/).
 - Qualité des exigences - ISO/IEC/IEEE 29148:2018 ; tradition IEEE 830 ;
   BABOK v3 §7.2 (Verify) / §7.3 (Validate) - IIBA.

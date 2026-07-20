@@ -61,8 +61,14 @@ concurrence.)* **Passe de complétude** : vérifier qu'aucun fichier, use case, 
 
 **Challenger, pas cocher.** Dérouler la **grille canonique** de
 `references/completude-checklist-guide.md`, adaptée au cadrage (contrat *fonctionnel*, jamais
-technique), en **quatre lentilles** - c'est ce qui rend le verdict honnête, au-delà de la simple
-présence :
+technique) : **28 items cochables** (`CHK001`+) répartis en **quatre lentilles**, plus les six
+booléens de socle - c'est ce qui rend le verdict honnête, au-delà de la simple présence.
+
+**Un item à la fois, dans l'ordre.** Un item dont la réponse est "non" ou "je ne sais pas"
+**reste décoché** et devient une décision en session ; il ne se coche qu'une fois la correction
+appliquée en place. Un item sans objet se coche **avec sa raison**. Les codes `CHK` et les codes
+de lentille sont **internes** : jamais montrés à l'utilisateur (contrainte "sans nom de champ ni
+code"). Résumé des lentilles :
 
 - **Lentille A - Complétude (rien d'essentiel manquant)** : chaque **use case a son brief** ;
   chaque **brief complet** (sections 1-9, section Trous vide, OUT non vide, critères de succès

@@ -28,8 +28,10 @@ export dans `designer-out/maquette-de-claude-design/`**.)*
   (`demonstrateur`, `client_validated`) comme **direction**.
 - **Architecte** : `architecte-out/impact-design.md` (§2 identité/rôles/navigation/theming, §3
   erreurs/async/listes, §4 a11y/responsive/i18n/perf).
-- Conventions : `references/states-catalog.md`, `references/coverage-checklist-guide.md`,
-  `references/question-map.md`, `references/interactive-loop.md`, `references/ux-conventions.md`.
+- Conventions : `references/coherence-checklist-guide.md` (**la grille de cette porte**),
+  `references/states-catalog.md`, `references/coverage-checklist-guide.md` (checklist de
+  l'atelier, pour la relire), `references/question-map.md`, `references/interactive-loop.md`,
+  `references/ux-conventions.md`.
 > **Lecture seule du cadrage.** `spec-index.md`, `glossaire.md`, `product-brief.md` sont des **artefacts du
 > cadrage** : on les **lit** pour vérifier la couverture, on ne les **crée ni ne les modifie jamais**.
 
@@ -51,7 +53,13 @@ qu'aucun écran, entité, parcours ou décision d'un contrat n'a été manqué a
 
 ## Étape 2 : Contrôles de cohérence stricts et adversariaux
 Ne **pas** se contenter de vérifier la présence. **Challenger** l'export contre chaque contrat amont : ce
-qui manque, ce qui se contredit, ce qui a été perdu en route. Au minimum :
+qui manque, ce qui se contredit, ce qui a été perdu en route.
+
+**Dérouler `references/coherence-checklist-guide.md`** : 19 items cochables (`CHK001`+), organisés en cinq
+lentilles - intégrité de l'export, couverture inverse, états d'écran, contrat technique honoré,
+accessibilité et direction. **Un item à la fois, dans l'ordre** ; un item dont la réponse est "non" ou
+"je ne sais pas" **reste décoché** et devient une décision à l'étape 3. Les codes `CHK` sont **internes** :
+jamais montrés à l'utilisateur (voir `ux-conventions.md`). Résumé des contrôles :
 
 1. **Aucun marqueur résiduel & artefacts présents** : aucun `[À VALIDER]` dans `coverage-report.md` ;
    `designer-out/maquette-de-claude-design/` **non vide** (dossier ou ZIP avec des tokens) ; guidelines

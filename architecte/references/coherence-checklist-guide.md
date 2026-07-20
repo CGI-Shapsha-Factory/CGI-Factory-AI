@@ -19,114 +19,165 @@ les artefacts : tout se règle dans la décision. Voir `interactive-loop.md` (r�
 
 ---
 
+## Comment se déroule cette checklist
+
+Chaque item est une **question de qualité** posée au contrat technique, jamais un test de
+présence - la présence, c'est le travail du script. On n'écrit pas "les ADR existent", on écrit
+"deux ADR acceptés se contredisent-ils ?".
+
+Format d'un item :
+
+```
+- [ ] CHK### Question de qualité ? [Dimension, source de traçabilité]
+```
+
+Règles de déroulé :
+- **Un item à la fois, dans l'ordre.** On ne saute pas, on ne groupe pas.
+- **Coché = la question a reçu une réponse satisfaisante** sur l'artefact réel. Un item dont la
+  réponse est "non" ou "je ne sais pas" **reste décoché** et devient une décision en session
+  (boucle 3-options), puis se coche une fois la correction appliquée en place.
+- **Sans objet** : cocher en annotant `[SANS OBJET : raison]` sur la ligne. Jamais de case cochée
+  sans raison lisible.
+- **IDs stables.** `CHK###` ne se renumérote jamais : on ajoute à la suite, on ne réordonne pas.
+  Le code de lentille historique (`A1`, `B4`...) est conservé entre parenthèses comme ancre.
+- **Traçabilité.** Chaque item nomme l'artefact à confronter. C'est ce qui empêche de cocher de
+  mémoire.
+- Cette checklist est un **gabarit** : l'état coché vit le temps de la session de porte, et la
+  synthèse part dans `architecte-out/coherence-report.md`.
+
+---
+
+## Le socle déterministe (couvert par `check_architecture.py`)
+
+Ces points ne sont **pas** des items de jugement : le script les tranche seul et **bloque** en
+`exit 1`. Ils sont listés ici pour mémoire, jamais cochés à la main.
+
+- [ ] SOC1 Profil d'équipe renseigné, composants non vides, langages de stack définis
+- [ ] SOC2 Conventions installées pour chaque langage retenu
+- [ ] SOC3 Séquence de features non vide, chaque entrée portant `{id, ucs}`
+- [ ] SOC4 Walking skeleton, impact-design et enforcement des tests déclarés
+- [ ] SOC5 Aucun marqueur résiduel, versions figées (pas de "latest"), front-matter valide,
+      fichiers d'environnement cohérents
+
+**Si le script échoue, on s'arrête** : aucune des lentilles ci-dessous ne se déroule sur un
+contrat que le socle refuse.
+
+---
+
 ## Lentille A : Cohérence (rien ne se contredit)
 
-**A1. Points de sensibilité et de compromis classés risque / non-risque.** Un *point de
-sensibilité* = un élément qui affecte un attribut de qualité ; un *point de compromis* = un
-élément qui est sensible pour **deux attributs en compétition** (ex. cache = performance <->
-fraîcheur). Vérifier qu'aucun n'est laissé **non classé** : chacun est soit un **risque** soit un
-**non-risque**, et les risques sont regroupés en **thèmes** rattachés à un driver métier.
-*(Ancrage : ATAM - Architecture Tradeoff Analysis Method, étapes 6 et 9, SEI/Kazman-Klein-Clements.)*
+- [ ] CHK001 (A1) Chaque point de sensibilité et chaque point de compromis est-il classé risque
+      ou non-risque, sans aucun laissé non classé ? [Cohérence, facteurs-et-qualite.md]
+- [ ] CHK002 (A1) Les risques sont-ils regroupés en thèmes rattachés à un driver métier ?
+      [Cohérence, facteurs-et-qualite.md + risques.md]
+- [ ] CHK003 (A2) Deux ADR acceptés se contredisent-ils quelque part dans le journal de
+      décisions ? [Cohérence, decisions/ADR-*.md]
+- [ ] CHK004 (A2) Chaque ADR remplacé porte-t-il `Statut: superseded` avec le lien vers son
+      successeur, et le successeur référence-t-il le précédent ? [Traçabilité, decisions/]
+- [ ] CHK005 (A2) Chaque ADR porte-t-il contexte, décision, **rationale**, options réellement
+      considérées avec leurs compromis, conséquences positives **et** négatives, statut courant ?
+      Un ADR sans rationale ni alternatives n'a pas de valeur d'architecture. [Substance,
+      decisions/]
+- [ ] CHK006 (A3) La confrontation drivers x stack x ADR x déploiement fait-elle apparaître une
+      contradiction - par exemple un driver "hébergement UE" face à un service externe hors UE ?
+      [Cohérence, facteurs-et-qualite.md + stack-technique.md + decisions/]
+- [ ] CHK007 (A3) La cible de disponibilité et de performance est-elle réellement tenue par le
+      déploiement décrit ? [Faisabilité, facteurs-et-qualite.md + diagrammes/]
+- [ ] CHK008 (A4) Un même concept est-il nommé pareil partout, en alignement avec le glossaire du
+      cadrage - pas deux noms pour une chose, pas deux choses sous un nom ? [Cohérence,
+      cadrage-out/glossaire.md]
+- [ ] CHK009 (A5) Les conteneurs et composants montrés dans les diagrammes existent-ils dans
+      `composants.md`, avec des frontières cohérentes entre Contexte, Conteneurs et Composants et
+      aucun placeholder ? [Traçabilité, diagrammes/ + composants.md]
 
-**A2. ADR non contradictoires et supersession propre.** Deux ADR **acceptés** ne se contredisent
-jamais (croiser le journal de décisions). Un ADR remplacé est **marqué `Statut: superseded` et
-lié** à son successeur - jamais réécrit ni supprimé en silence ; l'ADR successeur référence le
-précédent. Chaque ADR porte : contexte (faits neutres), décision, **rationale (le pourquoi)**,
-options réellement considérées avec leurs compromis, conséquences (positives **et** négatives),
-statut courant. Un ADR sans rationale ni alternatives n'a pas de valeur d'architecture.
-*(Ancrage : Michael Nygard ; adr.github.io ; arc42 §9.)*
-
-**A3. Contradictions inter-artefacts.** Confronter **drivers ⨉ stack ⨉ ADR ⨉ déploiement**. Ex. :
-un driver "hébergement UE / pas de fuite de données" contredit-il un service externe hors UE ?
-la cible de disponibilité/performance est-elle réellement tenue par le déploiement décrit ? un ADR
-en contredit-il un autre ? une techno de la stack contredit-elle une contrainte d'un driver ?
-
-**A4. Cohérence de nommage (langage ubiquitaire).** Un même concept est nommé pareil partout -
-alignement avec le `glossaire.md` du cadrage. Pas deux noms pour une même chose, pas deux choses
-sous le même nom (artefacts, composants, diagrammes, ADR).
-
-**A5. Diagrammes C4 <-> inventaire réel.** Les conteneurs/composants montrés dans les diagrammes
-**existent** dans `composants.md` ; les frontières sont **cohérentes** entre les niveaux
-Contexte -> Conteneurs -> Composants ; noms réels partout (aucun placeholder) ; les images PNG sont
-présentes dans `architecte-out/diagrammes/`. *(Ancrage : modèle C4 + traçabilité.)*
+*(Ancrages : ATAM étapes 6 et 9 - SEI/Kazman-Klein-Clements ; Nygard, adr.github.io, arc42 §9 ;
+modèle C4.)*
 
 ---
 
 ## Lentille B : Consistance (traçabilité bidirectionnelle, aucun orphelin)
 
-Principe : **ni parent sans enfant, ni orphelin.** Aucune exigence sans élément qui la réalise,
-aucun élément qui ne remonte pas à une exigence. La plupart des défauts de traçabilité sont des
-**liens manquants** ou **non mis à jour** quand une exigence a changé.
+Principe : **ni parent sans enfant, ni orphelin.** La plupart des défauts de traçabilité sont des
+liens **manquants** ou **non mis à jour** quand une exigence a changé.
 
-**B1. Sens avant (couverture).** Chaque **driver**, chaque **attribut de qualité**, chaque
-**contrainte de brief** et chaque **entité du glossaire** est **adressé** par ≥1 composant et/ou
-ADR. Une entité de l'ERD sans composant qui la gère = **trou**. Un besoin de sécurité/droits/audit
-est reflété par un composant **et** un ADR (journal d'audit présent si exigé).
+- [ ] CHK010 (B1) Chaque driver, chaque attribut de qualité, chaque contrainte de brief et chaque
+      entité du glossaire est-il adressé par au moins un composant ou un ADR ? [Couverture,
+      facteurs-et-qualite.md -> composants.md]
+- [ ] CHK011 (B1) Chaque entité de l'ERD a-t-elle un composant qui la gère ? [Couverture,
+      composants.md]
+- [ ] CHK012 (B1) Les besoins de sécurité, de droits et d'audit sont-ils reflétés par un composant
+      **et** un ADR - journal d'audit présent s'il est exigé ? [Couverture, composants.md +
+      decisions/]
+- [ ] CHK013 (B2) Chaque composant remonte-t-il à un besoin ou un driver ? Un composant qui ne
+      sert aucune exigence est un orphelin à justifier ou retirer. [Traçabilité, composants.md]
+- [ ] CHK014 (B3) La couverture use cases vers features est-elle 1:1 - chaque use case du
+      spec-index a sa feature, aucune feature ne référence un use case inexistant ? [Traçabilité,
+      cadrage-out/spec-index.md -> `architecture.feature_sequence`]
+- [ ] CHK015 (B4) Chaque composant a-t-il une techno définie dans la matrice, sans "à définir", et
+      chaque ligne de matrice a-t-elle son composant ? [Consistance, composants.md +
+      stack-technique.md]
+- [ ] CHK016 (B4) La stack inline d'un composant correspond-elle exactement à `stack-technique.md`
+      - mêmes technos, **mêmes versions exactes**, sans divergence ni version vague ?
+      [Consistance, composants.md + stack-technique.md]
+- [ ] CHK017 (B4) Un composant Frontend/UI existe-t-il, dès lors que le produit a des écrans ?
+      [Complétude, composants.md]
+- [ ] CHK018 (B5) Chaque langage retenu a-t-il son fichier de conventions installé dans
+      `conventions/` ? [Consistance, stack-technique.md -> conventions/]
 
-**B2. Sens arrière (pas d'orphelin).** Chaque **composant** remonte à un besoin/driver ; un
-composant qui ne sert aucune exigence = **orphelin** à justifier ou retirer.
-
-**B3. Use cases <-> features.** Couverture **1:1** : chaque use case du `spec-index.md` a une feature
-dans `architecture.feature_sequence` ; aucune feature ne référence un use case inexistant.
-
-**B4. Composant <-> stack (deux sens, versions concordantes).** Chaque composant a une techno
-**définie** dans la matrice (pas "à définir") ; aucune ligne de matrice sans composant. La stack
-inline d'un composant (`composants.md`) **correspond** à `stack-technique.md` - mêmes technos,
-**mêmes versions exactes**. Échec si un composant décrit une stack que `stack-technique.md` ne
-retient pas, ou une version divergente/vague. **Un composant Frontend/UI existe si le produit a
-des écrans.**
-
-**B5. Conventions <-> stack.** Chaque langage retenu a son fichier de conventions installé dans
-`conventions/`.
+*(Ancrage : matrice de traçabilité, pratique standard d'ingénierie des exigences.)*
 
 ---
 
 ## Lentille C : Complétude (chaque exigence bien formée et couverte)
 
-**C1. Scénarios qualité bien formés et testables.** Chaque attribut de qualité est exprimé en
-**scénario à 6 parties** : **source** du stimulus · **stimulus** · **artefact** stimulé ·
-**environnement** (nominal / pointe / dégradé) · **réponse** observable · **mesure de réponse
-chiffrée**. La mesure est la partie critique : sans elle, l'exigence n'est pas testable. **Rejeter**
-tout "scalable / robuste / performant / user-friendly" sans source/stimulus/mesure. Chaque
-attribut significatif a ≥1 scénario, tracé à un driver. *(Ancrage : Bass/Clements/Kazman, *Software
-Architecture in Practice* ; arc42 §10.)*
+- [ ] CHK019 (C1) Chaque attribut de qualité est-il exprimé en scénario à 6 parties - source,
+      stimulus, artefact, environnement (nominal / pointe / dégradé), réponse observable, mesure
+      chiffrée ? [Testabilité, facteurs-et-qualite.md]
+- [ ] CHK020 (C1) La mesure de réponse est-elle chiffrée dans chaque scénario ? Sans elle,
+      l'exigence n'est pas testable. Rejeter tout "scalable / robuste / performant / user-friendly"
+      sans source, stimulus ni mesure. [Anti-théâtre, facteurs-et-qualite.md]
+- [ ] CHK021 (C1) Chaque attribut significatif a-t-il au moins un scénario, tracé à un driver ?
+      [Traçabilité, facteurs-et-qualite.md]
+- [ ] CHK022 (C2) Drivers et attributs de qualité sont-ils distincts et non redondants - aucun
+      doublon désignant le même concept ? [Clarté, facteurs-et-qualite.md]
+- [ ] CHK023 (C2) Chaque attribut de qualité découle-t-il d'un driver ? Sinon : driver manquant ou
+      attribut injustifié. [Traçabilité, facteurs-et-qualite.md]
+- [ ] CHK024 (C3) La tranche du walking skeleton est-elle réellement de bout en bout, avec une
+      fonction réelle et non une démo mockée ? [Faisabilité, standards-ingenierie.md]
+- [ ] CHK025 (C3) Traverse-t-elle les vrais composants plutôt qu'une seule couche, et est-elle
+      automatiquement build, deploy et test ? [Faisabilité, standards-ingenierie.md]
+- [ ] CHK026 (C3) Frappe-t-elle l'intégration la plus risquée **sans stub** - la dépendance
+      externe, tierce ou inter-équipe la plus incertaine - plutôt que simplement la première
+      feature ? [Risque, standards-ingenierie.md + risques.md]
+- [ ] CHK027 (C4) Le registre de risques est-il non vide, chaque risque portant impact, mitigation
+      proportionnée et déclencheur de revue, priorisé par probabilité x impact ? Un registre vide
+      est un signal d'alerte. [Complétude, risques.md]
+- [ ] CHK028 (C4) L'effort de conception est-il proportionné au risque, avec une évidence que la
+      mitigation agit vraiment - ni sur-conception sur un petit risque, ni sous-conception sur un
+      risque majeur ? [Proportion, risques.md]
+- [ ] CHK029 (C4) Les items à haut risque de sécurité et de fiabilité sont-ils traités avant le
+      handoff, et les spikes ou POC bloquants identifiés avant la première feature ? [Risque,
+      risques.md]
+- [ ] CHK030 (C5) `impact-design.md` couvre-t-il la stack front et l'approche de style ?
+      [Handoff, impact-design.md §1]
+- [ ] CHK031 (C5) Couvre-t-il les contrats transverses visibles - multitenance/theming, identité,
+      rôles et autorisations avec variantes par rôle, cas non-autorisé, session expirée,
+      navigation et routage ? [Handoff, impact-design.md §2]
+- [ ] CHK032 (C5) Couvre-t-il les conventions d'API qui décident des états d'UI - format d'erreur
+      vers messages par champ, asynchrone, pagination et listes, cas vides ? [Handoff,
+      impact-design.md §3]
+- [ ] CHK033 (C5) Couvre-t-il les NFR qui touchent l'UX - niveau d'accessibilité visé, breakpoints
+      responsive, i18n, budget de performance ? **C'est ce que le designer va consommer, vérifié
+      en priorité.** [Handoff, impact-design.md §4]
+- [ ] CHK034 (C6) Ne subsiste-t-il aucun marqueur `[À VALIDER]`, `[À CHIFFRER]`, `[À DÉFINIR]`
+      dans `architecte-out/`, et chaque fichier porte-t-il son front-matter `version` et `date` ?
+      [Complétude, architecte-out/]
+- [ ] CHK035 (C7) Passe finale : une lecture critique de bout en bout, "ce qui manque / ce qui
+      peut casser", a-t-elle été faite ? C'est le filet qui rattrape ce que les contrôles ciblés
+      ont laissé passer - jamais une checklist de présence. [Jugement, architecte-out/]
 
-**C2. Drivers ≠ attributs de qualité.** Distincts, non redondants, dérivés : un **driver** =
-objectif métier / contrainte / risque (concret, adressé par composant/ADR/attribut) ; un **attribut
-de qualité** = une -ilité avec **cible mesurable + scénario**. Aucun doublon (un driver et un
-attribut ne désignent jamais le même concept) ; chaque -ilité **découle** d'un driver (sinon :
-driver manquant, ou -ilité injustifiée).
-
-**C3. Walking skeleton valide.** La tranche est **réellement de bout en bout** (fonction réelle,
-pas une démo mockée), **traverse les vrais composants** (pas une seule couche), est **automatiquement
-build/deploy/test**, et **frappe l'intégration la plus risquée sans stub** (dépendance externe /
-tierce / inter-équipe la plus incertaine) - pas juste la première feature. *(Ancrage : Cockburn ;
-Freeman & Pryce ; "tracer bullet", Hunt & Thomas.)*
-
-**C4. Registre de risques non vide et fermé.** Chaque risque porte **impact + mitigation
-proportionnée + déclencheur de revue**, priorisé (proba × impact). L'effort de conception est
-**proportionné** au risque (pas de sur-conception sur un petit risque, ni de sous-conception sur un
-risque majeur), et il y a une **évidence de réduction** (la mitigation agit vraiment). Les **items à
-haut risque (sécurité / fiabilité)** sont traités **avant le handoff**. Les spikes/POC bloquants
-sont identifiés **avant la 1re feature**. Un registre de risques **vide** est un signal d'alerte.
-*(Ancrage : Fairbanks, *Just Enough Software Architecture* ; arc42 §11 ; AWS Well-Architected -
-fermer les high-risk items avant go-live.)*
-
-**C5. Impact-design complet (contrat consommé par le designer).** `impact-design.md` couvre la
-tranche **qui se voit** : (1) stack front + approche de style ; (2) contrats transverses visibles
-(multitenance/theming, identité/rôles/autorisations avec variantes par rôle + non-autorisé +
-session expirée, navigation/routage) ; (3) conventions d'API qui décident des états d'UI (format
-d'erreur -> messages par champ, asynchrone, pagination/listes, cas vides) ; (4) NFR qui touchent
-l'UX (niveau d'accessibilité visé, breakpoints responsive, i18n, budget de performance). **C'est ce
-que le designer va consommer** - donc vérifié **en priorité** ici.
-
-**C6. Aucun marqueur résiduel & front-matter valide.** Aucun `[À VALIDER]` / `[À CHIFFRER]` /
-`[À DÉFINIR]` ne subsiste dans un fichier `architecte-out/` ; chaque fichier porte son front-matter
-`version:` (entier) / `date:` (ISO). *(Couvert aussi par le garde-fou déterministe.)*
-
-**C7. Passe finale "ce qui manque / ce qui peut casser".** Une lecture critique de bout en bout,
-pas une checklist de présence. C'est le filet qui rattrape ce que les contrôles ciblés ont laissé
-passer.
+*(Ancrages : Bass/Clements/Kazman, arc42 §10 ; Cockburn, Freeman & Pryce, Hunt & Thomas ;
+Fairbanks, arc42 §11, AWS Well-Architected.)*
 
 ---
 
@@ -134,6 +185,8 @@ passer.
 
 - ATAM - SEI, *ATAM: Method for Architecture Evaluation* (Kazman, Klein, Clements) :
   https://www.sei.cmu.edu/library/architecture-tradeoff-analysis-method-collection/
+- Checklists comme "tests unitaires de l'exigence" - GitHub Spec Kit, `/speckit.checklist`
+  (https://github.com/github/spec-kit/blob/main/templates/commands/checklist.md).
 - Scénarios qualité 6-parties - Bass, Clements, Kazman, *Software Architecture in Practice* ;
   arc42 §10 : https://docs.arc42.org/section-10/
 - ADR - Michael Nygard (martinfowler.com/bliki/ArchitectureDecisionRecord.html) ;

@@ -36,8 +36,13 @@ décision n'a été manqué avant de challenger.
 
 ## Contrôles de cohérence : stricts et adversariaux
 **Challenger, pas cocher.** Dérouler la **grille canonique** de
-`references/coherence-checklist-guide.md`, organisée en **trois lentilles** (chaque contrôle
-porte son ancrage de méthode) :
+`references/coherence-checklist-guide.md` : **35 items cochables** (`CHK001`+) répartis en
+**trois lentilles** (chaque item porte sa dimension et sa source de traçabilité).
+
+**Un item à la fois, dans l'ordre.** Un item dont la réponse est "non" ou "je ne sais pas"
+**reste décoché** et devient une décision en session ; il ne se coche qu'une fois la correction
+appliquée en place. Un item sans objet se coche **avec sa raison**. Les codes `CHK` sont
+**internes** : jamais montrés à l'utilisateur (voir `ux-conventions.md`). Résumé des lentilles :
 
 - **Lentille A - Cohérence (rien ne se contredit)** : points de sensibilité et de compromis
   tous **classés risque/non-risque** (aucun non classé ; risques en thèmes rattachés à un
