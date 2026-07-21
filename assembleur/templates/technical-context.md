@@ -17,7 +17,9 @@
 - **Échelle / périmètre** : [volumes utilisateurs / données estimés]
 
 ## Modèle de données
-[Entités principales + relations/cardinalités (<- ERD architecte). Détail dans `architecte-out/diagrammes.md`.]
+[Entités principales + relations/cardinalités (<- ERD architecte). Détail dans
+`architecte-out/diagrammes.md` - qui porte aussi les diagrammes de contexte (systèmes externes),
+de conteneurs, de flux des parcours critiques et de déploiement.]
 
 ## Déploiement / hébergement
 [Cible d'hébergement, topologie de déploiement, responsable d'exploitation, budget infra,
@@ -25,8 +27,9 @@ disponibilité visée (<- `diagrammes.md` + `project-frame.md`). Réconcilier av
 architecte - ne pas dupliquer, surfacer ce qui n'est pas déjà couvert.]
 
 ## Conventions
-[Où vivent les règles de style/format/nommage (`conventions/`), et les standards non-formatage
-(erreurs, logging, sécurité, tests, API, données, git).]
+[Où vivent les règles de style/format/nommage (`conventions/`). Les standards non-formatage
+(erreurs, logging, sécurité, tests, API, données, git) vivent dans
+`architecte-out/standards-ingenierie.md` - les rappeler ici en bref, le fichier fait foi.]
 
 ## Cibles de qualité (drivers)
 [Les scénarios de qualité testables - chacun avec une mesure observable et chiffrée.]

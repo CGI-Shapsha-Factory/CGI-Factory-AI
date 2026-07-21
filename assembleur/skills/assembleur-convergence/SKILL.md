@@ -70,7 +70,10 @@ parallèles) puis synthétiser leurs retours :
 5. **Design** - lire `designer-out/design-guidelines.md`, `designer-out/coverage-report.md`.
    Extraire : la **règle design** (tout écran dérive de l'export committé du design system,
    aucun style en dur), les **états** par écran, les **patterns d'erreur**, le **niveau
-   d'accessibilité** visé.
+   d'accessibilité** visé, et les **décisions d'expérience arbitrées à l'atelier** (navigation /
+   organisation de l'information, tailles d'écran et points de bascule, langues, theming par
+   client, ton des textes, confirmations et retours d'action, budget de performance UI) -
+   chacune renvoyée `"absent"` si le rapport de couverture ne la tranche pas, jamais déduite.
 
 Lire aussi le manifeste (`architecture.feature_sequence` = `{id, ucs, name}`,
 `walking_skeleton`, `design.design_system_ref`). Chaque lot renvoie un **extrait
@@ -81,7 +84,9 @@ un dump brut. La jointure des faces se fait **par use case** (`ucs`).
 use case du `spec-index` a-t-il sa matière fonctionnelle, technique et design ? chaque feature
 porte-t-elle son **hors-périmètre local** ? les **entités et relations du modèle de données (ERD)**
 sont-elles capturées, les **contraintes de déploiement/hébergement** présentes, les **risques/spikes**
-remontés ? un lot est-il revenu incomplet ? deux lots se contredisent-ils ? **Relire** le lot concerné
+remontés ? les **décisions d'expérience** (navigation, tailles d'écran, langues, ton) sont-elles
+reprises ou explicitement marquées absentes ? un lot est-il revenu incomplet ? deux lots se
+contredisent-ils ? **Relire** le lot concerné
 si un trou ou une contradiction apparaît. Ne synthétiser que sur des retours complets.
 
 ## Étape 2 : Produire le paquet `assembleur-out/`
@@ -133,8 +138,13 @@ jour en silence.
   l'index ; les fichiers du paquet `assembleur-out/` - contexte technique, carte des features,
   pré-constitution - sont cités **en texte simple**, jamais en lien `../` cassable), `domain.md`
   (langage ubiquitaire + entités - **remplace l'ancien GLOSSARY**), `architecture.md` (stack,
-  composants, digest ADR, conventions, cibles qualité), `design.md` (réf. design system + guidelines :
-  états, erreurs, a11y), `features.md` (séquence + couplage + walking skeleton + pointeurs des 3 faces).
+  composants, digest ADR, conventions, cibles qualité - **chaque section pointe le fichier complet
+  d'`architecte-out/`** : `composants.md`, `decisions/`, `standards-ingenierie.md`,
+  `facteurs-et-qualite.md`), `design.md` (réf. design system + guidelines : états, erreurs, a11y,
+  **et les décisions d'expérience de l'atelier** - navigation, tailles d'écran, langues, ton -
+  "sans objet" ou "non tranché" si l'atelier ne les a pas décidées, jamais inventées ; renvoi vers
+  `designer-out/design-guidelines.md` et `coverage-report.md`), `features.md` (séquence + couplage +
+  walking skeleton + pointeurs des 3 faces).
 - **`.claude/CLAUDE.md`** (gabarit `project-claude-md.md`, écrit **directement dans le `.claude/` du
   projet**) - instructions projet **< 200 lignes** pour la fabrication : identité, principes, la
   **règle design** (export committé), où vivent conventions/constitution, la séquence de features, les

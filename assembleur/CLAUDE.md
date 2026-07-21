@@ -132,6 +132,14 @@ case** ; design **global** (export committé du design system + guidelines). La 
 converge les **principes non négociables** des 3 contrats (dont la règle design : tout écran
 dérive de l'export committé du design system, aucune valeur de style en dur, états couverts, contrat d'erreur ;
 et le **principe de test** : tests écrits avec le code, intégration mockée).
+**Dédup par référence câblée** : le paquet reste un digest, mais chaque digest **pointe le fichier
+complet amont** - `memory/architecture.md` vers `architecte-out/composants.md` (interfaces,
+contraintes par composant), `decisions/` (ADR complets), `standards-ingenierie.md` et
+`facteurs-et-qualite.md` (scénarios QAW) ; `memory/design.md` vers `designer-out/design-guidelines.md`
++ `coverage-report.md`, et reprend les **décisions d'expérience de l'atelier** (navigation, tailles
+d'écran, langues, ton - "sans objet"/"non tranché" possible, jamais inventées). L'`attack-plan.md` et
+le `CLAUDE.md` déployé font **relire la graine (annexes Face technique / Face design) au
+`/speckit.plan`** : le `spec.md` généré par SpecKit ne reprend pas les annexes.
 
 ## Conventions partagées
 `references/interactive-loop.md`, `references/ux-conventions.md`, `references/speckit-mapping.md`,

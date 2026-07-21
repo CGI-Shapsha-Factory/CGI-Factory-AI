@@ -8,6 +8,8 @@
   (dossier ou ZIP), auto-portable - tout vit dans le repo.
 - **Règle non négociable** : tout écran dérive de l'export committé du design system ; **aucune valeur de
   style en dur** - on utilise les **tokens et composants**.
+- **Détail des arbitrages** : le handoff complet et la trace de l'atelier vivent dans
+  `designer-out/design-guidelines.md` et `designer-out/coverage-report.md`.
 
 ## États par écran
 [La checklist des états à couvrir : chargement, vide (message + action), erreur, succès, et tout
@@ -20,3 +22,24 @@ projette en messages par champ ; erreur serveur ; perte de connexion.]
 ## Accessibilité
 [Le niveau visé (ex. WCAG 2.2 AA) et le socle : contraste, focus visible, navigation clavier,
 erreurs pas par la couleur seule.]
+
+<!-- Les 4 sections suivantes reprennent les décisions d'expérience arbitrées à l'atelier design
+     (rapport de couverture). Chacune peut valoir "Sans objet" ou "Non tranché à l'atelier" -
+     ne JAMAIS inventer une décision que l'atelier n'a pas prise. -->
+
+## Navigation et organisation de l'information
+[Le modèle de navigation retenu et l'organisation des écrans, tels que tranchés à l'atelier.
+"Sans objet" ou "Non tranché à l'atelier" si rien n'a été décidé.]
+
+## Adaptation aux tailles d'écran
+[Les formats supportés (mobile / tablette / bureau) et les largeurs de bascule (breakpoints).
+"Sans objet" ou "Non tranché à l'atelier" si rien n'a été décidé.]
+
+## Langues
+[Multi-langues ou non ; implications visibles (longueur de texte variable, sens de lecture).
+"Sans objet" si le produit est monolingue.]
+
+## Ton des textes
+[Le ton des libellés, boutons et messages (langage humain, libellés d'action explicites) et les
+retours après action (confirmations, actions destructrices), tels que tranchés à l'atelier.
+"Sans objet" ou "Non tranché à l'atelier" si rien n'a été décidé.]

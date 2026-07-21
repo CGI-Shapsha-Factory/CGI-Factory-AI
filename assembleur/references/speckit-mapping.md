@@ -41,7 +41,11 @@ assembleur-out/
 | **Hors périmètre (cette feature)** | fonctionnel : hors-périmètre local du brief |
 | **Assumptions** | points tranchés en session (aucun marqueur résiduel) + **risques/spikes (`risques.md`)** |
 | *Annexe - Face technique* | architecte -> nourrit `technical-context.md` / le *Technical Context* du futur `plan.md` |
-| *Annexe - Face design* | designer -> `memory/design.md` (états, a11y) |
+| *Annexe - Face design* | designer -> `memory/design.md` (états, a11y, décisions d'expérience de l'atelier) |
+
+> Les deux annexes ne survivent pas au `/speckit.specify` (le `spec.md` généré suit le gabarit
+> SpecKit) : l'`attack-plan.md` et le `CLAUDE.md` déployé demandent de **relire la graine** au
+> moment du `/speckit.plan`, en plus de `technical-context.md`.
 
 ## `pre-constitution.md` : principes convergés (non négociables)
 - **Fonctionnel** (cadrage) : identité produit, hors-périmètre, langage ubiquitaire.

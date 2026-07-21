@@ -36,7 +36,9 @@ registre de l'architecte, **jamais** un numéro auto-généré. Enchaîner :
 3. **`/speckit.specify`** en fournissant explicitement **`SPECIFY_FEATURE_DIRECTORY=specs/NNN-slug`**
    (+ la matière de la graine `features/NNN-slug.md`). Ceci fige le répertoire **et** le numéro :
    pas d'auto-numérotation, donc pas de collision entre développeurs.
-4. `/speckit.plan` (Technical Context dans `technical-context.md`) -> `/speckit.tasks` ->
+4. `/speckit.plan` (Technical Context dans `technical-context.md` ; **relire aussi la graine**
+   `features/NNN-slug.md` : ses annexes Face technique / Face design portent les composants, ADR
+   et écrans propres à la feature, que le `spec.md` généré ne reprend pas) -> `/speckit.tasks` ->
    **`/assembleur:creation-task-linear`** (un sous-ticket `Task` par phase, rattaché au ticket
    `Feature`) -> `/speckit.implement`.
 

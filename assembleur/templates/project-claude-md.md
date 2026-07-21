@@ -29,6 +29,9 @@ démarrage de SpecKit ; chaque `plan.md` passe ensuite la *Constitution Check*.
 Voir `assembleur-out/attack-plan.md` : `specify init` -> `/speckit.constitution` (depuis `assembleur-out/pre-constitution.md`) ->
 `/speckit.specify` par feature **dans l'ordre du `assembleur-out/feature-map.md`** (walking skeleton d'abord) ->
 `/speckit.plan` -> `/speckit.tasks` -> `/speckit.implement`.
+Au `/speckit.plan` d'une feature, **relire sa graine** `assembleur-out/features/NNN-slug.md` (annexes
+Face technique / Face design) en plus de `assembleur-out/technical-context.md` : le `spec.md` généré
+ne reprend pas les annexes.
 
 ## Numérotation SpecKit : imposée (multi-développeurs)
 - **Une feature = une branche = un développeur.** Le numéro `NNN-slug` est **déjà fixé** dans
