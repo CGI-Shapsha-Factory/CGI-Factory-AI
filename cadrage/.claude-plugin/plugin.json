@@ -1,6 +1,6 @@
 {
   "name": "cadrage",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Phase amont d'un projet spec-driven : transforme la matière brute (transcripts, docs) en pack fonctionnel (vision, glossaire, découpage, brief par feature) repris par l'architecte. Sorties dans cadrage-out/, mécanique dans .factory/ ; skills indépendants pilotés par un manifeste partagé, tout en français.",
   "author": {
     "name": "IA Factory"
