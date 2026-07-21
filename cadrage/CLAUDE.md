@@ -30,6 +30,13 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 ## Les skills (9 du pipeline + `cadrage-ideation` facultatif + `help-factory`)
 `help-factory` (hors pipeline) est l'**aide unique** de la Factory : elle affiche, de façon **statique** (rendu immédiat), la **carte des 6 plugins** (cadrage -> architecte -> designer -> assembleur -> SpecKit -> validation -> maintenance) avec **un tableau par plugin** (rôle de chaque skill, ordre, portes humaines). C'est la seule aide - il n'y a plus de `help-cadrage` (son détail est absorbé dans le tableau cadrage).
 
+**Servie par un hook, pas par le modèle.** Le contenu étant 100 % statique, le faire ré-émettre par le modèle coûtait ~1000 tokens de sortie et ~34 s par invocation. Le plugin **embarque donc son propre hook** (seul de la Factory dans ce cas ; les hooks de `couts`/`architecte`/`assembleur` sont posés dans le `.claude/` du projet par un script d'init) :
+- `hooks/hooks.json` - événement **`UserPromptExpansion`**, matcher regex `(^|:)help-factory$` (le nom de commande arrive tantôt `help-factory`, tantôt `cadrage:help-factory`). Auto-enregistré à l'installation du plugin, donc l'aide marche **partout, avant tout `-init`**.
+- `scripts/help_factory_hook.py` - bloque l'expansion (`{"decision":"block","reason":<carte>}`) : le prompt **n'atteint jamais le modèle**, d'où zéro token de sortie et aucune latence de génération.
+- **Source unique = le `SKILL.md`.** Le script en extrait tout ce qui suit le marqueur `## À afficher tel quel` (comparaison insensible aux accents). **Aucune duplication** : toute correction de la carte se fait dans le `SKILL.md`, jamais dans le script. Le corps du skill reste le **chemin de repli** si les hooks sont désactivés.
+- **Jamais bloquant** : fichier absent, marqueur introuvable ou toute exception -> `exit 0` **sans rien imprimer**, l'expansion normale reprend la main. La sortie est écrite en **octets UTF-8** (`sys.stdout.buffer`) car la console Windows est en cp1252 et ferait échouer l'encodage des accents.
+- Toute évolution de l'aide doit s'accompagner d'un **bump de version** dans `.claude-plugin/plugin.json` : sans lui, la marketplace continue de servir la version en cache (c'est ce qui a fait traîner des noms de skills périmés côté utilisateurs).
+
 | # | skill | rôle | porte |
 |---|-------|------|-------|
 | 0 | `cadrage-init` | crée `.factory/` (gabarits, git-ignoré) + `cadrage-out/` (docs) + le **manifeste committé** `manifest.json` **à la racine** (le nom du projet est demandé par `cadrage-extraction`) | aucune |
