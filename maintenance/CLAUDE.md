@@ -1,10 +1,10 @@
-# CLAUDE.md : plugin `recette`
+# CLAUDE.md : plugin `maintenance`
 
 This file provides guidance to Claude Code (claude.ai/code) when working **on the
-`recette` plugin** (this directory). Factory-wide overview: `../CLAUDE.md`.
+`maintenance` plugin** (this directory). Factory-wide overview: `../CLAUDE.md`.
 
 ## Ce qu'est le plugin
-`recette` = **phase 6** de la Factory (après la livraison d'une feature, en aval de la
+`maintenance` = **phase 6** de la Factory (après la livraison d'une feature, en aval de la
 validation fonctionnelle). Il comble le trou
 post-fabrication : quand le PO teste une feature livrée et trouve un écart, tout devient un
 **objet suivi dans Linear** (anomalie ou évolution). La **détection amont** peut aussi venir du
@@ -15,8 +15,8 @@ simple orientation pour l'évolution) - la **porte de création unique** reste
 orchestrant les **commandes SpecKit existantes** (`/speckit.clarify`, `/speckit.plan`,
 `/speckit.tasks`, `/speckit.implement` cadré) - jamais en les réinventant. Ce sont des
 **skills Markdown** ; pas de build/test. **Le plugin n'écrit pas d'artefacts committés** : les
-objets de recette vivent dans **Linear** (tickets, statuts, commentaires) et les mises à jour
-de spécification dans **`specs/<feature>/`** (repo SpecKit du projet) - pas de `recette-out/`
+objets de maintenance vivent dans **Linear** (tickets, statuts, commentaires) et les mises à jour
+de spécification dans **`specs/<feature>/`** (repo SpecKit du projet) - pas de `maintenance-out/`
 (comme `couts`, exception assumée au dossier `-out/`, cohérente avec la règle "l'avancement
 concurrent ne va jamais dans un fichier committé").
 
@@ -25,16 +25,16 @@ fabrication et rien ne se trace ; après, tout écart se trace. **Quatre règles
 jamais écraser le travail d'autrui (rouvrir une feature livrée = geste volontaire et tracé),
 une vérité partagée remonte au niveau central, pas de clôture sans trace à jour, la
 spécification commande et le reste se régénère. Tout est détaillé dans
-`references/regles-recette.md`.
+`references/regles-maintenance.md`.
 
 ## Langue & invocation
 - **Tout en français** (skills, gabarits, tickets, interaction). Seuls les identifiants/valeurs
   machine et noms d'outils/formats (Linear, SpecKit, `spec.md`, `tasks.md`) restent tels quels.
-- **Skills uniquement, pas de `commands/`**. Invocation : `/recette:<skill>` + auto par le modèle.
+- **Skills uniquement, pas de `commands/`**. Invocation : `/maintenance:<skill>` + auto par le modèle.
 
 ## Les 5 skills
-- `recette-init` - setup (zéro décision) : installe les 2 gabarits dans `.factory/recette/`,
-  étend le manifeste (bloc `recette`, configuration statique seule), complète le `.gitignore`
+- `maintenance-init` - setup (zéro décision) : installe les 2 gabarits dans `.factory/maintenance/`,
+  étend le manifeste (bloc `maintenance`, configuration statique seule), complète le `.gitignore`
   (ligne `.factory/`), puis **sonde Linear** (équipe du bloc `linear`, labels
   `Anomalie`/`Evolution` résolus par nom et créés best-effort, statut **"Requalifiée en
   évolution"** vérifié via `list_issue_statuses` - le MCP ne sait pas créer de statut : marche
@@ -72,13 +72,13 @@ spécification commande et le reste se régénère. Tout est détaillé dans
 Lit `specs/<feature>/` (SpecKit), `assembleur-out/feature-map.md`,
 `architecte-out/composants.md`, `.specify/memory/constitution.md` et le bloc `linear` du
 manifeste (configuration : équipe - les tickets Feature se relèvent dans Linear via
-`list_issues({team, label Feature})`). Les **gabarits** vivent dans `.factory/recette/`
-(git-ignoré, reposés par `recette-init`) ; le **manifeste** est **committé** dans
-`manifest.json`. Bloc `recette` (configuration statique **seulement**) :
+`list_issues({team, label Feature})`). Les **gabarits** vivent dans `.factory/maintenance/`
+(git-ignoré, reposés par `maintenance-init`) ; le **manifeste** est **committé** dans
+`manifest.json`. Bloc `maintenance` (configuration statique **seulement**) :
 `{phase, team, labels{anomalie, evolution}, statut_requalification{name, present}}`.
 Écriture = read-modify-write + revalidation JSON. **Aucun état d'avancement dans le
 manifeste** : anomalies, évolutions, statuts et commentaires vivent **dans Linear**
-(concurrence multi-développeurs), cf. `references/linear-recette.md`.
+(concurrence multi-développeurs), cf. `references/linear-maintenance.md`.
 
 ## Identité des objets (Linear natif, pas de convention de titre)
 Pas de numérotation `A0x-F0y` / `E0x-F0y` dans les titres : l'**identifiant natif Linear**
@@ -100,12 +100,12 @@ d'abord (écart seul), puis `/speckit.clarify`, puis régénération plan + tâc
 
 ## Conventions partagées
 `references/interactive-loop.md`, `references/ux-conventions.md`,
-`references/regles-recette.md` (frontière de la livraison, 4 règles d'or, tri
+`references/regles-maintenance.md` (frontière de la livraison, 4 règles d'or, tri
 propre/partagé, 4 disciplines chirurgicales, partage humain/automatisé),
-`references/linear-recette.md` (usage du MCP linear-prism : détection, installation,
+`references/linear-maintenance.md` (usage du MCP linear-prism : détection, installation,
 rattachement `parentId`, labels, statut de requalification + marche à suivre manuelle,
 `save_issue`/`save_comment`, idempotence, "l'état vit dans Linear").
-Garde-fou déterministe : `scripts/check_recette.py` (bloc `recette` + équipe/labels résolus +
+Garde-fou déterministe : `scripts/check_maintenance.py` (bloc `maintenance` + équipe/labels résolus +
 statut de requalification déclaré + gabarits en place ; ne force jamais un constat).
 Gabarits : `templates/gabarit-anomalie.md`, `templates/gabarit-evolution.md`.
 
@@ -113,8 +113,8 @@ Gabarits : `templates/gabarit-anomalie.md`, `templates/gabarit-evolution.md`.
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python -m py_compile scripts/check_recette.py
-python scripts/check_recette.py <projet>/manifest.json
+python -m py_compile scripts/check_maintenance.py
+python scripts/check_maintenance.py <projet>/manifest.json
 ```
 
 ## Invariants

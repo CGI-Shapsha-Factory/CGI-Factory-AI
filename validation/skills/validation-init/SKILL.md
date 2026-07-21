@@ -37,7 +37,7 @@ validation peut être menée par **une autre personne**, sur une **autre machine
 ## Setup inconditionnel + état de l'amont (jamais bloquant)
 **Ce skill ne bloque jamais.** L'installation des gabarits et l'amorçage du bloc `validation`
 sont déterministes : ils s'installent **toujours**, dans le dossier courant. **Ne jamais
-refuser** au motif que Linear, la recette ou SpecKit manquent - on installe, puis on **signale
+refuser** au motif que Linear, la maintenance ou SpecKit manquent - on installe, puis on **signale
 en clair** ce qui manque pour que la validation soit opérante.
 
 **Idempotent** : ne réécrit aucun fichier existant ; n'installe que le manquant. Si
@@ -81,8 +81,8 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
      pourra pas être relié aux tickets Feature ni les écarts tracés dans Linear tant que la
      première alimentation (`/assembleur:premier-alimente-linear`) et le MCP ne sont pas en
      place (installation du MCP : section Linear de `references/regles-validation.md`).
-   - Bloc `recette` absent du manifeste -> signaler que le traitement des écarts passera par le
-     plugin recette : lancer `/recette:recette-init` avant le premier bilan (les anomalies et
+   - Bloc `maintenance` absent du manifeste -> signaler que le traitement des écarts passera par le
+     plugin maintenance : lancer `/maintenance:maintenance-init` avant le premier bilan (les anomalies et
      évolutions se créent là-bas, jamais ici).
 
 ## Porte de sortie
@@ -90,7 +90,7 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
 - `.gitignore` contient la ligne `.factory/`.
 - Le manifeste contient le bloc `validation` et reparse sans erreur.
 - L'adresse de l'environnement de recette est enregistrée (ou son absence a été signalée).
-- **État de l'amont signalé** : si `specs/`, Linear ou la recette manquent, l'utilisateur a
+- **État de l'amont signalé** : si `specs/`, Linear ou la maintenance manquent, l'utilisateur a
   été **averti** (pas bloqué).
 - Rien d'existant n'a été écrasé (idempotence).
 

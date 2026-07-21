@@ -89,7 +89,7 @@ proposer (un par un) :
   en sous-ticket du ticket Feature, **sans label de recette** (jamais `Anomalie`/`Evolution`,
   ni `Feature`/`Task` - cf. `references/regles-validation.md`, section Linear) ; si le flou
   révèle une spécification fausse ou incomplète, orienter plutôt vers
-  `/recette:creation-evolution` (geste du PO) ;
+  `/maintenance:creation-evolution` (geste du PO) ;
 - **laisser tel quel** : le cas reste A CLARIFIER dans le plan et sortira NON TESTABLE à
   l'exécution.
 Le plan n'est bon pour exécution qu'après l'accord explicite du testeur.
@@ -106,7 +106,7 @@ critère source.)
 - **Un critère = un cas, cité.** Aucun critère écarté en silence, aucun cas sans source.
 - **Jamais interpréter.** Un critère flou est marqué, discuté, ou tracé - jamais deviné.
 - **La spécification est en lecture seule.** Toute clarification vit dans le plan ; tout
-  changement de critère passe par la recette (évolution, geste PO).
+  changement de critère passe par la maintenance (évolution, geste PO).
 - **Plan validé par l'humain** avant toute exécution.
 - Manifeste silencieux, restitutions en prose, typographie humaine (cf.
   `references/ux-conventions.md`).

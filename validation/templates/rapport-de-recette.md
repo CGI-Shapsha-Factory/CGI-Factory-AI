@@ -28,7 +28,7 @@ nature, ce que ça dit de la livraison. Factuel.)
 
 <!-- Un bloc par écart (verdict KO ou NON TESTABLE), rempli au fil du tri avec le testeur.
      La nature (anomalie / évolution / flou) est une décision HUMAINE. Si un ticket Linear a
-     été créé (via /recette:creation-anomalie ou /recette:creation-evolution), citer son
+     été créé (via /maintenance:creation-anomalie ou /maintenance:creation-evolution), citer son
      identifiant natif et son lien. -->
 
 ### [TC-...-NNN] - [intitulé]

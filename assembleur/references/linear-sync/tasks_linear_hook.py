@@ -15,7 +15,7 @@ lit seulement :
     pousser qu'une fois par jeu de phases et ne pas re-harceler a chaque edition. Ce marqueur est
     NON autoritatif et regenerable - l'autorite d'idempotence reste **Linear** (interrogee par le skill).
 
-**Une phase deja possedee par un ticket de recette n'est jamais poussee.** Quand une anomalie ou une
+**Une phase deja possedee par un ticket de maintenance n'est jamais poussee.** Quand une anomalie ou une
 evolution fait regenerer tasks.md, la phase creee nomme son ticket proprietaire dans son titre
 (`## Phase 7: Evolution RAG-12 - ...`). Ce travail est deja suivi par RAG-12 : pousser a creer un
 sous-ticket Task produirait un doublon, frere du ticket d'origine sous la meme Feature, avec deux
@@ -36,7 +36,7 @@ import sys
 TASKS_RE = re.compile(r"(^|[\\/])specs[\\/]([^\\/]+)[\\/]tasks\.md$", re.IGNORECASE)
 PHASE_RE = re.compile(r"^##\s+Phase\s+(\d+)\s*:(.*)$", re.IGNORECASE | re.MULTILINE)
 
-# Phase DEJA POSSEDEE par un ticket de recette (anomalie / evolution). Le titre nomme son
+# Phase DEJA POSSEDEE par un ticket de maintenance (anomalie / evolution). Le titre nomme son
 # proprietaire, ex. `## Phase 7: Evolution RAG-12 - Ingestion des pieces PNG`. Une telle phase
 # est deja suivie : ne jamais pousser a creer un sous-ticket Task pour elle (ce serait un
 # doublon, frere du ticket d'origine sous la meme Feature, avec deux etats a synchroniser).
@@ -66,7 +66,7 @@ def _feature_id(feature_dir):  # conserve pour compat (plus utilise par le nudge
 
 
 def _phases_in_file(tasks_path):
-    """Numeros des phases A SYNCHRONISER : les phases deja possedees par un ticket de recette
+    """Numeros des phases A SYNCHRONISER : les phases deja possedees par un ticket de maintenance
     (titre `Evolution <id> -` / `Anomalie <id> -`) sont exclues - leur travail est deja suivi."""
     try:
         text = open(tasks_path, encoding="utf-8").read()

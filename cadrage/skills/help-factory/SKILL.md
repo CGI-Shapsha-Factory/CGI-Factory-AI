@@ -1,6 +1,6 @@
 ---
 name: help-factory
-description: Aide unique de la Factory - affiche la carte des 6 plugins (cadrage, architecte, designer, assembleur, validation, recette), un tableau par plugin avec le rôle de chaque skill, l'ordre et les portes humaines.
+description: Aide unique de la Factory - affiche la carte des 6 plugins (cadrage, architecte, designer, assembleur, validation, maintenance), un tableau par plugin avec le rôle de chaque skill, l'ordre et les portes humaines.
 ---
 
 # help-factory
@@ -14,7 +14,7 @@ Il **n'écrit aucun fichier** et ne modifie aucun manifeste.
 **La Factory IA transforme un atelier en projet spec-driven, en 4 phases amont + la recette (validation
 fonctionnelle puis traitement des écarts).** Chaque phase est un plugin qui produit un *contrat* validé
 par un humain, puis passe le relais :
-**`cadrage -> architecte -> designer -> assembleur -> SpecKit -> validation -> recette`**.
+**`cadrage -> architecte -> designer -> assembleur -> SpecKit -> validation -> maintenance`**.
 Chaque skill se termine par une ligne "**Étape suivante**" qui indique quoi lancer ensuite - tu avances
 de proche en proche. Le design system naît dans **Claude Design** ; son export est committé dans `designer-out/maquette-de-claude-design/` et sert de source à la fabrication.
 
@@ -70,23 +70,23 @@ Quand une feature est livrée et déployée sur l'environnement de recette : dé
 depuis les critères d'acceptation de sa spécification (un cas par critère, tracé), le jouer dans le
 navigateur (extension Chrome en priorité, Playwright en repli, ou mission différée pour Claude
 Cowork), et produire un rapport de recette tracé exigence par exigence. L'IA exécute et rapporte,
-le testeur valide (porte de recette). Les écarts constatés se traitent ensuite côté `recette`.
+le testeur valide (porte de recette). Les écarts constatés se traitent ensuite côté `maintenance`.
 
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
-| `validation-init` | installe les gabarits + bloc manifeste + enregistre l'adresse de l'environnement de recette + signale l'amont manquant (`specs/`, Linear, recette) | après la première feature livrée |
+| `validation-init` | installe les gabarits + bloc manifeste + enregistre l'adresse de l'environnement de recette + signale l'amont manquant (`specs/`, Linear, maintenance) | après la première feature livrée |
 | `plan-de-validation` | dérive le plan de test depuis `specs/<feature>/spec.md` : un cas par critère d'acceptation, tracé à sa source, critère non testable marqué "à clarifier" (jamais interprété), données de test collectées en session | **plan validé par le testeur** (humain) |
 | `execution-validation` | joue le plan dans le navigateur contre l'environnement de recette (choix de l'outil à chaque lancement : extension Chrome recommandée / Playwright / mission Cowork) ; résultats + preuves au format commun | le testeur choisit l'outil ; l'IA constate |
-| `bilan-validation` | rapport tracé (critère -> cas -> verdict -> preuve), tri de chaque écart avec le testeur (anomalie -> `/recette:creation-anomalie`, spec en cause -> `/recette:creation-evolution`, flou -> clarifier ou suivi Linear), scénarios rejouables de non-régression, puis verdict de recette (rapport + commentaire Linear) | **verdict de recette** (humain) |
+| `bilan-validation` | rapport tracé (critère -> cas -> verdict -> preuve), tri de chaque écart avec le testeur (anomalie -> `/maintenance:creation-anomalie`, spec en cause -> `/maintenance:creation-evolution`, flou -> clarifier ou suivi Linear), scénarios rejouables de non-régression, puis verdict de recette (rapport + commentaire Linear) | **verdict de recette** (humain) |
 
-### Phase 6 : `recette` (traitement des écarts après livraison)
+### Phase 6 : `maintenance` (traitement des écarts après livraison)
 Quand le PO ou la validation fonctionnelle constate un écart sur une feature livrée, tout devient
 un objet suivi dans Linear (anomalie ou évolution), réalisé en orchestrant les commandes SpecKit
 existantes. Frontière : avant livraison rien ne se trace, après livraison tout se trace.
 
 | skill | rôle | porte / ordre |
 |-------|------|---------------|
-| `recette-init` | installe les gabarits + bloc manifeste + vérifie le raccordement Linear (labels `Anomalie`/`Evolution`, statut "Requalifiée en évolution") | après la première feature livrée |
+| `maintenance-init` | installe les gabarits + bloc manifeste + vérifie le raccordement Linear (labels `Anomalie`/`Evolution`, statut "Requalifiée en évolution") | après la première feature livrée |
 | `creation-anomalie` | le PO crée une anomalie complète dans Linear (attendu, constaté, critère en échec, reproduction), rattachée au ticket de sa feature | **le PO qualifie la nature** (humain) |
 | `correction-anomalie` | le développeur corrige : requalifie si le code respecte la spec (sans créer l'évolution), sinon enquête code + correction + clôture avec trace à jour | **cause racine validée** (humain) |
 | `creation-evolution` | le PO crée une évolution portant un écart de spécification précis et circonscrit (jamais une réécriture) | **le PO porte le périmètre** (humain) |
@@ -109,4 +109,4 @@ Pas une phase : mesure **ce que coûterait la fabrication au tarif API** (estima
 (`cadrage-completude`, `architecte-coherence`, `designer-coherence`, le rapport de cohérence de l'assembleur, ou `bilan-validation` côté validation).
 
 ## Étape suivante
-"Étape suivante : `/cadrage:cadrage-init` pour démarrer depuis le début, ou lance directement la phase qui correspond à ton avancement - `/architecte:architecte-init`, `/designer:designer-init`, `/assembleur:assembleur-init`, `/validation:validation-init` (feature livrée à recetter) ou `/recette:recette-init` (écarts à traiter)."
+"Étape suivante : `/cadrage:cadrage-init` pour démarrer depuis le début, ou lance directement la phase qui correspond à ton avancement - `/architecte:architecte-init`, `/designer:designer-init`, `/assembleur:assembleur-init`, `/validation:validation-init` (feature livrée à recetter) ou `/maintenance:maintenance-init` (écarts à traiter)."

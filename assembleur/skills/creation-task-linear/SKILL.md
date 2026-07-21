@@ -105,7 +105,7 @@ Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
    - tâches d'une phase : lignes `^- \[[ xX]\] (T\d{3})(?: \[P\])?(?: \[US\d+\])? (.+)$`, groupées
      sous la phase courante (les IDs `T001...` sont **séquentiels sur tout le fichier**) ;
    - **retirer les emoji** (🎯 ⚠️ ...) des titres de phase, puis **collapser les espaces** doublés.
-3bis. **Écarter les phases déjà possédées par un ticket de recette.** Une phase née d'une anomalie ou
+3bis. **Écarter les phases déjà possédées par un ticket de maintenance.** Une phase née d'une anomalie ou
    d'une évolution **nomme son ticket propriétaire dans son titre** :
    `^\s*(Évolution|Evolution|Anomalie)\s+(<identifiant>)\b` - ex.
    `## Phase 7: Évolution RAG-12 - Ingestion des pièces PNG`. Ce travail **est déjà suivi** par ce

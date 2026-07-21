@@ -1,4 +1,4 @@
-# Conventions UX : sortie utilisateur (recette)
+# Conventions UX : sortie utilisateur (maintenance)
 
 ## Typographie : écrire comme un humain (tickets, commentaires ET sortie chat)
 S'applique à **tout ce que la Factory écrit** : les tickets et commentaires Linear, les
@@ -21,8 +21,8 @@ en **langage naturel français**. Correspondance :
 
 | Interne (manifeste / Linear) | Langage utilisateur |
 |---|---|
-| `recette.labels.anomalie` / `.evolution` | "les étiquettes de recette dans Linear" |
-| `recette.statut_requalification` | "le statut de requalification dans Linear" |
+| `maintenance.labels.anomalie` / `.evolution` | "les étiquettes de maintenance dans Linear" |
+| `maintenance.statut_requalification` | "le statut de requalification dans Linear" |
 | `statut_requalification.present: false` | "le statut de requalification n'existe pas encore dans l'équipe Linear" |
 | `parentId` | "le rattachement au ticket de la feature" |
 | `state: started` / `completed` | "le ticket passe en cours / est terminé" |
@@ -65,7 +65,7 @@ n'est utilisé que pour des listes courtes et énumérables (ex. la liste des fe
 
 ## 5. Une ligne "étape suivante" à la fin de chaque skill
 Terminer chaque exécution par exactement une phrase :
-> "Étape suivante : `/recette:<skill>` - <pourquoi en quelques mots>."
+> "Étape suivante : `/maintenance:<skill>` - <pourquoi en quelques mots>."
 
 ## 6. Langue
 **Tout en français** (interaction + tickets + commentaires). Seuls les identifiants/valeurs

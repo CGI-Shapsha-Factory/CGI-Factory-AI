@@ -1,6 +1,6 @@
 ---
 name: bilan-validation
-description: Assemble le rapport de recette tracé exigence par exigence, trie chaque écart avec le testeur (anomalie, évolution ou critère flou, renvoi vers les skills recette), consolide les scénarios de non-régression et recueille le verdict humain de la porte de recette.
+description: Assemble le rapport de recette tracé exigence par exigence, trie chaque écart avec le testeur (anomalie, évolution ou critère flou, renvoi vers les skills maintenance), consolide les scénarios de non-régression et recueille le verdict humain de la porte de recette.
 ---
 
 # bilan-validation
@@ -23,8 +23,8 @@ inscrire le verdict humain dans le rapport et dans Linear.
 - S'il y a plusieurs fichiers de résultats, prendre le plus récent et le confirmer au testeur
   (suggestion) ; il peut en désigner un autre.
 - `specs/<feature>/spec.md` accessible (pour citer les critères dans le tri des écarts).
-- Le traitement des écarts passe par le plugin recette : si le bloc `recette` du manifeste
-  manque, signaler qu'il faudra lancer `/recette:recette-init` avant de créer le premier
+- Le traitement des écarts passe par le plugin maintenance : si le bloc `maintenance` du manifeste
+  manque, signaler qu'il faudra lancer `/maintenance:maintenance-init` avant de créer le premier
   ticket (on peut quand même assembler le rapport).
 
 ## Procédure
@@ -44,12 +44,12 @@ face au critère cité, proposer un tri en suggestion, et laisser le testeur tra
 - **Anomalie** (la spécification est bonne, le logiciel ne la respecte pas) -> "Veux-tu créer
   l'anomalie dans Linear ?" Si oui : préparer le contenu (comportement attendu depuis le
   critère, comportement constaté et étapes de reproduction depuis le déroulé effectif,
-  critère de recette en échec) et enchaîner sur `/recette:creation-anomalie` avec ce contenu
+  critère de recette en échec) et enchaîner sur `/maintenance:creation-anomalie` avec ce contenu
   pré-rempli - la création passe par **sa** porte (complétude, rattachement au ticket
   Feature, confirmation humaine), jamais en direct d'ici.
 - **Évolution** (le logiciel respecte sa spécification, mais elle est fausse ou incomplète au
   regard du vrai besoin) -> "Veux-tu tracer cette évolution ?" Si oui : orienter vers
-  `/recette:creation-evolution` (geste du PO, avec sa proposition d'écart de spécification) -
+  `/maintenance:creation-evolution` (geste du PO, avec sa proposition d'écart de spécification) -
   jamais de création automatique.
 - **Critère flou** (NON TESTABLE) -> proposer de clarifier la lecture observable en session
   (elle s'écrit dans le plan pour la prochaine exécution), ou de tracer un ticket Linear de
@@ -68,7 +68,7 @@ depuis le gabarit `.factory/validation/scenario-rejouable.md` : le **déroulé e
 que joué), les préconditions et données, le résultat attendu observable - en langage naturel
 auto-portant, rejouable par n'importe quel outil. Ne pas réécrire un scénario existant dont le
 déroulé n'a pas changé. Lister les scénarios dans le rapport. C'est la bibliothèque que la
-recette rejoue en non-régression (`realisation-evolution`, `correction-anomalie`).
+maintenance rejoue en non-régression (`realisation-evolution`, `correction-anomalie`).
 
 ### Étape 4 : la porte de recette (verdict humain)
 Quand tous les écarts sont triés : afficher le récapitulatif final (la matrice en tableau
@@ -97,12 +97,12 @@ python <plugin>/scripts/check_validation.py manifest.json <feature>
 la seule présence du titre de section ne suffit pas.)
 
 ## Règles invariantes
-- **La validation détecte, la recette traite.** Aucune anomalie ni évolution n'est créée ici
-  en direct : toujours via les skills recette et leurs portes.
+- **La validation détecte, la maintenance traite.** Aucune anomalie ni évolution n'est créée ici
+  en direct : toujours via les skills maintenance et leurs portes.
 - **Le tri d'un écart et le verdict sont humains.** Le skill propose et pré-remplit ; le
   testeur tranche. Pas de porte de recette tant qu'un écart n'est pas trié.
 - **Traçabilité totale** : aucun critère du plan n'est absent de la matrice.
 - Manifeste silencieux, restitutions en prose, typographie humaine (cf.
   `references/ux-conventions.md`).
 
-Étape suivante : selon le verdict - `/recette:correction-anomalie` côté développeur si des anomalies ont été créées, `/validation:plan-de-validation` pour la feature livrée suivante, ou une nouvelle exécution après correction pour lever les réserves.
+Étape suivante : selon le verdict - `/maintenance:correction-anomalie` côté développeur si des anomalies ont été créées, `/validation:plan-de-validation` pour la feature livrée suivante, ou une nouvelle exécution après correction pour lever les réserves.

@@ -8,8 +8,8 @@ description: Réalise une évolution sur une feature livrée sans déborder : sp
 Skill du **développeur**, quand il prend en charge une évolution créée par le PO. Son rôle :
 réaliser l'évolution sur une feature **déjà livrée**, sans dérive, en mettant à jour **la
 spécification d'abord** et le code ensuite, et surtout **sans déborder** sur ce qui marchait
-déjà. C'est le skill le plus sensible de la recette : il applique les **4 disciplines
-chirurgicales** de `references/regles-recette.md`.
+déjà. C'est le skill le plus sensible de la maintenance : il applique les **4 disciplines
+chirurgicales** de `references/regles-maintenance.md`.
 
 ## Ancrage du répertoire (impératif)
 **La racine du projet est le dossier courant** (le cwd) - **jamais** un dossier parent. Tous
@@ -17,19 +17,19 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
 **sous ce dossier**. **Ne jamais remonter l'arborescence.**
 
 ## Pré-requis (vérification silencieuse)
-- **MCP Linear disponible** (`list_teams` répond - cf. `references/linear-recette.md`). Sinon,
+- **MCP Linear disponible** (`list_teams` répond - cf. `references/linear-maintenance.md`). Sinon,
   refuser en clair et afficher les instructions d'installation.
 - **L'évolution existe** : identifiant Linear fourni (ou retrouvée par `list_issues`, à
   confirmer), label `Evolution`, ticket Feature parent, et une **proposition de mise à jour de
   la spécification** dans sa description. Une évolution sans proposition circonscrite retourne
-  au PO (`/recette:creation-evolution`) - le dire en clair.
+  au PO (`/maintenance:creation-evolution`) - le dire en clair.
 - **La spécification de la feature existe** : `specs/<feature>/spec.md`.
 
 ## Procédure
 1. **Prendre en charge.** Lire tout le ticket (`get_issue`), dont la proposition de changement,
    identifier la feature par le ticket parent, puis passer l'évolution **en cours** : le
    statut de travail de l'équipe résolu **par son nom** via `list_issue_statuses` (ex. "In
-   Progress" - jamais le type brut `started`, cf. `references/linear-recette.md`), idempotent,
+   Progress" - jamais le type brut `started`, cf. `references/linear-maintenance.md`), idempotent,
    état retourné vérifié.
 2. **Le tri de niveau supérieur : propre à la feature, ou vérité partagée ?** Sans ce tri, ce
    skill deviendrait une porte par laquelle on modifierait des contrats partagés feature par
@@ -41,7 +41,7 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
 
    Si elle touche une **vérité partagée** (glossaire, principe de constitution, décision
    d'architecture, donnée commune, règle d'erreur ou de design - cf.
-   `references/regles-recette.md`) : **ne rien écrire**, et **exposer le conflit en clair** -
+   `references/regles-maintenance.md`) : **ne rien écrire**, et **exposer le conflit en clair** -
    ce que dit le contrat partagé et où il le dit, ce que demande l'évolution, pourquoi les
    deux sont incompatibles. Puis **poser la décision au développeur** en annonçant la voie
    recommandée, et **attendre sa réponse**. Ce point est une **décision, jamais un arrêt
@@ -59,9 +59,9 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
        commentaire Linear, puis continuer en 3.
      - **Remonter et parquer** : déposer un commentaire d'escalade qui **nomme** le contrat
        touché et ce qui doit être arbitré, **remettre le ticket en Backlog** (statut résolu
-       par son nom, état retourné vérifié - cf. `references/linear-recette.md`), et
+       par son nom, état retourné vérifié - cf. `references/linear-maintenance.md`), et
        s'arrêter. **Dire explicitement comment on reprend** : une fois le contrat amendé au
-       niveau central, il suffit de relancer `/recette:realisation-evolution` sur ce même
+       niveau central, il suffit de relancer `/maintenance:realisation-evolution` sur ce même
        ticket - le tri repassera et laissera continuer.
 
    *(Suivre `references/interactive-loop.md` : exposer le point, annoncer la recommandation,
@@ -143,4 +143,4 @@ dans Linear).
 - **Typographie humaine** dans la spécification, les commentaires et les sorties (cf. la
   section Typographie de `references/ux-conventions.md`).
 
-Étape suivante : si l'évolution a été parquée en attente d'arbitrage, **relancer ce même skill** sur le ticket une fois le contrat partagé amendé. Sinon, `/recette:creation-anomalie` ou `/recette:creation-evolution` - tracer le prochain écart constaté en recette.
+Étape suivante : si l'évolution a été parquée en attente d'arbitrage, **relancer ce même skill** sur le ticket une fois le contrat partagé amendé. Sinon, `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` - tracer le prochain écart constaté en recette.

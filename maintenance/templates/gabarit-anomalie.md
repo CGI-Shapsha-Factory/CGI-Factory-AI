@@ -1,4 +1,4 @@
-# Gabarit : corps d'un ticket d'anomalie de recette
+# Gabarit : corps d'un ticket d'anomalie de maintenance
 
 Gabarit du corps (description Markdown) d'un ticket d'anomalie créé dans Linear par
 `creation-anomalie`. Toutes les sections sont **obligatoires** : tant que l'une est vide,

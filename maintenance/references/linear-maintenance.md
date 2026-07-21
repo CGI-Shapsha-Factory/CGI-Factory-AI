@@ -1,6 +1,6 @@
-# Guide Linear : anomalies et évolutions de recette via le MCP linear-prism
+# Guide Linear : anomalies et évolutions de maintenance via le MCP linear-prism
 
-Référence d'usage pour les 4 skills métier de la recette. Le dialogue passe par le **MCP du
+Référence d'usage pour les 4 skills métier de la maintenance. Le dialogue passe par le **MCP du
 plugin `linear-prism`** (serveur hébergé `https://mcp.linear.app/mcp`, authentifié en OAuth via
 `/mcp` - **aucune clé API** à gérer). Ce plugin est **externe à la Factory** : les skills le
 détectent et, s'il est absent, **ne créent ni ne mettent à jour rien** - ils refusent et
@@ -40,7 +40,7 @@ l'analyse d'impact : un objet sans feature rattachable est un orphelin -> **refu
 créer**. Aucune convention de numérotation dans le titre : l'identifiant natif Linear
 (`<TEAM>-<n>`) porte déjà le numéro.
 
-## Marquer une phase de `tasks.md` possédée par un ticket de recette
+## Marquer une phase de `tasks.md` possédée par un ticket de maintenance
 Quand une anomalie ou une évolution fait **régénérer** `specs/<feature>/tasks.md`, la phase
 créée doit **nommer son ticket propriétaire** dans son titre :
 
@@ -50,7 +50,7 @@ créée doit **nommer son ticket propriétaire** dans son titre :
 ```
 
 Sans ce marqueur, `/assembleur:creation-task-linear` et le hook `tasks.md` voient une phase
-sans sous-ticket et proposent d'en créer un : ce serait un **doublon** du ticket de recette,
+sans sous-ticket et proposent d'en créer un : ce serait un **doublon** du ticket de maintenance,
 son **frère** sous la même Feature, avec deux états à synchroniser - et "Linear est la seule
 source de vérité" tombe. Marquée, la phase est **énoncée et passée**, jamais proposée. Règle
 complète et motif exact : `assembleur/references/linear-guide.md`, 4e clé de jointure.
@@ -60,22 +60,22 @@ complète et motif exact : `assembleur/references/linear-guide.md`, 4e clé de j
 **titre de phase markdown** dans `tasks.md` : objet différent, besoin différent (un fichier
 committé n'a aucun moyen natif de désigner un ticket). Les deux règles coexistent.
 
-**Corollaire** : un skill de recette **n'appelle jamais** `/assembleur:creation-task-linear`.
+**Corollaire** : un skill de maintenance **n'appelle jamais** `/assembleur:creation-task-linear`.
 Le ticket d'anomalie ou d'évolution **est** l'objet suivi ; la phase en est un détail
 d'implémentation, et son avancement se trace par le statut et les commentaires de ce ticket.
 
-## Labels de recette
+## Labels de maintenance
 Deux labels plats : **`Anomalie`** et **`Evolution`**. `save_issue` prend le paramètre
 **`labels`** (une liste de **noms** ou d'ids - passer les noms exacts, ex. `["Anomalie"]`).
-`recette-init` vérifie leur existence via `list_issue_labels` (comparaison insensible à la
+`maintenance-init` vérifie leur existence via `list_issue_labels` (comparaison insensible à la
 casse) et crée les manquants via `create_issue_label` (avec le `teamId` UUID de l'équipe,
 best-effort : ne pas bloquer un skill métier pour un label absent, l'omettre et le signaler).
 Attention : `labels` **remplace tout le jeu de labels** du ticket - à la **mise à jour** d'un
 ticket existant, ne jamais passer `labels` sans reprendre les labels déjà présents
 (`get_issue` d'abord). Jamais de label de numérotation, jamais `Feature`/`Task` sur un objet
-de recette.
+de maintenance.
 
-## Créer un objet de recette
+## Créer un objet de maintenance
 `save_issue({team, title: "<intitulé métier court>", parentId: "<identifier du ticket
 Feature>", labels: ["Anomalie" ou "Evolution"], state: "Backlog", description: "<gabarit
 rempli>"})`
@@ -94,14 +94,14 @@ défaut. Le MCP **ne sait pas créer de statut** : il se crée **une fois à la 
 Marche à suivre à afficher quand il manque (vérification : `list_issue_statuses({team})`) :
 1. Linear -> **Settings** de l'équipe -> **Issue statuses & automations**.
 2. Dans le groupe **Canceled**, ajouter un statut nommé **"Requalifiée en évolution"**.
-3. Relancer la vérification (le skill `recette-init` la refait à la demande).
+3. Relancer la vérification (le skill `maintenance-init` la refait à la demande).
 
 Tant que le statut manque, `correction-anomalie` **ne requalifie pas** (le ticket reste en
 cours) : afficher la marche à suivre et attendre. Cette vérification **préalable** est
 obligatoire : passer à `save_issue` un état inexistant **n'échoue pas** - il est ignoré en
 silence (voir ci-dessous).
 
-## Mettre à jour un objet de recette
+## Mettre à jour un objet de maintenance
 - **Trouver** : `get_issue({id: "<identifier>"})` (retourne aussi l'état courant et la
   description) ; ou `list_issues({query, team})` par mots-clés du titre.
 - **Changer l'état** : `save_issue({id, state})` avec le **nom exact** de l'état, résolu au
@@ -116,15 +116,15 @@ silence (voir ci-dessous).
   qu'il ne résout pas (aucune erreur, le ticket reste dans son état courant). Après chaque
   changement d'état, lire le champ `status` de la **réponse** et confirmer qu'il est bien
   l'état visé ; sinon, traiter comme un échec (ne jamais annoncer un changement non confirmé).
-- **Commenter** : `save_comment({issueId, body})` - la trace de recette vit dans le ticket
+- **Commenter** : `save_comment({issueId, body})` - la trace de maintenance vit dans le ticket
   (cause racine et correctif d'une anomalie, explication d'une requalification, réouverture
   d'une feature pour une évolution). Markdown réel, typographie humaine.
 - **Idempotence** : lire l'état courant (`get_issue`) **avant** d'écrire ; s'il est déjà celui
   visé, ne rien faire.
 
 ## L'état vit dans Linear, jamais dans le manifeste
-Le manifeste committé ne porte que la **configuration statique** de la recette (bloc
-`recette` : équipe, labels vérifiés, statut de requalification vérifié). Les anomalies, les
+Le manifeste committé ne porte que la **configuration statique** de la maintenance (bloc
+`maintenance` : équipe, labels vérifiés, statut de requalification vérifié). Les anomalies, les
 évolutions, leurs statuts et leurs commentaires vivent **uniquement dans Linear** : l'activité
-de recette est concurrente (plusieurs développeurs, plusieurs branches) et un fichier committé
+de maintenance est concurrente (plusieurs développeurs, plusieurs branches) et un fichier committé
 unique entrerait en conflit de merge. **Linear est la source de vérité** de l'avancement.

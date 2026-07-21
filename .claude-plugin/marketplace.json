@@ -62,13 +62,13 @@
       "description": "Plan de test derive de la spec -> execution navigateur -> rapport de recette trace, verdict humain."
     },
     {
-      "name": "recette",
+      "name": "maintenance",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
-        "path": "recette"
+        "path": "maintenance"
       },
-      "category": "Recette (post-livraison)",
+      "category": "Maintenance (post-livraison)",
       "tags": ["po", "developpeur", "anomalie", "evolution", "linear", "speckit"],
       "description": "Anomalies et evolutions apres livraison -> Linear + SpecKit orchestre."
     },

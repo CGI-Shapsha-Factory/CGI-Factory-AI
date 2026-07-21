@@ -1,4 +1,4 @@
-# Règles de la recette : frontière, règles d'or, discipline chirurgicale
+# Règles de la maintenance : frontière, règles d'or, discipline chirurgicale
 
 Référence partagée des 4 skills métier (`creation-anomalie`, `correction-anomalie`,
 `creation-evolution`, `realisation-evolution`). Chaque skill y renvoie au lieu de dupliquer.
@@ -15,7 +15,7 @@ l'épreuve par quelqu'un d'autre que le développeur (le PO, en recette). À par
 écart concerne l'équipe et mérite d'exister comme objet suivi.
 
 Conséquence pratique : si `specs/<feature>/` n'existe pas ou si la feature n'est pas déclarée
-terminée, la recette n'a pas d'objet - signaler que la frontière n'est pas franchie, ne rien créer.
+terminée, la maintenance n'a pas d'objet - signaler que la frontière n'est pas franchie, ne rien créer.
 
 ## Anomalie ou évolution : la distinction fondamentale
 - **Anomalie** : le logiciel ne fait pas ce que sa spécification promet. La spécification est

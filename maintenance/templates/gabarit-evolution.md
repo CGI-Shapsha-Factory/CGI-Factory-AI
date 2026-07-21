@@ -1,4 +1,4 @@
-# Gabarit : corps d'un ticket d'évolution de recette
+# Gabarit : corps d'un ticket d'évolution de maintenance
 
 Gabarit du corps (description Markdown) d'un ticket d'évolution créé dans Linear par
 `creation-evolution`. Toutes les sections sont **obligatoires** : tant que l'une est vide,

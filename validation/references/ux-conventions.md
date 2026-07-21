@@ -74,7 +74,7 @@ du rapport, ou le récapitulatif de la porte de recette).
 
 ## 5. Une ligne "étape suivante" à la fin de chaque skill
 Terminer chaque exécution par exactement une phrase :
-> "Étape suivante : `/validation:<skill>` (ou `/recette:<skill>`) - <pourquoi en quelques mots>."
+> "Étape suivante : `/validation:<skill>` (ou `/maintenance:<skill>`) - <pourquoi en quelques mots>."
 
 ## 6. Langue
 **Tout en français** (interaction + artefacts + commentaires Linear). Seuls les

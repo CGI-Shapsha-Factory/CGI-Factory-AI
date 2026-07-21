@@ -31,4 +31,4 @@ données, page de départ.)
 Ce scénario se rejoue tel quel contre l'environnement de recette, avec n'importe quel outil
 d'exécution navigateur. Si une étape ne trouve plus son élément par le libellé indiqué,
 c'est soit une évolution volontaire de l'écran (mettre le scénario à jour), soit une
-régression (ouvrir une anomalie via `/recette:creation-anomalie`).
+régression (ouvrir une anomalie via `/maintenance:creation-anomalie`).

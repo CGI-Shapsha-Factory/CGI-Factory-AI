@@ -10,11 +10,11 @@ recette) et **avant** son acceptation. Elle répond à la question : "le logicie
 fait-il ce que sa spécification promet ?" - critère par critère, preuve à l'appui.
 
 La validation **détecte et trace** ; elle ne **traite** jamais un écart :
-- le **traitement** des écarts est le rôle exclusif du plugin `recette` (création d'une
+- le **traitement** des écarts est le rôle exclusif du plugin `maintenance` (création d'une
   anomalie ou d'une évolution dans Linear, correction côté développeur, requalification) ;
 - la validation **prépare le contenu** d'un écart (comportement attendu, constaté, étapes de
-  reproduction depuis le déroulé capturé) et **renvoie** vers `/recette:creation-anomalie` ou
-  `/recette:creation-evolution` - la création reste la porte de création unique de la recette,
+  reproduction depuis le déroulé capturé) et **renvoie** vers `/maintenance:creation-anomalie` ou
+  `/maintenance:creation-evolution` - la création reste la porte de création unique de la maintenance,
   avec ses portes de complétude et sa validation humaine.
 
 Le déclenchement est **toujours manuel** (le testeur lance les skills) : aucune validation
@@ -33,17 +33,17 @@ ne part seule sur un push, un merge ou un déploiement.
   d'un critère flou produit des faux verdicts dans les deux sens.
 - **La spécification reste intacte.** La validation lit `spec.md`, elle ne l'écrit jamais :
   clarifier un critère **dans le plan de test** précise sa lecture observable ; changer le
-  critère **lui-même** passe par une évolution de recette (geste PO, via SpecKit).
+  critère **lui-même** passe par une évolution de maintenance (geste PO, via SpecKit).
 
 ## Le tri des écarts : bug, spécification en cause, ou critère flou
 À l'issue de l'exécution, chaque écart est trié **avec le testeur**, un par un, selon la
-distinction fondamentale de la recette :
+distinction fondamentale de la maintenance :
 - **Critère non respecté (anomalie)** : la spécification est bonne, le logiciel ne la respecte
-  pas. -> proposer de créer l'anomalie via `/recette:creation-anomalie`, contenu pré-rempli
+  pas. -> proposer de créer l'anomalie via `/maintenance:creation-anomalie`, contenu pré-rempli
   depuis le déroulé capturé. Le code sera réparé ; la spécification ne change pas.
 - **Critère faux ou incomplet (évolution)** : le logiciel fait ce qui est écrit, mais ce qui
   est écrit ne correspond pas au vrai besoin. -> proposer d'ouvrir la boucle de retour vers la
-  spécification via `/recette:creation-evolution` (geste du PO, jamais automatique).
+  spécification via `/maintenance:creation-evolution` (geste du PO, jamais automatique).
 - **Critère flou (non testable)** : impossible de trancher tant que le critère n'est pas
   clair. -> proposer de clarifier la lecture observable en session, ou de tracer le point dans
   Linear pour suivi.
@@ -86,7 +86,7 @@ afficher l'installation :
 2. Installer le plugin : `/plugin install linear-prism@linear-prism`
 3. Redémarrer Claude Code (pour charger le serveur MCP).
 4. S'authentifier : `/mcp` -> serveur `linear` -> login OAuth.
-Patrons d'usage (les mêmes que la recette) : ticket `Feature` résolu par
+Patrons d'usage (les mêmes que la maintenance) : ticket `Feature` résolu par
 `list_issues({team, label Feature})` avec le numéro de registre en tête de titre ; états
 changés par **nom** résolu via `list_issue_statuses` en vérifiant l'état retourné (un état
 non résolu est ignoré en silence) ; `save_comment` pour la trace ; lire avant d'écrire
@@ -98,5 +98,5 @@ Le déroulé **effectif** de chaque cas OK est consolidé en scénario rejouable
 (`validation-out/<feature>/scenarios/TC-*.md`) : étapes en **langage naturel**, précises et
 auto-portantes, rejouables par n'importe quel outil d'exécution (extension Chrome, Playwright,
 Cowork) sans dépendre d'un sélecteur technique. C'est la bibliothèque de non-régression que
-la recette rejoue : `realisation-evolution` (prouver que l'ancien comportement tient) et
+la maintenance rejoue : `realisation-evolution` (prouver que l'ancien comportement tient) et
 `correction-anomalie` (vérifier qu'une correction n'a rien cassé autour).

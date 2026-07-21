@@ -28,7 +28,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
   Le plugin lit/écrit ces fichiers ; il ne les contient pas.
 
 ## Les skills (9 du pipeline + `cadrage-ideation` facultatif + `help-factory`)
-`help-factory` (hors pipeline) est l'**aide unique** de la Factory : elle affiche, de façon **statique** (rendu immédiat), la **carte des 6 plugins** (cadrage -> architecte -> designer -> assembleur -> SpecKit -> validation -> recette) avec **un tableau par plugin** (rôle de chaque skill, ordre, portes humaines). C'est la seule aide - il n'y a plus de `help-cadrage` (son détail est absorbé dans le tableau cadrage).
+`help-factory` (hors pipeline) est l'**aide unique** de la Factory : elle affiche, de façon **statique** (rendu immédiat), la **carte des 6 plugins** (cadrage -> architecte -> designer -> assembleur -> SpecKit -> validation -> maintenance) avec **un tableau par plugin** (rôle de chaque skill, ordre, portes humaines). C'est la seule aide - il n'y a plus de `help-cadrage` (son détail est absorbé dans le tableau cadrage).
 
 | # | skill | rôle | porte |
 |---|-------|------|-------|

@@ -15,12 +15,12 @@ par exigence** dont le **verdict reste humain** (porte de recette : le testeur e
 valideur). Ce n'est **pas un projet applicatif** : des **skills Markdown** + un
 `plugin.json`. Pas de build, pas de lint, pas de tests unitaires.
 
-**La validation détecte et trace ; la recette traite.** Le tri d'un écart distingue le
-**bug** (critère non respecté -> renvoi vers `/recette:creation-anomalie`, contenu
+**La validation détecte et trace ; la maintenance traite.** Le tri d'un écart distingue le
+**bug** (critère non respecté -> renvoi vers `/maintenance:creation-anomalie`, contenu
 pré-rempli) de la **spécification en cause** (critère faux ou incomplet -> renvoi vers
-`/recette:creation-evolution`, geste PO) et du **critère flou** (clarification ou suivi
+`/maintenance:creation-evolution`, geste PO) et du **critère flou** (clarification ou suivi
 Linear). **Aucune anomalie ni évolution n'est créée ici en direct** : la porte de création
-unique et ses portes de complétude restent côté recette. Seule exception bornée : le **ticket
+unique et ses portes de complétude restent côté maintenance. Seule exception bornée : le **ticket
 de suivi** d'un critère flou (sur accord explicite du testeur) - un sous-ticket du ticket
 `Feature`, **sans label de recette** (jamais `Anomalie`/`Evolution`, ni `Feature`/`Task`).
 Le déclenchement est **toujours manuel** (jamais de hook de déploiement).
@@ -33,13 +33,13 @@ Invocation directe `/validation:<skill>` + auto-invocation par la description. P
 ## Les 4 skills
 | # | skill | rôle | porte |
 |---|-------|------|-------|
-| 0 | `validation-init` | gabarits dans `.factory/validation/` + bloc manifeste `validation` (adresse de recette, outil habituel - config statique seule) + `.gitignore` complété + état de l'amont signalé (specs/, Linear, recette) | jamais bloquant |
+| 0 | `validation-init` | gabarits dans `.factory/validation/` + bloc manifeste `validation` (adresse de recette, outil habituel - config statique seule) + `.gitignore` complété + état de l'amont signalé (specs/, Linear, maintenance) | jamais bloquant |
 | 1 | `plan-de-validation` | `specs/<feature>/spec.md` -> `validation-out/<feature>/plan-de-test.md` : un cas `TC-<feature>-NNN` par critère (Given/When/Then traduit en étapes navigateur observables), critère flou = `A CLARIFIER` avec raison, données de test collectées en boucle interactive, porte de régénération à la relance | **plan validé par le testeur** (humain) |
 | 2 | `execution-validation` | choix de l'outil à chaque lancement (extension Chrome recommandée / Playwright en repli / mission Cowork différée via `mission-cowork.md` auto-portant) -> `resultats/execution-<JJ-MM>.md` au **contrat commun** (un bloc par cas : verdict OK/KO/NON TESTABLE, déroulé effectif, preuves, constaté vs attendu sur KO) + captures dans `resultats/preuves/` | le testeur choisit l'outil ; l'IA constate, ne juge pas |
-| 3 | `bilan-validation` | matrice de traçabilité (critère -> cas -> verdict -> preuve -> décision) + tri des écarts un par un avec le testeur (anomalie / évolution / flou -> renvois `/recette:*`) + scénarios rejouables `scenarios/TC-*.md` (cas OK) + **porte de recette** : verdict humain inscrit dans le rapport et commenté sur le ticket `Feature` Linear | **verdict de recette** (humain) |
+| 3 | `bilan-validation` | matrice de traçabilité (critère -> cas -> verdict -> preuve -> décision) + tri des écarts un par un avec le testeur (anomalie / évolution / flou -> renvois `/maintenance:*`) + scénarios rejouables `scenarios/TC-*.md` (cas OK) + **porte de recette** : verdict humain inscrit dans le rapport et commenté sur le ticket `Feature` Linear | **verdict de recette** (humain) |
 
 Flux : `validation-init` -> (par feature livrée) `plan-de-validation` -> `execution-validation`
--> `bilan-validation` -> écarts traités côté recette (`correction-anomalie`,
+-> `bilan-validation` -> écarts traités côté maintenance (`correction-anomalie`,
 `realisation-evolution`) -> nouvelle exécution pour lever les réserves si besoin.
 
 ## Workspace & manifeste
@@ -61,7 +61,7 @@ rapport committé et **dans Linear** (jamais dans le manifeste : concurrence mul
 ## Frontière SpecKit (lecture seule)
 La spécification est **lue, jamais écrite** : clarifier un critère se fait **dans le plan de
 test** (sa lecture observable) ; changer le critère lui-même passe par une évolution de
-recette (geste PO, via les commandes SpecKit). Jamais d'écriture dans `specs/` ni `.specify/`.
+maintenance (geste PO, via les commandes SpecKit). Jamais d'écriture dans `specs/` ni `.specify/`.
 
 ## Conventions partagées
 `references/interactive-loop.md`, `references/ux-conventions.md` (typographie humaine
@@ -81,7 +81,7 @@ place ; par feature : plan présent et tracé, et si le rapport existe, **verdic
 Gabarits : `templates/{plan-de-test,mission-cowork,rapport-de-recette,scenario-rejouable}.md`.
 Identifiant d'un cas de test : `TC-<numéro>-NNN` où `<numéro>` est le **numéro de registre à
 3 chiffres** de la feature (ex. `TC-001-003`), jamais le nom complet du dossier `specs/`.
-Linear : mêmes patrons que la recette (`recette/references/linear-recette.md`, référence de
+Linear : mêmes patrons que la maintenance (`maintenance/references/linear-maintenance.md`, référence de
 ce dépôt ; les skills restent auto-portants et affichent eux-mêmes l'installation du MCP) -
 détection
 `list_teams`, ticket `Feature` résolu par le numéro en tête de titre, états par **nom**
@@ -101,7 +101,7 @@ python scripts/check_validation.py <projet>/manifest.json [<feature>]
 exécution ; le tri de chaque écart et le verdict de recette sont humains ; le skill ne
 prononce jamais le verdict. **Un critère = un cas, cité** (traçabilité totale, aucun critère
 écarté en silence). **Jamais interpréter un critère flou** (A CLARIFIER au plan,
-NON TESTABLE à l'exécution). **Détection ici, traitement côté recette** (jamais de ticket
+NON TESTABLE à l'exécution). **Détection ici, traitement côté maintenance** (jamais de ticket
 d'anomalie/évolution créé en direct). **Contrat de sortie commun** aux trois voies
 d'exécution. **Fiabilité** : relance unique triée avant KO, budget d'étapes borné, preuve à
 chaque verdict, jamais d'action destructive sans confirmation, données de test uniquement.
