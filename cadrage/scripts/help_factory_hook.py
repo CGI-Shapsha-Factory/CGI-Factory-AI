@@ -19,14 +19,15 @@ import os
 import re
 import sys
 import textwrap
+from itertools import zip_longest
 
 MARKER = "## A afficher tel quel"
 SKILL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                      "skills", "help-factory", "SKILL.md")
 
 WIDTH = 96          # largeur de rendu, confortable dans un terminal standard
-NAME_COL = 30       # colonne du nom de skill
-INDENT = "  "
+NAME_W = 28         # colonne du nom de skill (le plus long en fait exactement 28)
+ROLE_W = WIDTH - NAME_W - 7     # le reste, une fois retires les bordures et separateurs
 
 
 def sans_accent(text):
@@ -47,9 +48,13 @@ def cellules(ligne):
     return [c.strip() for c in ligne.strip().strip("|").split("|")]
 
 
-def plie(texte, largeur=None):
+def plie(texte, largeur):
     """Habille un texte. Sans coupure sur les tirets : les chemins doivent rester entiers."""
-    return textwrap.wrap(texte, largeur or (WIDTH - NAME_COL), break_on_hyphens=False)
+    return textwrap.wrap(texte, largeur, break_on_hyphens=False)
+
+
+def rangee(gauche, droite):
+    return "| " + gauche.ljust(NAME_W) + " | " + droite.ljust(ROLE_W) + " |"
 
 
 def rend_tableau(lignes, titre):
@@ -59,24 +64,22 @@ def rend_tableau(lignes, titre):
     i_porte = next((i for i, h in enumerate(entetes) if h.startswith("porte")), len(entetes) - 1)
     # colonne "#" (numerote des lignes deja ordonnees) et colonne porte : hors sujet ici
     ignores = {i_nom, i_porte} | {i for i, h in enumerate(entetes) if h in ("#", "")}
-    interieur = WIDTH - 4
-    corps = []
+    separateur = "+" + "-" * (NAME_W + 2) + "+" + "-" * (ROLE_W + 2) + "+"
+    entete = "-- " + titre + " " if titre else "-"
+    sortie = ["+" + entete + "-" * (WIDTH - 2 - len(entete)) + "+",
+              rangee("skill", "role"), separateur]
     for ligne in lignes[2:]:                                        # [1] = separateur |---|
         cols = cellules(ligne)
         if len(cols) <= i_nom:
             continue
-        nom = nettoie(cols[i_nom])
+        nom = plie(nettoie(cols[i_nom]), NAME_W) or [""]
         role = " ".join(nettoie(c) for j, c in enumerate(cols) if j not in ignores and nettoie(c))
-        replis = plie(role, interieur - NAME_COL) or [""]
-        if len(nom) > NAME_COL - 2:                                 # nom trop long : role en dessous
-            corps.append(nom)
-        else:
-            corps.append(nom.ljust(NAME_COL) + replis.pop(0))
-        corps.extend(" " * NAME_COL + suite for suite in replis)
-    entete = "-- " + titre + " " if titre else "-"
-    return (["+" + entete + "-" * (WIDTH - 2 - len(entete)) + "+"]
-            + ["| " + l.ljust(interieur) + " |" for l in corps]
-            + ["+" + "-" * (WIDTH - 2) + "+", ""])
+        role = plie(role, ROLE_W) or [""]
+        # une rangee par skill, sur autant de lignes que necessaire, puis un trait de separation
+        for g, d in zip_longest(nom, role, fillvalue=""):
+            sortie.append(rangee(g, d))
+        sortie.append(separateur)
+    return sortie + [""]
 
 
 def rend(body):
