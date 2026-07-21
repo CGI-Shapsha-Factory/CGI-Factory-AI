@@ -58,7 +58,18 @@ Produire `architecte-out/diagrammes.md` (gabarit `templates/diagrammes.md`) :
 C4 contexte, C4 conteneurs, flux d'un parcours critique, ERD, déploiement - en **syntaxe D2**
 (moteur de layout **ELK** : routage orthogonal, sans chevauchement de flèches ni de libellés),
 avec les noms réels (pas de placeholders). Garder les libellés de flèche courts là où plusieurs
-flèches convergent (sinon les libellés se serrent).
+flèches convergent (sinon les libellés se serrent). **Couleur de trait par entité source** : dans
+les diagrammes **conteneurs**, **flux** et **déploiement**, chaque entité qui émet **plusieurs
+flèches** reçoit une couleur dédiée, via un glob de connexion écrit **après** les connexions
+ciblées - `(<source> -> **)[*].style.stroke: "<hex>"` (le double glob `**` est **obligatoire** :
+avec un simple `*`, les cibles imbriquées dans un conteneur ne sont pas atteintes), chemin
+**qualifié complet** si la source est imbriquée (`system.containerA`). Palette du gabarit, prise dans l'ordre ; jamais la même teinte pour
+deux sources dont les flèches se croisent. La **même couleur** sert de **contour au rectangle
+émetteur** - sur la déclaration du noeud, `style.stroke: "<même hex>"` + `style.stroke-width: 3` -
+pour retrouver d'un coup d'oeil la boîte d'où part un faisceau ; les entités qui n'émettent rien
+(bases, secrets, journalisation, systèmes externes) **gardent leur contour d'origine**. La couleur
+**complète** les libellés, elle ne les remplace pas. **Pas de coloriage** sur le diagramme de
+contexte ni sur l'ERD (sur une `sql_table`, D2 applique `stroke` au fond de l'en-tête).
 Puis **générer les images** : lancer
 `py -3 "${CLAUDE_PLUGIN_ROOT}/scripts/render_diagrams.py" <projet>/architecte-out/diagrammes.md`
 (remplacer `py -3` par `python` si `py` est absent) - il rend un **SVG par diagramme** (source de
@@ -146,6 +157,9 @@ indéfini. Aucun fichier annexe.
   `composants.md`, `stack-technique.md`, `standards-ingenierie.md`, ADR, `diagrammes.md` (+ images dans
   `diagrammes/`), `risques.md`, **`impact-design.md`** produits ; conventions par langage
   installées dans `conventions/` ; walking skeleton et séquence de features figés.
+- Dans `diagrammes.md`, **chaque source émettant plusieurs flèches** des diagrammes conteneurs,
+  flux et déploiement porte sa **couleur** - **sur ses flèches et sur son contour**, même valeur hex
+  aux deux endroits (aucune source laissée au trait par défaut) ; contexte et ERD restent neutres.
 - **Composant Frontend/UI présent** dans `composants.md` si le produit a des écrans ;
   **chaque techno de `stack-technique.md` porte une version exacte** (aucun "latest" / vide) ;
   `composants.md` et `stack-technique.md` **cohérents** (mêmes technos/versions, pas de stack
