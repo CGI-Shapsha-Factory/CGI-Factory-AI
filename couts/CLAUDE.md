@@ -72,9 +72,9 @@ différent, ex. Opus 4.1 = 3×). Externe et **datée** (jamais en dur).
 
 ## Rapport (par session, versionné)
 `cost_report.py` agrège le journal **par session** : début/fin (`ts` min/max, format `JJ-MM`), tokens
-**input** (bruts, hors cache), tokens **output**, et **coût complet** (5 catégories au tarif par tier)
-converti en euros via un **taux figé** (`USD_EUR`/`RATE_DATE` en tête du script). Un tableau + une ligne
-Total. Aucune ventilation par phase/feature/tier. **Simulation seule.** **Versionnage** (`_next_report_path`) :
+**input** (bruts, hors cache), tokens **output**, tokens **cache lu**, tokens **cache écrit** (5m + 1h
+cumulés), et **coût complet** (5 catégories au tarif par tier) converti en euros via un **taux figé**
+(`USD_EUR`/`RATE_DATE` en tête du script). Un tableau + une ligne Total. Aucune ventilation par phase/feature/tier. **Simulation seule.** **Versionnage** (`_next_report_path`) :
 chaque run écrit un **nouveau fichier** (`rapport-couts.md`, puis `rapport-couts-2.md`, `-3.md`...) -
 **jamais d'écrasement** ; le chemin écrit est renvoyé (stdout + champ `report_path` en `--json`).
 

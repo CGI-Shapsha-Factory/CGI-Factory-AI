@@ -6,8 +6,9 @@ convertis en EUR via un taux FIGE dans ce script. Ce n'est PAS un montant factur
 estimation "combien cette fabrication couterait au tarif API".
 
 Le tableau donne, par session : date de debut -> date de fin (JJ-MM), tokens d'entree (bruts, hors
-cache), tokens de sortie, et le cout en euros (cout complet : input + output + cache lu + cache ecrit,
-au tarif par tier). Une ligne Total agrege les trois colonnes.
+cache), tokens de sortie, tokens de cache lu, tokens de cache ecrit (5m + 1h cumules), et le cout en
+euros (cout complet : input + output + cache lu + cache ecrit, au tarif par tier). Une ligne Total
+agrege les colonnes numeriques.
 
 Usage : python cost_report.py [racine_projet] [--json]
 Ecrit aussi .factory/couts/rapport-couts.md
@@ -110,11 +111,12 @@ def _jjmm(ts):
 
 
 def sessions_of(records):
-    """Agrege le journal PAR session : debut/fin (ts min/max), tokens input/output, cout USD."""
+    """Agrege le journal PAR session : debut/fin (ts min/max), tokens input/output, cache lu/ecrit, cout USD."""
     sess = {}
     for r in records:
         sid = r.get("session_id") or "?"
-        s = sess.setdefault(sid, {"start": None, "end": None, "input": 0, "output": 0, "usd": 0.0})
+        s = sess.setdefault(sid, {"start": None, "end": None, "input": 0, "output": 0,
+                                  "cache_read": 0, "cache_write": 0, "usd": 0.0})
         ts = r.get("ts")
         if ts:
             if s["start"] is None or ts < s["start"]:
@@ -124,6 +126,8 @@ def sessions_of(records):
         tok = r.get("tokens") or {}
         s["input"] += tok.get("input", 0) or 0
         s["output"] += tok.get("output", 0) or 0
+        s["cache_read"] += tok.get("cache_read", 0) or 0
+        s["cache_write"] += (tok.get("cache_write_5m", 0) or 0) + (tok.get("cache_write_1h", 0) or 0)
         s["usd"] += r.get("sim_cost_usd") or 0.0
     return sess
 
@@ -137,37 +141,44 @@ def build_report(root):
     lines = ["# Rapport de coûts : Factory", ""]
     lines.append(f"## Coût de simulation (estimation, tarif API - table du {pdate or '?'})")
     lines.append("")
-    lines.append("| Session (début -> fin) | Tokens input | Tokens output | Coût (€) |")
-    lines.append("|---|---|---|---|")
+    lines.append("| Session (début -> fin) | Tokens input | Tokens output | Cache lu | Cache écrit | Coût (€) |")
+    lines.append("|---|---|---|---|---|---|")
 
-    tot_in = tot_out = 0
+    tot_in = tot_out = tot_cread = tot_cwrite = 0
     tot_usd = 0.0
     for sid in order:
         s = sess[sid]
         label = f"{_jjmm(s['start'])} -> {_jjmm(s['end'])}"
         e = eur(s["usd"])
         cout = f"{e:.2f} €" if e is not None else "-"
-        lines.append(f"| {label} | {_int(s['input'])} | {_int(s['output'])} | {cout} |")
+        lines.append(f"| {label} | {_int(s['input'])} | {_int(s['output'])} | "
+                     f"{_int(s['cache_read'])} | {_int(s['cache_write'])} | {cout} |")
         tot_in += s["input"]
         tot_out += s["output"]
+        tot_cread += s["cache_read"]
+        tot_cwrite += s["cache_write"]
         tot_usd += s["usd"]
 
     te = eur(tot_usd)
     tot_cout = f"{te:.2f} €" if te is not None else "-"
-    lines.append(f"| **Total** | **{_int(tot_in)}** | **{_int(tot_out)}** | **{tot_cout}** |")
+    lines.append(f"| **Total** | **{_int(tot_in)}** | **{_int(tot_out)}** | "
+                 f"**{_int(tot_cread)}** | **{_int(tot_cwrite)}** | **{tot_cout}** |")
     lines.append("")
-    lines.append(f"_{len(sess)} session(s). Input = tokens d'entrée hors cache ; le coût inclut le "
-                 f"cache (lecture + écriture). Taux {USD_EUR} €/$ au {RATE_DATE}. "
+    lines.append(f"_{len(sess)} session(s). Input = tokens d'entrée hors cache ; Cache écrit = "
+                 f"écriture 5m + 1h cumulée ; le coût inclut le cache (lecture + écriture). "
+                 f"Taux {USD_EUR} €/$ au {RATE_DATE}. "
                  f"Devise native USD, estimation au tarif API - pas un montant facturé._")
 
     data = {
         "sessions": [
             {"session_id": sid, "start": sess[sid]["start"], "end": sess[sid]["end"],
              "input": sess[sid]["input"], "output": sess[sid]["output"],
+             "cache_read": sess[sid]["cache_read"], "cache_write": sess[sid]["cache_write"],
              "sim_cost_usd": round(sess[sid]["usd"], 6), "sim_cost_eur": eur(sess[sid]["usd"])}
             for sid in order
         ],
         "total": {"input": tot_in, "output": tot_out,
+                  "cache_read": tot_cread, "cache_write": tot_cwrite,
                   "sim_cost_usd": round(tot_usd, 6), "sim_cost_eur": eur(tot_usd)},
         "records": len(records), "price_table_date": pdate,
         "fx": {"usd_eur": USD_EUR, "date": RATE_DATE},

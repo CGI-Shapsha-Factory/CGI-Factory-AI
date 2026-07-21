@@ -1,6 +1,6 @@
 ---
 name: couts-rapport
-description: Restitue le coût de simulation du projet - un tableau par session (tokens input/output + coût en euros), à partir du journal .factory/couts/.
+description: Restitue le coût de simulation du projet - un tableau par session (tokens input/output, cache lu/écrit + coût en euros), à partir du journal .factory/couts/.
 ---
 
 # couts-rapport
@@ -22,15 +22,17 @@ facturé. Tout en **français**.
    dans `.factory/couts/` (`rapport-couts.md`, puis `rapport-couts-2.md`, ... - jamais d'écrasement).
 2. **Restituer le tableau** (une ligne par session) :
 
-   | Session (début -> fin) | Tokens input | Tokens output | Coût (€) |
-   |---|---|---|---|
+   | Session (début -> fin) | Tokens input | Tokens output | Cache lu | Cache écrit | Coût (€) |
+   |---|---|---|---|---|---|
 
    - **Session** : dates de début et de fin au format `JJ-MM`.
    - **Tokens input** : tokens d'entrée **bruts** (hors cache).
    - **Tokens output** : tokens de sortie.
+   - **Cache lu** : tokens lus depuis le cache (cache read).
+   - **Cache écrit** : tokens écrits en cache (cache write), écriture **5m + 1h cumulée**.
    - **Coût (€)** : coût **complet** de simulation (input + output + cache lu + cache écrit, au tarif
      par tier), converti en euros.
-   - Une **ligne Total** agrège les trois colonnes.
+   - Une **ligne Total** agrège les colonnes numériques.
 
 ## Règles invariantes
 - **Simulation seule.** C'est une **estimation** au tarif API, jamais un montant facturé.
