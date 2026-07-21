@@ -52,65 +52,53 @@ def plie(texte, largeur=None):
     return textwrap.wrap(texte, largeur or (WIDTH - NAME_COL), break_on_hyphens=False)
 
 
-def rend_tableau(lignes):
-    """Transforme un tableau markdown en lignes alignees : nom, role, puis la porte."""
+def rend_tableau(lignes, titre):
+    """Encadre un tableau markdown : une ligne par skill, nom puis role. Rien d'autre."""
     entetes = [c.lower() for c in cellules(lignes[0])]
     i_nom = next((i for i, h in enumerate(entetes) if h == "skill"), 0)
     i_porte = next((i for i, h in enumerate(entetes) if h.startswith("porte")), len(entetes) - 1)
-    # la colonne "#" ne sert qu'a numeroter des lignes deja dans l'ordre : elle parasite le rendu
+    # colonne "#" (numerote des lignes deja ordonnees) et colonne porte : hors sujet ici
     ignores = {i_nom, i_porte} | {i for i, h in enumerate(entetes) if h in ("#", "")}
-    sortie, marge = [], " " * NAME_COL
+    interieur = WIDTH - 4
+    corps = []
     for ligne in lignes[2:]:                                        # [1] = separateur |---|
         cols = cellules(ligne)
         if len(cols) <= i_nom:
             continue
         nom = nettoie(cols[i_nom])
-        porte = nettoie(cols[i_porte]) if i_porte != i_nom and len(cols) > i_porte else ""
         role = " ".join(nettoie(c) for j, c in enumerate(cols) if j not in ignores and nettoie(c))
-        corps = plie(role) or [""]
+        replis = plie(role, interieur - NAME_COL) or [""]
         if len(nom) > NAME_COL - 2:                                 # nom trop long : role en dessous
-            sortie.append(INDENT + nom)
+            corps.append(nom)
         else:
-            sortie.append(INDENT + nom.ljust(NAME_COL - 2) + "  " + corps.pop(0))
-        sortie.extend(INDENT + marge + suite for suite in corps)
-        if porte:
-            # crochets et non parentheses : la porte contient deja souvent un "(humain)"
-            sortie.extend(INDENT + marge + suite for suite in plie("[" + porte + "]"))
-        sortie.append("")
-    return sortie
+            corps.append(nom.ljust(NAME_COL) + replis.pop(0))
+        corps.extend(" " * NAME_COL + suite for suite in replis)
+    entete = "-- " + titre + " " if titre else "-"
+    return (["+" + entete + "-" * (WIDTH - 2 - len(entete)) + "+"]
+            + ["| " + l.ljust(interieur) + " |" for l in corps]
+            + ["+" + "-" * (WIDTH - 2) + "+", ""])
 
 
 def rend(body):
-    """Convertit la carte markdown en texte aligne lisible sans rendu markdown."""
+    """Ne garde que les tableaux de skills, encadres et titres par leur phase."""
     lignes = body.splitlines()
-    sortie, i = [], 0
+    sortie, titre, i = [], "", 0
     while i < len(lignes):
         ligne = lignes[i]
+        if ligne.startswith("#"):
+            titre = nettoie(ligne.lstrip("#")).replace(" : ", " : ")
+            i += 1
+            continue
         if ligne.lstrip().startswith("|"):
             bloc = []
             while i < len(lignes) and lignes[i].lstrip().startswith("|"):
                 bloc.append(lignes[i])
                 i += 1
             if len(bloc) >= 3:
-                sortie.extend(rend_tableau(bloc))
+                sortie.extend(rend_tableau(bloc, titre))
+            titre = ""
             continue
-        if ligne.startswith("#"):
-            titre = nettoie(ligne.lstrip("#")).upper()
-            sortie.extend(["", titre, "=" * min(len(titre), WIDTH)])
-            i += 1
-            continue
-        if not ligne.strip():
-            if sortie and sortie[-1]:
-                sortie.append("")
-            i += 1
-            continue
-        # paragraphe : on recolle les lignes jusqu'au prochain saut, puis on rehabille
-        bloc = []
-        while i < len(lignes) and lignes[i].strip() and not lignes[i].lstrip().startswith(("|", "#")):
-            bloc.append(lignes[i].strip())
-            i += 1
-        texte = nettoie(" ".join(bloc)).strip('"')
-        sortie.extend(plie(texte, WIDTH))
+        i += 1                                                      # prose : ignoree
     return "\n".join(sortie).strip() + "\n"
 
 
