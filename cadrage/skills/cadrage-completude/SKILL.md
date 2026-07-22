@@ -147,8 +147,11 @@ feature sans valeur), **une chose à la fois** :
    métier, **aucun nom de champ ni code** (seule exception : un use case, nommé "intitulé complet
    (UCn)").
 2. Demander explicitement : **"que veux-tu faire ?"**
-3. Proposer, **en prose (pas de menu numéroté)** : une **réponse recommandée** adaptée au contexte,
-   une **alternative** plausible, et l'invitation à **saisir ta propre réponse**.
+3. Proposer **avec `AskUserQuestion`** : une **réponse recommandée** adaptée au contexte et une
+   **alternative** plausible - **exactement deux options** ; la saisie libre est ajoutée par l'outil,
+   ne jamais la fabriquer en troisième option. Un point que l'utilisateur peut refuser de trancher
+   porte en **option 2 le retrait** ("je laisse ce point de côté"), l'alternative de fond passant
+   dans la saisie libre : sinon il choisira une réponse par défaut pour avancer.
 4. **Appliquer directement** le choix, **en place** dans l'artefact concerné de `cadrage-out/`
    (product-brief, spec-index, brief, glossaire...). **Aucun fichier annexe.**
 

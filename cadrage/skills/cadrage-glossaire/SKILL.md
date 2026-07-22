@@ -60,8 +60,8 @@ générer directement, sans porte.
    formulation de la source, elle ne la traduit pas en jargon technique. **Ne pas
    écrire de provenance** (ni horodatage, ni `(src: ...)`).
 3. **Contrôle de dérive.** Si un terme apparaît avec **deux sens divergents** : ne
-   pas trancher en silence. Le poser **comme question** à l'utilisateur au moment
-   de la validation en bloc (il choisit le sens), sans persister de marqueur.
+   pas trancher en silence. Le poser **avec `AskUserQuestion`** au moment de la validation en
+   bloc - les **deux sens** en options, il choisit -, sans persister de marqueur.
 4. **Mode incrémental.** Si un glossaire existe : conserver les définitions déjà
    validées, ajouter les nouveaux termes, et signaler toute nouvelle source qui
    contredirait une définition existante (`[REMIS EN CAUSE]`, pas écrasement).
@@ -71,10 +71,12 @@ générer directement, sans porte.
      (terme, définition dans les mots du client) - en langage clair, sans exposer
      de nom de colonne du manifeste ni d'identifiant technique
      (cf. `references/ux-conventions.md`).
-   - **Demander une seule validation pour l'ensemble** : "Ce glossaire te convient ?
-     Indique-moi les termes à corriger ou retirer, sinon je valide tout."
-     **Ne pas valider terme par terme.** S'il y a une ambiguïté de sens, poser la
-     ou les questions correspondantes dans le même échange.
+   - **Demander une seule validation pour l'ensemble avec `AskUserQuestion`** : "Ce glossaire te
+     convient ?" - deux options, "je valide tout" (recommandé) et "des termes sont à corriger ou
+     à retirer" ; la saisie libre sert à nommer directement ces termes.
+     **Ne pas valider terme par terme.** S'il y a une ambiguïté de sens, la poser ensuite
+     **avec `AskUserQuestion`** (les deux sens en options) - **un appel par sens ambigu**,
+     jamais plusieurs questions dans le même appel.
    - **Appliquer les corrections demandées tout de suite**, puis marquer l'ensemble
      `validé` sur l'accord de l'utilisateur (décision humaine).
    - **Ne jamais inventer** une définition. À la fin, **proposer de continuer vers

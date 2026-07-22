@@ -14,8 +14,9 @@ grille est le travail de **jugement** que le script ne peut pas faire.
 **Principe de résolution - toujours une décision, jamais un simple constat.** Chaque point relevé
 (trou, contradiction, exigence mal formée) n'est **jamais** seulement affiché "il manque X". Il
 devient une **décision en session** (`interactive-loop.md`) : énoncer en clair ce qui est là / ce
-qui manque, demander "que veux-tu faire ?", proposer une **réponse recommandée + une alternative
-plausible + "ta réponse"** (en prose, **pas de menu numéroté**), puis **appliquer en place**. Si
+qui manque, demander "que veux-tu faire ?", proposer **avec `AskUserQuestion`** une **réponse recommandée**
+et une **alternative plausible** - **deux options, jamais plus** ; la saisie libre est ajoutée par
+l'outil -, puis **appliquer en place**. Si
 l'utilisateur ne tranche pas, **on n'écrit rien** (le point est omis) et le **verdict reste au
 rouge**. L'utilisateur ne relit jamais les artefacts : tout se règle dans la décision.
 

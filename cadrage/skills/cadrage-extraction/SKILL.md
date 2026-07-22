@@ -58,7 +58,8 @@ suivi d'une **revalidation JSON** (le fichier doit reparser sans erreur).
 
 Vérifier sans l'annoncer : **le manifeste existe ET au moins une source est
 déclarée.** Ne jamais afficher de statut de "porte" ; si un pré-requis manque,
-poser une question en clair.
+poser une question **avec `AskUserQuestion`** (deux options : l'issue recommandée et
+l'alternative crédible).
 
 1. Si `manifest.json` est absent : indiquer en clair qu'il faut
    d'abord initialiser le workspace (`cadrage-init`) et s'arrêter là.
@@ -69,7 +70,10 @@ poser une question en clair.
    supportés qui s'y trouvent. Enregistre chaque source dans `sources[]` avec `type`,
    `ref`, `ingested_at`.
 3. Si aucune source n'est déclarée **et** que `cadrage-out/source-contexte/` est vide ou
-   absent : demander en clair au moins une source. N'invente pas de matière. (Le dossier
+   absent : demander au moins une source **avec `AskUserQuestion`** - deux options tirées de ce
+   qu'on voit dans le dossier (un fichier candidat trouvé à la racine, le dépôt d'un export dans
+   `cadrage-out/source-contexte/`), la saisie libre pour un chemin quelconque. N'invente pas de
+   matière. (Le dossier
    `source-contexte/` reste facultatif - son absence ne bloque jamais à elle seule.)
 
 ## Porte de régénération (relance)
@@ -81,11 +85,13 @@ générer directement, sans porte.
 
 ## Identité du projet
 
-Avant le dépouillement, **demander à l'utilisateur, en français** (attendre la réponse) :
-- "Quel est le **nom du projet** ?" (le nom usuel, lisible).
+Avant le dépouillement, demander **avec `AskUserQuestion`** : "Quel est le **nom du projet** ?"
+(le nom usuel, lisible). **Deux options** tirées des sources - le nom qui revient dans le
+transcript ou les documents, et la variante concurrente qu'on y lit -, la saisie libre pour tout
+autre nom.
 
 Écrire la réponse dans `project` du manifeste (laissé `null` par `cadrage-init`).
-**Ne jamais le déduire** du nom du dossier. Si l'utilisateur ne répond pas, suivre la
+**Ne jamais le déduire** du nom du dossier - il ne sert jamais d'option non plus. Si l'utilisateur ne répond pas, suivre la
 boucle interactive (`references/interactive-loop.md`).
 
 **Ne pas demander le nom du client.** Cette information n'est pas collectée par la
@@ -105,8 +111,10 @@ ajouter" fait passer directement à la suite.
    après, elles interrompraient le déballage. Ce qui est dit ici est de la **matière brute
    comme une autre** : ça alimente les sections de la capture et sert de suggestion dans la
    passe découverte, avec confirmation par le flux normal - rien n'est validé d'office.
-2. **Lecture de l'enjeu (une question).** Demander en clair quel est l'enjeu du projet :
-   outil interne, pilote / expérimentation, ou lancement public / critique. Cette lecture est
+2. **Lecture de l'enjeu (une question).** Demander **avec `AskUserQuestion`** quel est l'enjeu
+   du projet, parmi outil interne, pilote / expérimentation, ou lancement public / critique :
+   **deux options** - les deux lectures les plus plausibles au vu de la matière -, la troisième
+   reste accessible par la saisie libre. Cette lecture est
    une **calibration interne uniquement, jamais persistée telle quelle** : elle règle
    l'intensité de la relance sur réponse mince (cf. `references/interactive-loop.md`) et la
    richesse des suggestions proposées. Un enjeu fort justifie de creuser davantage ; un outil
@@ -180,17 +188,26 @@ et le bloc `discovery` du manifeste.
    le transcript/docs une **réponse candidate** et la garder comme **suggestion à confirmer**.
    **Aucune question n'est `answered` à ce stade.**
 2. **Dérouler la boucle interactive - Q1 -> Q19, UNE À LA FOIS** (voir `references/interactive-loop.md`).
-   Pour **chaque** question, en français, afficher le compteur **"Qn/19"**, l'intitulé, puis une
-   **réponse recommandée** (la suggestion tirée de la matière si elle existe, sinon une suggestion
-   plausible, étiquetée "suggestion"). **Pas de menu numéroté** : l'utilisateur accepte la suggestion
-   ou donne la sienne. Puis **POSE UNE SEULE QUESTION, ARRÊTE-TOI, et ATTENDS la réponse** avant de
-   passer à la suivante. **Jamais** plusieurs questions dans un même message ; **jamais**
+   Poser **chaque** question **avec `AskUserQuestion`**, en français : l'intitulé de la question
+   précédé du compteur **"Qn/19"**, et **exactement deux options** - la **réponse recommandée**
+   (la suggestion tirée de la matière si elle existe, sinon la plus plausible ; sa `description`
+   dit ce qui la soutient) puis l'**alternative crédible** (la lecture concurrente de la matière,
+   ou le cas de figure opposé le plus fréquent). **Une question de découverte est toujours
+   esquivable : l'option 2 est donc "je laisse ce point de côté"**, et l'alternative de fond
+   passe dans la saisie libre - sans quoi le retrait n'existe plus à l'écran (cf.
+   `references/interactive-loop.md`). La saisie libre est ajoutée par l'outil : ne
+   jamais la fabriquer en troisième option. La **puce** porte le thème en clair
+   ("Utilisateurs", "Hébergement"), **jamais** le code de la question. **Aucune question en prose dans le fil.** Puis **POSE
+   UNE SEULE QUESTION, ARRÊTE-TOI, et ATTENDS la réponse** avant de passer à la suivante. **Jamais** plusieurs questions dans un même appel de l'outil ni dans un même message ; **jamais**
    d'auto-complétion ; **jamais** `answered` sans réponse explicite. Ne jamais remplir de valeur démo.
    - Réponse explicite (suggestion acceptée ou saisie) -> statut `answered`. **Aucune `(src:)` écrite.**
-   - L'utilisateur laisse de côté -> le champ est **omis** (statut `deferred`, rien d'écrit dans
-     l'artefact, pas de marqueur).
+   - L'utilisateur laisse de côté (option 2, ou saisie libre équivalente) -> le champ est **omis**
+     (statut `deferred`, rien d'écrit dans l'artefact, pas de marqueur).
    - **Q8 (contraintes légales / conformité / RGPD) est OPTIONNELLE.** La proposer **une seule fois**,
-     sans insister. Si l'utilisateur la décline / la laisse à l'équipe ("on gère nous-mêmes") ->
+     sans insister. C'est la **seule question dont la forme des options est imposée** : option 1 =
+     la contrainte pressentie dans la matière, **option 2 = "on gère ça nous-mêmes"**. Sans cette
+     seconde option, décliner n'est plus visible et la question devient l'interrogatoire que la
+     règle proscrit. Si l'utilisateur la décline / la laisse à l'équipe ->
      statut **`na`** (traité hors cadrage), **pas `deferred`** : elle ne doit **jamais** bloquer la
      complétude ni revenir. **Ne jamais pousser la conformité** (cf. `references/discovery-questions.md`,
      note Q8, et `references/ux-conventions.md` §2bis).

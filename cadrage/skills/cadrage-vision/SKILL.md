@@ -28,7 +28,8 @@ est `.factory/cadrage/product-brief.md` (copie installée par cadrage-init).
 ## Pré-requis (vérification silencieuse)
 
 `artifacts.capture_brute` existe dans le manifeste (le fichier est présent).
-Sinon, l'indiquer en clair et proposer de faire l'extraction d'abord - sans
+Sinon, l'indiquer en clair et poser la suite **avec `AskUserQuestion`** - deux options,
+"faire l'extraction d'abord" (recommandé) et "vérifier le dossier de travail" - sans
 afficher de "porte".
 
 ## Porte de régénération (relance)
@@ -46,8 +47,9 @@ générer directement, sans porte.
    d'horodatage) ; un élément non soutenu par la matière est **omis** ou **demandé
    en session**, jamais marqué `[À VALIDER]`.
 3. **Périmètre OUT (forcé non vide).** Lister les exclusions explicites de la
-   capture. S'il n'y en a pas, **proposer** des exclusions plausibles au regard du
-   périmètre IN et **les faire trancher en session** (demander à l'utilisateur).
+   capture. S'il n'y en a pas, **les faire trancher en session avec `AskUserQuestion`** : deux
+   exclusions plausibles au regard du périmètre IN, une par option, la saisie libre pour une
+   autre.
    OUT ne doit jamais rester vide ; on n'y écrit que ce qui est confirmé.
 4. **Critères de succès produit.** Traduire les objectifs en métriques d'usage
    (pas de code). Si une cible n'a pas été captée, écrire le critère et préciser
@@ -55,9 +57,10 @@ générer directement, sans porte.
 5. **Hypothèse produit initiale.** Formuler l'hypothèse centrale en précisant
    qu'elle **se valide par le prototype** (boucle démonstrateur), jamais comme
    acquise.
-6. **Demander, ne pas inventer.** Tout élément essentiel absent de la capture est
-   **posé en session** ; s'il n'est pas tranché, il est **omis** (pas de marqueur,
-   pas de section "Trous").
+6. **Demander, ne pas inventer.** Tout élément essentiel absent de la capture est **posé en
+   session avec `AskUserQuestion`** (deux options : la lecture recommandée et l'alternative
+   crédible) ; s'il n'est pas tranché, il est **omis** (pas de marqueur, pas de section
+   "Trous").
 
 ### Sections du product brief
 

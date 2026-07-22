@@ -2,7 +2,7 @@
 
 Catalogue **curé** de techniques de facilitation, lu par `cadrage-ideation`.
 Le skill en **propose une à la fois** (suggestion adaptée au sujet et au but),
-jamais en menu numéroté ; l'utilisateur peut demander à voir ce tableau pour
+le choix se pose avec `AskUserQuestion`, deux techniques au plus ; l'utilisateur peut demander à voir ce tableau pour
 choisir lui-même. Toutes les techniques sont animées en posture **facilitateur** :
 les idées viennent de l'utilisateur, le skill pose les questions.
 

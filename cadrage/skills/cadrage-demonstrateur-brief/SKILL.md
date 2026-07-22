@@ -48,8 +48,9 @@ Un prompt médiocre donne une maquette médiocre. Pour produire un **prompt exce
   `spec-index.md`, avec pour chacun ce qu'on y fait.
 - **Injecter du contenu réaliste du domaine** (libellés, noms, données plausibles tirés
   du `glossaire.md` et de la vision) - **jamais** de "lorem ipsum".
-- **Demander les états utiles** sur les écrans clés : contenu chargé, état vide (message
-  + action), un cas d'erreur/chargement si pertinent.
+- **Demander les états utiles avec `AskUserQuestion`** sur les écrans clés : deux options (le
+  jeu d'états recommandé - contenu chargé et état vide avec message + action -, et le jeu élargi
+  qui ajoute erreur et chargement), la saisie libre pour un besoin particulier.
 - **Cadrer le style** : navigation persistante, hiérarchie typo, **palette délibérée adaptée au
   domaine (jamais le violet/indigo par défaut)**, responsive, ton professionnel, aucun emoji.
   Reprendre tel quel le bloc "Style - direction visuelle délibérée" du gabarit (interdictions

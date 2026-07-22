@@ -28,9 +28,13 @@ que `cadrage-extraction` ingère ensuite comme n'importe quelle source. L'idéat
 - **Une seule exception** : si l'utilisateur demande **explicitement** une idée
   ("propose-moi quelque chose"), en donner **exactement une**, comme une étincelle,
   puis lui rendre la main aussitôt.
-- **Une seule relance par message.** Jamais plusieurs questions empilées, jamais de
-  menu numéroté (cf. `references/interactive-loop.md`) : une question, on s'arrête,
-  on attend.
+- **Une seule relance par message.** Jamais plusieurs questions empilées : une relance, on
+  s'arrête, on attend.
+- **Relances d'animation en prose, décisions avec `AskUserQuestion`.** Les relances qui font
+  **produire** ("quoi d'autre ?", "et si la contrainte sautait ?") ne collectent aucune décision
+  et restent ouvertes - un menu y tuerait la divergence. Dès qu'une réponse est **enregistrée ou
+  oriente la suite** (choix de la technique, fin de session, sort d'une idée), la question passe
+  par `AskUserQuestion`, **deux options** (cf. `references/interactive-loop.md`).
 - **Résister à la conclusion.** L'envie d'organiser ou de synthétiser est l'ennemie
   de la divergence : tant que l'utilisateur produit, on pousse pour une idée de plus.
   La synthèse a sa phase dédiée, à la fin.
@@ -57,10 +61,11 @@ Pas de porte de régénération : chaque séance écrit un **fichier daté disti
    besoin flou, élargir un périmètre, trouver des angles d'attaque...). Le pourquoi
    oriente le choix des techniques et la synthèse finale. Attendre la réponse.
 2. **Proposer une technique (suggestion, pas menu).** À partir du sujet et du but,
-   proposer **une** technique adaptée de `references/techniques-ideation.md`, avec
-   une ligne d'explication, étiquetée "suggestion". L'utilisateur accepte, en nomme
-   une autre, ou demande à voir le catalogue (afficher alors le tableau de la
-   référence). Jamais de menu numéroté.
+   proposer **avec `AskUserQuestion`** une technique adaptée de
+   `references/techniques-ideation.md` : **deux options** - la technique recommandée
+   (une ligne d'explication en description) et une seconde adaptée au sujet. La saisie
+   libre laisse l'utilisateur en nommer une autre ou demander le catalogue (afficher
+   alors le tableau de la référence).
 3. **Animer.** Dérouler la technique : une relance par message, en français, en
    rebondissant sur ce que dit l'utilisateur. Noter chaque idée au fil de l'eau
    (mentalement ou en brouillon, sans interrompre le flux pour écrire). **Changer de

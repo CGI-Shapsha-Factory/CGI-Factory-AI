@@ -72,7 +72,9 @@ Read-modify-write puis revalidation JSON :
   maquette réelle** : `client_validated` ne peut passer à vrai **que si `demonstrateur.external_ref`
   est non nul** (une maquette a été générée et référencée). Une validation **verbale** ("tout est
   ok") **sans maquette référencée** ne converge PAS : **demander d'abord la référence de la
-  maquette** (lien Claude Design) avant d'enregistrer la validation. Pas de maquette -> pas de
+  maquette avec `AskUserQuestion`** (lien Claude Design ; deux options - "je colle le lien" et
+  "la maquette n'existe pas encore" - la saisie libre reçoit le lien) avant d'enregistrer la
+  validation. Pas de maquette -> pas de
   convergence. **Aucune validation fantôme.**
 - `updated_at`.
 

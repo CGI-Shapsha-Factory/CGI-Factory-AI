@@ -39,7 +39,9 @@ La **proposer au plus une fois**, en clair, comme un simple choix (lister l'opti
 Si l'utilisateur **décline ou la laisse** ("on gère nous-mêmes, plus tard"), c'est une réponse
 **terminale et non bloquante** : marquer Q8 **`na`** (traitée hors cadrage par l'équipe), **jamais
 `deferred`** - **ne plus jamais la re-soulever** ni en faire un point bloquant pour la Definition of
-Ready. **Ne jamais pousser la conformité.**
+Ready. **Ne jamais pousser la conformité.** Conséquence sur la forme de la question : Q8 est la
+**seule** dont les options sont imposées - option 1 = la contrainte pressentie dans la matière,
+**option 2 = "on gère ça nous-mêmes"** (-> `na`). Décliner doit rester visible sans avoir à taper.
 
 **Note de suggestion - Q11 (hébergement / cloud).** Quand la réponse n'est pas dans les sources et
 qu'on **propose** une suggestion de fournisseur cloud, mettre **GCP (Google Cloud Platform) en première

@@ -10,11 +10,37 @@ inventée : on demande, on ne comble pas.**
   de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs points d'un
   coup, **même si une source (transcript) semble tout répondre** - une réponse issue d'une source
   **reste une suggestion à confirmer**, pas une validation.
-- **Poser la question, proposer une réponse recommandée, attendre.** Pour chaque point : exposer le
-  point en clair, puis proposer **une réponse recommandée** - une suggestion plausible, clairement
-  étiquetée "suggestion". L'utilisateur **accepte** cette suggestion **ou** donne directement la
-  sienne. **Ne pas afficher de menu numéroté d'options** (pas de "1. ... 2. ... 3. Saisir ma réponse") :
-  l'utilisateur sait qu'il peut répondre librement.
+- **Toute question passe par l'outil `AskUserQuestion`. Sans exception.** Jamais une question
+  rédigée en prose dans le fil de la conversation : l'utilisateur doit toujours retrouver le même
+  geste - un intitulé, deux réponses possibles, et la saisie libre.
+- **Une question par appel.** L'outil sait en porter plusieurs : on ne s'en sert jamais. Un appel
+  = une question, puis on s'arrête et on attend. Le groupage est interdit dans la cadrage, y
+  compris pour des points de même nature.
+- **La puce (`header`) porte le thème en clair** - "Utilisateurs", "Hébergement", "Périmètre",
+  "Glossaire" - en quelques caractères. **Jamais un code** (`Q8`, `Q11`, `B1`, `A6`) ni une clé
+  de manifeste : c'est une sortie utilisateur comme une autre (cf. la section 3ter de
+  `ux-conventions.md`).
+- **Exactement deux options par question**, jamais trois ni quatre. L'outil ajoute lui-même la
+  saisie libre en troisième ligne : le lecteur voit donc **trois lignes**, dont la dernière lui
+  rend la main. Format :
+  - **option 1** = la **réponse recommandée** (la suggestion tirée de la matière si elle existe,
+    sinon la plus plausible), avec la mention "(recommandé)" dans son libellé et, dans sa
+    `description`, **ce qui la soutient** ("ce que dit le transcript : ...") ;
+  - **option 2** = l'**alternative crédible** - la lecture concurrente de la matière, ou le cas de
+    figure opposé le plus fréquent. Jamais un remplissage : si rien de sérieux ne se présente,
+    poser l'alternative "aucune des deux, je précise" et laisser la description dire pourquoi le
+    point reste ouvert.
+  - **Ne jamais fabriquer d'option "Saisir ma réponse"** : l'outil l'offre déjà, et une troisième
+    option la doublonnerait.
+- **Quand le point est légitimement esquivable, l'option 2 EST le retrait.** Une question de
+  découverte, un point de complétude, un arbitrage que l'utilisateur peut refuser de trancher :
+  l'option 2 devient "je laisse ce point de côté", et l'alternative de fond passe dans la saisie
+  libre. Sans elle, le retrait n'existe plus à l'écran et l'utilisateur choisit une réponse par
+  défaut pour avancer - on enregistrerait alors comme tranché un point qu'il n'a pas voulu
+  trancher. **Le retrait doit toujours être visible sans avoir à taper.**
+- **Le nombre d'options ne remplace pas l'écoute.** Deux options ne veulent pas dire que la
+  réponse est binaire : elles ouvrent la conversation, la saisie libre reste la voie normale
+  pour tout ce qui ne rentre pas dans les deux.
 - **Relance unique sur réponse mince.** Quand la réponse à un point structurant reste vague
   ("ça doit être rapide", "des utilisateurs classiques"), **coacher, pas quizzer** : reformuler
   concrètement ce que la réponse laisse ouvert et relancer **une seule fois** avec une question

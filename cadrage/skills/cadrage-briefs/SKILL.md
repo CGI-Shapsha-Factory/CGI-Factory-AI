@@ -93,8 +93,9 @@ contrat central** (`<feature>` = l'intitulé métier en clair, sans préfixe cod
   l'architecture").
 - *Acceptation* : pour chaque story, dériver au moins un scénario testable.
 
-**Ne rien inventer.** Un élément absent de la matière se **tranche en session** (on
-pose la question), il n'est pas marqué ni comblé. Aucun critère fabriqué. **Aucune
+**Ne rien inventer.** Un élément absent de la matière se **tranche en session** (on pose la
+question **avec `AskUserQuestion`**, deux options : la lecture recommandée et l'alternative
+crédible), il n'est pas marqué ni comblé. Aucun critère fabriqué. **Aucune
 provenance écrite** (pas de `(src:)`).
 
 ## Vérification avant écriture

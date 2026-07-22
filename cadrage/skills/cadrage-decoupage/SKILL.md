@@ -197,9 +197,9 @@ Déroulé :
    décision recommandée ET dans chaque option - le désigne par son intitulé complet en langage
    naturel suivi de sa référence entre parenthèses** (`l'ingestion documentaire (UC3)`),
    **jamais par un `UC3` nu** : l'utilisateur n'a ainsi pas à se rappeler quel numéro
-   correspond à quelle capacité. L'utilisateur accepte ou donne la sienne. **Pas de menu
-   numéroté** (pas de "3. Saisir ma décision"). **Attendre la réponse** avant le
-   point suivant.
+   correspond à quelle capacité. Poser le point **avec `AskUserQuestion`** : **exactement deux
+   options** (la décision recommandée, puis l'alternative crédible) ; ne jamais fabriquer de
+   "saisir ma décision", l'outil l'ajoute. **Attendre la réponse** avant le point suivant.
 2. **Appliquer chaque décision EN PLACE** au fur et à mesure : modifier directement
    `coupling-map.md` (et `spec-index.md` si la frontière/dépendance bouge) pour y
    inscrire le résultat tranché. **Ne créer aucun journal d'arbitrage, n'écrire

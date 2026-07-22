@@ -112,9 +112,10 @@ uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
 - **Typographie humaine.** Aucun glyphe de style IA dans les artefacts, prompts et sorties : pas de tiret cadratin (em dash), de points de suspension unicode, de flèches unicode, de guillemets à chevrons, ni de coche/croix ; utiliser les équivalents clavier (cf. la section Typographie de `references/ux-conventions.md`).
 
 ## Conventions d'interaction (voir `references/`)
-- **Boucle interactive** (`references/interactive-loop.md`) : une question à la fois -
-  réponse recommandée puis l'utilisateur accepte ou saisit la sienne (**pas de menu
-  numéroté**). Un point non tranché est **omis**, jamais marqué. **Relance unique sur
+- **Boucle interactive** (`references/interactive-loop.md`) : une question à la fois, **toujours
+  posée avec `AskUserQuestion`** - **exactement deux options** (la recommandée d'abord, puis
+  l'alternative crédible), l'outil ajoutant lui-même la saisie libre en troisième ligne. **Jamais
+  de question rédigée en prose dans le fil.** Un point non tranché est **omis**, jamais marqué. **Relance unique sur
   réponse mince** : une réponse vague sur un point structurant est relancée **une seule
   fois** avec une question plus précise (coacher, pas quizzer) ; si l'utilisateur maintient,
   on écrit tel quel - jamais de deuxième relance, jamais sur le légal (Q8).
