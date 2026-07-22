@@ -17,7 +17,7 @@ la chaîne, on l'invoque quand on veut.
 cours / bloqué). Si l'indice vise une **sous-partie** d'une feature (un `FR-xxx`, une phase), la cible
 est le **sous-ticket** correspondant, pas le parent : **il n'existe aucune case à cocher** dans les
 descriptions - chaque chose à faire est un **vrai sous-ticket** (`Task` par FR posé par
-`premier-alimente-linear`, `Task` par phase posé par `creation-task-linear`). Le ticket est
+`premier-alimente-linear`, `Task` par phase posé par `creation-tasks-linear`). Le ticket est
 **toujours confirmé avant d'écrire**. Idempotent : si le ticket est déjà dans l'état visé, on ne
 réécrit rien.
 

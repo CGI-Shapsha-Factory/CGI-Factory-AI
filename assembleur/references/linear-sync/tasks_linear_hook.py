@@ -2,7 +2,7 @@
 """Hook PostToolUse (Write|Edit) - sync tasks.md SpecKit -> Linear (declencheur, best-effort).
 
 A chaque ecriture/edition d'un `specs/<feature>/tasks.md`, si le fichier contient des **phases**
-(`## Phase N:`), POUSSE l'agent (message `decision:block`) a lancer `/assembleur:creation-task-linear`,
+(`## Phase N:`), POUSSE l'agent (message `decision:block`) a lancer `/assembleur:creation-tasks-linear`,
 qui - cote agent, avec le MCP - **verifie sur Linear** (par `parentId` du ticket Feature) et cree les
 sous-tickets `Task` manquants (label `Task`, Backlog, rattaches au ticket Feature).
 
@@ -131,7 +131,7 @@ def cmd_posttooluse():
         return _block(
             f"Le fichier tasks.md de la feature '{feature_dir}' a change, mais le pont Linear n'est pas "
             f"encore configure. Lance /assembleur:premier-alimente-linear (tickets Feature) puis "
-            f"/assembleur:creation-task-linear pour creer les sous-tickets Task (un par phase, label Task, "
+            f"/assembleur:creation-tasks-linear pour creer les sous-tickets Task (un par phase, label Task, "
             f"en Backlog, rattaches au ticket Feature)."
         )
 
@@ -149,7 +149,7 @@ def cmd_posttooluse():
     phases_txt = ", ".join(f"Phase {n}" for n in fresh)
     return _block(
         f"Le tasks.md de la feature '{feature_dir}' a change : {len(fresh)} phase(s) a synchroniser vers "
-        f"Linear ({phases_txt}). Lance /assembleur:creation-task-linear - il verifie sur Linear (par "
+        f"Linear ({phases_txt}). Lance /assembleur:creation-tasks-linear - il verifie sur Linear (par "
         f"parentId) et cree uniquement les sous-tickets Task manquants (label Task, Backlog, rattaches au "
         f"ticket Feature). L'avancement vit dans Linear, pas dans le manifeste committe."
     )

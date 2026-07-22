@@ -18,10 +18,10 @@ init` est joué en **non-interactif** pour l'agent Claude Code. À la fin, `.spe
 scripts, templates) et les commandes `/speckit.*` existent dans le repo, **et le registre de hooks
 `.specify/extensions.yml` est posé** (config d'équipe **non générée par `specify init`** ; sans elle
 les `/speckit.*` rapportent "No hooks") - il branche les automations Linear de la Factory en
-**hooks optionnels** (ex. `after_tasks` -> `creation-task-linear`, `after_implement` ->
+**hooks optionnels** (ex. `after_tasks` -> `creation-tasks-linear`, `after_implement` ->
 `update-issue-linear`). **Et** le **hook `PostToolUse` `tasks_linear_hook.py`** est posé dans
 `.claude/hooks/` : il détecte **toute édition d'un `specs/<feature>/tasks.md`** et pousse l'agent à
-lancer `creation-task-linear` pour synchroniser les sous-tickets `Task` (le hook ne parle jamais à Linear).
+lancer `creation-tasks-linear` pour synchroniser les sous-tickets `Task` (le hook ne parle jamais à Linear).
 
 ## Frontière (exception assumée)
 L'assembleur **n'écrit jamais lui-même** un fichier que SpecKit **génère**. Ce skill **ne rédige à la
