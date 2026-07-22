@@ -87,8 +87,10 @@ anomalie (quelque chose qui **manque**, se **contredit**, ou "se passe"), dérou
 1. **Énoncer en clair** ce qui est présent **et** ce qui manque / ce qui se passe - en prose,
    nom métier, **aucun nom de champ ni code** (`C1`/`UC1`/`ADR A6`...).
 2. Demander explicitement : **"que veux-tu faire ?"**
-3. Proposer **trois choix** : **(a)** une action concrète **recommandée** adaptée au contexte,
-   **(b)** une **alternative** plausible, **(c)** **"saisir ta propre réponse"**.
+3. Proposer **avec `AskUserQuestion`** : **(a)** une action concrète **recommandée** adaptée au
+   contexte, **(b)** une **alternative** plausible - ou **"sans objet"** si le point peut
+   légitimement ne pas s'appliquer, l'alternative passant alors dans la saisie libre. **Deux
+   options renseignées**, la saisie libre étant ajoutée par l'outil : ne jamais l'écrire soi-même.
 4. **Appliquer directement** le choix retenu, **en place** dans le fichier `architecte-out/`
    concerné. **Aucun fichier annexe.**
 
@@ -98,7 +100,8 @@ jusqu'à ce qu'il ne reste **rien**.
 
 > **Interdit explicite.** Écrire "ce point est bloquant" / "il manque X" / "il reste N
 > points" **sans** l'accompagner immédiatement de la question **"que veux-tu faire ?"**, des
-> **trois choix**, et de l'**application** du choix. Un constat nu est une violation de ce skill.
+> **deux options posées avec `AskUserQuestion`**, et de l'**application** du choix. Un constat nu
+> est une violation de ce skill.
 
 **Ne pas passer** à `/designer:designer-init` tant qu'il reste un point, un marqueur, ou un
 choix non appliqué.
@@ -130,7 +133,8 @@ par feature, une fois le contrat de design figé.)
 - **Challenger, pas cocher.** Cohérence stricte et adversariale, ancrée méthodes ; on cherche ce
   qui **manque** et ce qui se **contredit**, pas la simple présence.
 - **Toujours une décision, jamais un constat.** Chaque point -> question "que veux-tu faire ?"
-  + trois choix (recommandée / alternative / saisie) + application en place. Aucun "bloquant"
+  + deux options avec `AskUserQuestion` (recommandée / alternative ou sans objet) + application
+  en place. Aucun "bloquant"
   nu. L'utilisateur ne relit rien : tout se règle dans la décision.
 - **Remonter tout, résoudre un par un.** Énumérer chaque point trouvé, puis les dérouler un à un
   jusqu'à zéro. Aucun marqueur ne survit.

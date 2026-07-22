@@ -6,12 +6,30 @@ arbitrage des ADR, résolution des points de cohérence). **Aucune information n
 inventée : on demande, on ne comble pas.**
 
 ## Règle d'or
-- **Une question / un point à la fois.** Jamais une liste en bloc, jamais un tableau.
-- Pour **chaque** point, présenter en clair :
-  1. **Une réponse recommandée** - la proposition la plus adaptée au **contexte du
-     projet**, clairement étiquetée "recommandée".
-  2. **Une (ou des) alternative(s)** plausible(s).
-  3. **"Saisir ma réponse"** - l'utilisateur écrit sa propre décision.
+- **Toute question passe par l'outil `AskUserQuestion`. Sans exception.** Jamais une
+  question rédigée en prose dans le fil de la conversation : l'utilisateur doit toujours
+  retrouver le même geste - une puce de thème, deux réponses possibles, et la saisie libre.
+- **Une question par appel.** L'outil sait en porter plusieurs : on ne s'en sert jamais.
+  Un appel = un point, puis on s'arrête et on attend. Jamais une liste en bloc, jamais un
+  tableau de points à trancher.
+- **Deux options renseignées, trois lignes à l'écran.** L'outil ajoute lui-même la saisie
+  libre en dernière ligne :
+  1. **La réponse recommandée** - la proposition la plus adaptée au **contexte du
+     projet**, avec la mention "(recommandé)" dans son libellé et, dans sa `description`,
+     **ce qui la soutient** (ce que dit le cadrage, la contrainte qui la motive).
+  2. **L'alternative crédible** - l'autre proposition défendable. Pour un **point de
+     cohérence** qui peut légitimement ne pas s'appliquer, l'option 2 est **"sans objet"**
+     (elle se solde par un `[SANS OBJET : raison]`, cf. `coherence-checklist-guide.md`) et
+     l'alternative de fond passe dans la saisie libre : sans quoi ce dénouement disparaît
+     de l'écran et l'utilisateur tranche par défaut pour avancer.
+  - **Ne jamais écrire soi-même une option "Saisir ma réponse"** : elle ferait une
+    quatrième ligne, en doublon de celle que l'outil ajoute.
+- **Pas de retrait ailleurs.** Une réponse d'architecture, un choix de stack, un arbitrage
+  d'ADR **ne se laissent pas de côté** (voir "Aucun point laissé indéfini") : les deux
+  options portent alors deux propositions de fond.
+- **La puce (`header`) porte le thème en clair** - "Hébergement", "Profil d'équipe",
+  "Base de données" - en quelques caractères. **Jamais un code** (`C1`, `UC1`, `P1`) ni
+  une clé de manifeste.
 - **Attendre la réponse** avant le point suivant. **Écrire la réponse en place** dans
   l'artefact concerné (`architecte-out/...`) - **aucun fichier annexe** pour stocker les
   réponses.
@@ -30,9 +48,11 @@ inventée : on demande, on ne comble pas.**
 
 ## Workflow de validation (composants, stack)
 Pour les propositions (composants, choix de stack) : **restituer en prose claire**
-dans le chat (nom métier + rôle en une phrase), demander "est-ce que ça te convient,
-ou faut-il modifier ?", **appliquer les modifications** demandées, puis ne continuer
-qu'une fois **validé**. L'IA propose, l'humain tranche. **Pas de tableau.**
+dans le chat (nom métier + rôle en une phrase), puis poser la validation **avec
+`AskUserQuestion`** - deux options, "ça me convient" (recommandé) et "il faut modifier",
+la saisie libre recevant le détail des retouches. **Appliquer les modifications**
+demandées, puis ne continuer qu'une fois **validé**. L'IA propose, l'humain tranche.
+**Pas de tableau.**
 
 ## Ce qu'on écrit
 - Une décision n'est enregistrée que sur une **réponse explicite** de l'utilisateur

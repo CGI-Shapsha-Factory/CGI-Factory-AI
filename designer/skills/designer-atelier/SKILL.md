@@ -35,7 +35,7 @@ idempotente : au moindre doute, un renvoi vers elle est sans effet de bord.)*
 Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
 skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
 `version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
-au nom canonique en `version: N+1`) et **attendre** le choix. Premier passage (rien n'existe) :
+au nom canonique en `version: N+1`) et **attendre** le choix - la porte se pose **avec `AskUserQuestion`** (deux options, cf. `references/regeneration-gate.md`). Premier passage (rien n'existe) :
 générer directement, sans porte.
 
 ## Affichage des items à l'utilisateur
@@ -49,7 +49,9 @@ Les phrases complètes de référence sont dans `templates/coverage-checklist.md
 ## Procédure (= déroulé de l'atelier)
 
 ### Étape 1 : Dérouler la checklist par blocs (fondation -> expérience -> technique)
-Pour **chaque** item encore **à traiter**, via la boucle 3-options (`references/interactive-loop.md`), une
+Pour **chaque** item encore **à traiter**, **avec `AskUserQuestion`** (un appel par item, cf.
+`references/interactive-loop.md`) - deux options renseignées, la **proposition recommandée** et
+**"sans objet"**, la saisie libre étant ajoutée par l'outil -, une
 chose à la fois, **désignée par sa phrase claire** :
 - soit **déduit** d'un handoff -> en interne `deduced` (origine + source), montré **validé** ;
 - soit **tranché** par l'humain -> en interne `decided` (capter sa décision, ne pas inventer), montré
@@ -66,9 +68,9 @@ microcopie. **Le plugin propose et rappelle les contraintes ; il ne décide pas.
 
 ### Étape 3 : Résoudre en session tout point resté "à traiter"
 **Aucun item ne doit rester "à traiter" à la sortie de l'atelier.** Reprendre chaque point encore non
-couvert **un par un**, désigné par sa **phrase claire**, via la boucle 3-options
-(`references/interactive-loop.md`) : **réponse recommandée**, **alternative**, ou **réponse propre de
-l'humain**. La décision est **écrite en place** dans la checklist (l'item passe à `decided` ou
+couvert **un par un**, désigné par sa **phrase claire**, **avec `AskUserQuestion`**
+(`references/interactive-loop.md`) : **réponse recommandée** et **"sans objet"** en options, la
+**réponse propre de l'humain** passant par la saisie libre que l'outil ajoute. La décision est **écrite en place** dans la checklist (l'item passe à `decided` ou
 `sans_objet`). Discipline "marquer, ne pas inventer" et anti-usine-à-gaz : commencer petit (tokens
 essentiels, composants de base, patterns clés), ne pas créer de tokens/composants par anticipation. **On ne
 clôt l'atelier que lorsque plus aucun item n'est "à traiter".**

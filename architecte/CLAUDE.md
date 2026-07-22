@@ -72,7 +72,8 @@ risques** (le pourquoi / les limites) ; les attributs de qualité sont les **-il
 découlent** (cible + scénario QAW). Jamais de doublon entre les deux (cf. `templates/facteurs-et-qualite.md`).
 
 ## Conventions partagées
-`references/interactive-loop.md` (boucle 3-options), `references/ux-conventions.md`
+`references/interactive-loop.md` (boucle interactive : `AskUserQuestion`, deux options),
+`references/ux-conventions.md`
 (pas de fuite de champ, refus en clair, une ligne "Étape suivante" par skill),
 `references/coherence-checklist-guide.md` (grille canonique de la porte de cohérence, ancrée
 ATAM / scénarios qualité 6-parties / revue ADR / traçabilité / walking skeleton / risque-driven

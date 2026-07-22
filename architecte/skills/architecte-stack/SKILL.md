@@ -47,7 +47,7 @@ contrainte (`cadrage-out/project-frame.md`, `product-brief.md`, `spec-index.md`,
 Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
 skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
 `version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
-au nom canonique en `version: N+1`) et **attendre** le choix. **Exception ADR** : un ADR accepté est
+au nom canonique en `version: N+1`) et **attendre** le choix - la porte se pose **avec `AskUserQuestion`** (deux options, cf. `references/regeneration-gate.md`). **Exception ADR** : un ADR accepté est
 immuable ; la porte ne le supprime ni ne le versionne - il évolue via son champ `Statut` et un ADR
 successeur (cf. la règle de versionnage des documents). Premier passage (rien n'existe) : générer
 directement, sans porte.
@@ -58,22 +58,25 @@ directement, sans porte.
 Domaines de décision : **langage(s), framework(s) back, framework front / bibliothèque de
 composants / stratégie CSS-tokens, bibliothèques principales, base de données, style d'API,
 communication asynchrone, fournisseur cloud, déploiement, observabilité**. Pour **chaque**
-domaine (front et déploiement compris), **même si le cadrage suggère une piste** : **proposer
-2 à 4 options réellement diverses avec avantages/inconvénients + une recommandation**, puis
+domaine (front et déploiement compris), **même si le cadrage suggère une piste** : poser la
+question **avec `AskUserQuestion`** - **deux options réellement diverses**, la **recommandée**
+d'abord, chacune portant ses avantages/inconvénients dans sa `description` ; une troisième piste
+reste accessible par la saisie libre que l'outil ajoute. Puis
 **attendre le choix explicite de l'utilisateur** avant de continuer. **Ne jamais
 auto-sélectionner** une techno ni graver un choix non tranché.
 
 **Anti-biais (obligatoire).** Un choix antérieur ne restreint pas silencieusement les suivants
-à l'écosystème d'un même fournisseur : pour chaque domaine, présenter **au moins une alternative
-crédible hors de cet écosystème** - **interdit** de ne proposer que des options d'un seul
-fournisseur (pas d'"Azure-vs-Azure"). Le **fournisseur cloud** et le **déploiement** sont des
+à l'écosystème d'un même fournisseur : comme il n'y a que deux options, **l'option 2 est
+obligatoirement hors de l'écosystème de l'option 1** - **interdit** de proposer deux options d'un
+seul fournisseur (pas d'"Azure-vs-Azure"). Le **fournisseur cloud** et le **déploiement** sont des
 **décisions ouvertes** à part entière : ne jamais les déduire d'une "infra existante" sauf si
 l'utilisateur l'a **dit explicitement** - et alors, le lui **confirmer comme sa décision**, ne
 pas l'affirmer.
 
 **Expérience ≠ décision.** Si l'utilisateur mentionne connaître une techno ("je maîtrise
-React"), **ne pas l'adopter d'office** : demander "Puisque tu connais React, on part là-dessus
-ou on évalue d'autres options ?". La décision finale vient **toujours** de lui.
+React"), **ne pas l'adopter d'office** : demander **avec `AskUserQuestion`** "Puisque tu connais
+React, on part là-dessus ou on évalue d'autres options ?" - deux options, "on part sur React" et
+"on évalue d'autres options". La décision finale vient **toujours** de lui.
 
 Respecter l'ordre des dépendances entre choix (langage avant framework, etc.).
 **Version exacte pour CHAQUE techno** : à la finalisation, chaque langage, framework,
@@ -88,13 +91,15 @@ Pour chaque **langage retenu** au **workflow stack (étape 1)**, copier le(s) fi
 correspondant du catalogue `references/conventions/` vers le dossier `conventions/`
 du projet :
 - Python -> `python/ruff.toml` ; TS/JS -> `ts-js-biome/biome.json` (défaut) **ou**
-  `ts-js-eslint/{eslint.config.js,.prettierrc}` (demander lequel) ; C ->
+  `ts-js-eslint/{eslint.config.js,.prettierrc}` (demander lequel **avec `AskUserQuestion`**, Biome
+  en recommandé) ; C ->
   `c/.clang-format`.
 - **Fallback (langage hors catalogue)** : ne pas inventer de config exotique -
   garder le `.editorconfig` universel, **avertir l'utilisateur** que ce langage n'a
   pas de convention prédéfinie, et **proposer une convention générique** (indentation,
-  longueur de ligne, nommage) ; la faire **trancher en session** (recommandée +
-  alternative + saisir), écrite en place.
+  longueur de ligne, nommage) ; la faire **trancher en session avec `AskUserQuestion`** (deux
+  options : la convention recommandée et une alternative ; la saisie libre est ajoutée par
+  l'outil), écrite en place.
 
 **Installer l'outil retenu (best-effort, sans admin, non bloquant).** Après avoir écrit la config, poser
 réellement l'outil : `python "${CLAUDE_PLUGIN_ROOT}/scripts/install_formatter.py" <racine> <clé>` où
@@ -120,11 +125,14 @@ décision, options **réellement présentées**, conséquences, déclencheur de 
 workflow stack - ou ici) : l'ADR **consigne** un choix validé, il ne le **crée** pas. **Ne jamais** y inscrire
 une décision non tranchée, une formule "décision non remise en question" sur un choix jamais
 proposé, ni une **prémisse non énoncée** (composition d'équipe, infra existante...) - si une
-prémisse manque, la **demander** d'abord. Mettre à jour le manifeste en silence.
+prémisse manque, la **demander** d'abord **avec `AskUserQuestion`** (deux lectures plausibles en
+options). Mettre à jour le manifeste en silence.
 
 ### Étape 4 : Walking skeleton + convergence (numérotation **proposée**)
 Désigner le **walking skeleton définitif** (la première tranche de bout en bout qui
-dé-risque la stack ; confirmer/ajuster le candidat du spec-index). **Proposer la liste
+dé-risque la stack ; confirmer/ajuster le candidat du spec-index **avec `AskUserQuestion`** -
+deux options : le candidat du spec-index en recommandé, et la tranche concurrente la plus
+défendable). **Proposer la liste
 de features numérotées et séquencée** : **chaque** use case du `spec-index.md`
 devient une feature numérotée. La liste est **complète** - couverture 1:1, **aucun
 use case laissé de côté** - ordonnée selon les **dépendances et le couplage

@@ -2,7 +2,7 @@
 
 Lue par le skill `designer-ingestion` (pré-remplissage). Pour chaque **item de la checklist de couverture**,
 indique **d'où il se déduit**. Le skill auto-remplit (`status: deduced`, avec `(src: ...)`) ce qui vient des
-handoffs et ne **pose** (boucle 3-options) que les items **H** ou restés `open`. Un item bloquant non
+handoffs et ne **pose** (boucle interactive, `AskUserQuestion`) que les items **H** ou restés `open`. Un item bloquant non
 statué empêche de juger la couverture suffisante. La **maquette** est une **direction** (inspiration), pas
 une cible.
 

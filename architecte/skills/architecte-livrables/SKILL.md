@@ -47,7 +47,7 @@ skill** existent déjà - `diagrammes.md` **et les images sous `diagrammes/`**, 
 `impact-design.md` - proposer le choix **Repartir de zéro** (supprimer puis générer à neuf ; pour
 les diagrammes, vider `diagrammes/` avant de re-rendre les images) ou **Garder les deux (versionner)**
 (archiver l'existant sous `_archives/` - le dossier `diagrammes/` vers `_archives/diagrammes-v<N>/` -
-puis régénérer au nom canonique en `version: N+1`) et **attendre** le choix. Les fichiers
+puis régénérer au nom canonique en `version: N+1`) et **attendre** le choix - la porte se pose **avec `AskUserQuestion`** (deux options, cf. `references/regeneration-gate.md`). Les fichiers
 d'environnement `.env*`/`.gitignore` restent **complétés, jamais écrasés** (règle propre à l'étape 4).
 Premier passage (rien n'existe) : générer directement, sans porte.
 
@@ -147,8 +147,9 @@ charge de l'équipe, **hors périmètre** de la Factory (qui ne pose aucun hook 
 
 ## Résolution des points avant de conclure
 Avant de terminer, **balayer tous les fichiers `architecte-out/`** : pour **chaque**
-point encore à définir ou à chiffrer, **poser la question** à l'utilisateur (un par
-un - réponse recommandée + alternative + saisir, cf. `references/interactive-loop.md`)
+point encore à définir ou à chiffrer, **poser la question avec `AskUserQuestion`** (un appel par
+point - réponse recommandée + alternative en options, la saisie libre étant ajoutée par l'outil,
+cf. `references/interactive-loop.md`)
 et **écrire la réponse en place**. Ne **pas conclure** la phase tant qu'un point reste
 indéfini. Aucun fichier annexe.
 

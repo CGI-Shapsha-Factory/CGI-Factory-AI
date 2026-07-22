@@ -99,9 +99,9 @@ ne peut pas faire.)*
 
 ## Étape 3 : Résolution interactive de chaque point (obligatoire avant d'avancer)
 Tout point relevé - **bloquant ou non** - n'est **pas seulement affiché**. **Énumérer TOUT ce qui a été
-trouvé**, puis les traiter **un par un**, jamais un seul ni une liste en bloc : pour chaque point, la boucle
-3-options (`references/interactive-loop.md`) - **recommandation adaptée au projet** + **alternative** +
-**saisie**. Selon la nature du point, deux routes de résolution :
+trouvé**, puis les traiter **un par un**, jamais un seul ni une liste en bloc : pour chaque point, un appel
+**`AskUserQuestion`** (`references/interactive-loop.md`) - **recommandation adaptée au projet** +
+**alternative** ; la **saisie libre** est ajoutée par l'outil, ne jamais l'écrire en option. Selon la nature du point, deux routes de résolution :
 - **Point de guidelines / couverture** (règle d'état, pattern d'erreur, note a11y, microcopie, incohérence de
   nommage) -> **corrigé en place** dans `designer-out/design-guidelines.md` ou
   `designer-out/coverage-report.md`. **Aucun fichier annexe.**
@@ -153,7 +153,8 @@ contrôler les états et patterns d'erreur.
 - **Challenger, pas cocher.** Cohérence stricte et adversariale : on cherche ce qui **manque** et ce qui se
   **contredit** contre les trois contrats amont, pas la simple présence.
 - **Remonter tout, résoudre un par un.** Énumérer **chaque** point trouvé, puis les dérouler un à un (boucle
-  3-options). Ne jamais s'arrêter au premier ; ne jamais poser une liste en bloc.
+  interactive, un appel `AskUserQuestion` par point). Ne jamais s'arrêter au premier ; ne jamais poser
+  une liste en bloc.
 - **Rien laissé indéfini.** Chaque point se résout en session - corrigé en place (guidelines/couverture) ou
   renvoyé à Claude Design (trou structurel) - avant d'avancer. Aucun marqueur ne survit.
 - **Balayage typographie.** Vérifier qu'aucun artefact `designer-out/` (guidelines, rapport, prompt) ne contient de glyphe de style IA (tiret cadratin, points de suspension unicode, flèches unicode, guillemets à chevrons, coche/croix) ; remplacer par l'équivalent clavier en place (cf. la section Typographie de `references/ux-conventions.md`).

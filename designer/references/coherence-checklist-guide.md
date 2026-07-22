@@ -16,8 +16,9 @@ présence est couverte par le garde-fou déterministe `check_design.py` ; cette 
 travail de **jugement** que le script ne peut pas faire.
 
 **Principe de résolution - toujours une décision, jamais un simple constat.** Chaque point relevé
-devient une **décision en session** via la boucle 3-options (`interactive-loop.md`) :
-recommandation adaptée au projet + alternative + saisie libre, puis application. L'utilisateur ne
+devient une **décision en session** via la boucle interactive (`interactive-loop.md`) :
+`AskUserQuestion`, recommandation adaptée au projet + alternative (la saisie libre est ajoutée par
+l'outil), puis application. L'utilisateur ne
 relit jamais les artefacts : tout se règle dans la décision.
 
 ---
@@ -159,4 +160,5 @@ l'écran, pas l'inverse.
   (https://www.nngroup.com/articles/error-message-guidelines/).
 - Accessibilité - WCAG 2.2 (https://www.w3.org/TR/WCAG22/), critères 2.4.11 / 2.4.13 (focus
   visible non masqué), 1.4.3 (contraste).
-- Modèle de porte et boucle 3-options - `interactive-loop.md`, `ux-conventions.md`.
+- Modèle de porte et boucle interactive (`AskUserQuestion`, deux options) - `interactive-loop.md`,
+  `ux-conventions.md`.

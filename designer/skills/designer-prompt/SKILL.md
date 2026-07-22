@@ -31,7 +31,7 @@ est jugée suffisante - termine d'abord l'atelier via `/designer:designer-atelie
 Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
 skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
 `version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
-au nom canonique en `version: N+1`) et **attendre** le choix. Les prompts sous `prompts/` sont des
+au nom canonique en `version: N+1`) et **attendre** le choix - la porte se pose **avec `AskUserQuestion`** (deux options, cf. `references/regeneration-gate.md`). Les prompts sous `prompts/` sont des
 **fichiers plats numérotés** (`<NNN>-<JJ-MM>-...md`) : un nouveau prompt prend le **numéro suivant**
 sans jamais écraser les précédents (déjà non destructif) - la porte ne vise donc que les livrables au
 nom canonique. Premier passage (rien n'existe) : générer directement, sans porte.

@@ -3,7 +3,7 @@
 Lue par le skill `architecte` (étape de vérification). Pour chaque question
 structurante d'architecture, indique **où la réponse se trouve déjà** dans les
 artefacts de cadrage (`cadrage-out/`). Le skill auto-remplit depuis ces
-champs (avec `(src: ...)`) et ne **pose** (boucle 3-options) que les questions
+champs (avec `(src: ...)`) et ne **pose** (boucle interactive, `AskUserQuestion`) que les questions
 **non couvertes**. Une question bloquante non répondue empêche de démarrer la
 génération des fichiers d'architecture.
 
@@ -28,6 +28,6 @@ génération des fichiers d'architecture.
 | 17 | Authentification / autorisation | `project-frame.md` §10 (Q13) | non |
 
 **Méthode (résumé)** : 16/17 réponses viennent du cadrage ; seule la **#13 profil
-d'équipe** est posée à l'utilisateur (boucle 3-options). Si une réponse de cadrage
+d'équipe** est posée à l'utilisateur (boucle interactive, `AskUserQuestion`). Si une réponse de cadrage
 est restée `[À VALIDER]`/`deferred` (bloquante), elle est re-soumise ici avant de
 générer quoi que ce soit. On ne re-pose **jamais** ce que le cadrage a déjà tranché.

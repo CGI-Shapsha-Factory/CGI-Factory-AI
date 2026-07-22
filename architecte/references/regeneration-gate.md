@@ -13,7 +13,9 @@ ne **jamais** supprimer ni écraser un livrable sans un **choix explicite** de l
   attendre - cf. `interactive-loop.md`). Ne rien toucher tant que l'utilisateur n'a pas tranché.
 
 ## La décision (deux options, on attend le choix)
-Exposer en clair **les fichiers concernés par leur nom métier** (jamais un code), puis proposer :
+Exposer en clair **les fichiers concernés par leur nom métier** (jamais un code), puis poser la
+décision **avec `AskUserQuestion`** - les deux options ci-dessous, jamais une troisième écrite à la
+main (l'outil ajoute lui-même la saisie libre) :
 
 1. **Repartir de zéro** *(recommandé si la relance vise à tout refaire)* - **supprimer** les
    sorties existantes de ce skill, puis **générer à neuf** aux noms canoniques (front-matter

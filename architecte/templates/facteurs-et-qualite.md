@@ -61,7 +61,8 @@ date: AAAA-MM-JJ
 | 5        | [ex. Évolutivité / maintenabilité] | [ex. nouveau type d'intégration en < 1 sprint] | [nom du driver source] |
 
 <!-- Classer du plus prioritaire au moins prioritaire. Une cible non chiffrée se précise
-     en session avec l'utilisateur (réponse recommandée + alternative + saisir), écrite
+     en session avec l'utilisateur (`AskUserQuestion` : réponse recommandée + alternative, la
+     saisie libre étant ajoutée par l'outil), écrite
      en place - jamais laissée indéfinie. -->
 
 ## Scénarios de qualité testables (QAW)

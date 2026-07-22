@@ -1,6 +1,6 @@
 {
   "name": "designer",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Phase design d'un projet spec-driven : atelier de couverture (checklist fondation/expérience/technique pré-remplie par les handoffs cadrage+architecte) qui produit le prompt Claude Design, le rapport de couverture et le handoff. Le design system naît dans Claude Design ; son export est committé dans designer-out/maquette-de-claude-design/ et sert de source à la fabrication, le plugin ne le génère pas. Chaîne de 5 skills : designer-init amorce, designer-ingestion ingère les handoffs et pré-remplit la checklist, designer-atelier la déroule et arbitre les choix d'expérience, designer-prompt génère le prompt Claude Design + le rapport de couverture, designer-coherence valide l'export et produit le handoff. Toutes les sorties sont sous designer-out/. 5 skills interactifs, tout en français.",
   "author": {
     "name": "IA Factory"

@@ -44,7 +44,7 @@ sans l'annoncer ; sinon, orienter en clair vers `/architecte:architecte-init`.
 Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
 skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
 `version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
-au nom canonique en `version: N+1`) et **attendre** le choix. Premier passage (rien n'existe) :
+au nom canonique en `version: N+1`) et **attendre** le choix - la porte se pose **avec `AskUserQuestion`** (deux options, cf. `references/regeneration-gate.md`). Premier passage (rien n'existe) :
 générer directement, sans porte.
 
 ## Procédure : ordre imposé (chaque étape consomme la précédente)
@@ -107,7 +107,9 @@ design system **visuel**, pas le **composant technique** front (porté ici + sa 
 (nom métier) et **`Rôle`** (ce qu'il fait, en une phrase) ; **jamais de texte brut en liste**,
 **jamais de code `C1`/`C2`** ni d'identifiant technique. *(Exception assumée à la règle "pas de
 tableau" - cf. `references/ux-conventions.md` §4 : les composants se lisent bien mieux en tableau.)*
-**Demander si ça convient ou s'il faut modifier** ; appliquer les retours (ajout/fusion/suppression) ;
+**Demander avec `AskUserQuestion` si ça convient ou s'il faut modifier** (deux options : "ça me
+convient" en recommandé, "il faut modifier" ; la saisie libre reçoit le détail des retouches) ;
+appliquer les retours (ajout/fusion/suppression) ;
 **boucler jusqu'à validation**. Puis écrire `architecte-out/composants.md` (gabarit
 `templates/composants.md`). Mettre à jour le manifeste en silence.
 

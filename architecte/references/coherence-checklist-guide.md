@@ -12,9 +12,10 @@ travail de **jugement** que le script ne peut pas faire.
 
 **Principe de résolution - toujours une décision, jamais un simple constat.** Chaque point
 relevé (manque, contradiction, anomalie) n'est **jamais** seulement affiché "bloquant". Il est
-transformé en **décision en session** via la boucle 3-options (`interactive-loop.md`) : énoncer
-en clair ce qui est là / ce qui manque, demander "que veux-tu faire ?", proposer **deux actions
-adaptées + saisie libre**, puis **appliquer le choix en place**. L'utilisateur ne relit jamais
+transformé en **décision en session** via la boucle interactive (`interactive-loop.md`) : énoncer
+en clair ce qui est là / ce qui manque, demander "que veux-tu faire ?" **avec `AskUserQuestion`**,
+proposer **deux actions adaptées** (la saisie libre est ajoutée par l'outil), puis **appliquer le
+choix en place**. L'utilisateur ne relit jamais
 les artefacts : tout se règle dans la décision. Voir `interactive-loop.md` (règle d'or).
 
 ---
@@ -35,7 +36,8 @@ Règles de déroulé :
 - **Un item à la fois, dans l'ordre.** On ne saute pas, on ne groupe pas.
 - **Coché = la question a reçu une réponse satisfaisante** sur l'artefact réel. Un item dont la
   réponse est "non" ou "je ne sais pas" **reste décoché** et devient une décision en session
-  (boucle 3-options), puis se coche une fois la correction appliquée en place.
+  (boucle interactive, deux options avec `AskUserQuestion`), puis se coche une fois la correction
+  appliquée en place.
 - **Sans objet** : cocher en annotant `[SANS OBJET : raison]` sur la ligne. Jamais de case cochée
   sans raison lisible.
 - **IDs stables.** `CHK###` ne se renumérote jamais : on ajoute à la suite, on ne réordonne pas.
