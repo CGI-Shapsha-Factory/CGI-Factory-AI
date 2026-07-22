@@ -1,6 +1,6 @@
 # Rapport de recette : [intitulé de la feature] ([numéro de registre])
 
-<!-- Généré par `bilan-validation` dans `validation-out/<feature>/rapport-de-recette.md`.
+<!-- Généré par `rapport-de-recette` dans `validation-out/<feature>/rapport-de-recette.md`.
      Rapport TRACÉ exigence par exigence : une ligne par critère d'acceptation, reliée à son
      cas de test, son verdict, sa preuve et la décision prise sur l'écart. La section "Verdict
      de recette" n'est remplie QUE par le verdict humain du testeur (porte de recette) : la

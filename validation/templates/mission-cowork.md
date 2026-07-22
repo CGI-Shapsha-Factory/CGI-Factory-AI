@@ -63,5 +63,5 @@ de l'exécution ; si un fichier de ce nom existe déjà, suffixer `-2`, `-3`...)
 ## Après la mission
 
 Signaler au testeur que les résultats sont écrits. La suite (rapport de recette, tri des
-écarts, verdict) se fait dans Claude Code avec `/validation:bilan-validation` - ce n'est pas
+écarts, verdict) se fait dans Claude Code avec `/validation:rapport-de-recette` - ce n'est pas
 ton rôle.

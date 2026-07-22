@@ -1,6 +1,6 @@
 # Scénario rejouable : TC-[feature]-[NNN] - [intitulé court]
 
-<!-- Généré par `bilan-validation` dans `validation-out/<feature>/scenarios/TC-<feature>-<NNN>.md`
+<!-- Généré par `rapport-de-recette` dans `validation-out/<feature>/scenarios/TC-<feature>-<NNN>.md`
      pour chaque cas passé OK. C'est le capital de NON-RÉGRESSION de la feature : le déroulé
      EFFECTIF (tel que joué, pas tel que prévu), en langage naturel auto-portant, rejouable par
      n'importe quel outil (extension Chrome, Playwright, Cowork). Cibler les éléments par leur

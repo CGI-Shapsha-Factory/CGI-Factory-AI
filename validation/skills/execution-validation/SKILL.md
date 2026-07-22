@@ -117,9 +117,11 @@ booléens) : ce qui passe, ce qui échoue, ce qui n'a pas pu être testé.
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, y
   compris sur la voie Cowork où le skill s'arrête avant d'exécuter (cf. la section 5 de
   `references/ux-conventions.md`).
-- **Jamais de cul-de-sac, questions à choix pour l'énumérable.** Choix de l'outil, choix du
-  plan à jouer, confirmation de la mission Cowork et de toute action destructive se demandent
-  avec `AskUserQuestion` ; l'adresse de recette reste en prose ; **un refus se termine par une
-  question** (cf. `references/interactive-loop.md`).
+- **Jamais de cul-de-sac, et toute question passe par `AskUserQuestion`.** Choix de l'outil,
+  choix du plan à jouer, confirmation de la mission Cowork, toute action destructive **et
+  l'adresse de recette** - pour celle-ci, les options portent les adresses plausibles déduites
+  du dépôt (URL locale servie, ouverture directe du fichier, URL déployée) et la saisie libre
+  reste ouverte. **Aucune question rédigée en prose dans le fil.** Un refus se termine par une
+  question (cf. `references/interactive-loop.md`).
 
-Étape suivante : `/validation:bilan-validation` - assembler le rapport de recette tracé et trier les écarts avec le testeur. Sur la voie Cowork, attendre d'abord que le fichier de résultats soit apparu, puis lancer ce même bilan. Ou relancer `/validation:execution-validation` pour une nouvelle exécution (changement d'outil, cas restés à rejouer, ou vérification après correction) : chaque exécution produit son propre fichier, aucune n'écrase la précédente.
+Étape suivante : `/validation:rapport-de-recette` - assembler le rapport de recette tracé et trier les écarts avec le testeur. Sur la voie Cowork, attendre d'abord que le fichier de résultats soit apparu, puis lancer ce même bilan. Ou relancer `/validation:execution-validation` pour une nouvelle exécution (changement d'outil, cas restés à rejouer, ou vérification après correction) : chaque exécution produit son propre fichier, aucune n'écrase la précédente.

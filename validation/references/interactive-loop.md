@@ -20,20 +20,25 @@ concernés. **Aucune information n'est inventée : on demande, on ne comble pas.
   de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs points d'un
   coup, **même si une source (plan, résultat d'exécution, spécification) semble tout répondre** - une
   réponse issue d'une source **reste une suggestion à confirmer**, pas une validation.
-- **Deux formes de question, selon la nature de la réponse attendue.** Le testeur ne doit jamais
-  se demander ce qu'on attend de lui ni retaper une réponse qu'on connaît déjà :
-  - **Réponses énumérables (2 à 4 choix connus) : poser la question avec l'outil
-    `AskUserQuestion`.** Une option par choix réel, la **recommandation en premier** avec la
-    mention "(recommandé)" dans son libellé, et une `description` courte qui dit ce que le
-    choix implique concrètement. **Ne jamais fabriquer d'option "Saisir ma réponse"** :
-    l'outil offre toujours la saisie libre. C'est le cas de : quelle feature passe en recette,
-    quel outil d'exécution, quel fichier de résultats, le sort d'un critère à clarifier, la
-    nature d'un écart, le verdict de recette, une porte de régénération.
-  - **Réponses libres : poser la question en prose**, avec **une réponse recommandée** clairement
-    étiquetée "suggestion" quand une piste existe. C'est le cas de : l'adresse de l'environnement
-    de recette, les comptes et les données de test, la lecture observable d'un critère clarifié,
-    le texte d'un constat. Un menu à trois options y serait artificiel.
-- **Toujours attendre la réponse**, quelle que soit la forme. Présenter une recommandation ne
+- **Une seule forme de question : l'outil `AskUserQuestion`. Sans exception.** Toute question
+  posée au testeur passe par l'outil - **jamais** une question rédigée en prose dans le fil de
+  la conversation. Le testeur doit toujours retrouver le même geste : une puce de contexte, des
+  choix, et la saisie libre. Cela vaut pour les réponses énumérables **comme** pour les réponses
+  libres :
+  - **Réponses énumérables** (quelle feature passe en recette, quel outil d'exécution, quel
+    fichier de résultats, le sort d'un critère à clarifier, la nature d'un écart, le verdict de
+    recette, une porte de régénération) : une option par choix réel.
+  - **Réponses libres** (l'adresse de l'environnement de recette, les comptes et les données de
+    test, la lecture observable d'un critère clarifié, le texte d'un constat) : **les options
+    portent les candidats plausibles**, déduits de ce qu'on a lu dans le dépôt - par exemple, pour
+    une adresse de recette, l'URL locale servie par un serveur et l'ouverture directe du fichier.
+    Le testeur choisit un candidat ou saisit le sien. Une seule piste crédible ? Une option
+    "aucune de ces adresses" suffit à ouvrir la saisie ; **ne jamais renoncer à l'outil faute de
+    deuxième option évidente**.
+- **Forme des options.** La **recommandation en premier** avec la mention "(recommandé)" dans
+  son libellé, et une `description` courte qui dit ce que le choix implique concrètement.
+  **Ne jamais fabriquer d'option "Saisir ma réponse"** : l'outil offre toujours la saisie libre.
+- **Toujours attendre la réponse.** Présenter une recommandation ne
   vaut jamais réponse : rien n'est écrit sans un choix ou une saisie explicite du testeur.
 - **Regroupement autorisé pour les points de même nature.** Une même série (le sort de plusieurs
   critères à clarifier, le tri de plusieurs écarts) peut être posée en un seul appel à

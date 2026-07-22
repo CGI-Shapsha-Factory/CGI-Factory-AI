@@ -1,9 +1,9 @@
 ---
-name: bilan-validation
+name: rapport-de-recette
 description: Assemble le rapport de recette tracé exigence par exigence, trie chaque écart avec le testeur (anomalie, évolution ou critère flou, renvoi vers les skills maintenance), consolide les scénarios de non-régression et recueille le verdict humain de la porte de recette.
 ---
 
-# bilan-validation
+# rapport-de-recette
 
 Bras "restitution et porte" de la validation fonctionnelle : croise le plan de test et les
 résultats d'exécution en un **rapport de recette tracé exigence par exigence**, trie chaque
@@ -127,9 +127,11 @@ la seule présence du titre de section ne suffit pas.)
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, en la
   cadrant sur le verdict qui vient d'être prononcé (cf. la section 5 de
   `references/ux-conventions.md`).
-- **Jamais de cul-de-sac, questions à choix pour l'énumérable.** Fichier de résultats, nature
-  de chaque écart, verdict de recette et changement de statut Linear se demandent avec
-  `AskUserQuestion` ; **un refus se termine par une question** proposant les issues réellement
-  praticables (cf. `references/interactive-loop.md`).
+- **Jamais de cul-de-sac, et toute question passe par `AskUserQuestion`.** Fichier de résultats,
+  nature de chaque écart, verdict de recette, changement de statut Linear **et les réponses
+  libres** (texte d'un constat, motif d'une réserve) - pour celles-ci, les options portent les
+  formulations plausibles et la saisie libre reste ouverte. **Aucune question rédigée en prose
+  dans le fil.** Un refus se termine par une question proposant les issues réellement praticables
+  (cf. `references/interactive-loop.md`).
 
 Étape suivante : selon le verdict - livraison validée, `/validation:plan-de-validation` pour recetter la feature livrée suivante. Validée avec réserves ou refusée : `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` pour les écarts triés qui n'ont pas encore leur ticket, puis `/maintenance:correction-anomalie` (ou `/maintenance:realisation-evolution`) côté développeur, et enfin `/validation:execution-validation` pour rejouer les cas en échec et lever les réserves.

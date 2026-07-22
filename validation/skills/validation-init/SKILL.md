@@ -8,7 +8,7 @@ description: Amorce la phase de validation fonctionnelle : installe les gabarits
 Skill d'amorçage de la **validation fonctionnelle** : **tout premier skill** à lancer quand une
 feature livrée doit passer en recette fonctionnelle (après la fabrication SpecKit, donc après
 l'assembleur et la première alimentation de Linear). Il prépare le terrain ; les 3 skills
-métier (`plan-de-validation`, `execution-validation`, `bilan-validation`) supposent qu'il a
+métier (`plan-de-validation`, `execution-validation`, `rapport-de-recette`) supposent qu'il a
 tourné.
 
 ## Objectif
@@ -105,9 +105,10 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
   Typographie de `references/ux-conventions.md`).
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, même
   si l'amont manque (cf. la section 5 de `references/ux-conventions.md`).
-- **Jamais de cul-de-sac, questions à choix pour l'énumérable.** Les réponses énumérables se
-  demandent avec `AskUserQuestion` ; les réponses libres (adresse de recette) restent en prose ;
-  et on ne rend jamais la main sans question quand on attend quelque chose du testeur (cf.
+- **Jamais de cul-de-sac, et toute question passe par `AskUserQuestion`.** Y compris les
+  réponses libres comme l'adresse de recette : les options portent les candidats plausibles et
+  la saisie libre reste ouverte. **Aucune question rédigée en prose dans le fil**, et on ne rend
+  jamais la main sans question quand on attend quelque chose du testeur (cf.
   `references/interactive-loop.md`).
 
 Étape suivante : `/validation:plan-de-validation` - dériver le plan de test de la feature livrée à recetter. Ou `/maintenance:maintenance-init` d'abord si le terrain de maintenance manque (il faut l'avoir posé avant le premier bilan, c'est là que se créent les anomalies et les évolutions). Ou `/assembleur:premier-alimente-linear` si les tickets Linear n'ont jamais été créés et que tu veux que le rapport soit relié à sa feature.

@@ -1,7 +1,7 @@
 # Règles de la validation fonctionnelle : place dans la chaîne, règles d'or, tri des écarts
 
 Référence partagée des 3 skills métier (`plan-de-validation`, `execution-validation`,
-`bilan-validation`). Chaque skill y renvoie au lieu de dupliquer.
+`rapport-de-recette`). Chaque skill y renvoie au lieu de dupliquer.
 
 ## La place de la validation dans la chaîne
 La validation fonctionnelle intervient **après la livraison d'une feature** (fabrication

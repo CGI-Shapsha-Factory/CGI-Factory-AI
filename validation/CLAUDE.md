@@ -36,10 +36,10 @@ Invocation directe `/validation:<skill>` + auto-invocation par la description. P
 | 0 | `validation-init` | gabarits dans `.factory/validation/` + bloc manifeste `validation` (adresse de recette, outil habituel - config statique seule) + `.gitignore` complété + état de l'amont signalé (specs/, Linear, maintenance) | jamais bloquant |
 | 1 | `plan-de-validation` | `specs/<feature>/spec.md` -> `validation-out/<feature>/plan-de-test.md` : un cas `TC-<feature>-NNN` par critère (Given/When/Then traduit en étapes navigateur observables), critère flou = `A CLARIFIER` avec raison, données de test collectées en boucle interactive, porte de régénération à la relance | **plan validé par le testeur** (humain) |
 | 2 | `execution-validation` | choix de l'outil à chaque lancement (extension Chrome recommandée / Playwright en repli / mission Cowork différée via `mission-cowork.md` auto-portant) -> `resultats/execution-<JJ-MM>.md` au **contrat commun** (un bloc par cas : verdict OK/KO/NON TESTABLE, déroulé effectif, preuves, constaté vs attendu sur KO) + captures dans `resultats/preuves/` | le testeur choisit l'outil ; l'IA constate, ne juge pas |
-| 3 | `bilan-validation` | matrice de traçabilité (critère -> cas -> verdict -> preuve -> décision) + tri des écarts un par un avec le testeur (anomalie / évolution / flou -> renvois `/maintenance:*`) + scénarios rejouables `scenarios/TC-*.md` (cas OK) + **porte de recette** : verdict humain inscrit dans le rapport et commenté sur le ticket `Feature` Linear | **verdict de recette** (humain) |
+| 3 | `rapport-de-recette` | matrice de traçabilité (critère -> cas -> verdict -> preuve -> décision) + tri des écarts un par un avec le testeur (anomalie / évolution / flou -> renvois `/maintenance:*`) + scénarios rejouables `scenarios/TC-*.md` (cas OK) + **porte de recette** : verdict humain inscrit dans le rapport et commenté sur le ticket `Feature` Linear | **verdict de recette** (humain) |
 
 Flux : `validation-init` -> (par feature livrée) `plan-de-validation` -> `execution-validation`
--> `bilan-validation` -> écarts traités côté maintenance (`correction-anomalie`,
+-> `rapport-de-recette` -> écarts traités côté maintenance (`correction-anomalie`,
 `realisation-evolution`) -> nouvelle exécution pour lever les réserves si besoin.
 
 ## Workspace & manifeste

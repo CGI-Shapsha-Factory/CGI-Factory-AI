@@ -89,9 +89,12 @@ numéroté dans l'ordre des user stories, selon le gabarit
   `references/regles-validation.md`).
 
 ### Étape 4 : compléter les données de test (boucle interactive)
-Le plan doit être auto-portant : demander au testeur, un point à la fois (cf.
-`references/interactive-loop.md`), l'adresse de recette si elle manque au manifeste, les
-comptes de test et leur rôle, l'état de données attendu, les préparations manuelles. Un point
+Le plan doit être auto-portant : demander au testeur, un point à la fois et **toujours avec
+`AskUserQuestion`** (cf. `references/interactive-loop.md`), l'adresse de recette si elle manque
+au manifeste, les comptes de test et leur rôle, l'état de données attendu, les préparations
+manuelles. Ces réponses sont libres : les **options portent les candidats plausibles** lus dans
+le dépôt - pour l'adresse, l'URL locale servie par un serveur, l'ouverture directe du fichier,
+une URL déployée - et la saisie libre reste ouverte. **Jamais de question en prose.** Un point
 laissé de côté est omis (le cas concerné passe A CLARIFIER si la donnée lui est
 indispensable). **Jamais de valeur inventée.**
 
@@ -107,7 +110,8 @@ plusieurs critères peuvent être regroupés dans un même appel - cf.
 `references/interactive-loop.md`). Chaque question rappelle le critère concerné et la raison du
 flou :
 - **clarifier maintenant** : le testeur précise la lecture observable du critère ; cette
-  précision se demande **en prose** (réponse libre) juste après son choix, puis elle s'écrit
+  précision se demande **avec `AskUserQuestion`** juste après son choix - les options portent
+  les lectures observables plausibles du critère, la saisie libre reste ouverte -, puis elle s'écrit
   **dans le cas de test** (la spécification, elle, ne bouge pas) et le cas devient testable ;
 - **tracer le point dans Linear** : orienter vers un ticket de suivi sur la feature. La
   création est une **écriture hors du repo** : la confirmer par une question `AskUserQuestion`
@@ -144,10 +148,11 @@ critère source.)
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, même
   si le plan a été refusé ou reste à retoucher (cf. la section 5 de
   `references/ux-conventions.md`).
-- **Jamais de cul-de-sac, questions à choix pour l'énumérable.** Portée de campagne, choix de
-  la feature, porte de régénération, sort d'un critère, porte du plan et création d'un ticket
-  de suivi se demandent avec `AskUserQuestion` ; les réponses libres (données de test, lecture
-  observable) restent en prose ; **un refus se termine par une question**, jamais par un point
-  final (cf. `references/interactive-loop.md`).
+- **Jamais de cul-de-sac, et toute question passe par `AskUserQuestion`.** Portée de campagne,
+  choix de la feature, porte de régénération, sort d'un critère, porte du plan, création d'un
+  ticket de suivi **et aussi les réponses libres** (données de test, lecture observable) - pour
+  celles-ci, les options portent les candidats plausibles et la saisie libre reste ouverte.
+  **Aucune question rédigée en prose dans le fil.** Un refus se termine par une question, jamais
+  par un point final (cf. `references/interactive-loop.md`).
 
 Étape suivante : `/validation:execution-validation` - jouer le plan dans le navigateur contre l'environnement de recette. Ou relancer `/validation:plan-de-validation` si le plan doit être retouché avant exécution (la porte de régénération te demandera quoi faire de l'existant). Ou `/maintenance:creation-evolution` si un critère à clarifier révèle une spécification fausse ou incomplète (geste du PO, la spécification ne se corrige jamais ici).

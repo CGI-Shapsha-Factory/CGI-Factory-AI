@@ -1,7 +1,7 @@
 # Exécution navigateur : les trois voies et le contrat de sortie commun
 
 Référence d'usage d'`execution-validation`. Trois voies d'exécution, un seul contrat de
-sortie : le bilan (`bilan-validation`) est **agnostique de l'outil**.
+sortie : le bilan (`rapport-de-recette`) est **agnostique de l'outil**.
 
 ## Le choix de l'outil (à chaque lancement)
 Le skill demande au testeur quelle voie utiliser (une question, cf. `interactive-loop.md`),
@@ -55,7 +55,7 @@ Marche à suivre affichée au testeur :
 3. Donner la consigne : "Exécute la mission de recette décrite dans
    `validation-out/<feature>/mission-cowork.md`."
 4. Une fois l'exécution finie (le fichier de résultats est apparu), revenir dans Claude Code et
-   lancer `/validation:bilan-validation`.
+   lancer `/validation:rapport-de-recette`.
 
 ## Le contrat de sortie commun (quel que soit l'outil)
 Un fichier de résultats par exécution : `validation-out/<feature>/resultats/execution-<JJ-MM>.md`
