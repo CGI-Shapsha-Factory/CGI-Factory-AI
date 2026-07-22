@@ -33,8 +33,13 @@ Mêmes cas, mêmes règles, via les outils `mcp__playwright__browser_*` :
   d'accessibilité - c'est le **repère d'action** : cibler les éléments par rôle et libellé,
   jamais par pixel), `browser_click` / `browser_type` / `browser_fill_form` /
   `browser_select_option` (agir), `browser_wait_for` (attendre un texte ou un délai),
-  `browser_take_screenshot` (preuve, enregistrée dans `resultats/preuves/`),
+  `browser_take_screenshot` (preuve, destination finale `resultats/preuves/`),
   `browser_console_messages` / `browser_network_requests` (diagnostic sur KO).
+- **Captures** : le MCP Playwright n'écrit que sous sa propre racine autorisée (un chemin hors
+  de la session est refusé, et un nom relatif atterrit dans son dossier de sortie, pas dans
+  `preuves/`). Capturer avec un nom relatif `TC-<feature>-NNN-<n>.png`, puis **déplacer** les
+  fichiers dans `validation-out/<feature>/resultats/preuves/` avant d'écrire les résultats -
+  aucune preuve référencée ne doit rester dans le dossier de l'outil.
 - Si le MCP Playwright n'est pas disponible non plus, ne rien exécuter : proposer la voie 3
   (mission Cowork) ou l'installation d'un des deux outils.
 
