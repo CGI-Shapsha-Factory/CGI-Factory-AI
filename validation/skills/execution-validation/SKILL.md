@@ -1,6 +1,6 @@
 ---
 name: execution-validation
-description: Exécute le plan de test fonctionnel dans le navigateur contre l'environnement de recette : extension Chrome en priorité, MCP Playwright en repli, ou mission différée pour Claude Cowork ; résultats et preuves au format commun.
+description: Exécute le plan de test fonctionnel dans le navigateur contre l'environnement de recette : disponibilité des outils sondée avant le choix, extension Chrome en priorité (marche à suivre affichée si absente), MCP Playwright en repli (installé directement si absent), ou mission différée pour Claude Cowork ; résultats et preuves au format commun.
 ---
 
 # execution-validation
@@ -34,24 +34,58 @@ testeur, sans jamais interpréter un critère ambigu.
 
 ## Procédure
 
-### Étape 1 : choisir l'outil (à chaque lancement)
-Demander au testeur quelle voie utiliser **avec `AskUserQuestion`** (trois options, cf.
-`references/interactive-loop.md` et `references/execution-navigateur.md`), chacune décrite en
-une ligne (ce qu'elle exige, ce qu'elle donne) :
-- **l'extension Chrome (Claude in Chrome)** - la recommandée par défaut, à mettre en premier
-  avec la mention "(recommandé)" : vrai navigateur, session réelle ;
+### Étape 1 : sonder les outils, puis choisir (à chaque lancement)
+
+**1a. Préflight, en silence, avant toute question** (cf. la table du préflight dans
+`references/execution-navigateur.md`). **Un outil ne doit jamais se découvrir indisponible au
+milieu d'une exécution** : sonder les deux voies en session **avant** de proposer le choix.
+- **extension Chrome** : les outils navigateur du serveur `claude-in-chrome` répondent-ils ?
+- **Playwright** : les outils `mcp__playwright__browser_*` sont-ils chargés dans la session ?
+  À défaut, `claude mcp list` (chercher `playwright` à l'état `Connected` - lire l'**état
+  textuel**, jamais le glyphe : les vieilles consoles Windows n'affichent pas les mêmes).
+- **mission Cowork** : aucune sonde, elle est **toujours disponible** (rien à installer
+  localement) - c'est la sortie de secours qui garantit qu'il n'y a jamais de cul-de-sac.
+Ne rien narrer de ces sondes : elles alimentent les options de la question qui suit.
+
+**1b. Demander l'outil avec `AskUserQuestion`** (trois options, cf.
+`references/interactive-loop.md`), chacune décrite en une ligne **portant l'état du préflight**
+("disponible" / "à installer") :
+- **l'extension Chrome (Claude in Chrome)** : vrai navigateur, session réelle - la voie de
+  référence ;
 - **Playwright** (le MCP, en session) : repli, aucune installation dans Chrome ;
 - **une mission pour Claude Cowork** (exécution différée, hors session).
-Si un outil habituel est retenu au manifeste, c'est **lui** qui passe en premier avec la
-mention "(recommandé)". Enregistrer le choix comme outil habituel, en silence. **On redemande à
-chaque lancement** : le choix n'est jamais automatique.
+
+**La mention "(recommandé)" va à un outil réellement disponible**, jamais à un outil qu'il
+faudrait installer : extension Chrome si elle répond, sinon Playwright s'il est chargé, sinon la
+mission Cowork. **Un outil habituel retenu au manifeste ne passe en premier que s'il est
+disponible** : sa préférence ne prime jamais sur l'état réel de la machine. Enregistrer le choix
+comme outil habituel, en silence. **On redemande à chaque lancement** : le choix n'est jamais
+automatique.
+
+**1c. Le testeur peut choisir un outil indisponible** (c'est son droit : il veut cet outil-là).
+Alors **ne pas basculer d'office sur un autre** : traiter d'abord sa demande - installer
+Playwright directement (Étape 2b), ou afficher la marche à suivre de l'extension (Étape 2a) -
+et ne proposer le repli **qu'ensuite**, par une question.
 
 ### Étape 2a : exécuter avec l'extension Chrome (voie prioritaire)
-- **Détection** : tenter une action de lecture navigateur. Si l'extension ne répond pas,
-  afficher la marche à suivre (installer "Claude in Chrome", relancer la session avec
-  `claude --chrome`, autoriser le domaine de recette) puis **proposer le repli Playwright avec
-  `AskUserQuestion`** ("passer à Playwright" en premier / "réessayer l'extension") -
-  jamais d'exécution à moitié.
+- **Extension indisponible** : le skill **ne peut pas l'installer lui-même** - `/chrome` et
+  `/login` sont des **gestes de l'utilisateur** dans sa session. Afficher la marche à suivre,
+  dans cet ordre (détail et cas de panne dans `references/execution-navigateur.md`) :
+  **`/chrome`** (panneau d'état : l'intégration marche quand il affiche `Status: Enabled` et
+  `Extension: Installed` ; il permet aussi d'installer et de **reconnecter**) ; extension absente
+  -> Chrome Web Store ou répondre **"Install extension"** à l'invite "Claude wants to use your
+  browser" (installation **guidée, dans la même session**) ; session sans navigateur -> relancer
+  avec **`claude --chrome`** ; puis **autoriser le domaine de recette** dans les permissions par
+  site. Enfin **proposer le repli avec `AskUserQuestion`** ("passer à Playwright" en premier /
+  "réessayer l'extension") - jamais d'exécution à moitié.
+- **Impasses à nommer, jamais à contourner** : une session authentifiée par **clé API** ou par
+  jeton **`claude setup-token`** garde l'intégration Chrome **désactivée même avec `--chrome`** ;
+  sous **WSL** ou via un **fournisseur tiers** (Bedrock, Vertex, Foundry), la voie n'existe pas.
+  Le dire tout de suite et orienter vers Playwright ou la mission Cowork, plutôt que d'envoyer le
+  testeur réinstaller une extension qui ne pourra pas se connecter.
+- **Elle répondait puis s'arrête en cours d'exécution** (service worker en veille, séance
+  longue) : `/chrome` puis **"Reconnect extension"**, et reprendre au cas en cours - les cas
+  déjà joués gardent leur verdict, on ne rejoue pas le plan depuis le début.
 - Jouer le plan **cas par cas, dans l'ordre**, contre l'adresse de recette : préconditions,
   étapes, vérification du résultat attendu. Capture d'écran au point de vérification de chaque
   cas, enregistrée dans `resultats/preuves/TC-<feature>-NNN-<n>.png`.
@@ -63,9 +97,30 @@ Mêmes cas, mêmes règles, via les outils du MCP Playwright (`browser_navigate`
 `browser_snapshot` pour se repérer par rôles et libellés, `browser_click` / `browser_type` /
 `browser_fill_form`, `browser_wait_for`, `browser_take_screenshot`,
 `browser_console_messages` / `browser_network_requests` sur KO) - détail dans
-`references/execution-navigateur.md`. Si le MCP manque aussi : ne rien exécuter, et poser la
-question **avec `AskUserQuestion`** - "générer la mission Cowork" (en premier) ou "installer un
-des deux outils et relancer".
+`references/execution-navigateur.md`.
+
+**MCP Playwright absent : l'installer directement** (c'est la **seule** voie que le skill peut
+poser lui-même). Procédure complète dans `references/execution-navigateur.md` ; en résumé :
+1. **Confirmer avec `AskUserQuestion`** ("installer le MCP Playwright maintenant" en premier /
+   "générer plutôt la mission Cowork") - une installation modifie une configuration, jamais sans
+   accord.
+2. **Choisir la portée** (deuxième appel) : **`--scope user`** (recommandé - personnel, tous
+   projets, **aucun fichier écrit dans le dépôt**) ou **`--scope project`** (écrit `.mcp.json` à
+   la racine, à commiter, partagé par l'équipe).
+3. **Vérifier Node.js** : `node -v` doit rendre **18 ou plus**. Sinon, **ne pas installer** :
+   le dire en clair et proposer la mission Cowork.
+4. **Installer** : `claude mcp add playwright --scope <user|project> -- npx -y @playwright/mcp@latest`
+   (le séparateur `--` est obligatoire ; commande identique sous PowerShell et bash).
+5. **Vérifier** avec `claude mcp list` (état `Connected`) - la première tentative peut échouer
+   pendant le téléchargement par `npx` : **attendre et refaire une fois** avant de conclure.
+6. **Redémarrer la session, impérativement** : les outils d'un serveur MCP ne sont chargés qu'au
+   **démarrage**, donc **pas** dans la session qui vient de l'installer. Le dire, **s'arrêter
+   là**, et indiquer de relancer `/validation:execution-validation` ensuite. **Ne jamais**
+   enchaîner sur l'exécution en annonçant que Playwright est prêt.
+
+**Installation refusée ou échouée** (réseau, registre npm bloqué) : relayer le message en clair,
+ne pas s'acharner, et poser la question **avec `AskUserQuestion`** - "générer la mission Cowork"
+(en premier) ou "réessayer l'installation".
 
 ### Étape 2c : générer la mission Cowork (voie différée)
 La mission est un fichier destiné à **un autre outil** : la confirmer par une question
@@ -119,6 +174,17 @@ booléens) : ce qui passe, ce qui échoue, ce qui n'a pas pu être testé.
   appartient au testeur (porte de recette, au bilan).
 - **Un contrat de sortie unique** quel que soit l'outil : le bilan ne doit pas savoir qui a
   exécuté.
+- **Outil sondé avant d'être proposé, jamais découvert en panne en cours de route.** Le
+  préflight tourne avant la question ; la mention "(recommandé)" ne va **qu'à** un outil
+  réellement disponible ; un outil habituel devenu indisponible ne passe pas en premier.
+- **Installer ce qui s'installe, expliquer ce qui ne s'installe pas.** Le MCP Playwright est
+  posé **directement** par le skill (après confirmation et choix de portée), puis la session
+  **doit redémarrer** avant de pouvoir l'utiliser - on ne prétend jamais l'inverse. L'extension
+  Chrome, elle, dépend de gestes de l'utilisateur (`/chrome`, `/login`, Chrome Web Store) : le
+  skill **affiche la marche à suivre** et s'arrête, sans jamais faire semblant de l'installer.
+- **Une impasse se nomme.** Clé API ou `claude setup-token`, WSL, fournisseur tiers : l'extension
+  Chrome ne se connectera pas, quoi qu'on fasse. Le dire immédiatement et rediriger, plutôt que
+  d'envoyer le testeur dans une réinstallation vaine.
 - Manifeste silencieux, typographie humaine (cf. `references/ux-conventions.md`).
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, y
   compris sur la voie Cowork où le skill s'arrête avant d'exécuter (cf. la section 5 de
