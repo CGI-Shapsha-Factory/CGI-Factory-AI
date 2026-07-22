@@ -29,8 +29,8 @@ inscrire le verdict humain dans le rapport et dans Linear.
     (`/validation:plan-de-validation`) ;
   - une autre feature a bien ses deux fichiers -> "assembler plutôt le bilan de <feature>",
     et le skill reprend son cours sur celle-là ;
-  - rien n'existe encore dans `validation-out/` -> proposer la feature la plus pertinente à
-    démarrer, une option par feature livrée.
+  - rien n'existe encore dans `validation-out/` -> une option par feature livrée, la plus
+    pertinente à démarrer en premier.
 - S'il y a plusieurs fichiers de résultats, demander lequel fait foi **avec `AskUserQuestion`**
   (une option par fichier, le plus récent en premier avec la mention "(recommandé)", chaque
   option datée et accompagnée de l'outil utilisé et de sa synthèse chiffrée).
@@ -57,18 +57,19 @@ avec la mention "(recommandé)" et la raison dans sa description (cf.
 une question par écart, chaque question rappelant l'identifiant du cas et le constat en une
 ligne). Les natures possibles (cf. `references/regles-validation.md`) :
 - **Anomalie** (la spécification est bonne, le logiciel ne la respecte pas) -> "Veux-tu créer
-  l'anomalie dans Linear ?" Si oui : préparer le contenu (comportement attendu depuis le
+  l'anomalie dans Linear ?" - question posée **avec `AskUserQuestion`**. Si oui : préparer le contenu (comportement attendu depuis le
   critère, comportement constaté et étapes de reproduction depuis le déroulé effectif,
   critère de recette en échec) et enchaîner sur `/maintenance:creation-anomalie` avec ce contenu
   pré-rempli - la création passe par **sa** porte (complétude, rattachement au ticket
   Feature, confirmation humaine), jamais en direct d'ici.
 - **Évolution** (le logiciel respecte sa spécification, mais elle est fausse ou incomplète au
-  regard du vrai besoin) -> "Veux-tu tracer cette évolution ?" Si oui : orienter vers
+  regard du vrai besoin) -> "Veux-tu tracer cette évolution ?" - question posée **avec
+  `AskUserQuestion`**. Si oui : orienter vers
   `/maintenance:creation-evolution` (geste du PO, avec sa proposition d'écart de spécification) -
   jamais de création automatique.
-- **Critère flou** (NON TESTABLE) -> proposer de clarifier la lecture observable en session
-  (elle s'écrit dans le plan pour la prochaine exécution), ou de tracer un ticket Linear de
-  suivi sur la feature (sous-ticket du ticket `Feature`, **sans label de recette** - cf.
+- **Critère flou** (NON TESTABLE) -> demander **avec `AskUserQuestion`** : clarifier la lecture
+  observable en session (elle s'écrit dans le plan pour la prochaine exécution), ou tracer un
+  ticket Linear de suivi sur la feature (sous-ticket du ticket `Feature`, **sans label de recette** - cf.
   `references/regles-validation.md`, section Linear).
 - **Sans suite** : le testeur peut décider de ne pas donner suite ; sa décision s'écrit telle
   quelle dans le rapport.

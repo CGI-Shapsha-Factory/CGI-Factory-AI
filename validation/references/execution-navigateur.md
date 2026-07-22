@@ -4,7 +4,7 @@ Référence d'usage d'`execution-validation`. Trois voies d'exécution, un seul 
 sortie : le bilan (`rapport-de-recette`) est **agnostique de l'outil**.
 
 ## Le choix de l'outil (à chaque lancement)
-Le skill demande au testeur quelle voie utiliser (une question, cf. `interactive-loop.md`),
+Le skill demande au testeur quelle voie utiliser **avec `AskUserQuestion`** (cf. `interactive-loop.md`),
 avec **l'extension Chrome en suggestion recommandée** (voie la plus fidèle : vrai navigateur,
 session réelle). Le dernier choix est retenu dans le manifeste comme **suggestion** pour la
 prochaine fois - jamais comme automatisme : on redemande à chaque lancement.
@@ -19,7 +19,8 @@ disque.
 - **Détection** : tenter une action de lecture navigateur ; si le navigateur ne répond pas,
   afficher la marche à suivre (installer l'extension depuis chrome.google.com/webstore,
   relancer la session avec `claude --chrome`, autoriser le domaine de recette dans les
-  permissions par site de l'extension) et **proposer la voie Playwright en repli** - jamais
+  permissions par site de l'extension) et **proposer la voie Playwright en repli avec
+  `AskUserQuestion`** - jamais
   d'exécution à moitié.
 - **Session partagée** : le navigateur porte les logins de l'utilisateur. Se connecter à
   l'environnement de recette avec les **comptes de test du plan** uniquement ; sur un login ou
@@ -40,7 +41,8 @@ Mêmes cas, mêmes règles, via les outils `mcp__playwright__browser_*` :
   `preuves/`). Capturer avec un nom relatif `TC-<feature>-NNN-<n>.png`, puis **déplacer** les
   fichiers dans `validation-out/<feature>/resultats/preuves/` avant d'écrire les résultats -
   aucune preuve référencée ne doit rester dans le dossier de l'outil.
-- Si le MCP Playwright n'est pas disponible non plus, ne rien exécuter : proposer la voie 3
+- Si le MCP Playwright n'est pas disponible non plus, ne rien exécuter : proposer **avec
+  `AskUserQuestion`** la voie 3
   (mission Cowork) ou l'installation d'un des deux outils.
 
 ## Voie 3 (différée) : la mission Cowork (exécution hors session)

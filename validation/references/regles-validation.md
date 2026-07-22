@@ -47,8 +47,9 @@ distinction fondamentale de la maintenance :
 - **Critère flou (non testable)** : impossible de trancher tant que le critère n'est pas
   clair. -> proposer de clarifier la lecture observable en session, ou de tracer le point dans
   Linear pour suivi.
-Dans les trois cas, le skill **oriente et propose** ("Veux-tu créer l'anomalie ?", "Veux-tu
-tracer cette évolution ?") ; il ne crée jamais un ticket sans accord explicite.
+Dans les trois cas, le skill **oriente et propose avec `AskUserQuestion`** ("Veux-tu créer
+l'anomalie ?", "Veux-tu tracer cette évolution ?") - jamais une question rédigée en prose dans
+le fil ; il ne crée jamais un ticket sans accord explicite.
 
 ## L'IA exécute et rapporte, l'humain valide
 - **Constats automatisés** : dérouler un cas de test, constater OK / KO / NON TESTABLE,

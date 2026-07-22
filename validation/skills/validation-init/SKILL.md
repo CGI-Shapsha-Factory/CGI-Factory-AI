@@ -65,8 +65,11 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
    `validation-out/` et **dans Linear** - jamais dans le manifeste (cf.
    `references/regles-validation.md`).*
 3. **Enregistrer l'environnement de recette** : demander au testeur l'adresse de l'application
-   déployée à tester (une question, cf. `references/interactive-loop.md` ; s'il existe une
-   piste dans le projet - variable de déploiement, documentation - la proposer en suggestion).
+   déployée à tester **avec `AskUserQuestion`** (cf. `references/interactive-loop.md`) - les
+   options portent les adresses plausibles lues dans le projet (variable de déploiement,
+   documentation, URL locale servie, ouverture directe du fichier), la plus crédible en premier
+   avec la mention "(recommandé)", et la saisie libre reste ouverte. **Jamais de question en
+   prose.**
    La retenir dans le bloc `validation`, en silence. S'il préfère la donner plus tard, ne rien
    écrire et signaler que l'exécution la redemandera.
 4. **Git-ignore `.factory/` (compléter, jamais réécrire)** : le **`.gitignore` est généré en

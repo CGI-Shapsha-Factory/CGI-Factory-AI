@@ -23,7 +23,7 @@ cas), **honnête** (aucun critère flou n'est deviné), validé par le testeur a
   d'abord le dossier de travail".
 - La feature visée a sa spécification : `specs/<feature>/spec.md` existe. Sinon refuser en
   nommant le fichier manquant - la validation n'a pas d'objet tant que la feature n'est pas
-  fabriquée via SpecKit - puis poser la question des issues (cf. la règle "jamais de
+  fabriquée via SpecKit - puis poser la question des issues **avec `AskUserQuestion`** (cf. la règle "jamais de
   cul-de-sac" de `references/interactive-loop.md`) : une option par feature qui a **bien** sa
   spécification, ou, si `specs/` est vide, l'unique issue "attendre la fabrication SpecKit de
   la première feature" décrite en clair.

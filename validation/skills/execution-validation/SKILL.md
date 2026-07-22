@@ -23,12 +23,14 @@ testeur, sans jamais interpréter un critère ambigu.
 - Le plan existe : `validation-out/<feature>/plan-de-test.md`. **Plusieurs plans présents** :
   demander lequel jouer **avec `AskUserQuestion`**, une option par feature ayant un plan, en
   premier celle qui n'a pas encore de résultats. **Aucun plan pour la feature visée** : refuser
-  en nommant le fichier manquant, puis poser la question des issues (cf. la règle "jamais de
+  en nommant le fichier manquant, puis poser la question des issues **avec `AskUserQuestion`** (cf. la règle "jamais de
   cul-de-sac" de `references/interactive-loop.md`) - "écrire le plan de <feature>"
   (`/validation:plan-de-validation`), ou "jouer plutôt le plan de <autre feature>" quand une
   autre en a un.
 - L'adresse de l'environnement de recette est connue (manifeste ou section Environnement du
-  plan) ; sinon la demander (une question) et la retenir dans le manifeste, en silence.
+  plan) ; sinon la demander **avec `AskUserQuestion`** - les options portent les adresses plausibles
+  lues dans le dépôt (URL locale servie, ouverture directe du fichier, URL déployée), la saisie
+  libre reste ouverte - et la retenir dans le manifeste, en silence.
 
 ## Procédure
 
@@ -47,7 +49,8 @@ chaque lancement** : le choix n'est jamais automatique.
 ### Étape 2a : exécuter avec l'extension Chrome (voie prioritaire)
 - **Détection** : tenter une action de lecture navigateur. Si l'extension ne répond pas,
   afficher la marche à suivre (installer "Claude in Chrome", relancer la session avec
-  `claude --chrome`, autoriser le domaine de recette) et **proposer le repli Playwright** -
+  `claude --chrome`, autoriser le domaine de recette) puis **proposer le repli Playwright avec
+  `AskUserQuestion`** ("passer à Playwright" en premier / "réessayer l'extension") -
   jamais d'exécution à moitié.
 - Jouer le plan **cas par cas, dans l'ordre**, contre l'adresse de recette : préconditions,
   étapes, vérification du résultat attendu. Capture d'écran au point de vérification de chaque
@@ -60,8 +63,9 @@ Mêmes cas, mêmes règles, via les outils du MCP Playwright (`browser_navigate`
 `browser_snapshot` pour se repérer par rôles et libellés, `browser_click` / `browser_type` /
 `browser_fill_form`, `browser_wait_for`, `browser_take_screenshot`,
 `browser_console_messages` / `browser_network_requests` sur KO) - détail dans
-`references/execution-navigateur.md`. Si le MCP manque aussi : ne rien exécuter, proposer la
-mission Cowork ou l'installation d'un des deux outils.
+`references/execution-navigateur.md`. Si le MCP manque aussi : ne rien exécuter, et poser la
+question **avec `AskUserQuestion`** - "générer la mission Cowork" (en premier) ou "installer un
+des deux outils et relancer".
 
 ### Étape 2c : générer la mission Cowork (voie différée)
 La mission est un fichier destiné à **un autre outil** : la confirmer par une question
