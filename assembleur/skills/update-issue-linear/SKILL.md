@@ -1,6 +1,6 @@
 ---
 name: update-issue-linear
-description: Met à jour l'état d'un ticket Linear quand l'utilisateur signale qu'une tâche est terminée (ou avancée) - retrouve le ticket par son nom, ou le déduit des derniers changements de code, puis change son état (ou coche une case), via le MCP linear-prism.
+description: Met à jour l'état d'un ticket Linear quand l'utilisateur signale qu'une tâche est terminée (ou avancée) - retrouve le ticket (feature ou sous-ticket) par son nom, ou le déduit des derniers changements de code, puis change son état, via le MCP linear-prism.
 ---
 
 # update-issue-linear
@@ -14,9 +14,12 @@ la chaîne, on l'invoque quand on veut.
 
 ## Objectif
 À partir de l'indice, **passer un ticket Linear dans le bon état** (terminé par défaut, sinon en
-cours / bloqué) - ou, si l'indice vise une **sous-partie** d'une grosse feature, **cocher la case**
-correspondante dans la description. Le ticket est **toujours confirmé avant d'écrire**. Idempotent :
-si le ticket est déjà dans l'état visé, on ne réécrit rien.
+cours / bloqué). Si l'indice vise une **sous-partie** d'une feature (un `FR-xxx`, une phase), la cible
+est le **sous-ticket** correspondant, pas le parent : **il n'existe aucune case à cocher** dans les
+descriptions - chaque chose à faire est un **vrai sous-ticket** (`Task` par FR posé par
+`premier-alimente-linear`, `Task` par phase posé par `creation-task-linear`). Le ticket est
+**toujours confirmé avant d'écrire**. Idempotent : si le ticket est déjà dans l'état visé, on ne
+réécrit rien.
 
 ## Frontière (exception assumée)
 L'assembleur **n'écrit jamais dans le repo cible** : tout sort dans `assembleur-out/`. Mettre à jour
@@ -49,16 +52,17 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
 - **La tâche visée** : un nom en clair ("recherche Q&A sourcée"), un identifiant (`LIN-123`), un
   `id` de feature (`001`), un `FR-xxx`, ou **rien** ("j'ai terminé la tâche").
 - **L'action voulue** : **terminé** ("fini / terminé / done / bouclé"), **en cours** ("commencé /
-  en cours / je bosse dessus"), **bloqué** ("bloqué / en attente"), ou une **sous-partie** d'une
-  grosse feature (un `FR-xxx` / un item de la liste de contrôle) -> **cocher une case**. En l'absence
-  de verbe clair, supposer **terminé** (usage principal), mais **confirmer**.
+  en cours / je bosse dessus"), **bloqué** ("bloqué / en attente"). En l'absence de verbe clair,
+  supposer **terminé** (usage principal), mais **confirmer**.
+- **Le niveau visé** : la **feature entière**, ou une **sous-partie** (un `FR-xxx`, une phase) - qui
+  est alors un **sous-ticket** à part entière, cible directe de la mise à jour.
 
 ## Étape 3 : Identifier le ticket
 - **Tâche nommée** -> chercher **dans Linear** : `get_issue({id})` si un `identifier` (`LIN-123`) est
   donné, sinon `list_issues({query: "<mots-clés>", team})` (titre + description ; les tickets Feature
   portent l'id `001...` en tête de titre). Quand l'indice vise une **phase** ("phase 2",
   "la partie tests", un titre de phase), les sous-tickets de phase **vivent dans Linear** (pas dans le
-  manifeste) : les retrouver via `list_issues({parentId: "<issue_id de la Feature>"})` (jeton
+  manifeste) : les retrouver via `list_issues({parentId: "<identifier de la Feature>"})` (jeton
   `Phase N -` en tête de titre) ou `list_issues({query: "<mots-clés>", team})` (titre + description).
 - **Tâche non nommée** -> **déduire des derniers changements de code** (le repo cible est souvent un
   dépôt git), best-effort :
@@ -70,37 +74,42 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
   - Pas de git ou rien de sûr -> **demander avec `AskUserQuestion`** lequel : deux tickets ouverts
     (`list_issues` `assignee: "me"`, états `unstarted`/`started`), le plus probable en premier, la
     saisie libre pour un autre.
-- `get_issue({id})` pour lire l'**état courant** et la **description** (nécessaire pour les cases).
+- `get_issue({id})` pour lire l'**état courant** du ticket visé.
 - **Confirmer le ticket avec `AskUserQuestion`** - nom + intitulé - **avant toute écriture** :
   deux options, le ticket déduit (recommandé) et "ce n'est pas celui-là", la saisie libre pour en
   désigner un autre. **Ne jamais écrire sur une simple déduction.**
 
 ## Étape 4 : Déterminer la mise à jour (depuis l'indice)
-- **Terminé** -> résoudre l'état cible via `list_issue_statuses({team})` : viser l'état de **type
-  `completed`** ("Done" / "Terminé" selon l'équipe). En cours -> type `started` ; bloqué -> l'état
-  ou le label que l'équipe utilise pour "bloqué" s'il existe (best-effort ; sinon le dire en clair).
-- **Sous-partie** (un `FR-xxx` / item de checklist) -> dans la `description` du ticket, passer la ligne
-  `- [ ] ...` correspondante à `- [x] ...`. Si **toutes** les cases deviennent cochées, **demander
-  avec `AskUserQuestion`** s'il faut passer aussi le ticket à terminé ("passer à terminé" en
-  recommandé / "laisser le statut tel quel").
-- **Idempotence** : si `get_issue` montre que le ticket est **déjà** dans l'état visé (ou la case déjà
-  cochée), **le dire en clair et ne rien écrire**.
+- **Terminé** -> résoudre l'état cible via `list_issue_statuses({team})` : repérer l'état de **type
+  `completed`** et **retenir son `name`** ("Done" / "Terminé" selon l'équipe) - c'est ce **nom** qui
+  est passé à `save_issue`, jamais le type. En cours -> l'état de type `started` (même règle) ;
+  bloqué -> l'état ou le label que l'équipe utilise pour "bloqué" s'il existe (best-effort ; sinon
+  le dire en clair).
+- **Sous-partie** (un `FR-xxx`, une phase) -> la cible est le **sous-ticket**, pas le parent : le
+  retrouver via `list_issues({parentId: "<identifier de la Feature>"})` (jeton `FR-00x -` ou
+  `Phase N -` en tête de titre) et lui appliquer le changement d'état ci-dessus. **Ne jamais éditer
+  la `description` du parent** pour signifier un avancement : les descriptions ne portent **aucune
+  case à cocher** (chaque chose à faire est un vrai sous-ticket). Si, après cette mise à jour,
+  **tous** les sous-tickets de la Feature sont terminés, **demander avec `AskUserQuestion`** s'il
+  faut passer aussi la Feature à terminé ("passer la feature à terminé" en recommandé / "laisser le
+  statut tel quel").
+- **Idempotence** : si `get_issue` montre que le ticket visé est **déjà** dans l'état voulu, **le
+  dire en clair et ne rien écrire**.
 
 ## Étape 5 : Confirmer puis appliquer
-1. **Confirmer l'action avec `AskUserQuestion`** : "passer *&lt;ticket&gt;* à *terminé*" ou "cocher
-   *&lt;item&gt;* dans *&lt;ticket&gt;*" - deux options, l'action proposée (recommandé) et "ne rien
-   changer" ; le refus reste cliquable. **Ne rien écrire** tant que ce n'est pas approuvé ; la
-   saisie libre corrige en place.
-2. **Appliquer** (cf. `references/linear-guide.md`) :
-   - état : `save_issue({id, state: "<nom ou type de l'état résolu>"})` ;
-   - case : `save_issue({id, description: "<description avec la case cochée>"})`.
-   - **Pas de commentaire** (on ne change que l'état / la case).
+1. **Confirmer l'action avec `AskUserQuestion`** : "passer *&lt;ticket&gt;* à *terminé*" - deux
+   options, l'action proposée (recommandé) et "ne rien changer" ; le refus reste cliquable. **Ne
+   rien écrire** tant que ce n'est pas approuvé ; la saisie libre corrige en place.
+2. **Appliquer** (cf. `references/linear-guide.md`) : `save_issue({id, state: "<nom de l'état
+   résolu>"})` - le **nom**, jamais le type : le MCP résout l'état **par nom seulement** et **échoue
+   en silence** sur une valeur inconnue. **Pas de commentaire** (on ne change que l'état).
 3. **Ne rien écrire dans le manifeste** : l'état courant vit **dans Linear** (`get_issue` fait foi).
    Restituer en prose.
 
 ## Vérification avant de conclure
-- `get_issue` reflète le **nouvel état** (ou la case cochée) ; le ticket **existe** et l'écriture a
-  réussi.
+- `get_issue` reflète le **nouvel état** ; le ticket **existe** et l'écriture a réussi. Si l'état
+  n'a **pas** changé, l'écriture a échoué en silence (état résolu par type au lieu du nom) : le dire
+  en clair, ne jamais annoncer une mise à jour non constatée.
 - **Aucune écriture manifeste** : l'état d'avancement vit dans Linear (pas de conflit multi-dev).
 - Restitution **en prose** ("j'ai passé *Recherche Q&A sourcée* à *Terminé*"), **une** phrase de suite.
 

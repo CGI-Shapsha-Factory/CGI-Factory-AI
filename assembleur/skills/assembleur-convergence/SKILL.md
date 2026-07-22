@@ -203,9 +203,16 @@ non-contradiction (design system couvre les états requis ;
 pas de parcours sans FR ni de FR sans parcours ; pas de terme de glossaire en conflit ;
 les cibles qualité/perf sont tenables par la stack/déploiement). Écrire
 `assembleur-out/coherence-report.md` (prose, sans marqueur résiduel). Lancer le garde-fou
-(**obligatoire**) : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_assembly.py" <racine>/manifest.json`.
-S'il est **introuvable** (chemin plugin non résolu) ou renvoie **exit 1**, **s'arrêter** et **dire en
-clair** ce qui manque - **jamais** de vérification "à la main" silencieuse.
+(**obligatoire**). La variable de plugin **ne s'expanse pas pareil selon le shell** - prendre la
+forme du shell utilisé :
+- Bash : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_assembly.py" <racine>/manifest.json`
+- PowerShell : `python "$env:CLAUDE_PLUGIN_ROOT/scripts/check_assembly.py" <racine>/manifest.json`
+  (en PowerShell, `${CLAUDE_PLUGIN_ROOT}` désigne une variable de session, **pas** l'environnement :
+  le chemin serait vide et la commande échouerait)
+
+S'il renvoie **exit 1**, **s'arrêter** et **dire en clair** ce qui manque - **jamais** de
+vérification "à la main" silencieuse. S'il est **introuvable**, essayer d'abord **l'autre forme de
+shell** avant de conclure quoi que ce soit.
 
 **Récapitulatif de validation (obligatoire, juste avant la question).** Ne **jamais** poser la
 question de validation "à sec" : le garant doit **voir ce qu'il approuve**. Afficher d'abord un

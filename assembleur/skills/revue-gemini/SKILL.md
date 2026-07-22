@@ -21,8 +21,12 @@ et restitue **en session**. **La revue est faite par Gemini, jamais par Claude**
 ## Etape 1 : Pre-requis : cle API Gemini
 Verifier la cle Gemini. **Precedence** : le `.env` du projet (`GEMINI_API_KEY`, la cle que ce skill
 gere) **prime** sur les variables d'environnement ambiantes (`GEMINI_API_KEY`/`GOOGLE_API_KEY`) - pour
-qu'une vieille variable perimee ne **masque** pas silencieusement la cle voulue. Sonder avec :
-`python "${CLAUDE_PLUGIN_ROOT}/scripts/gemini_review.py" --check`.
+qu'une vieille variable perimee ne **masque** pas silencieusement la cle voulue. Sonder avec la
+forme du shell utilise (la variable de plugin **ne s'expanse pas pareil selon le shell**) :
+- Bash : `python "${CLAUDE_PLUGIN_ROOT}/scripts/gemini_review.py" --check`
+- PowerShell : `python "$env:CLAUDE_PLUGIN_ROOT/scripts/gemini_review.py" --check`
+  (en PowerShell, `${CLAUDE_PLUGIN_ROOT}` designe une variable de session, **pas** l'environnement :
+  le chemin serait vide et la commande echouerait)
 - **`status:"ok"`** -> continuer.
 - **`reason:"no_key"`** (cle absente) -> **ne pas bloquer sechement** : demander la cle **avec
   `AskUserQuestion`** ("Il me faut une cle API Gemini pour la revue independante") - deux options,
@@ -55,7 +59,8 @@ Lancer, **en un seul message** (appels paralleles), **six sous-agents `gemini-re
 (`agentType: "gemini-reviewer"`), un par **dimension** :
 `security`, `correctness`, `performance`, `architecture`, `quality`, `testing`.
 Donner a **chaque** sous-agent : sa `dimension`, le chemin `diff_file` = `.factory/gemini-review/diff.patch`,
-`plugin_root` = `${CLAUDE_PLUGIN_ROOT}`, `repo` = racine du projet. Chaque sous-agent lance le reviewer
+`plugin_root` = la racine du plugin **resolue en chemin absolu** (jamais la variable litterale : le
+sous-agent ne la reexpanse pas), `repo` = racine du projet. Chaque sous-agent lance le reviewer
 Gemini pour SA dimension et renvoie **un objet JSON** (`status`, `findings`, ou `reason`/`error`). Le
 fan-out **isole le contexte** (le diff et les findings ne saturent pas l'orchestrateur) et **parallelise**
 les appels - c'est la partie "optimisation".

@@ -73,9 +73,17 @@ Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-gui
 ## Étape 2 : Résoudre les labels et l'équipe (une seule fois)
 - **Équipe** : réutiliser `linear.team` du manifeste (posé par `premier-alimente-linear`). Ne pas
   redemander.
+- **État Backlog (impératif absolu)** : `list_issue_statuses({team})` -> repérer l'état dont le
+  **type** est `backlog` et **retenir son `name`**. C'est ce **nom** qui sera passé à `save_issue`,
+  **jamais le type** : le MCP résout l'état **par nom seulement** et **échoue en silence** sur une
+  valeur inconnue (le sous-ticket atterrirait dans l'état par défaut de l'équipe, sans erreur).
+  **Tout** sous-ticket créé par ce skill part en **Backlog**. Si aucun état de type `backlog` n'est
+  résolvable : **ne rien créer**, le dire en clair et demander **avec `AskUserQuestion`** quel état
+  de l'équipe fait office de backlog. **Jamais** de repli sur l'état par défaut.
 - **Labels `Feature` / `Task`** : les **résoudre par nom** via
   `mcp__plugin_linear-prism_linear__list_issue_labels` (comparaison **insensible à la casse** - les
-  labels s'appellent `Feature` / `Task`). Retenir leurs **UUID** pour la session. **Ne pas les créer**
+  labels s'appellent `Feature` / `Task`). Vérifier qu'ils **existent** et les passer ensuite **par
+  nom** dans le paramètre **`labels`** (pas `labelIds`). **Ne pas les créer**
   (ils préexistent dans l'espace de travail). Si l'un manque -> le dire en clair et proposer soit de le
   créer (`create_issue_label`, best-effort), soit de l'omettre. Détails :
   `references/linear-guide.md`.
@@ -84,7 +92,8 @@ Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-gui
 Pour chaque ticket de feature (relevé via `list_issues({team, label Feature})`, complété au besoin
 d'une recherche par titre pour les tickets sans label), s'assurer qu'il porte le label
 `Feature` **sans perdre ses labels existants** : lire ses labels via `get_issue({id})`, puis
-`save_issue({id, labelIds: <union des labelIds existants + Feature>})`. **Additif** : ne jamais
+`save_issue({id, labels: <union des noms de labels existants + "Feature">})` - le paramètre `labels`
+**remplace tout l'ensemble**, d'où l'union obligatoire. **Additif** : ne jamais
 retirer un label existant (ex. `walking-skeleton`). Idempotent : si `Feature` est déjà présent, ne
 rien écrire.
 
@@ -94,9 +103,10 @@ Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
 1. **Rattacher** : retrouver le ticket `Feature` de la feature **dans Linear** -
    `list_issues({team, label Feature})` (ou `list_issues({query})`) et jointure par **titre** (l'id
    `001...` figure en tête du titre, ex. `001 - ...`) ou par nom de dossier/branche `NNN-slug`.
-   Récupérer son **`issue_id` (UUID)** = le futur `parentId`. Si aucun ticket `Feature` ne
-   correspond -> le signaler et passer (ne pas créer d'orphelin).
-2. **Lister l'existant DANS Linear (autorité d'idempotence)** : `list_issues({parentId: "<issue_id>"})`
+   Récupérer son **`identifier`** (ex. `ENG-123`) = le futur `parentId` - le MCP **accepte les
+   identifiants** et **ne retourne aucun UUID interne**, ne pas chercher d'`issue_id`. Si aucun
+   ticket `Feature` ne correspond -> le signaler et passer (ne pas créer d'orphelin).
+2. **Lister l'existant DANS Linear (autorité d'idempotence)** : `list_issues({parentId: "<identifier>"})`
    pour récupérer les sous-tickets `Task` déjà créés sous cette Feature. **Linear est la source de
    vérité** (pas le manifeste - l'avancement de fabrication n'y est jamais écrit). La ré-identification
    d'une phase se fait sur le **jeton stable `Phase N -`** en tête de titre (voir étape 6).
@@ -134,10 +144,13 @@ Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
    tant que ce n'est pas approuvé. (Astuce : présenter d'un coup la liste des phases manquantes d'une feature pour validation
    groupée, puis créer.)
 6. **Créer** (cf. `references/linear-guide.md`) :
-   `save_issue({team, title: "Phase N - <intitulé descriptif>", parentId: "<issue_id UUID du ticket
-   Feature>", labelIds: ["<UUID Task>"], description: "<résumé 1 ligne>", state: <Backlog>})`.
-   **State = Backlog.** **Ne rien consigner dans le manifeste** : le sous-ticket **est** la trace, et il
-   vit dans Linear. Passer à la phase suivante, puis à la feature suivante.
+   `save_issue({team, title: "Phase N - <intitulé descriptif>", parentId: "<identifier du ticket
+   Feature>", labels: ["Task"], description: "<résumé 1 ligne>", state: "<nom de l'état
+   Backlog>"})`. **State = Backlog, toujours** (le nom résolu à l'Étape 2, jamais le type). **Sur la
+   première création**, relire le sous-ticket (`get_issue({id})`) et vérifier qu'il est bien en
+   Backlog ; sinon **s'arrêter** et le dire en clair. **Ne rien consigner dans le manifeste** : le
+   sous-ticket **est** la trace, et il vit dans Linear. Passer à la phase suivante, puis à la feature
+   suivante.
 
 **Idempotence (via Linear).** Une phase dont le sous-ticket existe **déjà dans Linear** (jeton
 `Phase N -` présent sous le bon `parentId`) n'est **pas recréée**. On ne s'appuie **pas** sur le
@@ -149,6 +162,9 @@ recréée ni proposée** : son travail est déjà suivi par ce ticket (cf. étap
 - Chaque feature avec un `tasks.md` a **un sous-ticket par phase dans Linear** (ou une phase
   explicitement écartée) ; chaque sous-ticket porte le label `Task`, le jeton `Phase N -`, et pointe
   (`parentId`) vers son ticket `Feature`. Vérifier via `list_issues({parentId})`.
+- **Contrôle d'état (obligatoire)** : sur ce relevé, vérifier que **tous** les sous-tickets créés sont
+  en **Backlog**. Un seul ailleurs = l'état n'a pas été résolu par son nom : le dire en clair et
+  corriger (`save_issue({id, state:"<nom Backlog>"})`) avant de conclure.
 - Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/manifest.json`
   (il valide la **carte amont figée** - tickets `Feature` + `Task` par FR ; les sous-tickets **de phase
   vivent dans Linear** et ne sont **pas** exigés dans le manifeste).
@@ -161,8 +177,10 @@ recréée ni proposée** : son travail est déjà suivi par ce ticket (cf. étap
   est **lu**, jamais modifié.
 - **Titre descriptif + jeton.** Toujours `Phase N - <intitulé enrichi>` ; jamais le nom générique brut.
 - **Confirmer avant de créer.** Chaque sous-ticket est validé par l'humain avant création.
-- **Rattachement réel.** `parentId` = l'**UUID** (`issue_id`) du ticket `Feature`, jamais l'identifier
-  (`ENG-123`).
+- **Rattachement réel.** `parentId` = l'**`identifier`** du ticket `Feature` (ex. `ENG-123`) - le MCP
+  l'accepte et ne retourne aucun UUID interne.
+- **Backlog, toujours.** Tout sous-ticket est créé dans l'état **Backlog**, résolu par son **nom** ;
+  jamais par le type, jamais de repli sur l'état par défaut de l'équipe.
 - **Labels résolus, pas inventés.** `Feature`/`Task` sont résolus par nom ; jamais recréés.
 - **Idempotent via Linear.** On liste les sous-tickets existants (`parentId`) avant de créer ; jamais
   deux fois la même phase.

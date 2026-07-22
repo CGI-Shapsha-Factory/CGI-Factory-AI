@@ -118,21 +118,30 @@ Sources = **sorties amont uniquement**, en **synthèse** (pas de copie ; source 
       `<à renseigner>`.
    **Ne rien écrire à la racine tant que les deux liens ne sont pas tranchés.**
 3. **Écrire** `init-cowork.md` à la **racine** du projet (read-modify-write si déjà présent).
-4. **Consigner en silence** le bloc `cowork` du manifeste :
+4. **Consigner en silence** le bloc `cowork` du manifeste, en y **reportant les deux URL tranchées
+   en 4.2** (jamais `null` quand l'humain a confirmé une adresse ; `null` uniquement pour un lien
+   resté `<à renseigner>`) :
 ```json
 "cowork": {
   "phase": "init", "path": "init-cowork.md",
-  "github_url": null, "linear_project_url": null, "generated": true
+  "github_url": "<URL GitHub confirmée>", "linear_project_url": "<URL Linear confirmée>",
+  "generated": true
 }
 ```
-(read-modify-write + revalidation JSON).
+(read-modify-write + revalidation JSON). Ces deux valeurs sont ce qui évite de **redemander les
+liens à chaque relance** : à la relance, les proposer en option recommandée.
 
 ## Vérification avant de conclure
 - `init-cowork.md` existe à la racine, expose une **section GitHub**, une **section Linear**, une
   section **"Périmètre"** et un **contexte projet** (problème / objectif / périmètre / contraintes),
   et **ne contient aucune** section SpecKit / fabrication / avancement (contrainte de périmètre).
-- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_cowork.py" <racine>/manifest.json`
-  (utiliser `python` ; `python3` sur macOS/Linux).
+- Lancer le garde-fou. La variable de plugin **ne s'expanse pas pareil selon le shell** - prendre
+  la forme du shell utilisé (utiliser `python` ; `python3` sur macOS/Linux) :
+  - Bash : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_cowork.py" <racine>/manifest.json`
+  - PowerShell : `python "$env:CLAUDE_PLUGIN_ROOT/scripts/check_cowork.py" <racine>/manifest.json`
+    (en PowerShell, `${CLAUDE_PLUGIN_ROOT}` désigne une variable de session, **pas**
+    l'environnement : le chemin serait vide et la commande échouerait)
+- Le bloc `cowork` porte bien les **deux URL confirmées** (pas `null` là où l'humain a tranché).
 - Le bloc `cowork` du manifeste **reparse sans erreur** ; restitution **en prose** ("j'ai généré
   le contexte de supervision `init-cowork.md` - GitHub + Linear"), manifeste mis à jour **en silence**.
 
