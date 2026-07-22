@@ -20,9 +20,11 @@ l'arborescence.**
 - **MCP Linear disponible** (`list_teams` répond - cf. `references/linear-maintenance.md`). Sinon,
   refuser en clair et afficher les instructions d'installation.
 - **L'anomalie existe** : identifiant Linear fourni par le développeur (ou retrouvée par
-  `list_issues` sur mots-clés, à confirmer). Elle porte le label `Anomalie` et un ticket
-  Feature parent ; sinon signaler l'objet mal rattaché (orphelin) et demander au PO de le
-  reprendre via `/maintenance:creation-anomalie`.
+  `list_issues` sur mots-clés, à confirmer **avec `AskUserQuestion`** : deux candidats, le mieux
+  apparié en premier). Elle porte le label `Anomalie` et un ticket
+  Feature parent ; sinon signaler l'objet mal rattaché (orphelin) et poser la suite **avec
+  `AskUserQuestion`** - "le PO le reprend via `/maintenance:creation-anomalie`" (recommandé) et
+  "je désigne un autre ticket".
 - **La spécification de la feature existe** : `specs/<feature>/spec.md`. Un fichier réellement
   manquant est nommé en clair.
 

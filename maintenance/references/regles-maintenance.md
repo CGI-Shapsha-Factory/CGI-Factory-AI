@@ -60,8 +60,9 @@ il ne se fait pas de mémoire.
 **Comment se résout une vérité partagée.** Ne pas traiter seul ne veut pas dire s'arrêter là.
 Le constat est **exposé en clair** (ce que dit le contrat partagé et où, ce que demande le
 changement, pourquoi les deux s'opposent), commenté sur le ticket, puis **tranché par
-l'humain** - avec une voie recommandée annoncée, et sans menu numéroté (cf.
-`interactive-loop.md`). Trois issues, jamais un arrêt nu :
+l'humain** - question posée **avec `AskUserQuestion`**, la voie recommandée en premier (cf.
+`interactive-loop.md`). Trois issues possibles, jamais un arrêt nu ; **les deux plus plausibles
+au vu du constat deviennent les options**, la troisième restant accessible par la saisie libre :
 - **Faux positif** : ce n'en est pas une. Tracer le motif en commentaire, continuer.
 - **Arbitrage déjà rendu** : la référence de la décision est fournie et vérifiée, citée en
   commentaire, on continue.

@@ -67,26 +67,30 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
   - `git log -1 --format=%s%n%b` (dernier commit), `git diff --name-only` et `git status --porcelain`
     (fichiers récemment touchés) -> en extraire des mots-clés ;
   - croiser ces mots-clés avec `list_issues({query, team})` -> **candidats**.
-  - Pas de git ou rien de sûr -> **proposer une courte liste** (tickets ouverts : `list_issues`
-    `assignee: "me"`, états `unstarted`/`started`) et **demander** lequel (un point à la fois).
+  - Pas de git ou rien de sûr -> **demander avec `AskUserQuestion`** lequel : deux tickets ouverts
+    (`list_issues` `assignee: "me"`, états `unstarted`/`started`), le plus probable en premier, la
+    saisie libre pour un autre.
 - `get_issue({id})` pour lire l'**état courant** et la **description** (nécessaire pour les cases).
-- **Confirmer le ticket** - nom + intitulé - **avant toute écriture** (recommandé + "ce n'est pas
-  celui-là" + "saisir"). **Ne jamais écrire sur une simple déduction.**
+- **Confirmer le ticket avec `AskUserQuestion`** - nom + intitulé - **avant toute écriture** :
+  deux options, le ticket déduit (recommandé) et "ce n'est pas celui-là", la saisie libre pour en
+  désigner un autre. **Ne jamais écrire sur une simple déduction.**
 
 ## Étape 4 : Déterminer la mise à jour (depuis l'indice)
 - **Terminé** -> résoudre l'état cible via `list_issue_statuses({team})` : viser l'état de **type
   `completed`** ("Done" / "Terminé" selon l'équipe). En cours -> type `started` ; bloqué -> l'état
   ou le label que l'équipe utilise pour "bloqué" s'il existe (best-effort ; sinon le dire en clair).
 - **Sous-partie** (un `FR-xxx` / item de checklist) -> dans la `description` du ticket, passer la ligne
-  `- [ ] ...` correspondante à `- [x] ...`. Si **toutes** les cases deviennent cochées, **proposer** de
-  passer aussi le ticket à terminé.
+  `- [ ] ...` correspondante à `- [x] ...`. Si **toutes** les cases deviennent cochées, **demander
+  avec `AskUserQuestion`** s'il faut passer aussi le ticket à terminé ("passer à terminé" en
+  recommandé / "laisser le statut tel quel").
 - **Idempotence** : si `get_issue` montre que le ticket est **déjà** dans l'état visé (ou la case déjà
   cochée), **le dire en clair et ne rien écrire**.
 
 ## Étape 5 : Confirmer puis appliquer
-1. **Confirmer l'action** en clair (recommandé + ajuster + saisir) : "passer *&lt;ticket&gt;* à
-   *terminé*" ou "cocher *&lt;item&gt;* dans *&lt;ticket&gt;*". **Ne rien écrire** tant que ce n'est pas
-   approuvé ; "ajuster" / "saisir" corrige en place.
+1. **Confirmer l'action avec `AskUserQuestion`** : "passer *&lt;ticket&gt;* à *terminé*" ou "cocher
+   *&lt;item&gt;* dans *&lt;ticket&gt;*" - deux options, l'action proposée (recommandé) et "ne rien
+   changer" ; le refus reste cliquable. **Ne rien écrire** tant que ce n'est pas approuvé ; la
+   saisie libre corrige en place.
 2. **Appliquer** (cf. `references/linear-guide.md`) :
    - état : `save_issue({id, state: "<nom ou type de l'état résolu>"})` ;
    - case : `save_issue({id, description: "<description avec la case cochée>"})`.
@@ -105,7 +109,7 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
   committé (conflit multi-dev) ni dans le repo cible.
 - **Confirmer avant d'écrire.** Toute mise à jour est validée par l'humain (action externe, difficile
   à défaire) ; on ne se fie **jamais** à une déduction seule.
-- **Un point à la fois.** Questions et confirmations en prose, une par une (cf. `interactive-loop.md`) ;
+- **Un point à la fois.** Questions et confirmations **avec `AskUserQuestion`**, un appel chacune (cf. `interactive-loop.md`) ;
   pas de tableau.
 - **Idempotent.** `get_issue` **avant** d'écrire ; si l'état est déjà bon, ne rien faire.
 - **Rien d'inventé.** On ne met à jour qu'un ticket **confirmé** ; jamais un état non demandé.

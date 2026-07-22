@@ -69,16 +69,19 @@ de**, parallélisable) et chaque graine `assembleur-out/features/<id>-*.md` (Use
 (La colonne **# FR (Tasks)** = le nombre de Functional Requirements de la graine -> autant de
 sous-tickets `Task` qui seront créés sous la Feature.)
 
-Puis **demander (oui/non) : "Créer un ticket Feature par feature, avec ses sous-tickets Task ?"**
-- **Oui** -> passer à l'Étape 3.
-- **Non** -> **boucle d'ajustement** (un point à la fois, cf. `references/interactive-loop.md` :
-  recommandée + alternative + "saisir") : quelles features **fusionner / renommer / écarter /
+Puis **demander avec `AskUserQuestion` : "Créer un ticket Feature par feature, avec ses
+sous-tickets Task ?"** - deux options, "créer les tickets" (recommandé) et "ajuster d'abord le
+découpage" ; le refus reste cliquable.
+- **Créer** -> passer à l'Étape 3.
+- **Ajuster** -> **boucle d'ajustement** (un appel `AskUserQuestion` par point, cf.
+  `references/interactive-loop.md` : recommandée + alternative) : quelles features **fusionner / renommer / écarter /
   réordonner** ? Refléter chaque décision dans le tableau (une feature écartée ou fusionnée n'aura
   simplement **pas de ticket** - la décision se prend et se confirme **en session**), **réafficher**
   le tableau, et **confirmer l'ensemble** avant de créer.
 
 ## Étape 3 : Cible Linear (une seule fois)
-Choisir l'**équipe** (`list_teams` -> recommandée + alternative + saisir) et, optionnellement, le
+Choisir l'**équipe** (`list_teams` -> **avec `AskUserQuestion`**, deux options : la recommandée et
+l'alternative la plus proche) et, optionnellement, le
 **projet** (`list_projects`). **État initial = Backlog** : `list_issue_statuses({team})` -> viser le
 type **`backlog`** (toute nouvelle issue - Feature comme Task - est créée en **Backlog**, jamais Todo).
 Résoudre aussi les labels **`Feature`** et **`Task`** par nom (`list_issue_labels`, insensible à la
@@ -95,9 +98,10 @@ Pour **chaque** feature retenue, **dans l'ordre** :
    - la **liste des `Task`** : **un par Functional Requirement** de la graine
      `assembleur-out/features/<id>-*.md` (§Functional Requirements). Pour chaque `FR-xxx` : **titre**
      = `FR-00x - <intitulé fonctionnel court>` ; **description d'une ligne** = l'énoncé du FR.
-2. **Confirmer** (recommandée + ajuster + saisir) : le **titre** + **description** de la Feature **et
-   la liste des Task (FR)**. **Ne rien créer** tant que ce n'est pas approuvé ; "ajuster"/"saisir"
-   corrige en place.
+2. **Confirmer avec `AskUserQuestion`** : le **titre** + **description** de la Feature **et
+   la liste des Task (FR)** - deux options, "créer tel que proposé" (recommandé) et "ajuster",
+   la saisie libre recevant les corrections. **Ne rien créer** tant que ce n'est pas approuvé ;
+   "ajuster" corrige en place.
 3. **Réconcilier avec Linear avant de créer** : si un ticket `Feature` au **titre exact** existe déjà
    dans le relevé de l'Étape 3 (relancer `list_issues({team, label Feature})` au besoin), **l'adopter**
    (récupérer son `issue_id` / `identifier` / `url`, il servira de `parentId`) et **ne pas le
@@ -141,7 +145,7 @@ tickets à désynchroniser).
   jamais dans le repo cible.
 - **Confirmer avant de créer.** Chaque ticket est validé par l'humain avant création (action
   externe, difficile à défaire).
-- **Un point à la fois.** Questions et confirmations en prose, une par une (cf.
+- **Un point à la fois.** Questions et confirmations **avec `AskUserQuestion`**, un appel chacune (cf.
   `interactive-loop.md`) ; le seul tableau autorisé est le tableau de revue de l'Étape 2.
 - **Idempotent.** On ne crée jamais deux fois le même ticket.
 - **Rien d'inventé.** Seulement les features approuvées par la convergence.

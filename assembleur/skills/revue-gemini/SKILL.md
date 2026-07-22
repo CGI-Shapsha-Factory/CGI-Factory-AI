@@ -24,21 +24,25 @@ gere) **prime** sur les variables d'environnement ambiantes (`GEMINI_API_KEY`/`G
 qu'une vieille variable perimee ne **masque** pas silencieusement la cle voulue. Sonder avec :
 `python "${CLAUDE_PLUGIN_ROOT}/scripts/gemini_review.py" --check`.
 - **`status:"ok"`** -> continuer.
-- **`reason:"no_key"`** (cle absente) -> **ne pas bloquer sechement** : demander la cle a l'utilisateur en
-  clair ("Il me faut une cle API Gemini pour la revue independante - colle-la ici, ou dis-moi de passer.
-  Tu peux en creer une sur aistudio.google.com/apikey."). Une fois fournie : **l'ajouter au `.env`**
+- **`reason:"no_key"`** (cle absente) -> **ne pas bloquer sechement** : demander la cle **avec
+  `AskUserQuestion`** ("Il me faut une cle API Gemini pour la revue independante") - deux options,
+  "je colle ma cle" (recommande, la saisie libre la recoit) et "passer la revue Gemini". Rappeler
+  dans la description qu'une cle se cree sur aistudio.google.com/apikey. Une fois fournie : **l'ajouter au `.env`**
   (ligne `GEMINI_API_KEY=<valeur>`, **creer `.env` s'il manque, git-ignore**) et poser un placeholder
   `GEMINI_API_KEY=` dans **`.env.example`** (committe) s'il existe - **convention architecte** (`.env`
   jamais committe). S'assurer que `.env` est bien dans `.gitignore` (l'ajouter sinon, sans reecrire le fichier).
 - **`reason:"no_genai"`** (paquet `google-genai` absent, auto-install echouee) -> le dire en clair et
-  proposer `pip install --user google-genai`, puis relancer.
-- **`reason:"auth"`** (cle invalide/expiree) -> le dire en clair, demander une cle valide, mettre a jour `.env`.
+  proposer **avec `AskUserQuestion`** : "installer `pip install --user google-genai` et relancer"
+  (recommande) ou "passer la revue Gemini".
+- **`reason:"auth"`** (cle invalide/expiree) -> le dire en clair, demander une cle valide **avec
+  `AskUserQuestion`** (memes options que `no_key`), mettre a jour `.env`.
 - **`reason:"quota"` / `"network"` / `"model"`** -> relayer le message actionnable ("quota atteint,
   reessaie plus tard", "reseau indisponible", "modele introuvable, definis `GEMINI_REVIEW_MODEL`").
 
 ## Etape 2 : Calculer le diff de branche (portee de revue)
 1. **Base** : par defaut `origin/main` (repli `main`) ; si la branche courante cible autre chose,
-   **confirmer la base** avec l'utilisateur (une question, recommande + saisir). Pas de git / pas de
+   **confirmer la base avec `AskUserQuestion`** - deux options, la base detectee (recommande) et
+   l'autre candidate du depot ; la saisie libre pour une base quelconque. Pas de git / pas de
    base -> le dire en clair et s'arreter.
 2. Ecrire le diff dans un **fichier temporaire git-ignore** :
    `git diff --no-color <base>...HEAD > .factory/gemini-review/diff.patch` (creer le dossier ;

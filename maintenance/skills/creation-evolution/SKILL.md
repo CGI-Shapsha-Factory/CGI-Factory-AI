@@ -20,18 +20,22 @@ les chemins (`manifest.json`, `.factory/maintenance/`, `specs/`) se résolvent *
 - **MCP Linear disponible** (`list_teams` répond - cf. `references/linear-maintenance.md`). Sinon,
   **ne rien créer** : refuser en clair et afficher les instructions d'installation.
 - **Terrain de maintenance posé** : le bloc `maintenance` du manifeste et le gabarit
-  `.factory/maintenance/gabarit-evolution.md` existent. Sinon, proposer en clair de lancer d'abord
-  `/maintenance:maintenance-init`.
+  `.factory/maintenance/gabarit-evolution.md` existent. Sinon, poser la suite **avec
+  `AskUserQuestion`** - "lancer `/maintenance:maintenance-init` maintenant" (recommandé) et
+  "vérifier d'abord le dossier de travail".
 - **Frontière de la livraison franchie** : la feature visée est livrée (ticket Feature dans
   Linear + `specs/<feature>/`). Sinon, le dire en clair et ne rien créer (un besoin sur une
   feature en fabrication se traite dans la fabrication, pas en recette).
 
 ## Procédure
-1. **Identifier la feature concernée** et résoudre son **ticket Feature parent** (mêmes règles
+1. **Identifier la feature concernée avec `AskUserQuestion`** (deux options tirées du registre,
+   la plus probable en premier) et résoudre son **ticket Feature parent** (mêmes règles
    que `creation-anomalie` : registre du manifeste, anti-orphelin, identifiant Linear du
    ticket Feature en parent).
 2. **Compléter le gabarit, section par section** (`.factory/maintenance/gabarit-evolution.md`),
-   en boucle interactive (`references/interactive-loop.md`) :
+   en boucle interactive (`references/interactive-loop.md` : un appel `AskUserQuestion` par
+   section, deux options - la suggestion recommandée et l'alternative crédible ; la complétude
+   étant **exigée** ici, aucune option de retrait) :
    - le **comportement actuel** (conforme à la spécification - c'est le principe d'une
      évolution) ;
    - le **comportement souhaité** ;

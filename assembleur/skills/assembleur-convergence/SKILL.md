@@ -24,7 +24,8 @@ Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si le
 existe déjà dans `assembleur-out/` (`pre-constitution.md`, `features/<id>-*.md`, `feature-map.md`,
 `technical-context.md`, `coherence-report.md`, `attack-plan.md`), proposer le choix **Repartir de
 zéro** (supprimer puis régénérer, `version: 1`) ou **Garder les deux (versionner)** (archiver
-l'existant sous `_archives/`, régénérer au nom canonique en `version: N+1`) et **attendre** le choix.
+l'existant sous `_archives/`, régénérer au nom canonique en `version: N+1`) et **attendre** le
+choix - la porte se pose **avec `AskUserQuestion`** (deux options, cf. `references/regeneration-gate.md`).
 **La porte couvre aussi le déploiement `.claude/`** : si `.claude/CLAUDE.md` ou `.claude/memory/`
 existent déjà, poser le même choix **avant** de les réécrire (Repartir de zéro = les régénérer ;
 Garder les deux = archiver l'existant sous `.claude/_archives/` puis régénérer au nom canonique) -
@@ -52,7 +53,8 @@ parallèles) puis synthétiser leurs retours :
    (`.path`) - ouvrir chaque brief par ce chemin, et **clé chaque extraction par son `id` de use
    case**, jamais par l'intitulé ni par le numéro `Feature 00X` de l'en-tête (numérotation
    provisoire du cadrage, renumérotée plus tard par le registre final). Si `artifacts.briefs[]`
-   est **absent ou vide**, le **dire en clair** et demander à l'humain d'apparier briefs et use
+   est **absent ou vide**, le **dire en clair** et demander **avec `AskUserQuestion`** à l'humain
+   d'apparier briefs et use
    cases - **jamais** d'appariement par ressemblance de titre en silence.
    Extraire : identité produit
    (problème + objectif), **critères de succès du produit (métriques d'usage chiffrées)**,
@@ -216,14 +218,17 @@ récapitulatif clair et présentable de ce qui a été convergé -
 - une ligne sur le **paquet produit** (pré-constitution, graines spec, carte des features, contexte
   technique, mémoire, CLAUDE.md).
 
-**Puis** poser la question de validation. Le tableau reste en **langage naturel** au service de la
+**Puis** poser la question de validation **avec `AskUserQuestion`** - deux options, "le paquet me
+convient" (recommandé) et "il faut revoir un point", la saisie libre recevant le détail. Le tableau
+reste en **langage naturel** au service de la
 lisibilité de la porte : **noms en clair uniquement**, aucune clé manifeste, aucun booléen brut. L'humain
 valide. Ne **jamais** valider la cohérence de soi-même.
 
 ## Étape 4 : Résolution interactive des points (obligatoire avant de conclure)
 Balayer **tout le paquet** : pour **chaque** marqueur `[À VALIDER]` / `[À CHIFFRER]` /
-`NEEDS CLARIFICATION` restant, **poser la question** à l'utilisateur - **un par un**,
-réponse recommandée (adaptée au projet) + alternative + saisir, cf.
+`NEEDS CLARIFICATION` restant, **poser la question avec `AskUserQuestion`** - **un appel par
+marqueur**, deux options : réponse recommandée (adaptée au projet) et alternative crédible ; la
+saisie libre est ajoutée par l'outil, ne jamais l'écrire en option, cf.
 `references/interactive-loop.md` - et **écrire la réponse en place** dans le fichier
 concerné. **Aucun fichier annexe.** **Ne pas conclure** tant qu'un marqueur subsiste.
 

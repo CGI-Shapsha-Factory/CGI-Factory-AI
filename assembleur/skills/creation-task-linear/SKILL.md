@@ -128,9 +128,10 @@ Pour **chaque** feature qui a un `specs/<feature>/tasks.md` :
      manifeste ;
    - une **description d'une ligne** (le but de la phase, déduit de ses tâches) - **sans** énumérer
      les tâches `Txxx`.
-5. **Confirmer** (recommandé + ajuster + saisir, cf. `references/interactive-loop.md`) : le **titre**
-   et la **description d'une ligne** de chaque phase manquante. **Ne rien créer** tant que ce n'est pas
-   approuvé. (Astuce : présenter d'un coup la liste des phases manquantes d'une feature pour validation
+5. **Confirmer avec `AskUserQuestion`** (cf. `references/interactive-loop.md`) : le **titre**
+   et la **description d'une ligne** de chaque phase manquante - deux options, "créer tel que
+   proposé" (recommandé) et "ajuster", la saisie libre recevant les corrections. **Ne rien créer**
+   tant que ce n'est pas approuvé. (Astuce : présenter d'un coup la liste des phases manquantes d'une feature pour validation
    groupée, puis créer.)
 6. **Créer** (cf. `references/linear-guide.md`) :
    `save_issue({team, title: "Phase N - <intitulé descriptif>", parentId: "<issue_id UUID du ticket

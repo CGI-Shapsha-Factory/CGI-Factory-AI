@@ -9,11 +9,30 @@ skills concernés. **Aucune information n'est inventée : on demande, on ne comb
   de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs points d'un
   coup, **même si une source (ticket, spécification) semble tout répondre** - une réponse issue d'une
   source **reste une suggestion à confirmer**, pas une validation.
-- **Poser la question, proposer une réponse recommandée, attendre.** Pour chaque point : exposer le
-  point en clair, puis proposer **une réponse recommandée** - une suggestion plausible, clairement
-  étiquetée "suggestion". L'utilisateur **accepte** cette suggestion **ou** donne directement la
-  sienne. **Ne pas afficher de menu numéroté d'options** (pas de "1. ... 2. ... 3. Saisir ma réponse") :
-  l'utilisateur sait qu'il peut répondre librement.
+- **Toute question passe par l'outil `AskUserQuestion`. Sans exception.** Jamais une question
+  rédigée en prose dans le fil de la conversation : l'utilisateur doit toujours retrouver le même
+  geste - une puce de thème, deux réponses possibles, et la saisie libre.
+- **Une question par appel.** L'outil sait en porter plusieurs : on ne s'en sert jamais. Un appel
+  = un point, puis on s'arrête et on attend.
+- **Deux options renseignées, trois lignes à l'écran.** L'outil ajoute lui-même la saisie libre en
+  dernière ligne :
+  1. **La réponse recommandée** - une suggestion plausible, avec la mention "(recommandé)" dans
+     son libellé et, dans sa `description`, **ce qui la soutient** (ce que dit le ticket, la
+     spécification, le code). La présenter ne vaut pas réponse : elle le devient quand
+     l'utilisateur la choisit.
+  2. **L'alternative crédible** - avec deux déclinaisons imposées par ce que le plugin documente :
+     - sur une **confirmation avant écriture externe** (créer un ticket, changer un état,
+       requalifier), l'option 2 est le **refus** - "ne pas créer", "laisser tel quel". Le refus
+       doit rester **cliquable**, jamais relégué à la saisie libre ;
+     - sur un point **légitimement esquivable**, l'option 2 est le **retrait** ("je laisse ce
+       point de côté") et l'alternative de fond passe dans la saisie libre - sans quoi le retrait
+       disparaît de l'écran et l'utilisateur tranche par défaut pour avancer.
+     **Exception** : dans les gabarits d'anomalie et d'évolution, la complétude est **exigée** ;
+     il n'y a pas de retrait à offrir, les deux options portent deux propositions de fond.
+  - **Ne jamais écrire soi-même une option "Saisir ma réponse"** : elle ferait une quatrième
+    ligne, en doublon de celle que l'outil ajoute.
+- **La puce (`header`) porte le thème en clair** - "Feature", "Ticket", "Cause", "Statut" - en
+  quelques caractères. **Jamais un code** (`FR-001`, `TC-001`) ni une clé de manifeste.
 - **Si l'utilisateur ne tranche pas un point** (il préfère le laisser de côté) : **on n'écrit rien**
   pour ce point. Aucun marqueur, aucune liste de points ouverts persistée - le point est simplement
   omis. On peut le lui rappeler oralement en fin de boucle, jamais l'écrire dans un fichier ou un ticket.

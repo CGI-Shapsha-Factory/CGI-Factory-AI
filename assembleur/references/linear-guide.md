@@ -47,10 +47,12 @@ demande une action en **écriture**), utiliser une **clé API personnelle** :
 reprend dans `init-cowork.md` ("Accès Linear pour Quark").
 
 ## Cible (une seule fois, avant la boucle)
-- **Équipe** (obligatoire pour créer) : `list_teams` -> présenter en 3 options (recommandée =
-  celle qui correspond au projet / à l'organisation, alternative(s), "saisir"). Retenir le
+- **Équipe** (obligatoire pour créer) : `list_teams` -> demander **avec `AskUserQuestion`** : deux
+  options, celle qui correspond au projet / à l'organisation (recommandé) et l'alternative la plus
+  proche ; la saisie libre pour une autre équipe. Retenir le
   `team` (nom ou id).
-- **Projet** (optionnel) : `list_projects({team})` -> proposer un projet existant ou en créer un au
+- **Projet** (optionnel) : `list_projects({team})` -> demander **avec `AskUserQuestion`** : un
+  projet existant (recommandé) ou en créer un au
   nom du produit. Retenir le `project`.
 - **État initial = Backlog** : `list_issue_statuses({team})` -> viser le type **`backlog`**, tickets
   **non assignés**. **Toute nouvelle issue** (Feature comme Task) est créée en **Backlog**, jamais en

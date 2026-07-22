@@ -64,11 +64,13 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
        niveau central, il suffit de relancer `/maintenance:realisation-evolution` sur ce même
        ticket - le tri repassera et laissera continuer.
 
-   *(Suivre `references/interactive-loop.md` : exposer le point, annoncer la recommandation,
-   attendre. Pas de menu numéroté - le développeur répond librement.)*
+   *(Suivre `references/interactive-loop.md` : exposer le point, puis poser la question **avec
+   `AskUserQuestion`** - deux options, la voie recommandée d'abord ; la saisie libre reste
+   ouverte pour une issue que ni l'une ni l'autre ne couvre.)*
 3. **Réouverture volontaire et tracée (première règle d'or).** Rouvrir une feature livrée est
    un geste délibéré, légitime parce que l'évolution est décidée par le PO. Demander la
-   **confirmation explicite du développeur**, puis déposer un **commentaire Linear** :
+   **confirmation explicite du développeur avec `AskUserQuestion`** - "rouvrir la feature"
+   (recommandé) et "ne pas rouvrir maintenant" -, puis déposer un **commentaire Linear** :
    "Réouverture de la feature <intitulé (numéro)> pour <identifiant de l'évolution>". *(Ce
    commentaire est le point d'accroche de la future protection anti-écrasement côté
    assemblage : la réouverture est visible, jamais un effet de bord silencieux.)*

@@ -107,13 +107,15 @@ Sources = **sorties amont uniquement**, en **synthèse** (pas de copie ; source 
    plus la section **"Accès Linear pour Quark"** (setup MCP + clé API - cf. `references/linear-guide.md`,
    sous-section "Accès par clé API"). Toute section sans matière amont -> `<à renseigner>`, jamais inventée.
 2. **Confirmer les deux liens vivants - une question par lien, posées SÉPARÉMENT (jamais les deux à
-   la fois).** Chaque question porte **une seule URL** (recommandé + autre + saisir) :
-   1. **D'abord GitHub** : poser **une seule question** sur l'**URL GitHub** - proposer l'URL détectée
-      (Étape 1) en option recommandée, ou `<à renseigner>` si aucune ; "autre URL" / "saisir"
-      corrige en place. **Attendre la réponse** avant de passer à la suivante.
-   2. **Ensuite Linear** : poser **une seconde question, distincte**, sur l'**URL Linear** - proposer
-      l'URL détectée (Étape 2 : projet existant / dérivée) en option recommandée, ou `<à renseigner>` ;
-      "autre URL" / "saisir" corrige en place.
+   la fois).** Chaque question est **un appel `AskUserQuestion` distinct**, portant **une seule
+   URL**, avec deux options : l'URL détectée (recommandé) et "aucune de ces adresses" ; la saisie
+   libre reçoit l'URL exacte.
+   1. **D'abord GitHub** : poser **un seul appel** sur l'**URL GitHub** - proposer l'URL détectée
+      (Étape 1) en option recommandée, ou `<à renseigner>` si aucune. **Attendre la réponse** avant
+      de passer à la suivante.
+   2. **Ensuite Linear** : poser **un second appel, distinct**, sur l'**URL Linear** - proposer
+      l'URL détectée (Étape 2 : projet existant / dérivée) en option recommandée, ou
+      `<à renseigner>`.
    **Ne rien écrire à la racine tant que les deux liens ne sont pas tranchés.**
 3. **Écrire** `init-cowork.md` à la **racine** du projet (read-modify-write si déjà présent).
 4. **Consigner en silence** le bloc `cowork` du manifeste :
