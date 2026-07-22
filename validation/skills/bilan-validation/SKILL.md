@@ -20,8 +20,9 @@ inscrire le verdict humain dans le rapport et dans Linear.
 - Le plan existe (`validation-out/<feature>/plan-de-test.md`) et au moins un fichier de
   résultats existe (`validation-out/<feature>/resultats/execution-*.md`) ; sinon refuser en
   nommant le fichier manquant et renvoyer vers le skill amont.
-- S'il y a plusieurs fichiers de résultats, prendre le plus récent et le confirmer au testeur
-  (suggestion) ; il peut en désigner un autre.
+- S'il y a plusieurs fichiers de résultats, demander lequel fait foi **avec `AskUserQuestion`**
+  (une option par fichier, le plus récent en premier avec la mention "(recommandé)", chaque
+  option datée et accompagnée de l'outil utilisé et de sa synthèse chiffrée).
 - `specs/<feature>/spec.md` accessible (pour citer les critères dans le tri des écarts).
 - Le traitement des écarts passe par le plugin maintenance : si le bloc `maintenance` du manifeste
   manque, signaler qu'il faudra lancer `/maintenance:maintenance-init` avant de créer le premier
@@ -37,10 +38,13 @@ trier. Si un rapport existe déjà pour la feature, appliquer la porte de régé
 (repartir de zéro ou archiver sous `_archives/`). Écrire aussi la synthèse chiffrée, en prose.
 
 ### Étape 2 : trier chaque écart avec le testeur (un par un)
-Pour chaque verdict KO, NON TESTABLE ou non exécuté (boucle interactive, cf.
-`references/interactive-loop.md`), présenter le constat factuel (constaté vs attendu, preuve)
-face au critère cité, proposer un tri en suggestion, et laisser le testeur trancher la
-**nature** (cf. `references/regles-validation.md`) :
+Pour chaque verdict KO, NON TESTABLE ou non exécuté : présenter le constat factuel (constaté vs
+attendu, preuve) face au critère cité, puis laisser le testeur trancher la **nature avec
+`AskUserQuestion`** - les quatre options ci-dessous, celle qui paraît la plus juste en premier
+avec la mention "(recommandé)" et la raison dans sa description (cf.
+`references/interactive-loop.md` ; plusieurs écarts peuvent être regroupés dans un même appel,
+une question par écart, chaque question rappelant l'identifiant du cas et le constat en une
+ligne). Les natures possibles (cf. `references/regles-validation.md`) :
 - **Anomalie** (la spécification est bonne, le logiciel ne la respecte pas) -> "Veux-tu créer
   l'anomalie dans Linear ?" Si oui : préparer le contenu (comportement attendu depuis le
   critère, comportement constaté et étapes de reproduction depuis le déroulé effectif,
@@ -72,9 +76,12 @@ maintenance rejoue en non-régression (`realisation-evolution`, `correction-anom
 
 ### Étape 4 : la porte de recette (verdict humain)
 Quand tous les écarts sont triés : afficher le récapitulatif final (la matrice en tableau
-court + la synthèse en prose) et poser **la** question : "Quel est ton verdict de recette
-pour cette feature - livraison validée, validée avec réserves, ou refusée ?" (suggestion
-argumentée possible, mais **le skill ne prononce jamais le verdict lui-même**). Puis :
+court + la synthèse en prose) et poser **la** question **avec `AskUserQuestion`** : "Quel est
+ton verdict de recette pour cette feature ?" - trois options, "livraison validée", "validée
+avec réserves" et "refusée", chacune décrite par ce qu'elle implique concrètement pour cette
+feature (ce qui reste ouvert, ce qui repart en correction). Le verdict le plus cohérent avec
+les résultats peut être placé en premier avec la mention "(recommandé)" et son argument dans la
+description, mais **le skill ne prononce jamais le verdict lui-même** : il attend le choix. Puis :
 1. inscrire le verdict, la date et les réserves (tickets Linear restant ouverts) dans la
    section "Verdict de recette" du rapport - cette section n'existe remplie que par ce geste ;
 2. **Linear** : déposer un commentaire de synthèse sur le ticket `Feature` de la feature
@@ -104,5 +111,10 @@ la seule présence du titre de section ne suffit pas.)
 - **Traçabilité totale** : aucun critère du plan n'est absent de la matrice.
 - Manifeste silencieux, restitutions en prose, typographie humaine (cf.
   `references/ux-conventions.md`).
+- **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, en la
+  cadrant sur le verdict qui vient d'être prononcé (cf. la section 5 de
+  `references/ux-conventions.md`).
+- **Questions à réponses énumérables : selecteur de choix** (`AskUserQuestion`) - fichier de
+  résultats, nature de chaque écart, verdict de recette (cf. `references/interactive-loop.md`).
 
-Étape suivante : selon le verdict - `/maintenance:correction-anomalie` côté développeur si des anomalies ont été créées, `/validation:plan-de-validation` pour la feature livrée suivante, ou une nouvelle exécution après correction pour lever les réserves.
+Étape suivante : selon le verdict - livraison validée, `/validation:plan-de-validation` pour recetter la feature livrée suivante. Validée avec réserves ou refusée : `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` pour les écarts triés qui n'ont pas encore leur ticket, puis `/maintenance:correction-anomalie` (ou `/maintenance:realisation-evolution`) côté développeur, et enfin `/validation:execution-validation` pour rejouer les cas en échec et lever les réserves.

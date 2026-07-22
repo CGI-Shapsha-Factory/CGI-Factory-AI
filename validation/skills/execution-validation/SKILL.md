@@ -27,14 +27,16 @@ testeur, sans jamais interpréter un critère ambigu.
 ## Procédure
 
 ### Étape 1 : choisir l'outil (à chaque lancement)
-Demander au testeur quelle voie utiliser (une question, cf. `references/interactive-loop.md`
-et `references/execution-navigateur.md`) :
-- **l'extension Chrome (Claude in Chrome)** - la suggestion recommandée par défaut ;
-- **Playwright** (le MCP, en session) ;
+Demander au testeur quelle voie utiliser **avec `AskUserQuestion`** (trois options, cf.
+`references/interactive-loop.md` et `references/execution-navigateur.md`), chacune décrite en
+une ligne (ce qu'elle exige, ce qu'elle donne) :
+- **l'extension Chrome (Claude in Chrome)** - la recommandée par défaut, à mettre en premier
+  avec la mention "(recommandé)" : vrai navigateur, session réelle ;
+- **Playwright** (le MCP, en session) : repli, aucune installation dans Chrome ;
 - **une mission pour Claude Cowork** (exécution différée, hors session).
-Si un outil habituel est retenu au manifeste, le proposer en suggestion. Enregistrer le choix
-comme outil habituel, en silence. **On redemande à chaque lancement** : le choix n'est jamais
-automatique.
+Si un outil habituel est retenu au manifeste, c'est **lui** qui passe en premier avec la
+mention "(recommandé)". Enregistrer le choix comme outil habituel, en silence. **On redemande à
+chaque lancement** : le choix n'est jamais automatique.
 
 ### Étape 2a : exécuter avec l'extension Chrome (voie prioritaire)
 - **Détection** : tenter une action de lecture navigateur. Si l'extension ne répond pas,
@@ -99,5 +101,11 @@ booléens) : ce qui passe, ce qui échoue, ce qui n'a pas pu être testé.
 - **Un contrat de sortie unique** quel que soit l'outil : le bilan ne doit pas savoir qui a
   exécuté.
 - Manifeste silencieux, typographie humaine (cf. `references/ux-conventions.md`).
+- **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, y
+  compris sur la voie Cowork où le skill s'arrête avant d'exécuter (cf. la section 5 de
+  `references/ux-conventions.md`).
+- **Questions à réponses énumérables : selecteur de choix** (`AskUserQuestion`) - le choix de
+  l'outil d'exécution en particulier ; l'adresse de recette reste demandée en prose (cf.
+  `references/interactive-loop.md`).
 
-Étape suivante : `/validation:bilan-validation` - assembler le rapport de recette tracé et trier les écarts avec le testeur.
+Étape suivante : `/validation:bilan-validation` - assembler le rapport de recette tracé et trier les écarts avec le testeur. Sur la voie Cowork, attendre d'abord que le fichier de résultats soit apparu, puis lancer ce même bilan. Ou relancer `/validation:execution-validation` pour une nouvelle exécution (changement d'outil, cas restés à rejouer, ou vérification après correction) : chaque exécution produit son propre fichier, aucune n'écrase la précédente.

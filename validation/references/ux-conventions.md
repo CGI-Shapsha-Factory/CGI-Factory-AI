@@ -73,8 +73,16 @@ utilisé que pour des listes courtes et énumérables (ex. la matrice critère -
 du rapport, ou le récapitulatif de la porte de recette).
 
 ## 5. Une ligne "étape suivante" à la fin de chaque skill
-Terminer chaque exécution par exactement une phrase :
+Terminer chaque exécution par exactement une phrase, **toujours affichée** (elle n'est jamais
+omise, même quand le skill s'arrête tôt ou refuse) :
 > "Étape suivante : `/validation:<skill>` (ou `/maintenance:<skill>`) - <pourquoi en quelques mots>."
+
+La recette est la phase la plus ramifiée de la factory : la suite dépend de l'outil
+d'exécution choisi, de la nature des écarts et du verdict. Quand plusieurs suites sont
+réellement possibles, **les nommer toutes dans cette même phrase**, chacune avec sa condition,
+dans cet ordre : le **chemin normal en premier**, puis les branches (`Ou <skill> si <condition>`).
+L'utilisateur doit voir d'un coup d'oeil "c'est ça, ou ça, selon". Ne jamais citer un skill qui
+n'existe pas : les suites sont des skills réels de `/validation:*` ou `/maintenance:*`.
 
 ## 6. Langue
 **Tout en français** (interaction + artefacts + commentaires Linear). Seuls les

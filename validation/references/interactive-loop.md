@@ -9,11 +9,25 @@ concernés. **Aucune information n'est inventée : on demande, on ne comble pas.
   de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs points d'un
   coup, **même si une source (plan, résultat d'exécution, spécification) semble tout répondre** - une
   réponse issue d'une source **reste une suggestion à confirmer**, pas une validation.
-- **Poser la question, proposer une réponse recommandée, attendre.** Pour chaque point : exposer le
-  point en clair, puis proposer **une réponse recommandée** - une suggestion plausible, clairement
-  étiquetée "suggestion". L'utilisateur **accepte** cette suggestion **ou** donne directement la
-  sienne. **Ne pas afficher de menu numéroté d'options** (pas de "1. ... 2. ... 3. Saisir ma réponse") :
-  l'utilisateur sait qu'il peut répondre librement.
+- **Deux formes de question, selon la nature de la réponse attendue.** Le testeur ne doit jamais
+  se demander ce qu'on attend de lui ni retaper une réponse qu'on connaît déjà :
+  - **Réponses énumérables (2 à 4 choix connus) : poser la question avec l'outil
+    `AskUserQuestion`.** Une option par choix réel, la **recommandation en premier** avec la
+    mention "(recommandé)" dans son libellé, et une `description` courte qui dit ce que le
+    choix implique concrètement. **Ne jamais fabriquer d'option "Saisir ma réponse"** :
+    l'outil offre toujours la saisie libre. C'est le cas de : quelle feature passe en recette,
+    quel outil d'exécution, quel fichier de résultats, le sort d'un critère à clarifier, la
+    nature d'un écart, le verdict de recette, une porte de régénération.
+  - **Réponses libres : poser la question en prose**, avec **une réponse recommandée** clairement
+    étiquetée "suggestion" quand une piste existe. C'est le cas de : l'adresse de l'environnement
+    de recette, les comptes et les données de test, la lecture observable d'un critère clarifié,
+    le texte d'un constat. Un menu à trois options y serait artificiel.
+- **Toujours attendre la réponse**, quelle que soit la forme. Présenter une recommandation ne
+  vaut jamais réponse : rien n'est écrit sans un choix ou une saisie explicite du testeur.
+- **Regroupement autorisé pour les points de même nature.** Une même série (le sort de plusieurs
+  critères à clarifier, le tri de plusieurs écarts) peut être posée en un seul appel à
+  `AskUserQuestion`, une question par point. C'est le seul assouplissement de la règle "une
+  question à la fois" ; la relecture avant écriture (ci-dessous) reste obligatoire.
 - **Si l'utilisateur ne tranche pas un point** (il préfère le laisser de côté) : **on n'écrit rien**
   pour ce point. Aucun marqueur, aucune liste de points ouverts persistée - le point est simplement
   omis. On peut le lui rappeler oralement en fin de boucle, jamais l'écrire dans un fichier ou un ticket.

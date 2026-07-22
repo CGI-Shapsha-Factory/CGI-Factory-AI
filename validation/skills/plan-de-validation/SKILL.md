@@ -30,17 +30,21 @@ cas), **honnête** (aucun critère flou n'est deviné), validé par le testeur a
 ### Étape 1 : identifier la feature
 Lister les features fabriquées (les dossiers de `specs/`), croiser avec le registre des
 features et `assembleur-out/feature-map.md` s'ils sont disponibles (intitulés métier), et
-demander au testeur laquelle passe en recette (une question, suggestion = la plus récente non
-encore validée). La nommer par son intitulé complet suivi de sa référence, ex. "la recherche
-en langage naturel (001)". Retrouver au passage son ticket `Feature` Linear (bloc `linear` du
+demander au testeur laquelle passe en recette **avec `AskUserQuestion`** (cf.
+`references/interactive-loop.md`) : **une option par feature livrée**, chacune nommée par son
+intitulé complet suivi de sa référence (ex. "la recherche en langage naturel (001)") et décrite
+en une ligne (ce qu'elle apporte, ce dont elle dépend). Mettre en premier, avec la mention
+"(recommandé)", la plus pertinente à recetter maintenant - la plus ancienne non encore validée,
+ou celle dont les autres dépendent - et dire pourquoi dans sa description. Retrouver au passage
+son ticket `Feature` Linear (bloc `linear` du
 manifeste + `list_issues({team, label Feature})`, jointure par le numéro en tête de titre) -
 best-effort : si le MCP est muet, continuer sans lien Linear et le signaler.
 
 ### Étape 1bis : porte de régénération (avant tout travail)
 Si `validation-out/<feature>/plan-de-test.md` existe déjà, poser **tout de suite** la
-décision (avant la lecture et la boucle interactive, pour ne pas faire refaire tout le
-travail au testeur avant de découvrir la question) : "repartir de zéro" (supprimer puis
-regénérer) ou "garder les deux" (archiver l'existant sous
+décision **avec `AskUserQuestion`** (deux options, avant la lecture et la boucle interactive,
+pour ne pas faire refaire tout le travail au testeur avant de découvrir la question) :
+"repartir de zéro" (supprimer puis regénérer) ou "garder les deux" (archiver l'existant sous
 `validation-out/<feature>/_archives/plan-de-test-v<N>.md`, `N` = index croissant, puis
 regénérer au nom canonique) - jamais d'écrasement sans choix explicite.
 
@@ -79,11 +83,14 @@ régénération a déjà été passée à l'étape 1bis si un plan existait).
 
 ### Étape 6 : relecture humaine + sort des critères à clarifier
 Afficher le récapitulatif (un tableau court : critère source -> cas de test -> testable ou à
-clarifier) et faire relire le plan par le testeur. Pour **chaque** critère à clarifier,
-proposer (un par un) :
-- **clarifier maintenant** : le testeur précise la lecture observable du critère ; elle
-  s'écrit **dans le cas de test** (la spécification, elle, ne bouge pas) et le cas devient
-  testable ;
+clarifier) et faire relire le plan par le testeur. Le sort de **chaque** critère à clarifier se
+demande **avec `AskUserQuestion`** (une question par critère, les trois options ci-dessous ;
+plusieurs critères peuvent être regroupés dans un même appel - cf.
+`references/interactive-loop.md`). Chaque question rappelle le critère concerné et la raison du
+flou :
+- **clarifier maintenant** : le testeur précise la lecture observable du critère ; cette
+  précision se demande **en prose** (réponse libre) juste après son choix, puis elle s'écrit
+  **dans le cas de test** (la spécification, elle, ne bouge pas) et le cas devient testable ;
 - **tracer le point dans Linear** : orienter vers un ticket de suivi sur la feature ("Veux-tu
   créer un ticket Linear pour tracer ce point ?") - création seulement sur accord explicite,
   en sous-ticket du ticket Feature, **sans label de recette** (jamais `Anomalie`/`Evolution`,
@@ -110,5 +117,11 @@ critère source.)
 - **Plan validé par l'humain** avant toute exécution.
 - Manifeste silencieux, restitutions en prose, typographie humaine (cf.
   `references/ux-conventions.md`).
+- **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, même
+  si le plan a été refusé ou reste à retoucher (cf. la section 5 de
+  `references/ux-conventions.md`).
+- **Questions à réponses énumérables : selecteur de choix** (`AskUserQuestion`) - quelle
+  feature, porte de régénération, sort d'un critère à clarifier ; les réponses libres (données
+  de test, lecture observable) restent en prose (cf. `references/interactive-loop.md`).
 
-Étape suivante : `/validation:execution-validation` - jouer le plan dans le navigateur contre l'environnement de recette.
+Étape suivante : `/validation:execution-validation` - jouer le plan dans le navigateur contre l'environnement de recette. Ou relancer `/validation:plan-de-validation` si le plan doit être retouché avant exécution (la porte de régénération te demandera quoi faire de l'existant). Ou `/maintenance:creation-evolution` si un critère à clarifier révèle une spécification fausse ou incomplète (geste du PO, la spécification ne se corrige jamais ici).

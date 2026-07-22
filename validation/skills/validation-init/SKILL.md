@@ -103,5 +103,10 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
   `references/ux-conventions.md`).
 - **Typographie humaine** : aucun glyphe de style IA dans les sorties (cf. la section
   Typographie de `references/ux-conventions.md`).
+- **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, même
+  si l'amont manque (cf. la section 5 de `references/ux-conventions.md`).
+- **Questions à réponses énumérables : selecteur de choix** (`AskUserQuestion`), jamais de
+  menu tapé en prose ; les réponses libres (adresse de recette) restent en prose (cf.
+  `references/interactive-loop.md`).
 
-Étape suivante : `/validation:plan-de-validation` - dériver le plan de test de la première feature livrée.
+Étape suivante : `/validation:plan-de-validation` - dériver le plan de test de la feature livrée à recetter. Ou `/maintenance:maintenance-init` d'abord si le terrain de maintenance manque (il faut l'avoir posé avant le premier bilan, c'est là que se créent les anomalies et les évolutions). Ou `/assembleur:premier-alimente-linear` si les tickets Linear n'ont jamais été créés et que tu veux que le rapport soit relié à sa feature.
