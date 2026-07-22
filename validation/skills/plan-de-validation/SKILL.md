@@ -18,14 +18,32 @@ cas), **honnête** (aucun critère flou n'est deviné), validé par le testeur a
 
 ## Pré-requis (vérification silencieuse)
 - `manifest.json` existe dans le dossier courant et contient le bloc de la validation ; sinon
-  refuser en clair et renvoyer vers `/validation:validation-init`.
+  refuser en clair, puis poser une question `AskUserQuestion` : "amorcer le terrain maintenant"
+  (`/validation:validation-init`, en premier avec la mention "(recommandé)") ou "vérifier
+  d'abord le dossier de travail".
 - La feature visée a sa spécification : `specs/<feature>/spec.md` existe. Sinon refuser en
-  nommant le fichier manquant : la validation n'a pas d'objet tant que la feature n'est pas
-  fabriquée via SpecKit.
+  nommant le fichier manquant - la validation n'a pas d'objet tant que la feature n'est pas
+  fabriquée via SpecKit - puis poser la question des issues (cf. la règle "jamais de
+  cul-de-sac" de `references/interactive-loop.md`) : une option par feature qui a **bien** sa
+  spécification, ou, si `specs/` est vide, l'unique issue "attendre la fabrication SpecKit de
+  la première feature" décrite en clair.
 - Rappel de frontière : la spécification est **lue, jamais écrite** (cf.
   `references/regles-validation.md`).
 
 ## Procédure
+
+### Étape 1a : la portée de la campagne (seulement si plusieurs features attendent)
+Si **plusieurs** features livrées n'ont pas encore de recette, demander **d'abord** la portée
+**avec `AskUserQuestion`**, avant même de choisir laquelle - le testeur doit savoir dans quoi il
+s'engage :
+- **une feature de bout en bout** (en premier, mention "(recommandé)") : plan, exécution, bilan
+  et verdict sur une seule feature. Cycle court, on rode le processus avant de le répéter ;
+- **toutes à la suite** : autant de plans, d'exécutions et de rapports que de features.
+  Couverture complète, mais session longue avec une porte de tri et un verdict par feature ;
+- **tous les plans d'abord, l'exécution ensuite** : écrire les plans de test des features en
+  attente pour mesurer l'ampleur de la recette, puis décider quoi jouer.
+Rappeler la portée retenue en fin de skill. **S'il n'y a qu'une feature en attente, sauter
+cette question** : elle n'a pas d'objet.
 
 ### Étape 1 : identifier la feature
 Lister les features fabriquées (les dossiers de `specs/`), croiser avec le registre des
@@ -91,15 +109,21 @@ flou :
 - **clarifier maintenant** : le testeur précise la lecture observable du critère ; cette
   précision se demande **en prose** (réponse libre) juste après son choix, puis elle s'écrit
   **dans le cas de test** (la spécification, elle, ne bouge pas) et le cas devient testable ;
-- **tracer le point dans Linear** : orienter vers un ticket de suivi sur la feature ("Veux-tu
-  créer un ticket Linear pour tracer ce point ?") - création seulement sur accord explicite,
+- **tracer le point dans Linear** : orienter vers un ticket de suivi sur la feature. La
+  création est une **écriture hors du repo** : la confirmer par une question `AskUserQuestion`
+  ("créer le ticket de suivi" / "ne rien créer") qui montre d'abord le titre et le contenu
+  prévus - création seulement sur accord explicite,
   en sous-ticket du ticket Feature, **sans label de recette** (jamais `Anomalie`/`Evolution`,
   ni `Feature`/`Task` - cf. `references/regles-validation.md`, section Linear) ; si le flou
   révèle une spécification fausse ou incomplète, orienter plutôt vers
   `/maintenance:creation-evolution` (geste du PO) ;
 - **laisser tel quel** : le cas reste A CLARIFIER dans le plan et sortira NON TESTABLE à
   l'exécution.
-Le plan n'est bon pour exécution qu'après l'accord explicite du testeur.
+Une fois le sort de tous les critères réglé, poser la **porte du plan avec `AskUserQuestion`** :
+"bon pour exécution" (en premier avec la mention "(recommandé)" quand plus rien n'est en
+suspens), "à retoucher" (le testeur dit ensuite en prose ce qui doit changer, et le skill
+reprend à l'étape concernée), ou "laisser de côté pour l'instant" (le plan reste écrit, rien
+n'est exécuté). Le plan n'est bon pour exécution qu'après cet accord explicite.
 
 ## Vérification avant de conclure
 Lancer le garde-fou déterministe et s'arrêter s'il échoue :
@@ -120,8 +144,10 @@ critère source.)
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, même
   si le plan a été refusé ou reste à retoucher (cf. la section 5 de
   `references/ux-conventions.md`).
-- **Questions à réponses énumérables : selecteur de choix** (`AskUserQuestion`) - quelle
-  feature, porte de régénération, sort d'un critère à clarifier ; les réponses libres (données
-  de test, lecture observable) restent en prose (cf. `references/interactive-loop.md`).
+- **Jamais de cul-de-sac, questions à choix pour l'énumérable.** Portée de campagne, choix de
+  la feature, porte de régénération, sort d'un critère, porte du plan et création d'un ticket
+  de suivi se demandent avec `AskUserQuestion` ; les réponses libres (données de test, lecture
+  observable) restent en prose ; **un refus se termine par une question**, jamais par un point
+  final (cf. `references/interactive-loop.md`).
 
 Étape suivante : `/validation:execution-validation` - jouer le plan dans le navigateur contre l'environnement de recette. Ou relancer `/validation:plan-de-validation` si le plan doit être retouché avant exécution (la porte de régénération te demandera quoi faire de l'existant). Ou `/maintenance:creation-evolution` si un critère à clarifier révèle une spécification fausse ou incomplète (geste du PO, la spécification ne se corrige jamais ici).

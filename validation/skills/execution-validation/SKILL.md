@@ -16,11 +16,17 @@ Produire `validation-out/<feature>/resultats/execution-<JJ-MM>.md` (+ les captur
 testeur, sans jamais interpréter un critère ambigu.
 
 ## Pré-requis (vérification silencieuse)
-- Le bloc de la validation existe dans `manifest.json` ; sinon renvoyer vers
-  `/validation:validation-init`.
-- Le plan existe : `validation-out/<feature>/plan-de-test.md` (demander la feature si
-  plusieurs plans existent ; refuser en nommant le fichier manquant sinon, et renvoyer vers
-  `/validation:plan-de-validation`).
+- Le bloc de la validation existe dans `manifest.json` ; sinon refuser, puis poser une question
+  `AskUserQuestion` : "amorcer le terrain maintenant" (`/validation:validation-init`, en
+  premier avec la mention "(recommandé)") ou "vérifier d'abord le dossier de travail" (le skill
+  s'ancre sur le dossier courant, un projet ouvert au mauvais endroit donne le même symptôme).
+- Le plan existe : `validation-out/<feature>/plan-de-test.md`. **Plusieurs plans présents** :
+  demander lequel jouer **avec `AskUserQuestion`**, une option par feature ayant un plan, en
+  premier celle qui n'a pas encore de résultats. **Aucun plan pour la feature visée** : refuser
+  en nommant le fichier manquant, puis poser la question des issues (cf. la règle "jamais de
+  cul-de-sac" de `references/interactive-loop.md`) - "écrire le plan de <feature>"
+  (`/validation:plan-de-validation`), ou "jouer plutôt le plan de <autre feature>" quand une
+  autre en a un.
 - L'adresse de l'environnement de recette est connue (manifeste ou section Environnement du
   plan) ; sinon la demander (une question) et la retenir dans le manifeste, en silence.
 
@@ -58,7 +64,11 @@ Mêmes cas, mêmes règles, via les outils du MCP Playwright (`browser_navigate`
 mission Cowork ou l'installation d'un des deux outils.
 
 ### Étape 2c : générer la mission Cowork (voie différée)
-Générer `validation-out/<feature>/mission-cowork.md` depuis le gabarit
+La mission est un fichier destiné à **un autre outil** : la confirmer par une question
+`AskUserQuestion` avant de l'écrire ("générer la mission" en premier avec la mention
+"(recommandé)" / "revenir au choix de l'outil"), en disant en une ligne ce qu'elle contiendra
+et ce que le testeur devra faire ensuite. Puis générer
+`validation-out/<feature>/mission-cowork.md` depuis le gabarit
 `.factory/validation/mission-cowork.md` (adresse de recette, renvoi au plan, règles
 d'exécution, format de résultats imposé - le document est auto-portant : Cowork n'a pas cette
 session). Si une mission existe déjà pour la feature, appliquer la porte de régénération
@@ -88,7 +98,10 @@ Cf. `references/regles-validation.md` :
 - **budget d'étapes borné** : un cas qui dépasse le double de ses étapes prévues sort
   NON TESTABLE avec la raison ;
 - **aucune action destructive** (suppression, paiement, envoi externe) sans confirmation
-  explicite du testeur ; données de test du plan uniquement, jamais de données réelles.
+  explicite du testeur : l'exécution **s'arrête** et pose une question `AskUserQuestion`
+  ("exécuter l'action, c'est bien une donnée de test" / "sauter ce cas, il sortira NON
+  TESTABLE"), en décrivant l'action et son effet ; données de test du plan uniquement, jamais
+  de données réelles.
 
 ## Vérification avant de conclure
 Confirmer que le fichier de résultats existe, qu'il contient un bloc par cas du plan (aucun
@@ -104,8 +117,9 @@ booléens) : ce qui passe, ce qui échoue, ce qui n'a pas pu être testé.
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, y
   compris sur la voie Cowork où le skill s'arrête avant d'exécuter (cf. la section 5 de
   `references/ux-conventions.md`).
-- **Questions à réponses énumérables : selecteur de choix** (`AskUserQuestion`) - le choix de
-  l'outil d'exécution en particulier ; l'adresse de recette reste demandée en prose (cf.
-  `references/interactive-loop.md`).
+- **Jamais de cul-de-sac, questions à choix pour l'énumérable.** Choix de l'outil, choix du
+  plan à jouer, confirmation de la mission Cowork et de toute action destructive se demandent
+  avec `AskUserQuestion` ; l'adresse de recette reste en prose ; **un refus se termine par une
+  question** (cf. `references/interactive-loop.md`).
 
 Étape suivante : `/validation:bilan-validation` - assembler le rapport de recette tracé et trier les écarts avec le testeur. Sur la voie Cowork, attendre d'abord que le fichier de résultats soit apparu, puis lancer ce même bilan. Ou relancer `/validation:execution-validation` pour une nouvelle exécution (changement d'outil, cas restés à rejouer, ou vérification après correction) : chaque exécution produit son propre fichier, aucune n'écrase la précédente.

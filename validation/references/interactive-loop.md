@@ -5,6 +5,17 @@ l'outil d'exécution, tri d'un écart, verdict de recette). Référencée par le
 concernés. **Aucune information n'est inventée : on demande, on ne comble pas.**
 
 ## Règle d'or
+- **Jamais de cul-de-sac.** Chaque fois que le skill **rend la main en attendant quelque chose
+  du testeur** - il refuse, un pré-requis manque, il attend un accord, il s'apprête à écrire
+  hors du repo - il **termine par une question `AskUserQuestion`** dont les options sont les
+  **issues réellement praticables ici et maintenant**, la plus sensée en premier avec la
+  mention "(recommandé)". Un refus n'est pas une impasse : c'est un choix entre plusieurs
+  façons d'avancer. Les options d'un refus sont **actionnables** - lancer le skill amont sur
+  telle feature, poser le terrain manquant, prendre une autre feature, ouvrir ce qui existe
+  déjà - **jamais** un simple "OK j'ai compris". Le refus reste un refus (rien n'est écrit),
+  mais il se termine par la question, pas par un point final.
+  Seules fins **sans** question : la fin normale d'un skill (elle a déjà sa ligne "Étape
+  suivante", cf. `ux-conventions.md`) et une erreur technique que seul le testeur peut lever.
 - **Une question à la fois.** Poser **une seule** question par message, puis **attendre** la réponse
   de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs points d'un
   coup, **même si une source (plan, résultat d'exécution, spécification) semble tout répondre** - une

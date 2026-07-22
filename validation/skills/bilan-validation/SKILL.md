@@ -18,8 +18,19 @@ inscrire le verdict humain dans le rapport et dans Linear.
 
 ## Pré-requis (vérification silencieuse)
 - Le plan existe (`validation-out/<feature>/plan-de-test.md`) et au moins un fichier de
-  résultats existe (`validation-out/<feature>/resultats/execution-*.md`) ; sinon refuser en
-  nommant le fichier manquant et renvoyer vers le skill amont.
+  résultats existe (`validation-out/<feature>/resultats/execution-*.md`). **Sinon : refuser en
+  nommant le fichier manquant, puis - sans jamais s'arrêter là - poser une question
+  `AskUserQuestion` avec les issues réellement praticables** (cf. la règle "jamais de
+  cul-de-sac" de `references/interactive-loop.md`), établies à partir de ce qui existe
+  vraiment dans `validation-out/` et `specs/` :
+  - une feature a déjà son plan mais aucun résultat -> "jouer l'exécution de <feature>"
+    (`/validation:execution-validation`), en premier avec la mention "(recommandé)" ;
+  - une feature n'a pas encore de plan -> "écrire le plan de test de <feature>"
+    (`/validation:plan-de-validation`) ;
+  - une autre feature a bien ses deux fichiers -> "assembler plutôt le bilan de <feature>",
+    et le skill reprend son cours sur celle-là ;
+  - rien n'existe encore dans `validation-out/` -> proposer la feature la plus pertinente à
+    démarrer, une option par feature livrée.
 - S'il y a plusieurs fichiers de résultats, demander lequel fait foi **avec `AskUserQuestion`**
   (une option par fichier, le plus récent en premier avec la mention "(recommandé)", chaque
   option datée et accompagnée de l'outil utilisé et de sa synthèse chiffrée).
@@ -86,10 +97,12 @@ description, mais **le skill ne prononce jamais le verdict lui-même** : il atte
    section "Verdict de recette" du rapport - cette section n'existe remplie que par ce geste ;
 2. **Linear** : déposer un commentaire de synthèse sur le ticket `Feature` de la feature
    (résolu par le numéro en tête de titre via `list_issues({team, label Feature})` ;
-   `save_comment` avec le verdict, les compteurs et le chemin du rapport). Si le testeur
-   souhaite aussi changer le statut du ticket, le faire **sur confirmation explicite
-   seulement**, par le nom d'état résolu via `list_issue_statuses` et en vérifiant l'état
-   retourné (un état non résolu est ignoré en silence par Linear). Si le MCP `linear-prism`
+   `save_comment` avec le verdict, les compteurs et le chemin du rapport). Le **statut** du
+   ticket, lui, n'est **jamais déduit du verdict** : poser une question `AskUserQuestion` -
+   "laisser le statut tel quel" (en premier avec la mention "(recommandé)") ou passer le ticket
+   à l'un des états réellement disponibles, une option par état pertinent résolu via
+   `list_issue_statuses`. N'appliquer que sur ce choix explicite, et vérifier l'état retourné
+   (un état non résolu est ignoré en silence par Linear). Si le MCP `linear-prism`
    est muet : le verdict reste dans le rapport, signaler que le commentaire Linear attendra
    et afficher l'installation du MCP (section Linear de `references/regles-validation.md`).
 Le verdict ne s'écrit **jamais dans le manifeste** : le rapport committé voyage avec le repo,
@@ -114,7 +127,9 @@ la seule présence du titre de section ne suffit pas.)
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, en la
   cadrant sur le verdict qui vient d'être prononcé (cf. la section 5 de
   `references/ux-conventions.md`).
-- **Questions à réponses énumérables : selecteur de choix** (`AskUserQuestion`) - fichier de
-  résultats, nature de chaque écart, verdict de recette (cf. `references/interactive-loop.md`).
+- **Jamais de cul-de-sac, questions à choix pour l'énumérable.** Fichier de résultats, nature
+  de chaque écart, verdict de recette et changement de statut Linear se demandent avec
+  `AskUserQuestion` ; **un refus se termine par une question** proposant les issues réellement
+  praticables (cf. `references/interactive-loop.md`).
 
 Étape suivante : selon le verdict - livraison validée, `/validation:plan-de-validation` pour recetter la feature livrée suivante. Validée avec réserves ou refusée : `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` pour les écarts triés qui n'ont pas encore leur ticket, puis `/maintenance:correction-anomalie` (ou `/maintenance:realisation-evolution`) côté développeur, et enfin `/validation:execution-validation` pour rejouer les cas en échec et lever les réserves.
