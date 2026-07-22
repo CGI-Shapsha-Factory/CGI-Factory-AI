@@ -30,9 +30,9 @@ sur un chemin relatif, l'écrire en **absolu à partir du cwd**.
 validation peut être menée par **une autre personne**, sur une **autre machine**, à partir d'un
 **clone frais** où **aucun `.factory/` n'existe encore**. Ce skill ne présuppose donc
 **jamais** un `.factory/` déjà présent : **avant toute autre chose**, il (re)pose dans
-`.factory/validation/` les quatre gabarits (`plan-de-test.md`, `mission-cowork.md`,
-`rapport-de-recette.md`, `scenario-rejouable.md`) et le bloc `validation` du manifeste
-`manifest.json` (créé s'il manque).
+`.factory/validation/` les cinq gabarits (`plan-de-test.md`, `execution-resultats.md`,
+`mission-cowork.md`, `rapport-de-recette.md`, `scenario-rejouable.md`) et le bloc `validation`
+du manifeste `manifest.json` (créé s'il manque).
 
 ## Setup inconditionnel + état de l'amont (jamais bloquant)
 **Ce skill ne bloque jamais.** L'installation des gabarits et l'amorçage du bloc `validation`
@@ -47,8 +47,9 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
 
 ## Procédure
 1. **Installer les gabarits** dans `.factory/validation/` (copier depuis le plugin
-   `templates/`) : `plan-de-test.md`, `mission-cowork.md`, `rapport-de-recette.md`,
-   `scenario-rejouable.md`. **Toujours écraser ceux qui existent déjà** : ils sont
+   `templates/`) : `plan-de-test.md`, `execution-resultats.md`, `mission-cowork.md`,
+   `rapport-de-recette.md`, `scenario-rejouable.md`. **Toujours écraser ceux qui existent
+   déjà** : ils sont
    git-ignorés, régénérables, et n'ont aucune valeur propre - un projet initialisé avec une
    version antérieure du plugin garderait sinon un gabarit périmé et continuerait de produire
    des artefacts à l'ancienne forme. Créer `validation-out/` s'il n'existe pas.

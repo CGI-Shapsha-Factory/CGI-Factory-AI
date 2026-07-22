@@ -30,7 +30,8 @@ import os
 import re
 import sys
 
-GABARITS = ("plan-de-test.md", "mission-cowork.md", "rapport-de-recette.md", "scenario-rejouable.md")
+GABARITS = ("plan-de-test.md", "execution-resultats.md", "mission-cowork.md",
+            "rapport-de-recette.md", "scenario-rejouable.md")
 
 
 def _manifest_path(argv):

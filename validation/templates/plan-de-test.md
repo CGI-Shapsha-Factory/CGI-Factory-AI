@@ -13,7 +13,9 @@
      vit uniquement dans la table "Critères à clarifier" (pas de ligne vide ailleurs).
      Le plan est AUTO-PORTANT : un exécuteur qui n'a que ce fichier (Cowork, une autre
      session) doit pouvoir tout jouer. Ne rien inventer : les données de test viennent du
-     testeur (boucle interactive), une donnée absente s'omet. -->
+     testeur (boucle interactive), une donnée absente s'omet.
+     FORME DES TABLES (séparateur `|---|` entre chaque ligne de données, étapes en <br>,
+     cellule vide = "-") : section 4bis de `ux-conventions.md`. -->
 
 ## Feature
 
@@ -40,6 +42,7 @@ de test fournies par le testeur - jamais de données réelles, jamais de valeur 
 | Cas | Ce qui est vérifié | Statut |
 |---|---|---|
 | TC-[numéro]-001 | (la phrase : ce que le cas prouve, ex. "une note saisie apparait dans la liste et le compteur augmente") | testable |
+|---|---|---|
 | TC-[numéro]-002 | (...) | à clarifier |
 
 ## Déroulé des cas
@@ -56,6 +59,8 @@ de test fournies par le testeur - jamais de données réelles, jamais de valeur 
 | Cas | Préconditions | Étapes | Résultat attendu | Source |
 |---|---|---|---|---|
 | TC-[numéro]-001 | (l'état de départ : compte connecté, données présentes...) | 1. (action concrète : ouvrir, cliquer, saisir)<br>2. (...) | (ce qui doit être observable à l'écran, factuel et vérifiable - jamais un jugement de valeur) | (référence compacte, ex. "US1 sc.1 / FR-001") |
+|---|---|---|---|---|
+| TC-[numéro]-002 | (...) | 1. (...)<br>2. (...) | (...) | (référence compacte) |
 
 ## Critères à clarifier
 

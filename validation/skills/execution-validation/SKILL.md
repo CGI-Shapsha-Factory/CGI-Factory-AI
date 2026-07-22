@@ -140,15 +140,28 @@ seront apparus.
 
 ### Étape 3 : écrire les résultats (voies en session)
 Un fichier `validation-out/<feature>/resultats/execution-<JJ-MM>.md` (si le nom du jour existe
-déjà, suffixer `-2`, `-3`... - **on n'écrase jamais une exécution**). En tête : l'adresse
-testée et l'outil. Puis un bloc par cas, dans l'ordre du plan :
-- **Verdict** : OK / KO / NON TESTABLE (avec la raison) ;
-- **Déroulé effectif** : les étapes réellement jouées, numérotées, en langage naturel ;
-- **Preuves** : les captures référencées (chemin relatif) ;
-- sur KO : **Constaté vs attendu** (factuel) + ce que la console / le réseau montrent
-  d'anormal.
-En fin de fichier, une ligne de synthèse (cas OK / KO / NON TESTABLE), restituée aussi au
-testeur en prose.
+déjà, suffixer `-2`, `-3`... - **on n'écrase jamais une exécution**), **depuis le gabarit**
+`.factory/validation/execution-resultats.md` - celui du **plugin** fait foi, remplacer la copie
+si elle en diffère (cf. `references/regles-validation.md`).
+
+**Tout est en tables**, quatre sections dans cet ordre (forme des tables - séparateurs entre
+lignes, étapes en `<br>`, cellule vide = `-` : section 4bis de `references/ux-conventions.md`) :
+1. **Contexte d'exécution** - une ligne : adresse testée, outil, plan joué, nombre de cas.
+2. **Synthèse** - trois lignes (OK / KO / NON TESTABLE) avec leur compte et les identifiants
+   concernés. **Elle est en haut** : le testeur doit savoir en deux secondes ce qui casse, sans
+   dérouler le fichier.
+3. **Résultats par cas** - `Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve` ;
+   **une ligne par cas du plan, dans l'ordre, aucun cas omis** (y compris les NON TESTABLE). Le
+   **déroulé effectif** (étapes réellement jouées, numérotées, séparées par `<br>`) est requis
+   **même quand le cas passe** : c'est la matière des scénarios rejouables. La colonne
+   **Constaté** reste **une phrase** factuelle.
+4. **Écarts (KO et NON TESTABLE)** - `Cas | Attendu | Constaté | Console et réseau` : le
+   diagnostic détaillé vit **ici**, pas dans la table précédente. Pour un NON TESTABLE,
+   "Constaté" porte la **raison** de la non-testabilité. **Tous les cas OK** : supprimer la
+   table et écrire "Aucun - tous les cas sont OK."
+
+La synthèse est restituée **aussi au testeur en prose** (jamais un tableau de booléens à
+l'écran).
 
 ## Règles de fiabilité (non négociables)
 Cf. `references/regles-validation.md` :

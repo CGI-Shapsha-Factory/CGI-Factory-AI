@@ -45,22 +45,57 @@
 ## Format de résultats imposé
 
 Écrire un fichier `validation-out/[feature]/resultats/execution-<JJ-MM>.md` (jour-mois du jour
-de l'exécution ; si un fichier de ce nom existe déjà, suffixer `-2`, `-3`...) :
+de l'exécution ; si un fichier de ce nom existe déjà, suffixer `-2`, `-3`...).
 
-- En tête : l'adresse testée et l'outil utilisé ("Claude Cowork + extension Chrome").
-- Puis **un bloc par cas de test**, dans l'ordre du plan :
+**Tout est en tables** - c'est un format imposé, il sera relu par un autre outil. Règles de
+forme, dans toutes les tables ci-dessous :
+- une **ligne de séparation** `|---|---|...|` (autant de colonnes que l'en-tête) **entre chaque
+  ligne de données** ; jamais après la dernière ligne, jamais juste après l'en-tête ;
+- les **étapes dans une cellule** sont numérotées et séparées par `<br>` (`1. ...<br>2. ...`),
+  jamais un pavé de texte ;
+- une **cellule sans valeur** porte un tiret `-`, jamais du blanc.
+
+Quatre sections, dans cet ordre :
 
 ```
-## TC-[feature]-NNN - [intitulé du cas]
-- Verdict : OK / KO / NON TESTABLE (raison)
-- Déroulé effectif :
-  1. ...
-  2. ...
-- Preuves : resultats/preuves/TC-[feature]-NNN-1.png
-- Constaté vs attendu (sur KO seulement) : ...
+# Résultats d'exécution : [feature] ([numéro]) - [JJ-MM]
+
+## Contexte d'exécution
+
+| Adresse testée | Outil | Plan joué | Cas joués |
+|---|---|---|---|
+| [URL] | Claude Cowork + extension Chrome | `validation-out/[feature]/plan-de-test.md` | [n] |
+
+## Synthèse
+
+| Verdict | Nombre | Cas concernés |
+|---|---|---|
+| OK | [n] | [identifiants, ou -] |
+|---|---|---|
+| KO | [n] | [identifiants, ou -] |
+|---|---|---|
+| NON TESTABLE | [n] | [identifiants, ou -] |
+
+## Résultats par cas
+
+| Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve |
+|---|---|---|---|---|---|
+| TC-[feature]-001 | [intitulé du plan] | OK | 1. ...<br>2. ... | [ce qui a été observé] | `preuves/TC-[feature]-001-1.png` |
+|---|---|---|---|---|---|
+| TC-[feature]-002 | [...] | KO | 1. ...<br>2. ... | [ce qui a été observé] | `preuves/TC-[feature]-002-1.png` |
+
+## Écarts (KO et NON TESTABLE)
+
+| Cas | Attendu | Constaté | Console et réseau |
+|---|---|---|---|
+| TC-[feature]-002 | [le résultat attendu, repris du plan] | [ce qui se produit vraiment] | [erreurs, requêtes en échec ; - si rien] |
 ```
 
-- En fin de fichier : une ligne de synthèse (nombre de cas OK, KO, NON TESTABLE).
+- **Une ligne par cas du plan**, dans l'ordre, **aucun cas omis** - y compris les NON TESTABLE.
+- Le **déroulé effectif est requis même pour un cas OK** : il sert à rejouer le scénario plus tard.
+- La colonne **Constaté** de la table par cas reste **une phrase** ; le détail d'un échec va dans
+  la table **Écarts**.
+- **Si tous les cas sont OK** : supprimer la table Écarts et écrire "Aucun - tous les cas sont OK."
 
 ## Après la mission
 

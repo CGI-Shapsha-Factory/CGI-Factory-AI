@@ -4,27 +4,30 @@
      pour chaque cas passé OK. C'est le capital de NON-RÉGRESSION de la feature : le déroulé
      EFFECTIF (tel que joué, pas tel que prévu), en langage naturel auto-portant, rejouable par
      n'importe quel outil (extension Chrome, Playwright, Cowork). Cibler les éléments par leur
-     libellé visible, jamais par un sélecteur technique. -->
+     libellé visible, jamais par un sélecteur technique.
+     TOUT EST EN TABLES (forme : section 4bis de `ux-conventions.md` - une ligne de séparation
+     entre chaque ligne de données, cellule vide = "-"). Un fichier par cas OK, donc il y en a
+     beaucoup : il doit rester court et se lire d'un coup d'oeil. Contenu seul : aucune
+     provenance, aucun horodatage. -->
 
-## Ce que le scénario prouve
+## Identité
 
-(Le critère d'acceptation couvert, cité depuis la spécification, avec sa référence (user
-story, FR-xxx ou SC-xxx).)
+| Ce que le scénario prouve | Source | Préconditions et données |
+|---|---|---|
+| (le critère d'acceptation couvert, reformulé en une phrase française qui se lit sans rouvrir la spécification) | (référence compacte, ex. "US1 sc.1 / FR-003") | (l'état de départ exact et les données de test du passage OK : compte, jeu de données, page de départ) |
 
-## Préconditions et données
+## Déroulé (tel que joué)
 
-(L'état de départ exact et les données de test utilisées lors du passage OK : compte, jeu de
-données, page de départ.)
+<!-- Une ligne par étape réellement jouée, dans l'ordre, reprise du déroulé effectif des
+     résultats d'exécution. "Résultat observable" ne se remplit que pour les étapes qui
+     produisent quelque chose de vérifiable ; sinon un tiret. La DERNIÈRE ligne porte le
+     résultat qui fait passer le scénario au vert. -->
 
-## Étapes (déroulé effectif)
-
-1. (action réellement jouée, en langage naturel : "ouvrir la page ..., cliquer sur le bouton
-   '...', saisir '...' dans le champ '...'")
-2. (...)
-
-## Résultat attendu observable
-
-(Ce qui doit apparaître à l'écran pour que le scénario soit toujours vert. Factuel.)
+| # | Action | Résultat observable |
+|---|---|---|
+| 1 | (action en langage naturel : ouvrir la page ..., cliquer sur le bouton "...", saisir "..." dans le champ "...") | `-` |
+|---|---|---|
+| 2 | (...) | (ce qui apparait à l'écran, factuel) |
 
 ## Rejouer ce scénario
 

@@ -149,13 +149,29 @@ Marche à suivre affichée au testeur :
 ## Le contrat de sortie commun (quel que soit l'outil)
 Un fichier de résultats par exécution : `validation-out/<feature>/resultats/execution-<JJ-MM>.md`
 (si un fichier du même jour existe déjà, suffixer `-2`, `-3`... - on n'écrase jamais une
-exécution). Contenu : l'adresse testée, l'outil utilisé, puis **un bloc par cas de test** :
-- `## TC-<feature>-NNN - <intitulé>`
-- **Verdict** : OK / KO / NON TESTABLE (avec la raison pour NON TESTABLE)
-- **Déroulé effectif** : les étapes réellement jouées, numérotées, en langage naturel (c'est
-  la matière des scénarios rejouables)
-- **Preuves** : les captures d'écran référencées (chemin relatif)
-- sur KO : **Constaté vs attendu** (factuel) + ce que la console / le réseau montrent d'anormal
+exécution). **Gabarit de référence : `execution-resultats.md`.** C'est ce contrat qui permet au
+rapport de recette de lire les résultats **sans savoir qui a exécuté** : les trois voies
+produisent le **même fichier**.
+
+**Tout est en tables** (forme : section 4bis de `ux-conventions.md` - une ligne de séparation
+entre chaque ligne de données, étapes en `<br>`, cellule vide = `-`), quatre sections :
+
+| Section | Colonnes | Ce qu'elle porte |
+|---|---|---|
+| Contexte d'exécution | Adresse testée, Outil, Plan joué, Cas joués | une seule ligne |
+|---|---|---|
+| Synthèse | Verdict, Nombre, Cas concernés | trois lignes (OK / KO / NON TESTABLE), **en haut du fichier** |
+|---|---|---|
+| Résultats par cas | Cas, Intitulé, Verdict, Déroulé effectif, Constaté, Preuve | **une ligne par cas du plan, dans l'ordre, aucun omis** |
+|---|---|---|
+| Écarts (KO et NON TESTABLE) | Cas, Attendu, Constaté, Console et réseau | le diagnostic détaillé ; supprimée si tous les cas sont OK |
+
+Deux règles qui portent l'aval :
+- le **déroulé effectif** (étapes réellement jouées, numérotées, séparées par `<br>`) est requis
+  **pour tous les cas, y compris OK** : c'est la matière première des scénarios rejouables ;
+- la colonne **Constaté** de la table principale reste **une phrase** ; l'attendu contredit, la
+  console et le réseau vont dans la table **Écarts** - c'est ce qui garde la vue par cas
+  scannable.
 
 ## Règles de fiabilité (les trois voies)
 Cf. `regles-validation.md`, section "Fiabilité d'exécution" : relance unique avec tri

@@ -82,6 +82,39 @@ un simple récapitulatif de session. Un tableau doit se lire **sans rouvrir la s
 Les identifiants de cas `TC-...` restent affichés (cf. section 1bis) : ce sont des repères
 partagés, pas des codes internes.
 
+## 4bis. Forme des tables écrites dans les artefacts
+La section 4 dit **ce qu'on met** dans une table ; celle-ci dit **comment on l'écrit**. Elle
+s'applique à **toute** table d'un fichier produit par la validation (plan de test, résultats
+d'exécution, rapport de recette, scénarios rejouables). But : que le fichier reste lisible
+**en Markdown brut**, pas seulement une fois rendu - une cellule de déroulé peut faire dix
+lignes à l'écran, et sans repère on ne voit plus où un cas finit et où le suivant commence.
+
+- **Une ligne de séparation entre chaque ligne de données** : `|---|---|...|`, avec **autant de
+  colonnes que l'en-tête**. On en met entre deux lignes de données, **jamais** après la
+  dernière, jamais juste après l'en-tête (la ligne de délimitation Markdown y est déjà) :
+
+  ```
+  | Cas | Verdict | Preuve |
+  |---|---|---|
+  | TC-001-001 | OK | preuves/TC-001-001-1.png |
+  |---|---|---|
+  | TC-001-002 | OK | preuves/TC-001-002-1.png |
+  ```
+
+  Ces lignes sont **décoratives** : les garde-fous lisent les lignes de cas (`TC-NNN-NNN`) et
+  les ignorent. Une table d'une seule ligne de données n'a donc **aucun** séparateur.
+- **Étapes et énumérations dans une cellule** : numérotées et séparées par `<br>`
+  (`1. ...<br>2. ...`), une action par ligne visible - **jamais un pavé de texte** dans une
+  cellule.
+- **Cellule sans valeur** : un tiret `-`. Jamais une cellule blanche (on ne distingue pas
+  "rien à dire" d'un oubli).
+- **Table qui n'aurait aucune ligne** : la **supprimer** et écrire une phrase à sa place
+  ("Aucun - tous les critères sont testables.", "Aucun - tous les cas sont OK."). Jamais une
+  table à en-tête seul, jamais une ligne de placeholder.
+- **Pas d'alignement à la largeur** : on n'aligne pas les colonnes par des espaces. Le calcul
+  serait à refaire à chaque écriture et casserait dès qu'une cellule s'allonge ; ce sont les
+  séparateurs qui portent la lisibilité.
+
 ## 5. Une ligne "étape suivante" à la fin de chaque skill
 Terminer chaque exécution par exactement une phrase, **toujours affichée** (elle n'est jamais
 omise, même quand le skill s'arrête tôt ou refuse) :

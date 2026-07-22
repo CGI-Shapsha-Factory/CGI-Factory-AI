@@ -21,7 +21,9 @@
 
 | Ce qui est vérifié | Cas de test | Verdict | Preuve | Source | Décision sur l'écart |
 |---|---|---|---|---|---|
-| (la phrase du plan, ex. "une note saisie apparait dans la liste") | TC-[feature]-001 | OK / KO / NON TESTABLE | (capture) | (référence compacte, ex. "US1 sc.1 / FR-003") | (rien si OK ; sinon : anomalie [identifiant Linear] / évolution [identifiant Linear] / clarifié en session / suivi [identifiant Linear]) |
+| (la phrase du plan, ex. "une note saisie apparait dans la liste") | TC-[feature]-001 | OK | (capture) | (référence compacte, ex. "US1 sc.1 / FR-003") | `-` |
+|---|---|---|---|---|---|
+| (la phrase du plan) | TC-[feature]-002 | KO / NON TESTABLE | (capture) | (référence compacte) | (anomalie [identifiant Linear] / évolution [identifiant Linear] / clarifié en session / suivi [identifiant Linear]) |
 
 ## Synthèse
 
@@ -30,18 +32,17 @@ nature, ce que ça dit de la livraison. Factuel.)
 
 ## Écarts et suites données
 
-<!-- Un bloc par écart (verdict KO ou NON TESTABLE), rempli au fil du tri avec le testeur.
-     La nature (anomalie / évolution / flou) est une décision HUMAINE. Si un ticket Linear a
-     été créé (via /maintenance:creation-anomalie ou /maintenance:creation-evolution), citer son
-     identifiant natif et son lien. -->
+<!-- Une ligne par écart (verdict KO ou NON TESTABLE), remplie au fil du tri avec le testeur.
+     La nature (anomalie / évolution / flou) est une décision HUMAINE : ne jamais la préremplir
+     de sa propre initiative. Si un ticket Linear a été créé (via /maintenance:creation-anomalie
+     ou /maintenance:creation-evolution), citer son identifiant natif et son lien.
+     Si aucun écart : SUPPRIMER la table et écrire "Aucun - tous les cas sont OK." -->
 
-### [TC-...-NNN] - [intitulé]
-
-- **Constaté vs attendu** : (factuel, depuis les résultats d'exécution)
-- **Nature retenue** : (anomalie : le logiciel ne respecte pas sa spécification / évolution :
-  la spécification est fausse ou incomplète / critère flou : à clarifier)
-- **Suite donnée** : (le ticket Linear créé avec son identifiant, ou la clarification actée
-  en session, ou la décision de ne pas donner suite)
+| Cas | Constaté vs attendu | Nature retenue | Suite donnée |
+|---|---|---|---|
+| TC-[feature]-002 | (factuel, depuis les résultats d'exécution : ce qui était attendu, ce qui se produit) | (anomalie : le logiciel ne respecte pas sa spécification / évolution : la spécification est fausse ou incomplète / critère flou : à clarifier) | (le ticket Linear avec son identifiant et son lien, ou la clarification actée en session, ou la décision de ne pas donner suite) |
+|---|---|---|---|
+| TC-[feature]-007 | (...) | (...) | (...) |
 
 ## Scénarios de non-régression
 
