@@ -69,8 +69,18 @@ confirmer" - jamais de variantes anglaises (`[TBD]`...).
 ## 4. Restitutions en prose
 Les bilans (état d'une exécution, tri d'un écart, synthèse de recette) se restituent en
 **prose claire** (ce qui est établi, ce qui reste, la prochaine étape). Un tableau n'est
-utilisé que pour des listes courtes et énumérables (ex. la matrice critère -> cas -> verdict
-du rapport, ou le récapitulatif de la porte de recette).
+utilisé que pour des listes courtes et énumérables (ex. la matrice du rapport, ou le
+récapitulatif de la porte de recette).
+
+**Dans tout tableau affiché, une ligne se nomme par une phrase, jamais par une référence de
+spécification nue.** La colonne qui identifie une ligne pour l'humain dit **ce qui est
+vérifié**, en français (ex. "une note saisie apparait dans la liste et le compteur augmente").
+Les références de la spécification (`US1 sc.1`, `FR-001`, `SC-002`) ne sont **jamais seules**
+dans une colonne visible : elles accompagnent la phrase, dans une colonne "Source", et
+seulement là où la traçabilité l'exige (le plan de test, la matrice du rapport) - jamais dans
+un simple récapitulatif de session. Un tableau doit se lire **sans rouvrir la spécification**.
+Les identifiants de cas `TC-...` restent affichés (cf. section 1bis) : ce sont des repères
+partagés, pas des codes internes.
 
 ## 5. Une ligne "étape suivante" à la fin de chaque skill
 Terminer chaque exécution par exactement une phrase, **toujours affichée** (elle n'est jamais

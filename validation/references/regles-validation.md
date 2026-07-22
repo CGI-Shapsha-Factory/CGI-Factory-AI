@@ -24,8 +24,10 @@ ne part seule sur un push, un merge ou un déploiement.
 - **Un cas de test par critère d'acceptation** de la spécification (`specs/<feature>/spec.md` :
   scénarios Given/When/Then des user stories, exigences fonctionnelles, critères de succès
   mesurables observables dans le navigateur, cas limites). Identifiant stable
-  `TC-<feature>-NNN`, et chaque cas **cite son critère source** : c'est la colonne vertébrale
-  du rapport tracé exigence par exigence.
+  `TC-<feature>-NNN`, et chaque **ligne de cas porte sa Source** (référence compacte du
+  critère, ex. `US1 sc.1 / FR-001`) : c'est la colonne vertébrale du rapport tracé exigence
+  par exigence. Le plan est en tableaux : **une ligne = un scénario**, le critère n'y est
+  jamais recopié verbatim, et ce qui nomme la ligne pour l'humain est une phrase française.
 - **Un critère non testable n'est jamais interprété.** Ambigu ("rapide", "convivial"), non
   observable dans le navigateur, ou impossible sans donnée manquante : il est marqué
   `A CLARIFIER` dans le plan, avec la raison, et le testeur décide de la suite (clarifier en

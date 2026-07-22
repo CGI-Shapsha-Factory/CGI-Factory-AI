@@ -43,7 +43,9 @@ inscrire le verdict humain dans le rapport et dans Linear.
 
 ### Étape 1 : assembler la matrice de traçabilité
 Depuis le gabarit `.factory/validation/rapport-de-recette.md` : une ligne **par critère** du
-plan (critère source -> cas de test -> verdict de l'exécution -> preuve). Aucun critère ne
+plan, dans l'ordre des colonnes du gabarit : **ce qui est vérifié** (la phrase reprise de la
+vue d'ensemble du plan, jamais une référence de spécification nue), le cas de test, le verdict
+de l'exécution, la preuve, puis la **Source** (référence compacte) et la décision. Aucun critère ne
 disparaît : un cas absent des résultats apparaît "non exécuté" et compte comme un écart à
 trier. Si un rapport existe déjà pour la feature, appliquer la porte de régénération
 (repartir de zéro ou archiver sous `_archives/`). Écrire aussi la synthèse chiffrée, en prose.

@@ -75,17 +75,31 @@ Lire `specs/<feature>/spec.md` en entier et inventorier **tout ce qui est vérif
 Aucun critère n'est écarté en silence : ce qui ne devient pas un cas de test doit apparaître
 comme "à clarifier" avec sa raison.
 
-### Étape 3 : dériver un cas de test par critère
+### Étape 3 : dériver un cas de test par critère (une ligne de tableau par cas)
+Le plan est **entièrement en tableaux** (gabarit `.factory/validation/plan-de-test.md`) : un
+critère ne donne plus un bloc de texte mais **une ligne**. Il doit rester court et scannable -
+c'est le testeur qui le relit.
+
 Pour chaque critère, un cas `TC-<numéro>-NNN` où `<numéro>` est le **numéro de registre à 3
 chiffres** de la feature (ex. `TC-001-003` ; jamais le nom complet du dossier `specs/`),
-numéroté dans l'ordre des user stories, selon le gabarit
-`.factory/validation/plan-de-test.md` :
-- **Critère source cité** (la traçabilité du rapport en dépend) ;
+numéroté dans l'ordre des user stories :
+- **une ligne = un scénario, jamais deux** : un critère qui porte plusieurs scénarios
+  (`sc.1`, `sc.2`...) donne autant de lignes, chacune avec son identifiant, ses préconditions,
+  ses étapes et son résultat attendu. Jamais deux scénarios dans une cellule, jamais de
+  renvoi "voir le cas précédent" ;
 - le "Étant donné / quand / alors" traduit en **préconditions + étapes numérotées + résultat
   attendu observable** (des actions concrètes de navigateur : ouvrir, cliquer sur le bouton
-  "...", saisir "..." ; un résultat factuel à l'écran, jamais un jugement) ;
+  "...", saisir "..." ; un résultat factuel à l'écran, jamais un jugement). Les étapes d'une
+  cellule sont séparées par `<br>`, une étape par ligne visible ;
+- **le critère n'est jamais recopié mot pour mot** : la colonne **Source** porte la référence
+  compacte (ex. `US1 sc.1 / FR-001`) - c'est elle qui porte la traçabilité du rapport - et la
+  colonne **Ce qui est vérifié** de la vue d'ensemble porte une **phrase en français** qui se
+  lit sans rouvrir la spécification. Jamais l'inverse ;
+- les cas sont **regroupés par thème fonctionnel** : une sous-table sous "Déroulé des cas" par
+  user story ou par groupe de cas qui se jouent à la suite, avec un intitulé en clair ;
 - **critère non testable** (ambigu, non observable dans le navigateur, donnée manquante) :
-  statut **A CLARIFIER** avec la raison - **ne jamais interpréter** (cf.
+  statut **à clarifier**, avec sa raison, dans la **seule** table "Critères à clarifier" (pas
+  de ligne fantôme dans le déroulé) - **ne jamais interpréter** (cf.
   `references/regles-validation.md`).
 
 ### Étape 4 : compléter les données de test (boucle interactive)
@@ -103,8 +117,13 @@ indispensable). **Jamais de valeur inventée.**
 régénération a déjà été passée à l'étape 1bis si un plan existait).
 
 ### Étape 6 : relecture humaine + sort des critères à clarifier
-Afficher le récapitulatif (un tableau court : critère source -> cas de test -> testable ou à
-clarifier) et faire relire le plan par le testeur. Le sort de **chaque** critère à clarifier se
+Afficher le récapitulatif : un tableau court à **trois colonnes**, `Cas | Ce qui est vérifié |
+Statut`, où la colonne du milieu est **une phrase française décrivant ce que le cas prouve**
+(la même que dans la vue d'ensemble du plan). **Interdit** : une colonne dont la valeur est
+une référence de spécification nue du type `US1 sc.1 (FR-001, FR-004)` ou `SC-002` - le
+testeur ne peut pas savoir ce qui est testé sans rouvrir la spécification. Les références
+n'apparaissent pas dans ce récapitulatif : elles vivent dans la colonne Source du plan. Puis
+faire relire le plan par le testeur. Le sort de **chaque** critère à clarifier se
 demande **avec `AskUserQuestion`** (une question par critère, les trois options ci-dessous ;
 plusieurs critères peuvent être regroupés dans un même appel - cf.
 `references/interactive-loop.md`). Chaque question rappelle le critère concerné et la raison du
@@ -138,7 +157,13 @@ python <plugin>/scripts/check_validation.py manifest.json <feature>
 critère source.)
 
 ## Règles invariantes
-- **Un critère = un cas, cité.** Aucun critère écarté en silence, aucun cas sans source.
+- **Un critère = un cas, tracé.** Aucun critère écarté en silence, aucune ligne de cas sans
+  sa colonne Source remplie. Un critère à plusieurs scénarios donne autant de lignes.
+- **Un tableau se lit sans rouvrir la spécification.** Dans le plan comme à l'écran, ce qui
+  nomme une ligne pour l'humain est une phrase française ; la référence de spécification
+  reste dans la colonne Source.
+- **Le plan reste court.** Tableaux seulement, pas de citation verbatim du critère, pas de
+  ligne "sans objet".
 - **Jamais interpréter.** Un critère flou est marqué, discuté, ou tracé - jamais deviné.
 - **La spécification est en lecture seule.** Toute clarification vit dans le plan ; tout
   changement de critère passe par la maintenance (évolution, geste PO).

@@ -15,9 +15,13 @@
 
 ## Matrice de traçabilité (exigence par exigence)
 
-| Critère (source) | Cas de test | Verdict | Preuve | Décision sur l'écart |
-|---|---|---|---|---|
-| (référence + résumé du critère, ex. "FR-003 : ...") | TC-[feature]-001 | OK / KO / NON TESTABLE | (capture) | (rien si OK ; sinon : anomalie [identifiant Linear] / évolution [identifiant Linear] / clarifié en session / suivi [identifiant Linear]) |
+<!-- Une ligne par cas de test, dans l'ordre du plan. "Ce qui est vérifié" est une PHRASE en
+     français (reprise du plan de test) : elle se lit sans rouvrir la spécification. La
+     référence de spécification vit dans la colonne "Source", jamais seule en tête de ligne. -->
+
+| Ce qui est vérifié | Cas de test | Verdict | Preuve | Source | Décision sur l'écart |
+|---|---|---|---|---|---|
+| (la phrase du plan, ex. "une note saisie apparait dans la liste") | TC-[feature]-001 | OK / KO / NON TESTABLE | (capture) | (référence compacte, ex. "US1 sc.1 / FR-003") | (rien si OK ; sinon : anomalie [identifiant Linear] / évolution [identifiant Linear] / clarifié en session / suivi [identifiant Linear]) |
 
 ## Synthèse
 

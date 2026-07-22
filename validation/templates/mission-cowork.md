@@ -15,8 +15,10 @@
 
 - **Environnement de recette** : [URL de l'application déployée]
 - **Plan de test à jouer** : `validation-out/[feature]/plan-de-test.md` (dans ce dossier de
-  projet ; chaque cas y est numéroté TC-[feature]-NNN avec ses préconditions, ses étapes et
-  son résultat attendu)
+  projet). Le plan est un **tableau** : sous "Déroulé des cas", une **ligne par cas** numéroté
+  TC-[feature]-NNN, avec ses colonnes Préconditions, Étapes, Résultat attendu et Source. Les
+  étapes d'une cellule sont séparées par `<br>` et se jouent **dans l'ordre**. Les cas listés
+  sous "Critères à clarifier" ne se jouent pas : ils sortent NON TESTABLE.
 - **Comptes et données de test** : ceux de la section "Pré-requis et données de test" du plan,
   et uniquement ceux-là
 

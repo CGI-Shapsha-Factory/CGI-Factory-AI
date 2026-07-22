@@ -48,6 +48,56 @@ def _project_root(manifest_path):
     return root
 
 
+CAS_RE = re.compile(r"^\|\s*(TC-\d{3}-\d{3})\s*\|(.*)$", re.MULTILINE)
+
+
+def _section(contenu, titre_regex):
+    """Contenu d'une section `## <titre>` jusqu'au prochain `## ` (chaine vide si absente)."""
+    match = re.search(rf"^##\s+{titre_regex}\s*$(.*?)(?=^##\s|\Z)", contenu,
+                      flags=re.MULTILINE | re.DOTALL)
+    return match.group(1) if match else ""
+
+
+def _lignes_tracees(section):
+    """Identifiants des cas dont la derniere cellule (Source) est remplie."""
+    traces = set()
+    for cas, reste in CAS_RE.findall(section):
+        cellules = [c.strip() for c in reste.rstrip().rstrip("|").split("|")]
+        if cellules and cellules[-1]:
+            traces.add(cas)
+    return traces
+
+
+def _check_plan(contenu, feature, problems):
+    """Tracabilite du plan de test : forme tableau, avec repli sur l'ancienne forme en blocs."""
+    vue = _section(contenu, r"Vue d'ensemble")
+    if vue.strip():
+        cas = [c for c, _ in CAS_RE.findall(vue)]
+        if not cas:
+            problems.append(
+                f"plan de test sans aucun cas de test (validation-out/{feature}/plan-de-test.md)")
+            return
+        traces = _lignes_tracees(_section(contenu, r"D[eé]roul[eé] des cas"))
+        traces |= _lignes_tracees(_section(contenu, r"Crit[eè]res [aà] clarifier"))
+        orphelins = [c for c in cas if c not in traces]
+        if orphelins:
+            problems.append(
+                f"tracabilite rompue: {len(orphelins)} cas sans source ({', '.join(orphelins[:5])}"
+                f"{'...' if len(orphelins) > 5 else ''}) - chaque ligne de cas doit porter sa Source")
+        return
+
+    # Repli : plans ecrits avant le passage aux tableaux (un bloc `### TC-` par cas).
+    cas = re.findall(r"^###\s+TC-", contenu, flags=re.MULTILINE)
+    sources = re.findall(r"^\s*-\s+\*\*Crit[eè]re source\*\*", contenu, flags=re.MULTILINE)
+    if not cas:
+        problems.append(
+            f"plan de test sans aucun cas de test (validation-out/{feature}/plan-de-test.md)")
+    elif len(sources) < len(cas):
+        problems.append(
+            f"tracabilite rompue: {len(cas)} cas de test mais {len(sources)} criteres sources cites "
+            f"(chaque cas doit citer son critere)")
+
+
 def _check_feature(root, feature, problems):
     """Controles de tracabilite des artefacts d'une feature."""
     fdir = os.path.join(root, "validation-out", feature)
@@ -59,15 +109,7 @@ def _check_feature(root, feature, problems):
 
     with open(plan, encoding="utf-8-sig") as f:
         contenu = f.read()
-    cas = re.findall(r"^###\s+TC-", contenu, flags=re.MULTILINE)
-    sources = re.findall(r"^\s*-\s+\*\*Crit[eè]re source\*\*", contenu, flags=re.MULTILINE)
-    if not cas:
-        problems.append(
-            f"plan de test sans aucun cas de test (validation-out/{feature}/plan-de-test.md)")
-    elif len(sources) < len(cas):
-        problems.append(
-            f"tracabilite rompue: {len(cas)} cas de test mais {len(sources)} criteres sources cites "
-            f"(chaque cas doit citer son critere)")
+    _check_plan(contenu, feature, problems)
 
     rapport = os.path.join(fdir, "rapport-de-recette.md")
     if os.path.isfile(rapport):

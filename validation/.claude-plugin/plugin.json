@@ -1,6 +1,6 @@
 {
   "name": "validation",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Validation fonctionnelle de la Factory (recette fonctionnelle d'une feature livrée) : dérive un plan de test depuis les critères d'acceptation de la spécification (un cas par critère, critère non testable marqué à clarifier, jamais interprété), fait exécuter le plan dans le navigateur contre l'environnement de recette (extension Chrome en priorité, MCP Playwright en repli, ou mission différée pour Claude Cowork), capture le déroulé en scénarios rejouables pour la non-régression, et produit un rapport de recette tracé exigence par exigence. Le tri des écarts distingue le bug (renvoi vers /maintenance:creation-anomalie) de la spécification en cause (renvoi vers /maintenance:creation-evolution) ; le verdict de la porte de recette reste humain. Toute question passe par une question à choix (recommandation en premier, saisie libre toujours ouverte), y compris les réponses libres comme l'adresse de recette. 4 skills en français (validation-init, plan-de-validation, execution-validation, rapport-de-recette).",
   "author": {
     "name": "IA Factory"
