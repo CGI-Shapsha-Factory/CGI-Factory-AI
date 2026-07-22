@@ -2,7 +2,7 @@
 """Garde-fou deterministe (sans IA) de la validation fonctionnelle.
 
 La validation produit des artefacts commites dans validation-out/<feature>/ (plan de test,
-resultats d'execution, rapport de recette, scenarios rejouables) ; le verdict humain vit dans
+resultats d'execution, rapport de recette) ; le verdict humain vit dans
 le rapport et dans Linear, jamais dans le manifeste. Ce garde-fou valide le TERRAIN (manifeste
 + gabarits) et, si une feature est passee en argument, la TRACABILITE de ses artefacts.
 
@@ -31,7 +31,7 @@ import re
 import sys
 
 GABARITS = ("plan-de-test.md", "execution-resultats.md", "mission-cowork.md",
-            "rapport-de-recette.md", "scenario-rejouable.md")
+            "rapport-de-recette.md")
 
 
 def _manifest_path(argv):

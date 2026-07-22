@@ -9,8 +9,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 (`specs/<feature>/spec.md` - un cas par critère, tracé, critère non testable marqué
 `A CLARIFIER`, jamais interprété), **exécuter** ce plan dans le navigateur contre
 l'environnement de recette (extension Chrome "Claude in Chrome" en priorité, MCP Playwright
-en repli, ou mission différée pour Claude Cowork), **capturer** le déroulé en scénarios
-rejouables (capital de non-régression), et produire un **rapport de recette tracé exigence
+en repli, ou mission différée pour Claude Cowork) en **capturant le déroulé effectif** de
+chaque cas, et produire un **rapport de recette tracé exigence
 par exigence** dont le **verdict reste humain** (porte de recette : le testeur est juge et
 valideur). Ce n'est **pas un projet applicatif** : des **skills Markdown** + un
 `plugin.json`. Pas de build, pas de lint, pas de tests unitaires.
@@ -33,10 +33,10 @@ Invocation directe `/validation:<skill>` + auto-invocation par la description. P
 ## Les 4 skills
 | # | skill | rôle | porte |
 |---|-------|------|-------|
-| 0 | `validation-init` | **cinq** gabarits dans `.factory/validation/` + bloc manifeste `validation` (adresse de recette, outil habituel - config statique seule) + `.gitignore` complété + état de l'amont signalé (specs/, Linear, maintenance) | jamais bloquant |
+| 0 | `validation-init` | **quatre** gabarits dans `.factory/validation/` + bloc manifeste `validation` (adresse de recette, outil habituel - config statique seule) + `.gitignore` complété + état de l'amont signalé (specs/, Linear, maintenance) | jamais bloquant |
 | 1 | `plan-de-validation` | `specs/<feature>/spec.md` -> `validation-out/<feature>/plan-de-test.md` : plan **entièrement en tableaux** (vue d'ensemble + déroulé par thème + critères à clarifier), **une ligne = un scénario** `TC-<feature>-NNN` (Given/When/Then traduit en préconditions / étapes séparées par `<br>` / résultat observable), critère **jamais recopié verbatim** (colonne `Source` compacte pour la traçabilité, colonne `Ce qui est vérifié` en phrase française), critère flou = `à clarifier` avec raison dans sa seule table, données de test collectées en boucle interactive, porte de régénération à la relance | **plan validé par le testeur** (humain) |
-| 2 | `execution-validation` | **préflight de disponibilité** des outils avant le choix (l'état "disponible / à installer" est porté dans les options, et "(recommandé)" ne va qu'à un outil qui répond), puis choix à chaque lancement : extension Chrome (non installable par le skill - marche à suivre `/chrome`, `claude --chrome`, Web Store ; impasses nommées : clé API / `setup-token`, WSL, fournisseur tiers) / Playwright en repli (**installé directement** par le skill : `claude mcp add playwright --scope <user\|project> -- npx -y @playwright/mcp@latest`, après confirmation et choix de portée, Node 18+ requis, **redémarrage de session obligatoire** avant usage) / mission Cowork différée via `mission-cowork.md` auto-portant, toujours disponible -> `resultats/execution-<JJ-MM>.md` (gabarit `execution-resultats.md`) au **contrat commun, entièrement en tables** : contexte d'exécution, **synthèse en haut** (OK/KO/NON TESTABLE), une ligne par cas (`Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve` - déroulé requis même sur OK, il alimente les scénarios rejouables), et une table **Écarts** qui porte seule le diagnostic (attendu, constaté, console et réseau) + captures dans `resultats/preuves/` | le testeur choisit l'outil ; l'IA constate, ne juge pas |
-| 3 | `rapport-de-recette` | matrice de traçabilité (critère -> cas -> verdict -> preuve -> décision) + tri des écarts un par un avec le testeur (anomalie / évolution / flou -> renvois `/maintenance:*`) + scénarios rejouables `scenarios/TC-*.md` (cas OK) + **porte de recette** : verdict humain inscrit dans le rapport et commenté sur le ticket `Feature` Linear | **verdict de recette** (humain) |
+| 2 | `execution-validation` | **préflight de disponibilité** des outils avant le choix (l'état "disponible / à installer" est porté dans les options, et "(recommandé)" ne va qu'à un outil qui répond), puis choix à chaque lancement : extension Chrome (non installable par le skill - marche à suivre `/chrome`, `claude --chrome`, Web Store ; impasses nommées : clé API / `setup-token`, WSL, fournisseur tiers) / Playwright en repli (**installé directement** par le skill : `claude mcp add playwright --scope <user\|project> -- npx -y @playwright/mcp@latest`, après confirmation et choix de portée, Node 18+ requis, **redémarrage de session obligatoire** avant usage) / mission Cowork différée via `mission-cowork.md` auto-portant, toujours disponible -> `resultats/execution-<JJ-MM>.md` (gabarit `execution-resultats.md`) au **contrat commun, entièrement en tables** : contexte d'exécution, **synthèse en haut** (OK/KO/NON TESTABLE), une ligne par cas (`Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve` - déroulé requis même sur OK : il dit ce qui a vraiment été joué, ce que le plan ne dit pas), et une table **Écarts** qui porte seule le diagnostic (attendu, constaté, console et réseau) + captures dans `resultats/preuves/` | le testeur choisit l'outil ; l'IA constate, ne juge pas |
+| 3 | `rapport-de-recette` | matrice de traçabilité (critère -> cas -> verdict -> preuve -> décision) + tri des écarts un par un avec le testeur (anomalie / évolution / flou -> renvois `/maintenance:*`) + **porte de recette** : verdict humain inscrit dans le rapport et commenté sur le ticket `Feature` Linear | **verdict de recette** (humain) |
 
 Flux : `validation-init` -> (par feature livrée) `plan-de-validation` -> `execution-validation`
 -> `rapport-de-recette` -> écarts traités côté maintenance (`correction-anomalie`,
@@ -50,7 +50,6 @@ validation-out/<feature>/          # committé - le handoff de la validation
 ├── mission-cowork.md              # seulement si la voie Cowork est choisie
 ├── resultats/execution-<JJ-MM>.md # une exécution = un fichier, jamais écrasé
 ├── resultats/preuves/*.png
-├── scenarios/TC-*.md              # non-régression (cas OK, déroulé effectif)
 ├── rapport-de-recette.md          # matrice + écarts + Verdict de recette
 └── _archives/                     # versions archivées par la porte de régénération
 ```
@@ -66,7 +65,7 @@ maintenance (geste PO, via les commandes SpecKit). Jamais d'écriture dans `spec
 ## Conventions partagées
 `references/interactive-loop.md`, `references/ux-conventions.md` (typographie humaine
 incluse), `references/regles-validation.md` (place dans la chaîne, un cas par critère,
-tri des écarts, humain/automatisé, fiabilité d'exécution, scénarios rejouables),
+tri des écarts, humain/automatisé, fiabilité d'exécution, déroulé effectif),
 `references/execution-navigateur.md` (les trois voies : extension Chrome / Playwright /
 mission Cowork, contrat de sortie commun). Porte de régénération : même principe que
 l'assembleur (jamais d'écrasement sans choix explicite, question posée **avant** de
@@ -78,7 +77,7 @@ fichier par exécution, jamais écrasé.
 Garde-fou déterministe : `scripts/check_validation.py` (bloc `validation` + gabarits en
 place ; par feature : plan présent et tracé, et si le rapport existe, **verdict rempli**
 - la présence du titre de section ne suffit pas, le gabarit le contient toujours).
-Gabarits : `templates/{plan-de-test,execution-resultats,mission-cowork,rapport-de-recette,scenario-rejouable}.md`.
+Gabarits : `templates/{plan-de-test,execution-resultats,mission-cowork,rapport-de-recette}.md`.
 **Tous les livrables sont en tables** (le fichier de résultats d'exécution y est passé aussi) :
 forme imposée par la **section 4bis de `references/ux-conventions.md`** - une ligne de séparation
 `|---|---|` entre chaque ligne de données (lisibilité du Markdown brut ; les garde-fous

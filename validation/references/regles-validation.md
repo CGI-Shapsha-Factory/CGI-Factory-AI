@@ -65,8 +65,7 @@ le fil ; il ne crée jamais un ticket sans accord explicite.
 
 ## L'IA exécute et rapporte, l'humain valide
 - **Constats automatisés** : dérouler un cas de test, constater OK / KO / NON TESTABLE,
-  capturer les preuves, assembler le rapport, consolider les scénarios rejouables, déposer un
-  commentaire de synthèse dans Linear.
+  capturer les preuves, assembler le rapport, déposer un commentaire de synthèse dans Linear.
 - **Gestes humains, jamais automatisés** : valider le plan de test avant exécution ; trier un
   écart (anomalie / évolution / flou) ; décider de créer un ticket ; et surtout **le verdict
   de la porte de recette** (valider la livraison, valider avec réserves, refuser) - sur ce
@@ -106,10 +105,11 @@ non résolu est ignoré en silence) ; `save_comment` pour la trace ; lire avant 
 (idempotence). Un ticket de suivi de critère flou est un sous-ticket du ticket `Feature`,
 **sans label de recette** (jamais `Anomalie`/`Evolution`, ni `Feature`/`Task`).
 
-## Scénarios rejouables (le capital de non-régression)
-Le déroulé **effectif** de chaque cas OK est consolidé en scénario rejouable
-(`validation-out/<feature>/scenarios/TC-*.md`) : étapes en **langage naturel**, précises et
-auto-portantes, rejouables par n'importe quel outil d'exécution (extension Chrome, Playwright,
-Cowork) sans dépendre d'un sélecteur technique. C'est la bibliothèque de non-régression que
-la maintenance rejoue : `realisation-evolution` (prouver que l'ancien comportement tient) et
-`correction-anomalie` (vérifier qu'une correction n'a rien cassé autour).
+## Le déroulé effectif (la trace de ce qui a été joué)
+Chaque cas du fichier de résultats porte son déroulé **effectif** : les étapes **réellement**
+jouées, en **langage naturel**, précises et auto-portantes, sans dépendre d'un sélecteur
+technique. Ce n'est pas une redite du plan : le plan porte les étapes **prévues**, le déroulé
+porte ce qui s'est vraiment passé (relances, contournements, ordre effectif). Il est requis
+**même sur un cas OK** - c'est ce qui permet, plus tard, de comprendre et de rejouer un cas
+sans deviner. Le fichier de résultats est **committé** et **jamais écrasé** (un fichier par
+exécution) : c'est lui qui porte cette trace, il n'y a **pas d'artefact séparé**.

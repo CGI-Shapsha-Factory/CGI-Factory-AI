@@ -2,7 +2,7 @@
 
 ## Typographie : écrire comme un humain (artefacts, commentaires Linear ET sortie chat)
 S'applique à **tout ce que la Factory écrit** : le plan de test, la mission Cowork, les
-résultats d'exécution, le rapport de recette, les scénarios rejouables, les commentaires
+résultats d'exécution, le rapport de recette, les commentaires
 Linear, et le texte affiché. Ne jamais employer ces caractères ; toujours l'équivalent
 clavier naturel :
 - tiret cadratin (em dash, U+2014) -> ponctuation adaptée au contexte : deux-points dans un titre, virgule ou parenthèses dans une phrase, tiret simple " - " dans une liste.
@@ -36,7 +36,7 @@ par l'utilisateur. On reformule **toujours** en clair.
 ## 1bis. Identifiants : cas de test et Linear oui, codes internes non
 Deux familles d'identifiants sont **publiques** et peuvent être montrées et demandées :
 - l'**identifiant d'un cas de test** (ex. `TC-001-003`) : c'est le repère de traçabilité du
-  rapport, partagé entre le plan, les résultats et les scénarios rejouables ;
+  rapport, partagé entre le plan, les résultats et le rapport de recette ;
 - l'**identifiant natif Linear** (ex. `ENG-123`) : le nom public d'un ticket.
 Les **codes internes** restent bannis en sortie : pas de clé de manifeste, pas d'UUID interne,
 pas de `parentId`. **Exception features (comme au cadrage)** : une feature se nomme par son
@@ -85,7 +85,7 @@ partagés, pas des codes internes.
 ## 4bis. Forme des tables écrites dans les artefacts
 La section 4 dit **ce qu'on met** dans une table ; celle-ci dit **comment on l'écrit**. Elle
 s'applique à **toute** table d'un fichier produit par la validation (plan de test, résultats
-d'exécution, rapport de recette, scénarios rejouables). But : que le fichier reste lisible
+d'exécution, rapport de recette). But : que le fichier reste lisible
 **en Markdown brut**, pas seulement une fois rendu - une cellule de déroulé peut faire dix
 lignes à l'écran, et sans repère on ne voit plus où un cas finit et où le suivant commence.
 

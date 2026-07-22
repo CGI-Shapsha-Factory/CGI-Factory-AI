@@ -1,20 +1,19 @@
 ---
 name: rapport-de-recette
-description: Assemble le rapport de recette tracé exigence par exigence, trie chaque écart avec le testeur (anomalie, évolution ou critère flou, renvoi vers les skills maintenance), consolide les scénarios de non-régression et recueille le verdict humain de la porte de recette.
+description: Assemble le rapport de recette tracé exigence par exigence, trie chaque écart avec le testeur (anomalie, évolution ou critère flou, renvoi vers les skills maintenance) et recueille le verdict humain de la porte de recette.
 ---
 
 # rapport-de-recette
 
 Bras "restitution et porte" de la validation fonctionnelle : croise le plan de test et les
 résultats d'exécution en un **rapport de recette tracé exigence par exigence**, trie chaque
-écart **avec le testeur** (bug, spécification en cause, ou critère flou), consolide les
-scénarios rejouables de non-régression, et soumet le **verdict de la porte de recette** à la
-validation humaine. **Le skill rapporte et oriente ; le testeur est juge et valideur.**
+écart **avec le testeur** (bug, spécification en cause, ou critère flou), et soumet le
+**verdict de la porte de recette** à la validation humaine. **Le skill rapporte et oriente ; le
+testeur est juge et valideur.**
 
 ## Objectif
 Produire `validation-out/<feature>/rapport-de-recette.md` (matrice critère -> cas -> verdict
--> preuve -> décision), `validation-out/<feature>/scenarios/TC-*.md` (non-régression), et
-inscrire le verdict humain dans le rapport et dans Linear.
+-> preuve -> décision) et inscrire le verdict humain dans le rapport et dans Linear.
 
 ## Pré-requis (vérification silencieuse)
 - Le plan existe (`validation-out/<feature>/plan-de-test.md`) et au moins un fichier de
@@ -82,15 +81,7 @@ Chaque décision prise est reportée dans le rapport (colonne "Décision sur l'�
 le testeur laisse de côté reste **sans décision** dans la matrice : on le lui rappelle
 oralement, et la porte de recette n'est pas franchissable tant qu'il en reste.
 
-### Étape 3 : consolider les scénarios de non-régression
-Pour chaque cas **OK**, écrire `validation-out/<feature>/scenarios/TC-<feature>-<NNN>.md`
-depuis le gabarit `.factory/validation/scenario-rejouable.md` : le **déroulé effectif** (tel
-que joué), les préconditions et données, le résultat attendu observable - en langage naturel
-auto-portant, rejouable par n'importe quel outil. Ne pas réécrire un scénario existant dont le
-déroulé n'a pas changé. Lister les scénarios dans le rapport. C'est la bibliothèque que la
-maintenance rejoue en non-régression (`realisation-evolution`, `correction-anomalie`).
-
-### Étape 4 : la porte de recette (verdict humain)
+### Étape 3 : la porte de recette (verdict humain)
 Quand tous les écarts sont triés : afficher le récapitulatif final (la matrice en tableau
 court + la synthèse en prose) et poser **la** question **avec `AskUserQuestion`** : "Quel est
 ton verdict de recette pour cette feature ?" - trois options, "livraison validée", "validée

@@ -35,7 +35,8 @@
    `validation-out/[feature]/resultats/preuves/` (nommée `TC-[feature]-NNN-<n>.png`). Sur KO,
    noter en plus, factuellement, ce qui est constaté par rapport à l'attendu.
 6. **Capturer le déroulé effectif** : pour chaque cas, noter les étapes réellement jouées,
-   numérotées, en langage naturel (elles serviront de scénarios de non-régression).
+   numérotées, en langage naturel - ce qui s'est vraiment passé (relances, contournements,
+   ordre effectif), pas la recopie des étapes prévues au plan.
 7. **Aucune action destructive ni donnée réelle** : ne jamais supprimer, payer, ou envoyer
    quoi que ce soit vers l'extérieur sans que le plan le prévoie explicitement avec des
    données de test. Dans le doute, marquer le cas NON TESTABLE et passer au suivant.
@@ -92,7 +93,8 @@ Quatre sections, dans cet ordre :
 ```
 
 - **Une ligne par cas du plan**, dans l'ordre, **aucun cas omis** - y compris les NON TESTABLE.
-- Le **déroulé effectif est requis même pour un cas OK** : il sert à rejouer le scénario plus tard.
+- Le **déroulé effectif est requis même pour un cas OK** : il dit ce qui a vraiment été joué, ce
+  que le plan (étapes prévues) ne dit pas.
 - La colonne **Constaté** de la table par cas reste **une phrase** ; le détail d'un échec va dans
   la table **Écarts**.
 - **Si tous les cas sont OK** : supprimer la table Écarts et écrire "Aucun - tous les cas sont OK."

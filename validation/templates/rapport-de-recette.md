@@ -44,11 +44,6 @@ nature, ce que ça dit de la livraison. Factuel.)
 |---|---|---|---|
 | TC-[feature]-007 | (...) | (...) | (...) |
 
-## Scénarios de non-régression
-
-(La liste des scénarios rejouables consolidés depuis les cas OK :
-`scenarios/TC-[feature]-NNN.md`, un par ligne avec l'intitulé du cas.)
-
 ## Verdict de recette
 
 <!-- Rempli UNIQUEMENT sur le verdict explicite du testeur, une fois tous les écarts triés.

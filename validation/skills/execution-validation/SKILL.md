@@ -153,8 +153,9 @@ lignes, étapes en `<br>`, cellule vide = `-` : section 4bis de `references/ux-c
 3. **Résultats par cas** - `Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve` ;
    **une ligne par cas du plan, dans l'ordre, aucun cas omis** (y compris les NON TESTABLE). Le
    **déroulé effectif** (étapes réellement jouées, numérotées, séparées par `<br>`) est requis
-   **même quand le cas passe** : c'est la matière des scénarios rejouables. La colonne
-   **Constaté** reste **une phrase** factuelle.
+   **même quand le cas passe** : le plan porte les étapes **prévues**, le déroulé porte ce qui
+   s'est **vraiment** passé (relances, contournements, ordre effectif). La colonne **Constaté**
+   reste **une phrase** factuelle.
 4. **Écarts (KO et NON TESTABLE)** - `Cas | Attendu | Constaté | Console et réseau` : le
    diagnostic détaillé vit **ici**, pas dans la table précédente. Pour un NON TESTABLE,
    "Constaté" porte la **raison** de la non-testabilité. **Tous les cas OK** : supprimer la

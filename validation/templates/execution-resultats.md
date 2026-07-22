@@ -37,8 +37,9 @@
 
 <!-- Une ligne par cas du plan, dans l'ordre, AUCUN cas omis - y compris les NON TESTABLE.
      "Déroulé effectif" = les étapes RÉELLEMENT jouées (pas celles prévues au plan), numérotées
-     et séparées par <br> : c'est la matière première des scénarios rejouables que le rapport
-     génère à partir des cas OK, elle est donc requise même quand le cas passe.
+     et séparées par <br>. Requis MÊME sur un cas OK : le plan porte les étapes prévues, le
+     déroulé porte ce qui s'est vraiment passé (relances, contournements, ordre effectif). Ce
+     fichier étant committé et jamais écrasé, c'est lui qui garde cette trace.
      "Constaté" est UNE PHRASE factuelle (ce qui a été observé), sans jugement de valeur. Le
      détail d'un échec (attendu vs constaté, console, réseau) ne va PAS ici : il va dans la
      table "Écarts", pour que celle-ci reste scannable. -->

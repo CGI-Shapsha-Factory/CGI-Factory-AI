@@ -168,7 +168,9 @@ entre chaque ligne de données, étapes en `<br>`, cellule vide = `-`), quatre s
 
 Deux règles qui portent l'aval :
 - le **déroulé effectif** (étapes réellement jouées, numérotées, séparées par `<br>`) est requis
-  **pour tous les cas, y compris OK** : c'est la matière première des scénarios rejouables ;
+  **pour tous les cas, y compris OK** : le plan porte les étapes **prévues**, le déroulé porte ce
+  qui s'est **vraiment** passé (relances, contournements, ordre effectif). Le fichier de résultats
+  étant committé et jamais écrasé, c'est **lui** qui garde cette trace ;
 - la colonne **Constaté** de la table principale reste **une phrase** ; l'attendu contredit, la
   console et le réseau vont dans la table **Écarts** - c'est ce qui garde la vue par cas
   scannable.
