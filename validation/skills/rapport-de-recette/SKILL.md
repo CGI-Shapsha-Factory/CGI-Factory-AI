@@ -42,7 +42,9 @@ inscrire le verdict humain dans le rapport et dans Linear.
 ## Procédure
 
 ### Étape 1 : assembler la matrice de traçabilité
-Depuis le gabarit `.factory/validation/rapport-de-recette.md` : une ligne **par critère** du
+Depuis le gabarit `rapport-de-recette.md` - celui du **plugin** fait foi : si la copie
+`.factory/validation/rapport-de-recette.md` en diffère, la remplacer avant d'écrire (cf.
+`references/regles-validation.md`). Une ligne **par critère** du
 plan, dans l'ordre des colonnes du gabarit : **ce qui est vérifié** (la phrase reprise de la
 vue d'ensemble du plan, jamais une référence de spécification nue), le cas de test, le verdict
 de l'exécution, la preuve, puis la **Source** (référence compacte) et la décision. Aucun critère ne

@@ -73,7 +73,9 @@ La mission est un fichier destiné à **un autre outil** : la confirmer par une 
 "(recommandé)" / "revenir au choix de l'outil"), en disant en une ligne ce qu'elle contiendra
 et ce que le testeur devra faire ensuite. Puis générer
 `validation-out/<feature>/mission-cowork.md` depuis le gabarit
-`.factory/validation/mission-cowork.md` (adresse de recette, renvoi au plan, règles
+`mission-cowork.md` - celui du **plugin** fait foi, remplacer la copie
+`.factory/validation/mission-cowork.md` si elle en diffère (cf.
+`references/regles-validation.md`) - (adresse de recette, renvoi au plan, règles
 d'exécution, format de résultats imposé - le document est auto-portant : Cowork n'a pas cette
 session). Si une mission existe déjà pour la feature, appliquer la porte de régénération
 (repartir de zéro ou archiver sous `_archives/`). Afficher la marche à suivre (ouvrir Cowork

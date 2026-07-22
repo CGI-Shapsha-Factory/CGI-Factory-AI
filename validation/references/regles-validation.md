@@ -20,6 +20,16 @@ La validation **détecte et trace** ; elle ne **traite** jamais un écart :
 Le déclenchement est **toujours manuel** (le testeur lance les skills) : aucune validation
 ne part seule sur un push, un merge ou un déploiement.
 
+## Le gabarit qui fait foi est celui du plugin
+Les gabarits de `.factory/validation/` sont une **copie de travail** git-ignorée, posée par
+`validation-init`. Un projet initialisé avec une version antérieure du plugin en garde une
+version périmée, et produirait alors des artefacts à l'ancienne forme sans que personne le
+voie. Donc, **avant d'écrire un artefact**, comparer le gabarit du projet à celui du plugin
+(`templates/<gabarit>.md`) : s'ils diffèrent, **c'est celui du plugin qui gagne** - le reposer
+dans `.factory/validation/`, puis écrire l'artefact selon lui, et le dire en une phrase au
+testeur ("le gabarit du projet datait, je l'ai remis à jour"). Jamais l'inverse, jamais un
+artefact écrit depuis un gabarit périmé.
+
 ## Un cas par critère, tracé, jamais interprété
 - **Un cas de test par critère d'acceptation** de la spécification (`specs/<feature>/spec.md` :
   scénarios Given/When/Then des user stories, exigences fonctionnelles, critères de succès

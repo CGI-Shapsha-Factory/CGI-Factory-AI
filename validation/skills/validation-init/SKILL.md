@@ -48,7 +48,10 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
 ## Procédure
 1. **Installer les gabarits** dans `.factory/validation/` (copier depuis le plugin
    `templates/`) : `plan-de-test.md`, `mission-cowork.md`, `rapport-de-recette.md`,
-   `scenario-rejouable.md`. Créer `validation-out/` s'il n'existe pas.
+   `scenario-rejouable.md`. **Toujours écraser ceux qui existent déjà** : ils sont
+   git-ignorés, régénérables, et n'ont aucune valeur propre - un projet initialisé avec une
+   version antérieure du plugin garderait sinon un gabarit périmé et continuerait de produire
+   des artefacts à l'ancienne forme. Créer `validation-out/` s'il n'existe pas.
 2. **Étendre le manifeste** `manifest.json` : ajouter le bloc `validation` ci-dessous s'il est
    absent (read-modify-write + revalidation JSON) :
 

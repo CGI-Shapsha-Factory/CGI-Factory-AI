@@ -76,7 +76,10 @@ Aucun critère n'est écarté en silence : ce qui ne devient pas un cas de test 
 comme "à clarifier" avec sa raison.
 
 ### Étape 3 : dériver un cas de test par critère (une ligne de tableau par cas)
-Le plan est **entièrement en tableaux** (gabarit `.factory/validation/plan-de-test.md`) : un
+Le plan est **entièrement en tableaux**. Le gabarit qui fait foi est celui du **plugin**
+(`templates/plan-de-test.md`) : si `.factory/validation/plan-de-test.md` en diffère (projet
+initialisé avec une version antérieure), le remplacer par celui du plugin avant d'écrire et le
+signaler en une phrase (cf. `references/regles-validation.md`). Un
 critère ne donne plus un bloc de texte mais **une ligne**. Il doit rester court et scannable -
 c'est le testeur qui le relit.
 
