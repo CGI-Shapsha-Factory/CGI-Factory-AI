@@ -87,7 +87,7 @@ def _canonical_slugs(root):
     if not os.path.isdir(fdir):
         return out
     for name in os.listdir(fdir):
-        m = re.match(r"^(\d+)-(.+?)(?:\.spec-seed)?\.md$", name)  # tolere le suffixe .spec-seed
+        m = re.match(r"^(\d+)-(.+)\.md$", name)
         if m:
             out[int(m.group(1))] = m.group(2)
     return out

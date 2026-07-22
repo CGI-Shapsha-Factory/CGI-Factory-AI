@@ -13,6 +13,10 @@
 ## Mission produit
 [Identité produit : problème résolu + objectif métier, en une à deux phrases.]
 
+**Objectifs mesurables du produit :** [métriques d'usage et cibles chiffrées côté organisation,
+reprises des critères de succès du product brief. "Non chiffrés à ce stade" si le cadrage ne les a
+pas captés - jamais inventés.]
+
 ## Principes (non négociables)
 
 ### P1 : [nom] (fonctionnel)

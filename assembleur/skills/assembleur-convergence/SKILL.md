@@ -46,13 +46,22 @@ sous-agents lecteurs (`agentType: "contract-reader"`), **un par lot**, chacun av
 **schéma de sortie structuré**. Lancer les **5 lots en un seul message** (appels
 parallèles) puis synthétiser leurs retours :
 
-1. **Fonctionnel** - lire `cadrage-out/product-brief.md`, `cadrage-out/project-frame.md`,
-   `cadrage-out/features-fonctionnels-brief/*.md`. Extraire : identité produit
-   (problème + objectif), hors-périmètre global, contraintes (légales/sécurité/données),
+1. **Fonctionnel** - lire `cadrage-out/product-brief.md`, `cadrage-out/project-frame.md`, et les
+   briefs de feature **désignés par le manifeste** : `artifacts.briefs[]` donne, pour chaque
+   feature, son **identifiant de use case** (`id` = `UC...`) et le **chemin** de son brief
+   (`.path`) - ouvrir chaque brief par ce chemin, et **clé chaque extraction par son `id` de use
+   case**, jamais par l'intitulé ni par le numéro `Feature 00X` de l'en-tête (numérotation
+   provisoire du cadrage, renumérotée plus tard par le registre final). Si `artifacts.briefs[]`
+   est **absent ou vide**, le **dire en clair** et demander à l'humain d'apparier briefs et use
+   cases - **jamais** d'appariement par ressemblance de titre en silence.
+   Extraire : identité produit
+   (problème + objectif), **critères de succès du produit (métriques d'usage chiffrées)**,
+   hors-périmètre global, contraintes (légales/sécurité/données),
    et - depuis `project-frame.md` - les réponses de découverte qui pèsent sur la fabrication :
    **cible d'hébergement/déploiement (Q11), budget infra (Q12), responsable d'exploitation (Q10),
-   disponibilité/perf visées (Q6/Q7)** ; et **par feature** : user stories, critères d'acceptation
-   (Given/When/Then), critères de succès mesurables, **et le hors-périmètre local (ce que la feature
+   disponibilité/perf visées (Q6/Q7)** ; et **par use case** : user stories, critères d'acceptation
+   (Given/When/Then), **critères de succès mesurables avec leur cible chiffrée - repris tous, y
+   compris ceux laissés "cible à préciser à l'architecture"**, **et le hors-périmètre local (ce que la feature
    ne fait pas)**.
 2. **Domaine** - lire `cadrage-out/glossaire.md`, `cadrage-out/spec-index.md`,
    `cadrage-out/coupling-map.md`. Extraire : langage ubiquitaire + entités clés ; la
@@ -75,14 +84,20 @@ parallèles) puis synthétiser leurs retours :
    client, ton des textes, confirmations et retours d'action, budget de performance UI) -
    chacune renvoyée `"absent"` si le rapport de couverture ne la tranche pas, jamais déduite.
 
-Lire aussi le manifeste (`architecture.feature_sequence` = `{id, ucs, name}`,
+Lire aussi le manifeste (`artifacts.briefs[]` = `{id, name, path, status}`,
+`architecture.feature_sequence` = `{id, ucs, name}`,
 `walking_skeleton`, `design.design_system_ref`). Chaque lot renvoie un **extrait
 structuré complet** (fidèle sur le fond, organisé) - jamais un résumé qui coupe, jamais
-un dump brut. La jointure des faces se fait **par use case** (`ucs`).
+un dump brut. La jointure des faces se fait **par use case** : la face fonctionnelle
+d'une feature du registre, ce sont les briefs dont l'`id` appartient à ses `ucs`. Cette
+appartenance est la **seule** clé d'appariement autorisée - ni l'intitulé métier, ni le
+numéro `Feature 00X` de l'en-tête d'un brief, ni le nom du fichier.
 
 **Passe de complétude (exactitude).** Avant de synthétiser, recouper les retours : chaque
-use case du `spec-index` a-t-il sa matière fonctionnelle, technique et design ? chaque feature
-porte-t-elle son **hors-périmètre local** ? les **entités et relations du modèle de données (ERD)**
+use case du `spec-index` a-t-il sa matière fonctionnelle, technique et design ? chaque brief
+de `artifacts.briefs[]` a-t-il bien été ouvert par son `.path` et rendu sous son `id` ?
+chaque feature porte-t-elle son **hors-périmètre local** ? **chaque critère de succès chiffré
+d'un brief est-il remonté** (aucun perdu, aucun arrondi) ? les **entités et relations du modèle de données (ERD)**
 sont-elles capturées, les **contraintes de déploiement/hébergement** présentes, les **risques/spikes**
 remontés ? les **décisions d'expérience** (navigation, tailles d'écran, langues, ton) sont-elles
 reprises ou explicitement marquées absentes ? un lot est-il revenu incomplet ? deux lots se
@@ -97,7 +112,11 @@ découpage en features devient **définitif** : présenter la séquence proposé
 propose, l'humain tranche"), **arbitrer** si besoin - **découper** une feature en deux, **fusionner**
 deux features (une seule entrée, `ucs` = liste des use cases concernés). Puis **réécrire**
 `architecture.feature_sequence` avec la liste **finale**, renumérotée **contiguë** `001...00N` dans
-l'ordre de fabrication (walking skeleton = `001`). Les graines, la `feature-map` et Linear en
+l'ordre de fabrication (walking skeleton = `001`). **Chaque entrée porte ses `ucs`**, et avant
+d'écrire, vérifier que l'union des `ucs` du registre **couvre exactement** l'ensemble des
+`artifacts.briefs[].id` : aucun use case orphelin (brief sans feature), aucun use case fantôme
+(feature qui référence un `id` sans brief). Tout écart se **tranche avec l'humain ici**, jamais
+plus tard. Les graines, la `feature-map` et Linear en
 **découlent** (couverture 1:1 sur ce registre final). Ce registre est **figé à l'init Linear**
 (`premier-alimente-linear`) - après, plus de découpage/fusion ni de renumérotation. Manifeste mis à
 jour en silence.
@@ -116,7 +135,9 @@ jour en silence.
 - **`features/<id>-<slug>.md`** (gabarit `spec-seed.md`), une par feature de
   la séquence (walking skeleton d'abord) - **mappe le `spec.md` SpecKit** : User Scenarios
   (P1/P2/P3, Given/When/Then), Functional Requirements (FR-xxx), Key Entities (<- domaine,
-  **relations <- ERD**), Success Criteria (SC-xxx mesurables <- cibles qualité + a11y), **Hors
+  **relations <- ERD**), Success Criteria (SC-xxx mesurables <- **critères de succès chiffrés du
+  brief de ses use cases**, complétés par les cibles qualité + a11y ; aucune cible du brief
+  écartée), **Hors
   périmètre (cette feature)** (<- hors-périmètre local du brief), Assumptions (**absorbe les
   risques/spikes de la feature**), + annexes face technique / face design. Le `<slug>` est un **slug git/SpecKit-safe** (`[a-z0-9-]` : minuscules,
   tirets, ASCII, ≤ ~4 mots) dérivé de l'intitulé métier. **`<id>-<slug>` EST le nom canonique** du
@@ -173,8 +194,10 @@ dans `assembleur-out/`.
 
 ## Étape 3 : Cohérence (décision humaine : garant de cohérence)
 Vérifier **strictement** que chaque feature part avec ses **3 faces complètes et non
-contradictoires** : 3 faces présentes ; couverture inverse (aucun use case orphelin,
-chaque feature a sa graine) ; non-contradiction (design system couvre les états requis ;
+contradictoires** : 3 faces présentes ; couverture inverse **vérifiée sur les `ucs`, jamais sur
+les intitulés** (aucun `artifacts.briefs[].id` hors du registre, chaque feature a sa graine) ;
+**chaque critère de succès chiffré des briefs a son SC dans la graine correspondante** ;
+non-contradiction (design system couvre les états requis ;
 pas de parcours sans FR ni de FR sans parcours ; pas de terme de glossaire en conflit ;
 les cibles qualité/perf sont tenables par la stack/déploiement). Écrire
 `assembleur-out/coherence-report.md` (prose, sans marqueur résiduel). Lancer le garde-fou

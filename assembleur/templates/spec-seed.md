@@ -31,6 +31,10 @@
 - **[Entité]**: [ce qu'elle représente]  <!-- voir memory/domain.md ; relations <- ERD architecte -->
 
 ## Success Criteria *(mandatory)*
+<!-- Deux origines : (1) les critères de succès mesurables du brief cadrage (section 5) - les cibles
+     chiffrées négociées avec le client, reprises TOUTES, aucune écartée ; (2) les cibles qualité de
+     l'architecte et le niveau d'accessibilité visé. Une cible du brief laissée "à préciser à
+     l'architecture" se tranche en session, jamais supprimée. -->
 - **SC-001**: [mesurable, techno-agnostique]
 
 ## Hors périmètre *(cette feature)*

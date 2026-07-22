@@ -36,12 +36,17 @@ assembleur-out/
 |---|---|
 | **User Scenarios & Testing** (User Stories P1/P2/P3, Given/When/Then, Edge Cases) | fonctionnel : brief cadrage + parcours |
 | **Functional Requirements** (FR-001...) | fonctionnel : brief cadrage |
-| **Success Criteria** (SC-001..., mesurables, techno-agnostiques) | technique : scénarios qualité architecte + design : cibles a11y |
+| **Success Criteria** (SC-001..., mesurables, techno-agnostiques) | **fonctionnel d'abord** : critères de succès mesurables du brief cadrage (section 5, cibles chiffrées négociées avec le client) ; complétés par technique : scénarios qualité architecte + design : cibles a11y |
 | **Key Entities** | langage ubiquitaire (`memory/domain.md`) + **relations <- ERD (`diagrammes.md`)** |
 | **Hors périmètre (cette feature)** | fonctionnel : hors-périmètre local du brief |
 | **Assumptions** | points tranchés en session (aucun marqueur résiduel) + **risques/spikes (`risques.md`)** |
 | *Annexe - Face technique* | architecte -> nourrit `technical-context.md` / le *Technical Context* du futur `plan.md` |
 | *Annexe - Face design* | designer -> `memory/design.md` (états, a11y, décisions d'expérience de l'atelier) |
+
+> **Aucun critère de succès chiffré du brief n'est écarté.** Une cible du cadrage marquée
+> "cible à préciser à l'architecture" se résout contre les scénarios qualité de l'architecte ;
+> si elle reste ouverte, elle passe par la résolution interactive (étape 4 de la convergence),
+> jamais par une suppression silencieuse.
 
 > Les deux annexes ne survivent pas au `/speckit.specify` (le `spec.md` généré suit le gabarit
 > SpecKit) : l'`attack-plan.md` et le `CLAUDE.md` déployé demandent de **relire la graine** au
@@ -61,7 +66,11 @@ assembleur-out/
 ## Jointure des 3 faces : clé = use case (`uc`)
 `architecture.feature_sequence` est le **registre canonique** (objets `{id, ucs, name}`, `ucs` =
 liste ; une feature peut bundler plusieurs use cases). La **clé de jointure** est le **use case** :
-- cadrage -> `artifacts.briefs[].id ∈ feature.ucs` (chemin = `.path`) ; parcours/use cases du cadrage ;
+- cadrage -> `artifacts.briefs[].id ∈ feature.ucs` (chemin = `.path`) ; parcours/use cases du cadrage.
+  Cette jointure est **opérée** par le lot 1 de `assembleur-convergence` : il lit `artifacts.briefs[]`,
+  ouvre chaque brief par son `.path` et renvoie l'extraction sous son `id`. La numérotation
+  `Feature 00X` de l'en-tête d'un brief est **provisoire** (posée avant l'architecture, renumérotée
+  par le registre final) : elle n'est **jamais** un discriminant de jointure, pas plus que l'intitulé ;
 - designer -> **contrat global** (design system synchronisé + guidelines appliqués à tous les écrans,
   pas de jointure par feature) ;
 - architecte -> le registre `feature_sequence`.

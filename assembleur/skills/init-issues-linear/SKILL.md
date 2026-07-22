@@ -5,6 +5,13 @@ description: Transforme les features approuvées en tickets Linear (un par featu
 
 # init-issues-linear
 
+> **Skill déprécié - remplacé par `/assembleur:premier-alimente-linear`.** Conservé pour référence
+> historique, **hors du contrat courant** de la Factory : il ouvre les tickets en Todo au lieu de
+> Backlog, pose des labels `feature:<id>` aujourd'hui bannis, et consigne les tickets dans le
+> manifeste alors que **Linear est la seule source de vérité**. **Ne pas le lancer sur un projet en
+> cours.** Avant toute écriture dans Linear, dire en clair qu'il est déprécié, orienter vers
+> `/assembleur:premier-alimente-linear`, et **attendre une confirmation explicite** de l'utilisateur.
+
 **Pont vers Linear.** À lancer **après `assembleur-convergence`** (le paquet est produit, la
 cohérence validée, les features **déjà approuvées**) et **avant `install-speckit`**. Ce skill lit
 la liste des features, la présente en **tableau de revue**, puis - **ticket par ticket, avec
@@ -22,16 +29,16 @@ L'assembleur ne produit que son paquet (`assembleur-out/`) et **n'écrit aucun f
 génère** dans le repo cible. Ce skill a **deux écritures explicitement bornées** :
 - **Linear** - la création des tickets, via le **MCP du plugin `linear-prism`** ; Linear est un
   **système externe** (pas le repo cible) ;
-- le **bloc `linear` du manifeste** (`.factory/manifest.json`, à la racine du projet) - le manifeste
+- le **bloc `linear` du manifeste** (`manifest.json`, à la racine du projet) - le manifeste
   est le **contrat machine partagé** de la Factory ; y consigner `team`/`project`/`issues` est
   **assumé**, ce n'est pas un artefact SpecKit.
 
 Voir `references/linear-guide.md`.
 
 ## Pré-requis (vérification silencieuse)
-Lire `.factory/manifest.json` **sans l'annoncer** :
+Lire `manifest.json` **sans l'annoncer** :
 - la convergence a tourné et la **cohérence est validée**, et le paquet est présent
-  (`assembleur-out/feature-map.md` + au moins une graine `assembleur-out/features/*.spec-seed.md`) ;
+  (`assembleur-out/feature-map.md` + au moins une graine `assembleur-out/features/<id>-<slug>.md`) ;
 - sinon -> le dire en clair et orienter vers `/assembleur:assembleur-convergence` :
   > "Les tickets ne peuvent pas être créés : il faut d'abord la convergence terminée et la
   > cohérence validée (le paquet de features approuvées)."
@@ -48,7 +55,7 @@ Sonder `mcp__plugin_linear-prism_linear__list_teams` (cf. `references/linear-gui
 
 ## Étape 2 : Charger et présenter les features (tableau de revue)
 Lire `architecture.feature_sequence`, `assembleur-out/feature-map.md` (ordre, couplage, **Dépend
-de**, parallélisable) et chaque graine `assembleur-out/features/<id>-*.spec-seed.md` (User Stories,
+de**, parallélisable) et chaque graine `assembleur-out/features/<id>-<slug>.md` (User Stories,
 `FR-xxx`, `SC-xxx`, cas limites). Afficher **un tableau de revue unique** (c'est l'exception au
 "pas de tableau" - une revue, comme `feature-map.md`) :
 
@@ -91,13 +98,13 @@ Pour **chaque** feature retenue, **dans l'ordre** :
 ## Vérification avant de conclure
 - Chaque feature approuvée a **son ticket** (ou une décision `skipped`/`merged`, ou un brouillon si
   MCP absent) ; les grosses features ont leur **liste de contrôle** dans la description ; les **dépendances** sont posées.
-- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/.factory/manifest.json`.
+- Lancer le garde-fou : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_linear.py" <racine>/manifest.json`.
 - Le bloc `linear` du manifeste **reparse sans erreur** ; restitution **en prose** ("j'ai créé N
   tickets, un par feature"), manifeste mis à jour **en silence**.
 
 ## Règles invariantes
 - **Écritures bornées.** Seulement dans Linear (externe) + le bloc `linear` du manifeste
-  (`.factory/manifest.json`, contrat machine partagé de la Factory) ; **aucun fichier que SpecKit génère**.
+  (`manifest.json`, contrat machine partagé de la Factory) ; **aucun fichier que SpecKit génère**.
 - **Confirmer avant de créer.** Chaque ticket est validé par l'humain avant création (action
   externe, difficile à défaire).
 - **Un point à la fois.** Questions et confirmations en prose, une par une (cf.

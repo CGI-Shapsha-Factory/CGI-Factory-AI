@@ -17,7 +17,7 @@ L'index `memory/MEMORY.md` (chargé à chaque session) pointe vers les fichiers 
 lit **à la demande**.
 
 ## Contrats (3 faces) : où regarder
-- **Fonctionnel** : les graines de feature (`assembleur-out/features/<id>-...spec-seed.md`) ; langage = `memory/domain.md`.
+- **Fonctionnel** : les graines de feature (`assembleur-out/features/<id>-<slug>.md`) ; langage = `memory/domain.md`.
 - **Technique** : `assembleur-out/technical-context.md` et `memory/architecture.md` (stack, composants, ADR, conventions).
 - **Design** : `memory/design.md` (design system synchronisé + états + erreurs + a11y).
 
@@ -29,7 +29,7 @@ démarrage de SpecKit ; chaque `plan.md` passe ensuite la *Constitution Check*.
 Voir `assembleur-out/attack-plan.md` : `specify init` -> `/speckit.constitution` (depuis `assembleur-out/pre-constitution.md`) ->
 `/speckit.specify` par feature **dans l'ordre du `assembleur-out/feature-map.md`** (walking skeleton d'abord) ->
 `/speckit.plan` -> `/speckit.tasks` -> `/speckit.implement`.
-Au `/speckit.plan` d'une feature, **relire sa graine** `assembleur-out/features/NNN-slug.md` (annexes
+Au `/speckit.plan` d'une feature, **relire sa graine** `assembleur-out/features/<id>-<slug>.md` (annexes
 Face technique / Face design) en plus de `assembleur-out/technical-context.md` : le `spec.md` généré
 ne reprend pas les annexes.
 
