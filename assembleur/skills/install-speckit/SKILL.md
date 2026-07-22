@@ -49,10 +49,23 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
 **et** hors ligne) ; ils sortent du **script**, jamais d'une gate de ce skill.
 
 ## Procédure
-1. **Lancer l'installeur déterministe** (il fait tout, bout en bout, dans un seul processus) :
-   `py -3 "${CLAUDE_PLUGIN_ROOT}/scripts/install_speckit.py" <racine-projet>` (utiliser `python`
-   si `py` est absent ; `python3` sur macOS/Linux). Le script : détecte si `.specify/` est déjà là
-   (**idempotent**), s'assure de `uv` (l'auto-installe sans admin, rafraîchit le PATH dans son
+0. **Préflight interpréteur** (une seule commande, silencieuse si elle passe) : `python -V` (repli
+   `py -3 -V`, `python3 -V`). Si **aucun** ne répond, s'arrêter là et le dire en clair : Python est le
+   seul pré-requis que l'installeur ne peut pas poser lui-même (il **est** l'installeur). Message à
+   donner : installer Python depuis python.org, ou `winget install Python.3.12` sur Windows, puis
+   relancer ce skill. Ne jamais laisser sortir l'erreur brute du shell (sur Windows, `python` sans
+   Python ouvre le stub Microsoft Store et rend un code 9009 illisible pour un nouvel arrivant).
+1. **Lancer l'installeur déterministe** (il fait tout, bout en bout, dans un seul processus). La
+   variable de plugin **ne s'expanse pas pareil selon le shell** - prendre la forme du shell utilisé :
+   - Bash : `python "${CLAUDE_PLUGIN_ROOT}/scripts/install_speckit.py" <racine-projet>`
+   - PowerShell : `python "$env:CLAUDE_PLUGIN_ROOT/scripts/install_speckit.py" <racine-projet>`
+     (en PowerShell, `${CLAUDE_PLUGIN_ROOT}` désigne une variable de session, **pas** l'environnement :
+     le chemin serait vide et la commande échouerait)
+
+   Replis d'interpréteur : `py -3` sur Windows, `python3` sur macOS/Linux. Le script : **diagnostique
+   l'état réel** (`.specify/` **et** commandes `/speckit.*` **et** CLI) - complet : n'y touche pas
+   (**idempotent**) ; **partiel** (cas classique du clone où seul `.specify/` est committé, ou d'un
+   `specify init` interrompu) : **répare** au lieu de déclarer "rien à faire" -, s'assure de `uv` (l'auto-installe sans admin, rafraîchit le PATH dans son
    propre processus), vérifie Git, acquiert le CLI `specify`, **introspecte `specify init --help`**
    pour bâtir les bons flags (version-proof), joue `specify init` non-interactif, fait un **test de
    fumée**, **pose le registre de hooks `.specify/extensions.yml`** (gabarit
@@ -61,8 +74,10 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
    fusion idempotente de `settings.json`, best-effort), **fige la numérotation en séquentiel**
    (`.specify/init-options.json`, jamais timestamp) **et pose le garde-fou d'alignement
    `check_speckit_alignment.py`** (hook `PostToolUse` via `references/speckit-sync/install_align_hook.py`)
-   qui bloque toute **collision de numéro de feature entre développeurs**, écrit le bloc `speckit` du
-   manifeste, et affiche un statut clair en français.
+   qui bloque toute **collision de numéro de feature entre développeurs**, **épingle la version**
+   (la première installation enregistre sa `ref` dans le bloc `speckit` ; les suivantes réutilisent la
+   **même version** - toute l'équipe a le même SpecKit, sauf `--ref` explicite ou `--upgrade`), écrit le
+   bloc `speckit` du manifeste, et affiche un statut clair en français.
 2. **Relayer le résultat en prose** (voir `references/ux-conventions.md`) : dire **ce qui s'est
    passé** et **la prochaine étape** ; ne jamais afficher de nom de clé du manifeste ni de tableau.
 3. Si le script **sort en échec** : relayer son message **actionnable** tel quel (ex. "Git est
@@ -79,7 +94,11 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
 - Le garde-fou `.claude/hooks/check_speckit_alignment.py` existe et son entrée `PostToolUse` est dans `.claude/settings.json`.
 - Le CLI `specify` est disponible (installation persistante) - `specify check` a pu tourner (informatif).
 - Le manifeste contient le bloc `speckit` (installé + initialisé) et **reparse sans erreur**.
-- **Idempotence** : si `.specify/` préexistait, rien n'a été réinitialisé ni écrasé.
+- **Idempotence** : si l'installation était **complète** (`.specify/` **et** commandes `/speckit.*`),
+  rien n'a été réinitialisé ni écrasé ; si elle était **partielle**, la réparation a été **annoncée**.
+- **Hooks actifs seulement après redémarrage** : dire au développeur que les entrées ajoutées à
+  `.claude/settings.json` ne prennent effet qu'au **redémarrage de la session** Claude Code (et qu'une
+  revue des hooks peut lui être demandée). Ne jamais présenter "fichier posé" comme "hook actif".
 - **Aucun fichier SpecKit rédigé à la main** : tout `.specify/` provient de `specify init`.
 - Le script est sorti **0** ; en cas d'échec, un message **actionnable** a été relayé (pas de trace).
 - Restitution faite **en prose**, manifeste mis à jour **en silence**.
@@ -95,7 +114,11 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
 - **Rien ne bloque l'installation.** `uv` auto-installé sans admin ; PATH rafraîchi en cours de
   processus ; flags construits par introspection ; sous-processus bornés par timeout ; échecs
   réseau attrapés proprement.
-- **Idempotent.** `.specify/` déjà présent -> ne réinitialise pas, ne réécrit rien.
+- **Idempotent, mais jamais complaisant.** Installation **complète** (dossier + commandes) -> ne
+  réinitialise pas, ne réécrit rien. Installation **partielle** -> répare, en le disant. Jamais de faux
+  "tout va bien" à quelqu'un qui n'a pas les commandes `/speckit.*`.
+- **Même version pour toute l'équipe.** La `ref` installée est épinglée dans le bloc `speckit` du
+  manifeste committé et réutilisée par les membres suivants ; `--upgrade` pour bumper volontairement.
 - **Manifeste en silence.** Le bloc `speckit` est écrit sans le narrer ; restitution en prose.
 - **TLS jamais désactivé.** On respecte la CA système (proxys d'entreprise) ; jamais `--skip-tls`.
 

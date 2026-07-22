@@ -4,7 +4,7 @@
 Deux gestes deterministes (jamais laisses au modele), miroir de l'enforcement architecte et du hook
 sync tasks->Linear :
   1. COPIE `check_speckit_alignment.py` (depuis `assembleur/scripts/`) -> `<racine>/.claude/hooks/`
-     (jamais d'ecrasement - idempotent).
+     (idempotent : inchange si identique, remplace avec sauvegarde .bak si la copie est obsolete).
   2. FUSIONNE le hook `PostToolUse` (matcher Write|Edit) dans `.claude/settings.json` SANS ecraser un
      hook existant (tests_guard/format_guard de l'architecte, tasks_linear_hook, SessionEnd des couts).
 
@@ -17,24 +17,60 @@ Usage : python install_align_hook.py [racine_projet]   (defaut : cwd)
 import json
 import os
 import shutil
+import subprocess
 import sys
 
 MARKER = "check_speckit_alignment.py"
-CMD = 'python "${CLAUDE_PROJECT_DIR}/.claude/hooks/check_speckit_alignment.py" posttooluse'
-ENTRY = {"matcher": "Write|Edit",
-         "hooks": [{"type": "command", "command": CMD, "timeout": 30}]}
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "..", "..", "scripts", "check_speckit_alignment.py")
 
 
+def _interpreter():
+    """Interpreteur a inscrire dans la commande du hook.
+
+    why: `python` en dur echoue a CHAQUE Write/Edit sur un poste ou seul `py` (ou `python3`) resout —
+    un hook qui plante en boucle est pire qu'un hook absent. On prefere un nom PORTABLE (settings.json
+    est committe et partage : un chemin absolu casserait chez les autres) et on ne retombe sur le
+    chemin absolu de CE poste que si aucun nom ne repond. Chaque candidat est reellement execute :
+    sur Windows, `python` peut resoudre vers le stub Microsoft Store, qui ne lance rien.
+    """
+    for cand in ("python", "python3", "py"):
+        if not shutil.which(cand):
+            continue
+        try:
+            if subprocess.run([cand, "-c", "pass"], capture_output=True, timeout=20).returncode == 0:
+                return cand
+        except (OSError, subprocess.SubprocessError):
+            continue
+    exe = sys.executable
+    return f'"{exe}"' if exe and os.path.isfile(exe) else "python"
+
+
+def _entry():
+    cmd = (_interpreter()
+           + ' "${CLAUDE_PROJECT_DIR}/.claude/hooks/check_speckit_alignment.py" posttooluse')
+    return {"matcher": "Write|Edit",
+            "hooks": [{"type": "command", "command": cmd, "timeout": 30}]}
+
+
 def _copy_asset(root):
     dst = os.path.join(root, ".claude", "hooks", "check_speckit_alignment.py")
-    if os.path.isfile(dst):
-        print("garde-fou alignement SpecKit : deja present (.claude/hooks/check_speckit_alignment.py)")
-        return
     if not os.path.isfile(SRC):
         print(f"ATTENTION: source introuvable, non copiee : {SRC}", file=sys.stderr)
+        return
+    if os.path.isfile(dst):
+        # why: une copie OBSOLETE (version precedente du plugin, ou commitee par l'equipe) restait en
+        # place a vie. On rafraichit, en gardant une sauvegarde.
+        with open(SRC, "rb") as f:
+            src_bytes = f.read()
+        with open(dst, "rb") as f:
+            if f.read() == src_bytes:
+                print("garde-fou alignement SpecKit : deja a jour (.claude/hooks/check_speckit_alignment.py)")
+                return
+        shutil.copyfile(dst, dst + ".bak")
+        shutil.copyfile(SRC, dst)
+        print("garde-fou alignement SpecKit : version obsolete remplacee (sauvegarde : check_speckit_alignment.py.bak)")
         return
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     shutil.copyfile(SRC, dst)
@@ -63,7 +99,7 @@ def main(argv):
     if found:
         print("hook PostToolUse alignement SpecKit : deja enregistre dans .claude/settings.json")
         return 0
-    arr.append(ENTRY)
+    arr.append(_entry())
     with open(settings, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
         f.write("\n")

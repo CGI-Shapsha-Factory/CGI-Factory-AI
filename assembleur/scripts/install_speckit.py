@@ -5,7 +5,8 @@ Objectif : poser SpecKit COMPLETEMENT et SANS MANIP, et surtout **sans rien qui 
 Le script est le bras arme du skill `install-speckit` (plugin assembleur) : il verifie si le
 projet a deja SpecKit, sinon il l'installe bout en bout dans UN seul processus :
 
-  1. detection idempotente (.specify/ deja present -> ne touche a rien) ;
+  1. diagnostic par CAPACITE (.specify/ + commandes /speckit.* + CLI) : complet -> ne touche a rien ;
+     PARTIEL (cas du clone ou seul .specify/ est commite, ou init interrompu) -> REPARE ;
   2. `uv` garanti (auto-installe en espace utilisateur, SANS admin, PATH rafraichi en cours de
      processus) ; `uv` gere lui-meme Python 3.11+, donc la version de Python systeme n'est PAS
      un pre-requis bloquant ;
@@ -37,7 +38,9 @@ Usage :
 Options :
     --cli-only        installe/persiste le CLI mais NE joue PAS `specify init`
     --ephemeral       force le repli `uvx` (pas d'installation persistante du CLI)
-    --ref <tag>       epingle une version de spec-kit (ex. v0.12.3) ; defaut : main/latest
+    --ref <tag>       epingle une version de spec-kit (ex. v0.12.3) ; defaut : ref deja enregistree
+                      au manifeste par la 1re installation de l'equipe, sinon main/latest
+    --upgrade         ignore la ref epinglee au manifeste et reprend main/latest (bump volontaire)
     --integration <a> agent cible (defaut : claude)
     --allow-pypi      repli garde : tente PyPI si l'acquisition git echoue (non garanti)
     --no-manifest     n'ecrit pas le bloc `speckit` du manifeste
@@ -107,6 +110,10 @@ def refresh_path():
 
 # --- Detection cible + idempotence --------------------------------------------
 def detect_target(argv_target):
+    # why: une cible passee EXPLICITEMENT est un ordre : on ne remonte pas les ancetres (sinon, dans un
+    # repo imbrique, l'install part dans le projet parent au lieu du dossier demande).
+    if argv_target:
+        return os.path.realpath(os.path.abspath(argv_target))
     # defaut = CWD ; si un ancetre contient .factory/, prefere cette racine de projet.
     # why: on ne remonte JAMAIS jusqu'au dossier home (ni au-dessus) -- sinon un `~/.factory`
     # parasite ferait installer SpecKit dans le home au lieu du projet. Repli sur `start`.
@@ -126,8 +133,25 @@ def detect_target(argv_target):
         cur = parent
 
 
-def speckit_present(target):
-    return os.path.isdir(os.path.join(target, ".specify"))
+def diagnose(target):
+    """Etat REEL de SpecKit dans le repo, par CAPACITE (pas par presence de dossier).
+
+    why: `.specify/` est commite ; un nouveau membre qui clone l'a donc deja, alors qu'il n'a NI le CLI
+    `specify` NI les commandes `/speckit.*` (`.claude/` est souvent git-ignore). Se fier au seul dossier
+    faisait dire « rien a faire » a quelqu'un qui ne pouvait rien lancer. Meme piege apres un
+    `specify init` interrompu.
+
+    Renvoie (etat, has_cli) avec etat dans {'absent', 'partiel', 'complet'}.
+    """
+    has_dir = os.path.isdir(os.path.join(target, ".specify"))
+    has_cmds = bool(speckit_commands(target))
+    refresh_path()
+    has_cli = bool(shutil.which("specify"))
+    if has_dir and has_cmds:
+        return "complet", has_cli
+    if has_dir or has_cmds:
+        return "partiel", has_cli
+    return "absent", has_cli
 
 
 # --- Pre-requis ---------------------------------------------------------------
@@ -269,15 +293,56 @@ def smoke(target):
 
 
 # --- Manifeste (silencieux) ---------------------------------------------------
+def manifest_path(target):
+    """Chemin du manifeste committe (repli legacy cadrage-out/), ou None hors workspace Factory."""
+    mpath = os.path.join(target, "manifest.json")
+    if os.path.isfile(mpath):
+        return mpath
+    legacy = os.path.join(target, "cadrage-out", "manifest.json")
+    return legacy if os.path.isfile(legacy) else None
+
+
+def read_speckit_block(target):
+    """Bloc `speckit` deja ecrit par une installation precedente (ou {} si rien/illisible)."""
+    mpath = manifest_path(target)
+    if not mpath:
+        return {}
+    try:
+        with open(mpath, encoding="utf-8-sig") as f:
+            return (json.load(f) or {}).get("speckit") or {}
+    except (OSError, ValueError):
+        return {}
+
+
+def resolve_head_sha():
+    """SHA de `main` chez l'upstream, pour epingler EXACTEMENT ce qui vient d'etre installe.
+
+    why: `main` est une cible mouvante — sans SHA, le membre suivant recoit une autre version. Un tag
+    devine depuis `specify --version` (ex. `0.13.3.dev0`) designerait une version differente : seul le
+    SHA est exact. Best-effort : None si git/reseau ne repondent pas (on n'epingle alors rien).
+    """
+    rc, out, _ = run(["git", "ls-remote", "https://github.com/github/spec-kit.git", "HEAD"], T_QUICK)
+    if rc != 0 or not out.strip():
+        return None
+    sha = out.split()[0].strip()
+    return sha if len(sha) == 40 and all(c in "0123456789abcdef" for c in sha) else None
+
+
+def cli_version(cli_prefix):
+    """Version reellement installee (informative, enregistree au manifeste). None si indisponible."""
+    rc, out, err = run(list(cli_prefix) + ["--version"], T_QUICK)
+    if rc != 0:
+        return None
+    line = (out or err).strip().splitlines()
+    return line[0].strip() if line else None
+
+
 def write_manifest(target, block, no_manifest):
     if no_manifest:
         return
-    mpath = os.path.join(target, "manifest.json")
-    if not os.path.isfile(mpath):  # repli legacy cadrage-out/ ; sinon pas un workspace Factory -> on saute
-        legacy = os.path.join(target, "cadrage-out", "manifest.json")
-        if not os.path.isfile(legacy):
-            return
-        mpath = legacy
+    mpath = manifest_path(target)
+    if not mpath:  # pas un workspace Factory -> on saute
+        return
     try:
         # utf-8-sig: tolere un BOM (manifeste touche par un outil Windows/PowerShell) sans casser.
         with open(mpath, encoding="utf-8-sig") as f:
@@ -339,9 +404,13 @@ def write_init_options(target):
                 data = json.load(f) or {}
         except ValueError:
             return None
-    if data.get("feature_numbering") == "sequential":
+    # why: les deux cles coexistent selon la version de SpecKit (`feature_numbering` ecrit par
+    # `specify init`, `branch_numbering` lu par la strategie de nommage de branche). Meme valeur, aucun
+    # risque : on les pose toutes les deux pour ne dependre d'aucune version.
+    if all(data.get(k) == "sequential" for k in ("feature_numbering", "branch_numbering")):
         return "present"
     data["feature_numbering"] = "sequential"
+    data["branch_numbering"] = "sequential"
     try:
         with open(dest, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
@@ -404,60 +473,123 @@ def parse_args(argv):
     ap.add_argument("--integration", default=DEFAULT_INTEGRATION)
     ap.add_argument("--allow-pypi", action="store_true")
     ap.add_argument("--no-manifest", action="store_true")
+    ap.add_argument("--upgrade", action="store_true",
+                    help="bumpe volontairement la version : ignore la ref epinglee au manifeste")
     ap.add_argument("--verbose", "--debug", dest="verbose", action="store_true")
     return ap.parse_args(argv[1:])
+
+
+def resolve_ref(target, args):
+    """Ref a installer. why: sans epinglage, deux membres qui installent a deux semaines d'ecart
+    n'ont pas la meme version de SpecKit ni les memes templates. La 1re installation enregistre sa ref
+    dans le manifeste committe ; les suivantes la REUTILISENT (sauf --ref explicite ou --upgrade)."""
+    if args.ref or args.upgrade:
+        return args.ref, None
+    pinned = read_speckit_block(target).get("ref")
+    if pinned:
+        return pinned, f"Version SpecKit epinglee par l'equipe (manifeste) : {pinned} -- meme version pour tout le monde."
+    return None, None
+
+
+def _finish(target, args, ref, cli_desc, version, note):
+    """Pose la config d'equipe (hooks, numerotation), ecrit le manifeste, restitue le statut."""
+    ext = write_extensions(target)
+    tasks_hook = install_tasks_hook(target)
+    init_options = write_init_options(target)
+    align_hook = install_align_hook(target)
+    block = {"installed": True, "initialized": True, "path": ".specify",
+             "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
+             "ref": ref, "version": version,
+             "extensions_hooks": ext, "tasks_hook": tasks_hook,
+             "init_options": init_options, "align_hook": align_hook}
+    write_manifest(target, block, args.no_manifest)
+    _report_extensions(ext)
+    if init_options in ("set", "present"):
+        print("Numerotation SpecKit figee en SEQUENTIEL (.specify/init-options.json) — chaque feature garde son NNN canonique ; jamais d'auto-numerotation entre developpeurs.")
+    if note:
+        print(note)
+    if tasks_hook or align_hook:
+        print("Les hooks poses dans .claude/settings.json ne deviennent actifs qu'au REDEMARRAGE de la session Claude Code (une revue des hooks peut etre demandee).")
+    print("Prochaine etape : /speckit.constitution avec assembleur-out/pre-constitution.md, puis les /speckit.specify dans l'ordre de feature-map.md (une branche NNN-slug par feature, SPECIFY_FEATURE_DIRECTORY=specs/NNN-slug).")
+    emit_result(block, target)
+    return 0
 
 
 def main(argv):
     args = parse_args(argv)
     target = detect_target(args.target)
-    cli_desc = f"{PKG} @ {spec_source(args.ref)}"
+    ref, pin_note = resolve_ref(target, args)
+    cli_desc = f"{PKG} @ {spec_source(ref)}"
+    if pin_note:
+        print(pin_note)
 
-    # 1. Idempotence : SpecKit deja present -> rien a faire.
-    if speckit_present(target):
-        print(f"SpecKit deja present dans {target} (.specify/) -- rien a faire.")
-        ext = write_extensions(target)  # rattrape le registre de hooks meme sur une install existante
-        tasks_hook = install_tasks_hook(target)  # rattrape aussi le hook sync tasks->Linear
-        init_options = write_init_options(target)  # rattrape la numerotation sequentielle
-        align_hook = install_align_hook(target)  # rattrape le garde-fou anti-collision de numero
-        block = {"installed": True, "initialized": True, "path": ".specify",
-                 "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
-                 "extensions_hooks": ext, "tasks_hook": tasks_hook,
-                 "init_options": init_options, "align_hook": align_hook}
-        write_manifest(target, block, args.no_manifest)
-        _report_extensions(ext)
-        emit_result(block, target)
-        return 0
+    etat, has_cli = diagnose(target)
 
-    # 2. Pre-requis.
+    # 1. Installation COMPLETE (dossier + commandes) -> idempotent : on ne reinitialise rien.
+    if etat == "complet":
+        print(f"SpecKit deja operationnel dans {target} (.specify/ + commandes /speckit.*) -- rien a reinitialiser.")
+        version = None
+        if not has_cli and not args.ephemeral and ensure_uv(args.verbose) and ensure_git():
+            # why: le repo est complet mais le poste n'a pas le CLI (clone frais). On le pose sans
+            # toucher a .specify/ : sans lui, `specify check`/`specify extension` restent hors de portee.
+            cli = acquire_cli(ref, args.ephemeral, args.allow_pypi, args.verbose)
+            if cli and shutil.which("specify"):
+                print("CLI `specify` manquant sur ce poste : installe (le repo, lui, n'a pas ete touche).")
+                version = cli_version(cli)
+        elif has_cli:
+            version = cli_version(("specify",))
+        return _finish(target, args, ref, cli_desc, version, None)
+
+    # 2. Installation PARTIELLE (ex. clone ou seul .specify/ est commite, ou init interrompu)
+    #    -> on REPARE au lieu de declarer "rien a faire".
+    repair = etat == "partiel"
+    if repair:
+        print("SpecKit incomplet dans ce dossier (il manque le CLI, .specify/ ou les commandes /speckit.*) : reparation en cours.")
+
+    # 3. Pre-requis (Git est requis dans tous les cas : `specify init` initialise un depot).
     if not ensure_uv(args.verbose):
         return 1
-    if not args.allow_pypi and not ensure_git():
+    if not ensure_git():
         return 1
 
-    # 3. Acquisition du CLI.
-    cli = acquire_cli(args.ref, args.ephemeral, args.allow_pypi, args.verbose)
+    # 4. Epinglage : figer le SHA installe pour que les membres suivants aient la MEME version.
+    if ref is None:
+        sha = resolve_head_sha()
+        if sha:
+            ref = sha
+            cli_desc = f"{PKG} @ {spec_source(ref)}"
+            print(f"Version SpecKit epinglee pour l'equipe : {sha[:12]} (les prochains membres installeront la meme).")
+
+    # 5. Acquisition du CLI.
+    cli = acquire_cli(ref, args.ephemeral, args.allow_pypi, args.verbose)
     if cli is None:
         print("ERREUR: impossible d'acquerir le CLI `specify`. Relance avec --verbose.", file=sys.stderr)
         return 1
 
     if args.cli_only:
         block = {"installed": True, "initialized": False, "path": None,
-                 "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc}
+                 "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
+                 "ref": ref, "version": cli_version(cli)}
         write_manifest(target, block, args.no_manifest)
         print("CLI `specify` installe (persistant). `specify init` NON lance (--cli-only).")
         emit_result(block, target)
         return 0
 
-    # 4. Flags par introspection, puis init.
+    # 6. Flags par introspection, puis init.
     help_text = init_help(cli)
     dir_nonempty = os.path.isdir(target) and bool(os.listdir(target))
     argv2 = build_init_argv(cli, target, dir_nonempty, args.integration, help_text)
     if not run_init(argv2, target, args.verbose):
         return 1
 
-    # 5. Test de fumee.
+    # 7. Test de fumee.
     if not smoke(target):
+        # why: tracer l'echec dans le manifeste, sinon la relance suivante croyait avoir affaire a une
+        # installation terminee (.specify/ existe) et repartait sur un faux "rien a faire".
+        write_manifest(target, {"installed": True, "initialized": False, "path": ".specify",
+                                "integration": args.integration, "script": SCRIPT_FLAVOR,
+                                "cli": cli_desc, "ref": ref},
+                       args.no_manifest)
         print(
             "ERREUR: `specify init` s'est termine mais .specify/ ou les commandes /speckit.* sont "
             "introuvables. Relance avec --verbose.",
@@ -465,27 +597,9 @@ def main(argv):
         )
         return 1
 
-    # 6. Registre de hooks SpecKit (config d'equipe, non generee par specify init) + hook sync tasks->Linear
-    #    + numerotation sequentielle figee + garde-fou d'alignement (anti-collision de numero multi-dev).
-    ext = write_extensions(target)
-    tasks_hook = install_tasks_hook(target)
-    init_options = write_init_options(target)
-    align_hook = install_align_hook(target)
-
-    # 7. Manifeste + statut.
-    block = {"installed": True, "initialized": True, "path": ".specify",
-             "integration": args.integration, "script": SCRIPT_FLAVOR, "cli": cli_desc,
-             "extensions_hooks": ext, "tasks_hook": tasks_hook,
-             "init_options": init_options, "align_hook": align_hook}
-    write_manifest(target, block, args.no_manifest)
-    print(f"SpecKit installe et initialise dans {target}.")
+    print(("SpecKit repare dans " if repair else "SpecKit installe et initialise dans ") + f"{target}.")
     print("Crees par `specify init` : .specify/ (constitution, scripts, templates) et les commandes /speckit.* dans .claude/.")
-    _report_extensions(ext)
-    if init_options in ("set", "present"):
-        print("Numerotation SpecKit figee en SEQUENTIEL (.specify/init-options.json) — chaque feature garde son NNN canonique ; jamais d'auto-numerotation entre developpeurs.")
-    print("Prochaine etape : /speckit.constitution avec assembleur-out/pre-constitution.md, puis les /speckit.specify dans l'ordre de feature-map.md (une branche NNN-slug par feature, SPECIFY_FEATURE_DIRECTORY=specs/NNN-slug).")
-    emit_result(block, target)
-    return 0
+    return _finish(target, args, ref, cli_desc, cli_version(cli), None)
 
 
 if __name__ == "__main__":
