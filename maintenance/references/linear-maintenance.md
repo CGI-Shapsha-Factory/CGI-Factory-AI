@@ -49,7 +49,7 @@ créée doit **nommer son ticket propriétaire** dans son titre :
 ## Phase 8: Anomalie RAG-31 - Correction du chevauchement de réservations
 ```
 
-Sans ce marqueur, `/assembleur:creation-tasks-linear` et le hook `tasks.md` voient une phase
+Sans ce marqueur, `/assembleur:creation-taches-par-phase-de-spec` et le hook `tasks.md` voient une phase
 sans sous-ticket et proposent d'en créer un : ce serait un **doublon** du ticket de maintenance,
 son **frère** sous la même Feature, avec deux états à synchroniser - et "Linear est la seule
 source de vérité" tombe. Marquée, la phase est **énoncée et passée**, jamais proposée. Règle
@@ -60,7 +60,7 @@ complète et motif exact : `assembleur/references/linear-guide.md`, 4e clé de j
 **titre de phase markdown** dans `tasks.md` : objet différent, besoin différent (un fichier
 committé n'a aucun moyen natif de désigner un ticket). Les deux règles coexistent.
 
-**Corollaire** : un skill de maintenance **n'appelle jamais** `/assembleur:creation-tasks-linear`.
+**Corollaire** : un skill de maintenance **n'appelle jamais** `/assembleur:creation-taches-par-phase-de-spec`.
 Le ticket d'anomalie ou d'évolution **est** l'objet suivi ; la phase en est un détail
 d'implémentation, et son avancement se trace par le statut et les commentaires de ce ticket.
 
