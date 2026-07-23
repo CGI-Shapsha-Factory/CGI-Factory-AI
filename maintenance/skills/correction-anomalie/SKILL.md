@@ -75,7 +75,7 @@ l'arborescence.**
    ce ticket d'anomalie** : `## Phase N: Anomalie <identifiant> - <intitulé>`. Corriger le
    titre si `/speckit.tasks` ne l'a pas produit ainsi. Sans ce marqueur, l'outillage aval
    proposera de créer un sous-ticket `Task` pour cette phase : un doublon de ce ticket. **Ne
-   pas appeler** `/assembleur:creation-tasks-linear` - ce ticket est l'objet suivi de la
+   pas appeler** `/assembleur:creation-taches-par-phase-de-spec` - ce ticket est l'objet suivi de la
    correction. Cf. `assembleur/references/linear-guide.md`, 4e clé de jointure.)*
 6. **Refermer proprement (garde-fou clé).** Refuser la clôture tant que ces trois choses ne
    sont pas faites :
