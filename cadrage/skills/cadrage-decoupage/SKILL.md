@@ -112,6 +112,12 @@ chat sous forme de tableau à TROIS colonnes, en français Product Owner** :
   `references/ux-conventions.md`, §3ter). Dans le tableau, la colonne `Use case` porte cet
   **intitulé complet suivi de `(UCn)`**.
 - Présenter la proposition comme une **proposition** (pas une décision).
+- **Découpage divergent = fork exposé, pas choix silencieux.** Si une capacité peut
+  raisonnablement se découper de deux façons aux conséquences différentes (une grosse tranche
+  contre deux plus fines, un regroupement contre une séparation), **ne pas trancher en silence** :
+  présenter les deux découpages comme un **fork de conception** avec le coût de chacun (cf.
+  `references/interactive-loop.md`) et laisser l'utilisateur choisir. La recommandation reste la
+  vue par défaut du modèle, mais l'alternative crédible est rendue visible avec ce qu'elle coûte.
 - **Demander à l'utilisateur si des modifications sont nécessaires** (reformuler,
   fusionner, scinder, réordonner). **Appliquer** les changements demandés dans
   l'artefact, puis enchaîner sur la suite.
@@ -199,7 +205,11 @@ Déroulé :
    **jamais par un `UC3` nu** : l'utilisateur n'a ainsi pas à se rappeler quel numéro
    correspond à quelle capacité. Poser le point **avec `AskUserQuestion`** : **exactement deux
    options** (la décision recommandée, puis l'alternative crédible) ; ne jamais fabriquer de
-   "saisir ma décision", l'outil l'ajoute. **Attendre la réponse** avant le point suivant.
+   "saisir ma décision", l'outil l'ajoute. Comme un point de couplage est un **fork de
+   conception**, **chaque option nomme son coût** dans sa description - coupler (ce que ça
+   simplifie, ce que ça fige) contre séparer (ce que ça libère, ce que ça duplique) - cf. la
+   règle "forks de conception" de `references/interactive-loop.md`. **Attendre la réponse** avant
+   le point suivant.
 2. **Appliquer chaque décision EN PLACE** au fur et à mesure : modifier directement
    `coupling-map.md` (et `spec-index.md` si la frontière/dépendance bouge) pour y
    inscrire le résultat tranché. **Ne créer aucun journal d'arbitrage, n'écrire

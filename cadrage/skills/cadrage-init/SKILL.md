@@ -202,4 +202,4 @@ création/mise à jour du manifeste, pas la date d'une source.
 - **Frontière claire.** Les gabarits installés appartiennent au projet ; le plugin
   reste la source canonique mais n'est pas modifié par le projet.
 
-Étape suivante : `/cadrage:cadrage-extraction` - dépouiller la matière brute de l'atelier en capture structurée.
+Étape suivante : `/cadrage:cadrage-extraction` - dépouiller la matière brute de l'atelier en capture structurée. Si la matière est encore mince ou le besoin flou, `/cadrage:cadrage-ideation` (atelier d'idéation facultatif) peut la faire émerger d'abord - son compte rendu est ensuite repris comme source par l'extraction.

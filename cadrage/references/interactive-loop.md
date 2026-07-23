@@ -41,14 +41,41 @@ inventée : on demande, on ne comble pas.**
 - **Le nombre d'options ne remplace pas l'écoute.** Deux options ne veulent pas dire que la
   réponse est binaire : elles ouvrent la conversation, la saisie libre reste la voie normale
   pour tout ce qui ne rentre pas dans les deux.
-- **Relance unique sur réponse mince.** Quand la réponse à un point structurant reste vague
+- **Forks de conception : exposer le coût dans chaque option.** À un **fork de conception** - un
+  choix de cadrage aux conséquences durables (découper ou fusionner une feature, coupler ou
+  séparer deux capacités, inclure ou exclure du périmètre) par opposition à une simple
+  confirmation - les deux options ne se contentent pas de "recommandée vs alternative" : chacune
+  **nomme ce qu'elle coûte ou ferme** dans sa `description` ("ce choix simplifie X mais reporte
+  Y"). C'est la version deux-options du "proposer deux ou trois approches avec leurs compromis
+  et une recommandation" : l'option 1 porte le cadrage recommandé **avec son coût**, l'option 2
+  le meilleur concurrent **avec le sien**, la saisie libre laisse la place à un troisième
+  cadrage. Le but n'est pas d'ajouter des questions mais de rendre l'arbitrage **éclairé** là
+  où il engage la suite.
+- **Relance unique par défaut.** Quand la réponse à un point structurant reste vague
   ("ça doit être rapide", "des utilisateurs classiques"), **coacher, pas quizzer** : reformuler
   concrètement ce que la réponse laisse ouvert et relancer **une seule fois** avec une question
   plus précise ("rapide pour qui, sur quelle action ?"). Si l'utilisateur confirme ou maintient
-  sa réponse telle quelle, **l'accepter et l'écrire telle quelle** - jamais de deuxième relance,
-  jamais de relance sur un point que l'utilisateur a choisi de laisser de côté, et **jamais**
-  sur la conformité / le légal (règle Q8). Calibrer l'intensité sur l'enjeu du projet : creuser
-  davantage un lancement critique, rester léger sur un outil interne modeste.
+  sa réponse telle quelle, **l'accepter et l'écrire telle quelle** - jamais de relance
+  automatique supplémentaire, jamais de relance sur un point que l'utilisateur a choisi de
+  laisser de côté, et **jamais** sur la conformité / le légal (règle Q8). Calibrer l'intensité
+  sur l'enjeu du projet : creuser davantage un lancement critique, rester léger sur un outil
+  interne modeste.
+- **Sondage approfondi sur choix explicite (opt-in).** La relance unique reste la règle ; le
+  sondage plus profond est une **exception que l'utilisateur ouvre lui-même**, jamais imposée.
+  Conditions cumulatives : le point est **structurant** (utilisateurs cibles, problème résolu,
+  signal de succès, contrainte non négociable), l'**enjeu est fort** (pilote ou lancement
+  critique - pas un outil interne modeste), et la réponse **reste mince après la relance
+  unique**. Alors, proposer **avec `AskUserQuestion`** - deux options : "Creusons ce point
+  ensemble (recommandé)" et "Ma réponse tient, on avance". Sur le second choix, **écrire la
+  réponse telle quelle** et passer à la suite. Sur le premier, mener un **laddering court** en
+  prose (relances ouvertes, une par message) : monter vers la racine ("pourquoi est-ce
+  important - qu'est-ce que ça t'apporte vraiment ?") puis descendre vers le concret
+  ("concrètement, sur quelle action, pour qui, et à quoi verrais-tu que c'est atteint ?").
+  **Plafond de trois crans**, puis on écrit la réponse affinée. À tout moment l'utilisateur
+  peut clore ("ça me suffit") : on s'arrête et on écrit l'état atteint. **Jamais** sur Q8 /
+  légal, **jamais** sur un point laissé de côté. Pour les seeds qualité (Q2 charge, Q6
+  disponibilité, Q7 performance), le laddering cadre l'ordre de grandeur sans jamais le
+  présenter comme une cible chiffrée ("rapide, ça veut dire combien, sur quelle opération ?").
 - **Si l'utilisateur ne tranche pas un point** (il préfère le laisser de côté) : **on n'écrit rien**
   pour ce point. Aucun marqueur, aucune liste de points ouverts persistée - le point est simplement
   omis de l'artefact. On peut le lui rappeler oralement en fin de boucle, jamais l'écrire dans un fichier.

@@ -80,7 +80,9 @@ Pas de porte de régénération : chaque séance écrit un **fichier daté disti
 5. **Synthétiser en deux temps.** D'abord **lui tendre le miroir** : reformuler ses
    propres idées, y compris les premières, souvent enterrées sous les suivantes, et le
    laisser voir le motif d'ensemble. Ensuite seulement, **ajouter les liens non
-   évidents** que la séance a fait apparaître entre ses idées. Faire valider cette
+   évidents** que la séance a fait apparaître entre ses idées. Au passage, **relever avec
+   lui** les hypothèses qu'il tient pour acquises et les questions restées ouvertes - elles
+   nourrissent les deux sections dédiées du compte rendu (voir Sortie). Faire valider cette
    synthèse en clair.
 6. **Écrire le compte rendu** dans
    `cadrage-out/source-contexte/ideation-<JJ-MM>.md` (voir Sortie). Tout le contenu
@@ -106,13 +108,22 @@ simplement :
 
 ## Écartées
 <ce que l'utilisateur a explicitement écarté, en une ligne chacune>
+
+## Hypothèses à vérifier
+<ce que la séance tient pour acquis et qui reste à confirmer - une par ligne>
+
+## Questions émergentes
+<les questions restées ouvertes que la séance a fait surgir - une par ligne>
 ```
 
 **Contenu uniquement, sans provenance** : pas d'horodatage interne, pas de tour de
 parole, pas de mention de technique par idée. C'est de la **matière brute** : elle
 sera dépouillée, confirmée et structurée par `cadrage-extraction` comme toute autre
 source - rien de ce fichier n'est considéré validé tant que l'extraction ne l'a pas
-fait confirmer.
+fait confirmer. Les deux dernières sections sont **reprises nommément** par l'extraction :
+les **hypothèses à vérifier** alimentent la suggestion de la question sur les incertitudes
+et hypothèses (Q19), les **questions émergentes** deviennent des points à creuser dans la
+passe découverte - toujours à confirmer par le flux normal, jamais validées d'office.
 
 ## Mise à jour du manifeste
 

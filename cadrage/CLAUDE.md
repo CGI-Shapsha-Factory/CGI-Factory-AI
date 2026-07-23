@@ -43,8 +43,8 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | # | skill | rôle | porte |
 |---|-------|------|-------|
 | 0 | `cadrage-init` | crée `.factory/` (gabarits, git-ignoré) + `cadrage-out/` (docs) + le **manifeste committé** `manifest.json` **à la racine** (le nom du projet est demandé par `cadrage-extraction`) | aucune |
-| 0bis | `cadrage-ideation` | **facultatif** - atelier d'idéation facilité (posture facilitateur : les idées viennent de l'utilisateur ; catalogue de techniques `references/techniques-ideation.md`) ; le compte rendu va dans `cadrage-out/source-contexte/ideation-<JJ-MM>.md`, ingéré ensuite comme source par `cadrage-extraction` ; n'écrit pas le manifeste, ne conditionne aucune porte | manifeste existe |
-| 1 | `cadrage-extraction` | matière brute (fichier/multi/dossier ; .txt/.md/.pdf/.docx) -> `capture-brute.md` (contenu, **sans horodatage ni src**) + **passe découverte** (19 questions, interactive) -> `project-frame.md` | manifeste existe + 1 source |
+| 0bis | `cadrage-ideation` | **facultatif** - atelier d'idéation facilité (posture facilitateur : les idées viennent de l'utilisateur ; catalogue de techniques scriptées `references/techniques-ideation.md`, familles exploration + analytique dont pré-mortem, laddering, renversement d'hypothèses) ; le compte rendu (dont **hypothèses à vérifier** et **questions émergentes**) va dans `cadrage-out/source-contexte/ideation-<JJ-MM>.md`, repris comme source par `cadrage-extraction` (les deux dernières sections nourrissent Q19 et les points à creuser) ; n'écrit pas le manifeste, ne conditionne aucune porte | manifeste existe |
+| 1 | `cadrage-extraction` | tour de table à chaud (brain dump + **pré-mortem / hypothèses**) puis matière brute (fichier/multi/dossier ; .txt/.md/.pdf/.docx) -> `capture-brute.md` (contenu, **sans horodatage ni src**) + **passe découverte** (19 questions, interactive) -> `project-frame.md` | manifeste existe + 1 source |
 | 2 | `cadrage-vision` | capture -> `product-brief.md` (quoi/pourquoi, sans techno) | capture existe |
 | 3 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
 | 4 | `cadrage-decoupage` | découpage **fonctionnel** (use cases par valeur, **sans MVP**) + couplage (hypothèse) ; **table affichée en chat** ; arbitrage **en session, écrit en place** | `vision_complete` |
@@ -115,10 +115,14 @@ uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
 - **Boucle interactive** (`references/interactive-loop.md`) : une question à la fois, **toujours
   posée avec `AskUserQuestion`** - **exactement deux options** (la recommandée d'abord, puis
   l'alternative crédible), l'outil ajoutant lui-même la saisie libre en troisième ligne. **Jamais
-  de question rédigée en prose dans le fil.** Un point non tranché est **omis**, jamais marqué. **Relance unique sur
-  réponse mince** : une réponse vague sur un point structurant est relancée **une seule
-  fois** avec une question plus précise (coacher, pas quizzer) ; si l'utilisateur maintient,
-  on écrit tel quel - jamais de deuxième relance, jamais sur le légal (Q8).
+  de question rédigée en prose dans le fil.** Un point non tranché est **omis**, jamais marqué. **Relance unique par défaut** : une réponse vague sur un point structurant est relancée **une seule
+  fois** (coacher, pas quizzer) ; si l'utilisateur maintient, on écrit tel quel. **Sondage
+  approfondi sur choix explicite** : sur un point structurant à enjeu fort resté mince, on peut
+  proposer (deux options) de creuser ensemble - laddering court, plafond de trois crans,
+  l'utilisateur peut clore à tout moment ; jamais sur le légal (Q8) ni sur un point laissé de
+  côté. **Forks de conception** : à un choix de cadrage engageant (découper/fusionner,
+  coupler/séparer, périmètre), chaque option **nomme son coût**, pas seulement recommandée vs
+  alternative.
 - **Pas de fuite de champ** (`references/ux-conventions.md`) : aucun nom d'attribut /
   clé JSON en sortie utilisateur ni dans les refus (table de correspondance fournie).
   Refus en langage naturel. Chaque skill finit par **une ligne "Étape suivante"**.

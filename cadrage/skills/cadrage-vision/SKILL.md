@@ -47,9 +47,12 @@ générer directement, sans porte.
    d'horodatage) ; un élément non soutenu par la matière est **omis** ou **demandé
    en session**, jamais marqué `[À VALIDER]`.
 3. **Périmètre OUT (forcé non vide).** Lister les exclusions explicites de la
-   capture. S'il n'y en a pas, **les faire trancher en session avec `AskUserQuestion`** : deux
-   exclusions plausibles au regard du périmètre IN, une par option, la saisie libre pour une
-   autre.
+   capture. S'il n'y en a pas, **les faire trancher en session avec `AskUserQuestion`**. Pour une
+   frontière de périmètre qui **engage vraiment la suite**, la poser comme un **fork de
+   conception** (cf. `references/interactive-loop.md`) : deux options qui **nomment chacune leur
+   coût** - "Exclure X du périmètre (ce que ça ferme, le risque)" contre "Garder X (le coût, le
+   délai que ça ajoute)" -, la saisie libre pour une autre lecture. Pour des exclusions
+   secondaires sans réel enjeu, deux exclusions plausibles suffisent, une par option.
    OUT ne doit jamais rester vide ; on n'y écrit que ce qui est confirmé.
 4. **Critères de succès produit.** Traduire les objectifs en métriques d'usage
    (pas de code). Si une cible n'a pas été captée, écrire le critère et préciser

@@ -100,8 +100,16 @@ factory - ne pas la poser, ne pas l'écrire dans le manifeste.
 ## Tour de table à chaud (avant les questions structurées)
 
 Juste après le nom du projet, **avant** le dépouillement et la passe découverte, ouvrir un
-court tour de table libre. Les deux temps sont **facultatifs et jamais insistés** : "rien à
+court tour de table libre. Ces temps sont **facultatifs et jamais insistés** : "rien à
 ajouter" fait passer directement à la suite.
+
+**Atelier d'idéation si la matière est mince (une seule proposition, facultative).** Si peu ou
+pas de sources ont été fournies, ou si le sujet est manifestement encore en train de se former,
+proposer **avec `AskUserQuestion`** - deux options : "Cadrons d'abord les zones floues à voix
+haute (court atelier)" et "La matière est solide, on structure directement". Sur le premier
+choix, orienter vers `/cadrage:cadrage-ideation` (son compte rendu revient comme source, repris
+au chargement) puis reprendre l'extraction ; sur le second, continuer le tour de table. **Ne pas
+la proposer** si des sources riches sont déjà là - ce serait une friction inutile.
 
 1. **Invitation ouverte (un seul message).** Inviter l'utilisateur à vider son sac : tout ce
    qui lui semble important et qui n'est pas dans les sources - contexte, intuitions,
@@ -120,12 +128,33 @@ ajouter" fait passer directement à la suite.
    richesse des suggestions proposées. Un enjeu fort justifie de creuser davantage ; un outil
    interne modeste ne mérite pas un interrogatoire. (Le recouvrement avec la question sur le
    type de projet est normal : c'est elle qui porte la réponse persistée.)
+3. **Projection d'échec et hypothèse-clé (deux relances ouvertes, prose).** Toujours dans le
+   registre du tour de table (prose, **pas** `AskUserQuestion` : on fait produire, on ne collecte
+   pas de décision), poser deux questions courtes l'une après l'autre, en attendant la réponse à
+   chaque fois :
+   - Pré-mortem : "Projetons-nous : on est [horizon réaliste] après la mise en service et le
+     projet est jugé décevant. Qu'est-ce qui a le plus probablement mal tourné ?"
+   - Hypothèse-clé : "Quelle est l'hypothèse que tu tiens pour acquise aujourd'hui et qui, si
+     elle se révélait fausse, remettrait tout le projet en cause ?"
+   **Facultatif et jamais insisté** ("rien ne me vient" fait passer) ; **calibré sur l'enjeu**
+   (appuyé pour un lancement critique, à peine effleuré pour un outil interne modeste). Ce qui
+   remonte est de la **matière brute** : ça alimente les sections Frictions, Contraintes et
+   Objectifs de la capture, et sert de **suggestion** à la question sur les incertitudes et
+   hypothèses (Q19) - jamais validé d'office, confirmé par le flux normal. Ne pas creuser ici :
+   le sondage détaillé, s'il est justifié, viendra pendant la passe découverte (relance unique,
+   puis sondage approfondi opt-in ; cf. `references/interactive-loop.md`).
 
 ## Procédure
 
 1. **Charger** le contenu de chaque source (Notion, ou fichier `.txt`/`.md`/
    transcript/`.pdf`/`.docx` selon les règles de la section Entrées). Écrire la
-   capture dans `cadrage-out/capture-brute.md`.
+   capture dans `cadrage-out/capture-brute.md`. **Cas particulier des comptes rendus
+   d'idéation** (`cadrage-out/source-contexte/ideation-<JJ-MM>.md`, produits par
+   `cadrage-ideation`) : les dépouiller comme toute source pour les sept sections, **et en
+   plus** reprendre nommément leurs deux sections finales - les **Hypothèses à vérifier**
+   deviennent des **suggestions** de la question sur les incertitudes et hypothèses (Q19), les
+   **Questions émergentes** deviennent des **points à creuser** dans la passe découverte. Ces
+   éléments restent des suggestions à confirmer par le flux normal, jamais des réponses validées.
 2. **Dépouiller** la matière et la classer dans les **sept sections fixes**
    (voir ci-dessous). Travailler section par section, sur l'ensemble des
    sources. Extraire le **contenu**, reformulé clair et lisible.
