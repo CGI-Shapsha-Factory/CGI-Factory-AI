@@ -1,9 +1,9 @@
 ---
-name: rapport-de-recette
+name: rapport-de-validation
 description: Assemble le rapport de recette tracé exigence par exigence, trie chaque écart avec le testeur (anomalie, évolution ou critère flou, renvoi vers les skills maintenance) et recueille le verdict humain de la porte de recette.
 ---
 
-# rapport-de-recette
+# rapport-de-validation
 
 Bras "restitution et porte" de la validation fonctionnelle : croise le plan de test et les
 résultats d'exécution en un **rapport de recette tracé exigence par exigence**, trie chaque
@@ -12,7 +12,7 @@ résultats d'exécution en un **rapport de recette tracé exigence par exigence*
 testeur est juge et valideur.**
 
 ## Objectif
-Produire `validation-out/<feature>/rapport-de-recette.md` (matrice critère -> cas -> verdict
+Produire `validation-out/<feature>/rapport-de-validation.md` (matrice critère -> cas -> verdict
 -> preuve -> décision) et inscrire le verdict humain dans le rapport et dans Linear.
 
 ## Pré-requis (vérification silencieuse)
@@ -41,8 +41,8 @@ Produire `validation-out/<feature>/rapport-de-recette.md` (matrice critère -> c
 ## Procédure
 
 ### Étape 1 : assembler la matrice de traçabilité
-Depuis le gabarit `rapport-de-recette.md` - celui du **plugin** fait foi : si la copie
-`.factory/validation/rapport-de-recette.md` en diffère, la remplacer avant d'écrire (cf.
+Depuis le gabarit `rapport-de-validation.md` - celui du **plugin** fait foi : si la copie
+`.factory/validation/rapport-de-validation.md` en diffère, la remplacer avant d'écrire (cf.
 `references/regles-validation.md`). Une ligne **par critère** du
 plan, dans l'ordre des colonnes du gabarit : **ce qui est vérifié** (la phrase reprise de la
 vue d'ensemble du plan, jamais une référence de spécification nue), le cas de test, le verdict

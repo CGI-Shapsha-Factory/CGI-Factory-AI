@@ -89,7 +89,7 @@ le testeur valide (porte de recette). Les écarts constatés se traitent ensuite
 | `validation-init` | installe les gabarits + bloc manifeste + enregistre l'adresse de l'environnement de recette + signale l'amont manquant (`specs/`, Linear, maintenance) | après la première feature livrée |
 | `plan-de-validation` | dérive le plan de test depuis `specs/<feature>/spec.md` : un cas par critère d'acceptation, tracé à sa source, critère non testable marqué "à clarifier" (jamais interprété), données de test collectées en session | **plan validé par le testeur** (humain) |
 | `execution-validation` | joue le plan dans le navigateur contre l'environnement de recette (choix de l'outil à chaque lancement : extension Chrome recommandée / Playwright / mission Cowork) ; résultats + preuves au format commun | le testeur choisit l'outil ; l'IA constate |
-| `rapport-de-recette` | rapport tracé (critère -> cas -> verdict -> preuve), tri de chaque écart avec le testeur (anomalie -> `/maintenance:creation-anomalie`, spec en cause -> `/maintenance:creation-evolution`, flou -> clarifier ou suivi Linear), scénarios rejouables de non-régression, puis verdict de recette (rapport + commentaire Linear) | **verdict de recette** (humain) |
+| `rapport-de-validation` | rapport tracé (critère -> cas -> verdict -> preuve), tri de chaque écart avec le testeur (anomalie -> `/maintenance:creation-anomalie`, spec en cause -> `/maintenance:creation-evolution`, flou -> clarifier ou suivi Linear), scénarios rejouables de non-régression, puis verdict de recette (rapport + commentaire Linear) | **verdict de recette** (humain) |
 
 ### Phase 6 : `maintenance` (traitement des écarts après livraison)
 Quand le PO ou la validation fonctionnelle constate un écart sur une feature livrée, tout devient
@@ -119,7 +119,7 @@ Pas une phase : mesure **ce que coûterait la fabrication au tarif API** (estima
 **Fabrication en parallèle** : une branche = une feature = un développeur (numéro imposé par le registre, **jamais** d'auto-numérotation), **claim** du ticket `Feature` Linear avant de démarrer, l'avancement vit **dans Linear**, et les features **couplées** (même composant/état) se traitent **en séquence**. SpecKit offre aussi des portes de cohérence **natives optionnelles** (`/speckit.clarify`, `/speckit.analyze`). Règles complètes : `assembleur-out/attack-plan.md`.
 
 **Repère** : pour savoir où tu en es dans une phase, lance son skill de bilan/cohérence
-(`cadrage-completude`, `architecte-coherence`, `designer-coherence`, le rapport de cohérence de l'assembleur, ou `rapport-de-recette` côté validation).
+(`cadrage-completude`, `architecte-coherence`, `designer-coherence`, le rapport de cohérence de l'assembleur, ou `rapport-de-validation` côté validation).
 
 ## Étape suivante
 "Étape suivante : `/cadrage:cadrage-init` pour démarrer depuis le début, ou lance directement la phase qui correspond à ton avancement - `/architecte:architecte-init`, `/designer:designer-init`, `/assembleur:assembleur-init`, `/validation:validation-init` (feature livrée à recetter) ou `/maintenance:maintenance-init` (écarts à traiter)."

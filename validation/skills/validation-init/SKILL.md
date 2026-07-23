@@ -8,7 +8,7 @@ description: Amorce la phase de validation fonctionnelle : installe les gabarits
 Skill d'amorçage de la **validation fonctionnelle** : **tout premier skill** à lancer quand une
 feature livrée doit passer en recette fonctionnelle (après la fabrication SpecKit, donc après
 l'assembleur et la première alimentation de Linear). Il prépare le terrain ; les 3 skills
-métier (`plan-de-validation`, `execution-validation`, `rapport-de-recette`) supposent qu'il a
+métier (`plan-de-validation`, `execution-validation`, `rapport-de-validation`) supposent qu'il a
 tourné.
 
 ## Objectif
@@ -31,7 +31,7 @@ validation peut être menée par **une autre personne**, sur une **autre machine
 **clone frais** où **aucun `.factory/` n'existe encore**. Ce skill ne présuppose donc
 **jamais** un `.factory/` déjà présent : **avant toute autre chose**, il (re)pose dans
 `.factory/validation/` les quatre gabarits (`plan-de-test.md`, `execution-resultats.md`,
-`mission-cowork.md`, `rapport-de-recette.md`) et le bloc `validation` du manifeste
+`mission-cowork.md`, `rapport-de-validation.md`) et le bloc `validation` du manifeste
 `manifest.json` (créé s'il manque).
 
 ## Setup inconditionnel + état de l'amont (jamais bloquant)
@@ -48,7 +48,7 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
 ## Procédure
 1. **Installer les gabarits** dans `.factory/validation/` (copier depuis le plugin
    `templates/`) : `plan-de-test.md`, `execution-resultats.md`, `mission-cowork.md`,
-   `rapport-de-recette.md`. **Toujours écraser ceux qui existent déjà** : ils sont
+   `rapport-de-validation.md`. **Toujours écraser ceux qui existent déjà** : ils sont
    git-ignorés, régénérables, et n'ont aucune valeur propre - un projet initialisé avec une
    version antérieure du plugin garderait sinon un gabarit périmé et continuerait de produire
    des artefacts à l'ancienne forme. Créer `validation-out/` s'il n'existe pas.

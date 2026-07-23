@@ -210,4 +210,4 @@ booléens) : ce qui passe, ce qui échoue, ce qui n'a pas pu être testé.
   reste ouverte. **Aucune question rédigée en prose dans le fil.** Un refus se termine par une
   question (cf. `references/interactive-loop.md`).
 
-Étape suivante : `/validation:rapport-de-recette` - assembler le rapport de recette tracé et trier les écarts avec le testeur. Sur la voie Cowork, attendre d'abord que le fichier de résultats soit apparu, puis lancer ce même bilan. Ou relancer `/validation:execution-validation` pour une nouvelle exécution (changement d'outil, cas restés à rejouer, ou vérification après correction) : chaque exécution produit son propre fichier, aucune n'écrase la précédente.
+Étape suivante : `/validation:rapport-de-validation` - assembler le rapport de recette tracé et trier les écarts avec le testeur. Sur la voie Cowork, attendre d'abord que le fichier de résultats soit apparu, puis lancer ce même bilan. Ou relancer `/validation:execution-validation` pour une nouvelle exécution (changement d'outil, cas restés à rejouer, ou vérification après correction) : chaque exécution produit son propre fichier, aucune n'écrase la précédente.

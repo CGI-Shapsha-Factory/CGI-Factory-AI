@@ -16,7 +16,7 @@ L'adresse de l'environnement de recette absente n'est jamais bloquante : elle es
 Avec une feature en second argument (le nom de son dossier sous validation-out/), echoue si :
   - le plan `validation-out/<feature>/plan-de-test.md` est absent ;
   - un cas de test du plan ne cite pas son critere source ;
-  - le rapport `rapport-de-recette.md` existe mais son verdict n'est pas rempli (le gabarit
+  - le rapport `rapport-de-validation.md` existe mais son verdict n'est pas rempli (le gabarit
     contient toujours le titre de la section : on exige une ligne `- **Verdict** : <valeur>`
     dont la valeur n'est pas le placeholder entre parentheses du gabarit).
 
@@ -31,7 +31,7 @@ import re
 import sys
 
 GABARITS = ("plan-de-test.md", "execution-resultats.md", "mission-cowork.md",
-            "rapport-de-recette.md")
+            "rapport-de-validation.md")
 
 
 def _manifest_path(argv):
@@ -112,7 +112,7 @@ def _check_feature(root, feature, problems):
         contenu = f.read()
     _check_plan(contenu, feature, problems)
 
-    rapport = os.path.join(fdir, "rapport-de-recette.md")
+    rapport = os.path.join(fdir, "rapport-de-validation.md")
     if os.path.isfile(rapport):
         with open(rapport, encoding="utf-8-sig") as f:
             rcontenu = f.read()
@@ -124,7 +124,7 @@ def _check_feature(root, feature, problems):
                                 flags=re.MULTILINE)
         if not section or not verdict or verdict.group(1).lstrip().startswith("("):
             problems.append(
-                f"rapport sans verdict rempli (validation-out/{feature}/rapport-de-recette.md) - "
+                f"rapport sans verdict rempli (validation-out/{feature}/rapport-de-validation.md) - "
                 f"la porte de recette n'a pas ete franchie proprement")
 
 
