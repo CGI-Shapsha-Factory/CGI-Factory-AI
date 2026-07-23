@@ -132,15 +132,26 @@ et ce que le testeur devra faire ensuite. Puis générer
 `.factory/validation/mission-cowork.md` si elle en diffère (cf.
 `references/regles-validation.md`) - (adresse de recette, renvoi au plan, règles
 d'exécution, format de résultats imposé - le document est auto-portant : Cowork n'a pas cette
-session). Si une mission existe déjà pour la feature, appliquer la porte de régénération
-(repartir de zéro ou archiver sous `_archives/`). Afficher la marche à suivre (ouvrir Cowork
+session). Si `validation-out/<feature>/mission-cowork.md` existe déjà, poser la **porte de
+régénération avec `AskUserQuestion`** avant d'écrire, en nommant le fichier - **deux options
+explicites, la saisie libre restant ouverte** (le "Other" de l'outil) : **repartir de zéro**
+(supprimer la mission existante puis regénérer au nom canonique) ou **garder les deux
+(versionner)** (archiver l'existant sous
+`validation-out/<feature>/_archives/mission-cowork-v<N>.md`, `N` = index croissant, puis
+regénérer au nom canonique). La **saisie libre** est la troisième voie : le testeur précise une
+autre consigne (renommer l'existant, garder tel quel et s'arrêter) et le skill **l'applique** ;
+**jamais d'écrasement ni de suppression sans un geste explicite** (une consigne non actionnable
+se re-demande). Afficher la marche à suivre (ouvrir Cowork
 sur le dossier du projet, extension Chrome autorisée sur le domaine, donner la mission), puis
 **s'arrêter là** : l'exécution se fait hors session, le bilan se lancera quand les résultats
 seront apparus.
 
 ### Étape 3 : écrire les résultats (voies en session)
 Un fichier `validation-out/<feature>/resultats/execution-<JJ-MM>.md` (si le nom du jour existe
-déjà, suffixer `-2`, `-3`... - **on n'écrase jamais une exécution**), **depuis le gabarit**
+déjà, suffixer `-2`, `-3`... - **on n'écrase jamais une exécution**). Les résultats et leurs
+preuves **ne passent jamais par la porte de régénération** : chaque exécution produit son propre
+fichier (auto-suffixe), donc aucune question à poser - la porte ne vaut que pour la mission
+Cowork (Étape 2c). Le fichier est écrit **depuis le gabarit**
 `.factory/validation/execution-resultats.md` - celui du **plugin** fait foi, remplacer la copie
 si elle en diffère (cf. `references/regles-validation.md`).
 

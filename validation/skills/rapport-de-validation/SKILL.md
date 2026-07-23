@@ -48,8 +48,17 @@ plan, dans l'ordre des colonnes du gabarit : **ce qui est vérifié** (la phrase
 vue d'ensemble du plan, jamais une référence de spécification nue), le cas de test, le verdict
 de l'exécution, la preuve, puis la **Source** (référence compacte) et la décision. Aucun critère ne
 disparaît : un cas absent des résultats apparaît "non exécuté" et compte comme un écart à
-trier. Si un rapport existe déjà pour la feature, appliquer la porte de régénération
-(repartir de zéro ou archiver sous `_archives/`). Écrire aussi la synthèse chiffrée, en prose.
+trier. Si `validation-out/<feature>/rapport-de-validation.md` existe déjà, poser la **porte de
+régénération avec `AskUserQuestion`** avant d'écrire, en nommant le fichier - **deux options
+explicites, la saisie libre restant ouverte** (le "Other" de l'outil) : **repartir de zéro**
+(supprimer le rapport existant puis regénérer au nom canonique) ou **garder les deux
+(versionner)** (archiver l'existant sous
+`validation-out/<feature>/_archives/rapport-de-validation-v<N>.md`, `N` = index croissant, puis
+regénérer au nom canonique, qui porte toujours la version la plus récente). La **saisie libre**
+est la troisième voie : le testeur précise une autre consigne (renommer l'existant, garder tel
+quel et s'arrêter) et le skill **l'applique** ; **jamais d'écrasement ni de suppression sans un
+geste explicite** (une consigne non actionnable se re-demande). Écrire aussi la synthèse
+chiffrée, en prose.
 
 ### Étape 2 : trier chaque écart avec le testeur (un par un)
 Pour chaque verdict KO, NON TESTABLE ou non exécuté : présenter le constat factuel (constaté vs

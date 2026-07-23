@@ -69,11 +69,17 @@ tri des écarts, humain/automatisé, fiabilité d'exécution, déroulé effectif
 `references/execution-navigateur.md` (les trois voies : extension Chrome / Playwright /
 mission Cowork, contrat de sortie commun). Porte de régénération : même principe que
 l'assembleur (jamais d'écrasement sans choix explicite, question posée **avant** de
-regénérer) avec un **écart assumé** : les archives vivent **par feature** sous
-`validation-out/<feature>/_archives/` (nommées `<nom>-v<N>.md`, `N` = index croissant -
-pas de front-matter `version:` dans les gabarits), car tout le livrable de la validation est
-rangé par feature. Les résultats d'exécution, eux, ne passent jamais par la porte : un
-fichier par exécution, jamais écrasé.
+regénérer), en **trois voies** posées identiquement dans les 3 skills producteurs
+(`plan-de-validation` -> `plan-de-test.md`, `execution-validation` -> `mission-cowork.md`,
+`rapport-de-validation` -> `rapport-de-validation.md`) : (1) **repartir de zéro** (supprimer +
+regénérer), (2) **garder les deux (versionner)**, (3) **saisie libre** (le "Other" natif
+d'`AskUserQuestion`, comportement défini : le testeur précise une consigne - renommer, garder
+tel quel - et le skill l'applique ; jamais d'écrasement ni de suppression sans geste explicite,
+une consigne non actionnable se re-demande). **Écart assumé** vs l'assembleur : les archives
+vivent **par feature** sous `validation-out/<feature>/_archives/` (nommées `<nom>-v<N>.md`,
+`N` = index croissant - pas de front-matter `version:` dans les gabarits), car tout le livrable
+de la validation est rangé par feature. Les résultats d'exécution, eux, ne passent **jamais**
+par la porte : un fichier par exécution, suffixé `-2/-3`, jamais écrasé.
 Garde-fou déterministe : `scripts/check_validation.py` (bloc `validation` + gabarits en
 place ; par feature : plan présent et tracé, et si le rapport existe, **verdict rempli**
 - la présence du titre de section ne suffit pas, le gabarit le contient toujours).

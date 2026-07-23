@@ -60,11 +60,19 @@ best-effort : si le MCP est muet, continuer sans lien Linear et le signaler.
 
 ### Étape 1bis : porte de régénération (avant tout travail)
 Si `validation-out/<feature>/plan-de-test.md` existe déjà, poser **tout de suite** la
-décision **avec `AskUserQuestion`** (deux options, avant la lecture et la boucle interactive,
-pour ne pas faire refaire tout le travail au testeur avant de découvrir la question) :
-"repartir de zéro" (supprimer puis regénérer) ou "garder les deux" (archiver l'existant sous
-`validation-out/<feature>/_archives/plan-de-test-v<N>.md`, `N` = index croissant, puis
-regénérer au nom canonique) - jamais d'écrasement sans choix explicite.
+décision **avec `AskUserQuestion`** (avant la lecture et la boucle interactive, pour ne pas
+faire refaire tout le travail au testeur avant de découvrir la question), en nommant le fichier
+concerné - **deux options explicites, la saisie libre restant ouverte** (le "Other" que l'outil
+ajoute) :
+- **repartir de zéro** : supprimer le plan existant, puis regénérer au nom canonique ;
+- **garder les deux (versionner)** : archiver l'existant sous
+  `validation-out/<feature>/_archives/plan-de-test-v<N>.md` (`N` = index croissant, pas de
+  front-matter `version:`), puis regénérer au nom canonique (qui porte toujours la version la
+  plus récente).
+La **saisie libre** est la troisième voie : le testeur peut préciser une autre consigne
+(renommer l'existant, ne regénérer qu'une partie, garder tel quel et s'arrêter) et le skill
+**l'applique**. **Jamais d'écrasement ni de suppression sans un geste explicite** : une consigne
+libre non actionnable se re-demande, elle n'est jamais ignorée.
 
 ### Étape 2 : lire la spécification, inventorier les critères
 Lire `specs/<feature>/spec.md` en entier et inventorier **tout ce qui est vérifiable** :
