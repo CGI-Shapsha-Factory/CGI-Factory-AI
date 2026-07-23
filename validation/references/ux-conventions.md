@@ -96,9 +96,9 @@ lignes à l'écran, et sans repère on ne voit plus où un cas finit et où le s
   ```
   | Cas | Verdict | Preuve |
   |---|---|---|
-  | TC-001-001 | OK | preuves/TC-001-001-1.png |
+  | TC-001-001 | OK | preuves-chrome-01/TC-001-001-1.png |
   |---|---|---|
-  | TC-001-002 | OK | preuves/TC-001-002-1.png |
+  | TC-001-002 | OK | preuves-chrome-01/TC-001-002-1.png |
   ```
 
   Ces lignes sont **décoratives** : les garde-fous lisent les lignes de cas (`TC-NNN-NNN`) et

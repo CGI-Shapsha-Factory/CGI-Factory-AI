@@ -74,8 +74,9 @@ disque.
 - **Session partagée** : le navigateur porte les logins de l'utilisateur. Se connecter à
   l'environnement de recette avec les **comptes de test du plan** uniquement ; sur un login ou
   un captcha, rendre la main au testeur (il se connecte, puis l'exécution reprend).
-- **Preuves** : captures d'écran enregistrées dans `validation-out/<feature>/resultats/preuves/`
-  (nommées par cas : `TC-<feature>-NNN-<n>.png`).
+- **Preuves** : captures d'écran enregistrées dans
+  `validation-out/<feature>/resultats/preuves-<outil>-<NN>/` (`<outil>` = `chrome` ici, `<NN>` = la
+  version de l'exécution en cours ; nommées par cas : `TC-<feature>-NNN-<n>.png`).
 
 ## Voie 2 (repli) : le MCP Playwright, en session
 Mêmes cas, mêmes règles, via les outils `mcp__playwright__browser_*` :
@@ -83,13 +84,14 @@ Mêmes cas, mêmes règles, via les outils `mcp__playwright__browser_*` :
   d'accessibilité - c'est le **repère d'action** : cibler les éléments par rôle et libellé,
   jamais par pixel), `browser_click` / `browser_type` / `browser_fill_form` /
   `browser_select_option` (agir), `browser_wait_for` (attendre un texte ou un délai),
-  `browser_take_screenshot` (preuve, destination finale `resultats/preuves/`),
+  `browser_take_screenshot` (preuve, destination finale `resultats/preuves-playwright-<NN>/`),
   `browser_console_messages` / `browser_network_requests` (diagnostic sur KO).
 - **Captures** : le MCP Playwright n'écrit que sous sa propre racine autorisée (un chemin hors
   de la session est refusé, et un nom relatif atterrit dans son dossier de sortie, pas dans
-  `preuves/`). Capturer avec un nom relatif `TC-<feature>-NNN-<n>.png`, puis **déplacer** les
-  fichiers dans `validation-out/<feature>/resultats/preuves/` avant d'écrire les résultats -
-  aucune preuve référencée ne doit rester dans le dossier de l'outil.
+  `preuves-playwright-<NN>/`). Capturer avec un nom relatif `TC-<feature>-NNN-<n>.png`, puis
+  **déplacer** les fichiers dans `validation-out/<feature>/resultats/preuves-playwright-<NN>/`
+  (`<NN>` = la version de l'exécution en cours) avant d'écrire les résultats - aucune preuve
+  référencée ne doit rester dans le dossier de l'outil.
 ### Playwright absent : l'installer directement (seule voie installable par le skill)
 Contrairement à l'extension Chrome, le MCP Playwright **s'installe en une commande**, sans
 droits administrateur. Le skill le fait **lui-même**, après confirmation.
@@ -147,11 +149,24 @@ Marche à suivre affichée au testeur :
    lancer `/validation:rapport-de-validation`.
 
 ## Le contrat de sortie commun (quel que soit l'outil)
-Un fichier de résultats par exécution : `validation-out/<feature>/resultats/execution-<JJ-MM>.md`
-(si un fichier du même jour existe déjà, suffixer `-2`, `-3`... - on n'écrase jamais une
-exécution). **Gabarit de référence : `execution-resultats.md`.** C'est ce contrat qui permet au
+Un fichier de résultats par exécution : `validation-out/<feature>/resultats/execution-<outil>-<NN>.md`,
+où `<outil>` est le **jeton de l'outil** utilisé et `<NN>` un numéro de version sur **deux
+chiffres**. À chaque exécution, prendre le plus petit `<NN>` libre **pour cet outil** (plus haut
+`<NN>` existant + 1, en partant de `01`) : on n'écrase jamais une exécution. Les captures de cette
+exécution vont dans `resultats/preuves-<outil>-<NN>/` (même `<outil>`, même `<NN>` que le
+fichier), nommées `TC-<feature>-NNN-<n>.png`. Rejouer le même plan avec un autre outil, ou une
+seconde fois avec le même outil, produit un couple fichier + dossier **distinct** - jamais de
+capture écrasée.
+
+| Voie d'exécution | Jeton `<outil>` |
+|---|---|
+| Extension Chrome | `chrome` |
+| MCP Playwright | `playwright` |
+| Mission Cowork | `cowork` |
+
+**Gabarit de référence : `execution-resultats.md`.** C'est ce contrat qui permet au
 rapport de recette de lire les résultats **sans savoir qui a exécuté** : les trois voies
-produisent le **même fichier**.
+produisent le **même format** de fichier.
 
 **Tout est en tables** (forme : section 4bis de `ux-conventions.md` - une ligne de séparation
 entre chaque ligne de données, étapes en `<br>`, cellule vide = `-`), quatre sections :

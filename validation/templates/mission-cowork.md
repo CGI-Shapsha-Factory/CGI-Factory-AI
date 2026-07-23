@@ -32,8 +32,9 @@
 4. **Sur un échec, une seule relance** : si l'échec ressemble à de la lenteur ou à un élément
    pas encore affiché, attendre puis rejouer l'étape une fois ; au deuxième échec, verdict KO.
 5. **Prouver chaque verdict** : une capture d'écran au point de vérification, enregistrée dans
-   `validation-out/[feature]/resultats/preuves/` (nommée `TC-[feature]-NNN-<n>.png`). Sur KO,
-   noter en plus, factuellement, ce qui est constaté par rapport à l'attendu.
+   `validation-out/[feature]/resultats/preuves-cowork-[NN]/` (même `[NN]` que le fichier de
+   résultats ci-dessous ; nommée `TC-[feature]-NNN-<n>.png`). Sur KO, noter en plus,
+   factuellement, ce qui est constaté par rapport à l'attendu.
 6. **Capturer le déroulé effectif** : pour chaque cas, noter les étapes réellement jouées,
    numérotées, en langage naturel - ce qui s'est vraiment passé (relances, contournements,
    ordre effectif), pas la recopie des étapes prévues au plan.
@@ -45,8 +46,11 @@
 
 ## Format de résultats imposé
 
-Écrire un fichier `validation-out/[feature]/resultats/execution-<JJ-MM>.md` (jour-mois du jour
-de l'exécution ; si un fichier de ce nom existe déjà, suffixer `-2`, `-3`...).
+Écrire un fichier `validation-out/[feature]/resultats/execution-cowork-[NN].md`, où `[NN]` est un
+numéro de version sur **deux chiffres** : prendre le plus petit `[NN]` libre parmi les
+`execution-cowork-*.md` déjà présents (plus haut existant + 1, à partir de `01`) - on n'écrase
+jamais une exécution. Les captures de cette mission vont dans `resultats/preuves-cowork-[NN]/`
+(même `[NN]`).
 
 **Tout est en tables** - c'est un format imposé, il sera relu par un autre outil. Règles de
 forme, dans toutes les tables ci-dessous :
@@ -59,7 +63,7 @@ forme, dans toutes les tables ci-dessous :
 Quatre sections, dans cet ordre :
 
 ```
-# Résultats d'exécution : [feature] ([numéro]) - [JJ-MM]
+# Résultats d'exécution : [feature] ([numéro]) - cowork [NN]
 
 ## Contexte d'exécution
 
@@ -81,9 +85,9 @@ Quatre sections, dans cet ordre :
 
 | Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve |
 |---|---|---|---|---|---|
-| TC-[feature]-001 | [intitulé du plan] | OK | 1. ...<br>2. ... | [ce qui a été observé] | `preuves/TC-[feature]-001-1.png` |
+| TC-[feature]-001 | [intitulé du plan] | OK | 1. ...<br>2. ... | [ce qui a été observé] | `preuves-cowork-[NN]/TC-[feature]-001-1.png` |
 |---|---|---|---|---|---|
-| TC-[feature]-002 | [...] | KO | 1. ...<br>2. ... | [ce qui a été observé] | `preuves/TC-[feature]-002-1.png` |
+| TC-[feature]-002 | [...] | KO | 1. ...<br>2. ... | [ce qui a été observé] | `preuves-cowork-[NN]/TC-[feature]-002-1.png` |
 
 ## Écarts (KO et NON TESTABLE)
 

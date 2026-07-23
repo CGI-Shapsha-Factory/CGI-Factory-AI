@@ -31,8 +31,9 @@ Produire `validation-out/<feature>/rapport-de-validation.md` (matrice critère -
   - rien n'existe encore dans `validation-out/` -> une option par feature livrée, la plus
     pertinente à démarrer en premier.
 - S'il y a plusieurs fichiers de résultats, demander lequel fait foi **avec `AskUserQuestion`**
-  (une option par fichier, le plus récent en premier avec la mention "(recommandé)", chaque
-  option datée et accompagnée de l'outil utilisé et de sa synthèse chiffrée).
+  (une option par fichier, chacune identifiée par son **outil et sa version** - lus dans le nom
+  `execution-<outil>-<NN>.md` - la version la plus haute en premier avec la mention
+  "(recommandé)", accompagnée de sa synthèse chiffrée).
 - `specs/<feature>/spec.md` accessible (pour citer les critères dans le tri des écarts).
 - Le traitement des écarts passe par le plugin maintenance : si le bloc `maintenance` du manifeste
   manque, signaler qu'il faudra lancer `/maintenance:maintenance-init` avant de créer le premier

@@ -10,7 +10,7 @@
 ## Exécution de référence
 
 - **Environnement testé** : (l'URL)
-- **Exécution** : (le fichier de résultats utilisé, ex. `resultats/execution-12-08.md`, et
+- **Exécution** : (le fichier de résultats utilisé, ex. `resultats/execution-chrome-01.md`, et
   l'outil d'exécution)
 
 ## Matrice de traçabilité (exigence par exigence)

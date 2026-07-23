@@ -11,9 +11,9 @@ navigateur, contre l'environnement de recette, et écrit des **résultats au for
 **L'IA exécute et rapporte ; elle ne juge pas la livraison.**
 
 ## Objectif
-Produire `validation-out/<feature>/resultats/execution-<JJ-MM>.md` (+ les captures dans
-`resultats/preuves/`) en jouant chaque cas de test du plan, avec l'outil choisi par le
-testeur, sans jamais interpréter un critère ambigu.
+Produire `validation-out/<feature>/resultats/execution-<outil>-<NN>.md` (+ les captures dans
+`resultats/preuves-<outil>-<NN>/`) en jouant chaque cas de test du plan, avec l'outil choisi par
+le testeur, sans jamais interpréter un critère ambigu.
 
 ## Pré-requis (vérification silencieuse)
 - Le bloc de la validation existe dans `manifest.json` ; sinon refuser, puis poser une question
@@ -88,7 +88,7 @@ et ne proposer le repli **qu'ensuite**, par une question.
   déjà joués gardent leur verdict, on ne rejoue pas le plan depuis le début.
 - Jouer le plan **cas par cas, dans l'ordre**, contre l'adresse de recette : préconditions,
   étapes, vérification du résultat attendu. Capture d'écran au point de vérification de chaque
-  cas, enregistrée dans `resultats/preuves/TC-<feature>-NNN-<n>.png`.
+  cas, enregistrée dans `resultats/preuves-<outil>-<NN>/TC-<feature>-NNN-<n>.png`.
 - Sur un écran de connexion ou un captcha : rendre la main au testeur (comptes de test du plan
   uniquement), puis reprendre.
 
@@ -147,11 +147,17 @@ sur le dossier du projet, extension Chrome autorisée sur le domaine, donner la 
 seront apparus.
 
 ### Étape 3 : écrire les résultats (voies en session)
-Un fichier `validation-out/<feature>/resultats/execution-<JJ-MM>.md` (si le nom du jour existe
-déjà, suffixer `-2`, `-3`... - **on n'écrase jamais une exécution**). Les résultats et leurs
-preuves **ne passent jamais par la porte de régénération** : chaque exécution produit son propre
-fichier (auto-suffixe), donc aucune question à poser - la porte ne vaut que pour la mission
-Cowork (Étape 2c). Le fichier est écrit **depuis le gabarit**
+Un fichier `validation-out/<feature>/resultats/execution-<outil>-<NN>.md`, où `<outil>` est le
+jeton de l'outil utilisé - **`chrome`** (extension Chrome), **`playwright`** (MCP Playwright),
+**`cowork`** (mission Cowork) - et `<NN>` un numéro de version sur **deux chiffres**
+(`01`, `02`, ...). À chaque exécution, prendre le plus petit `<NN>` libre **pour cet outil**
+(plus haut `<NN>` existant + 1, en partant de `01`) : **on n'écrase jamais une exécution**. Les
+captures de cette exécution vont dans `resultats/preuves-<outil>-<NN>/` (même `<outil>`, même
+`<NN>` que le fichier) - jouer le même plan avec deux outils, ou deux fois avec le même outil,
+donne donc deux couples fichier + dossier distincts, sans collision de captures. Les résultats et
+leurs preuves **ne passent jamais par la porte de régénération** : chaque exécution produit son
+propre couple (nom auto-calculé), donc aucune question à poser - la porte ne vaut que pour la
+mission Cowork (Étape 2c). Le fichier est écrit **depuis le gabarit**
 `.factory/validation/execution-resultats.md` - celui du **plugin** fait foi, remplacer la copie
 si elle en diffère (cf. `references/regles-validation.md`).
 

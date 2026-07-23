@@ -35,7 +35,7 @@ Invocation directe `/validation:<skill>` + auto-invocation par la description. P
 |---|-------|------|-------|
 | 0 | `validation-init` | **quatre** gabarits dans `.factory/validation/` + bloc manifeste `validation` (adresse de recette, outil habituel - config statique seule) + `.gitignore` complété + état de l'amont signalé (specs/, Linear, maintenance) | jamais bloquant |
 | 1 | `plan-de-validation` | `specs/<feature>/spec.md` -> `validation-out/<feature>/plan-de-test.md` : plan **entièrement en tableaux** (vue d'ensemble + déroulé par thème + critères à clarifier), **une ligne = un scénario** `TC-<feature>-NNN` (Given/When/Then traduit en préconditions / étapes séparées par `<br>` / résultat observable), critère **jamais recopié verbatim** (colonne `Source` compacte pour la traçabilité, colonne `Ce qui est vérifié` en phrase française), critère flou = `à clarifier` avec raison dans sa seule table, données de test collectées en boucle interactive, porte de régénération à la relance | **plan validé par le testeur** (humain) |
-| 2 | `execution-validation` | **préflight de disponibilité** des outils avant le choix (l'état "disponible / à installer" est porté dans les options, et "(recommandé)" ne va qu'à un outil qui répond), puis choix à chaque lancement : extension Chrome (non installable par le skill - marche à suivre `/chrome`, `claude --chrome`, Web Store ; impasses nommées : clé API / `setup-token`, WSL, fournisseur tiers) / Playwright en repli (**installé directement** par le skill : `claude mcp add playwright --scope <user\|project> -- npx -y @playwright/mcp@latest`, après confirmation et choix de portée, Node 18+ requis, **redémarrage de session obligatoire** avant usage) / mission Cowork différée via `mission-cowork.md` auto-portant, toujours disponible -> `resultats/execution-<JJ-MM>.md` (gabarit `execution-resultats.md`) au **contrat commun, entièrement en tables** : contexte d'exécution, **synthèse en haut** (OK/KO/NON TESTABLE), une ligne par cas (`Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve` - déroulé requis même sur OK : il dit ce qui a vraiment été joué, ce que le plan ne dit pas), et une table **Écarts** qui porte seule le diagnostic (attendu, constaté, console et réseau) + captures dans `resultats/preuves/` | le testeur choisit l'outil ; l'IA constate, ne juge pas |
+| 2 | `execution-validation` | **préflight de disponibilité** des outils avant le choix (l'état "disponible / à installer" est porté dans les options, et "(recommandé)" ne va qu'à un outil qui répond), puis choix à chaque lancement : extension Chrome (non installable par le skill - marche à suivre `/chrome`, `claude --chrome`, Web Store ; impasses nommées : clé API / `setup-token`, WSL, fournisseur tiers) / Playwright en repli (**installé directement** par le skill : `claude mcp add playwright --scope <user\|project> -- npx -y @playwright/mcp@latest`, après confirmation et choix de portée, Node 18+ requis, **redémarrage de session obligatoire** avant usage) / mission Cowork différée via `mission-cowork.md` auto-portant, toujours disponible -> `resultats/execution-<outil>-<NN>.md` (jeton d'outil `chrome`/`playwright`/`cowork` + version 2 chiffres, plus petit `<NN>` libre par outil, jamais écrasé ; gabarit `execution-resultats.md`) au **contrat commun, entièrement en tables** : contexte d'exécution, **synthèse en haut** (OK/KO/NON TESTABLE), une ligne par cas (`Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve` - déroulé requis même sur OK : il dit ce qui a vraiment été joué, ce que le plan ne dit pas), et une table **Écarts** qui porte seule le diagnostic (attendu, constaté, console et réseau) + captures dans `resultats/preuves-<outil>-<NN>/` (même outil et même version que le fichier) | le testeur choisit l'outil ; l'IA constate, ne juge pas |
 | 3 | `rapport-de-validation` | matrice de traçabilité (critère -> cas -> verdict -> preuve -> décision) + tri des écarts un par un avec le testeur (anomalie / évolution / flou -> renvois `/maintenance:*`) + **porte de recette** : verdict humain inscrit dans le rapport et commenté sur le ticket `Feature` Linear | **verdict de recette** (humain) |
 
 Flux : `validation-init` -> (par feature livrée) `plan-de-validation` -> `execution-validation`
@@ -48,8 +48,8 @@ Flux : `validation-init` -> (par feature livrée) `plan-de-validation` -> `execu
 validation-out/<feature>/          # committé - le handoff de la validation
 ├── plan-de-test.md
 ├── mission-cowork.md              # seulement si la voie Cowork est choisie
-├── resultats/execution-<JJ-MM>.md # une exécution = un fichier, jamais écrasé
-├── resultats/preuves/*.png
+├── resultats/execution-<outil>-<NN>.md   # une exécution = un fichier (outil + version), jamais écrasé
+├── resultats/preuves-<outil>-<NN>/*.png  # captures de cette exécution (même outil et version)
 ├── rapport-de-validation.md          # matrice + écarts + Verdict de recette
 └── _archives/                     # versions archivées par la porte de régénération
 ```
@@ -79,7 +79,9 @@ une consigne non actionnable se re-demande). **Écart assumé** vs l'assembleur 
 vivent **par feature** sous `validation-out/<feature>/_archives/` (nommées `<nom>-v<N>.md`,
 `N` = index croissant - pas de front-matter `version:` dans les gabarits), car tout le livrable
 de la validation est rangé par feature. Les résultats d'exécution, eux, ne passent **jamais**
-par la porte : un fichier par exécution, suffixé `-2/-3`, jamais écrasé.
+par la porte : un fichier par exécution, **nommé par outil + version** (`execution-<outil>-<NN>.md`
+avec ses captures dans `resultats/preuves-<outil>-<NN>/`, plus petit `<NN>` libre par outil),
+jamais écrasé.
 Garde-fou déterministe : `scripts/check_validation.py` (bloc `validation` + gabarits en
 place ; par feature : plan présent et tracé, et si le rapport existe, **verdict rempli**
 - la présence du titre de section ne suffit pas, le gabarit le contient toujours).
