@@ -58,10 +58,13 @@ parallèles) puis synthétiser leurs retours :
    cases - **jamais** d'appariement par ressemblance de titre en silence.
    Extraire : identité produit
    (problème + objectif), **critères de succès du produit (métriques d'usage chiffrées)**,
+   **l'hypothèse produit initiale (à valider)** du product brief,
    hors-périmètre global, contraintes (légales/sécurité/données),
    et - depuis `project-frame.md` - les réponses de découverte qui pèsent sur la fabrication :
    **cible d'hébergement/déploiement (Q11), budget infra (Q12), responsable d'exploitation (Q10),
-   disponibilité/perf visées (Q6/Q7)** ; et **par use case** : user stories, critères d'acceptation
+   disponibilité/perf visées (Q6/Q7)**, ainsi que les **risques et hypothèses produit (Q19)**,
+   la **différenciation (Q16)** et les **signaux de succès observables (Q17)** - ce que le produit
+   doit encore prouver ne s'arrête pas à la frontière SpecKit ; et **par use case** : user stories, critères d'acceptation
    (Given/When/Then), **critères de succès mesurables avec leur cible chiffrée - repris tous, y
    compris ceux laissés "cible à préciser à l'architecture"**, **et le hors-périmètre local (ce que la feature
    ne fait pas)**.
@@ -101,7 +104,8 @@ de `artifacts.briefs[]` a-t-il bien été ouvert par son `.path` et rendu sous s
 chaque feature porte-t-elle son **hors-périmètre local** ? **chaque critère de succès chiffré
 d'un brief est-il remonté** (aucun perdu, aucun arrondi) ? les **entités et relations du modèle de données (ERD)**
 sont-elles capturées, les **contraintes de déploiement/hébergement** présentes, les **risques/spikes**
-remontés ? les **décisions d'expérience** (navigation, tailles d'écran, langues, ton) sont-elles
+remontés ? l'**hypothèse produit initiale** et les **risques/hypothèses produit (Q19)** sont-ils
+remontés (ou explicitement absents du cadrage) ? les **décisions d'expérience** (navigation, tailles d'écran, langues, ton) sont-elles
 reprises ou explicitement marquées absentes ? un lot est-il revenu incomplet ? deux lots se
 contredisent-ils ? **Relire** le lot concerné
 si un trou ou une contradiction apparaît. Ne synthétiser que sur des retours complets.
@@ -133,7 +137,10 @@ jour en silence.
   system synchronisé, aucun style en dur, chaque écran couvre ses états, les erreurs
   suivent le contrat, accessibilité au niveau visé ; **tests : écrits avec le code, unitaires
   passant/échec/limite, intégration mockée**) + gouvernance + footer
-  version/ratification. **Prêt pour `/speckit.constitution`, sans contexte supplémentaire.**
+  version/ratification. Les **objectifs mesurables du produit** (mission) reprennent les critères
+  de succès chiffrés du product brief **complétés des signaux de succès observables (Q17)** - "non
+  chiffrés à ce stade" si le cadrage ne les a pas captés, jamais inventés. **Prêt pour
+  `/speckit.constitution`, sans contexte supplémentaire.**
 - **`features/<id>-<slug>.md`** (gabarit `spec-seed.md`), une par feature de
   la séquence (walking skeleton d'abord) - **mappe le `spec.md` SpecKit** : User Scenarios
   (P1/P2/P3, Given/When/Then), Functional Requirements (FR-xxx), Key Entities (<- domaine,
@@ -141,7 +148,8 @@ jour en silence.
   brief de ses use cases**, complétés par les cibles qualité + a11y ; aucune cible du brief
   écartée), **Hors
   périmètre (cette feature)** (<- hors-périmètre local du brief), Assumptions (**absorbe les
-  risques/spikes de la feature**), + annexes face technique / face design. Le `<slug>` est un **slug git/SpecKit-safe** (`[a-z0-9-]` : minuscules,
+  risques/spikes de la feature, et les hypothèses/risques produit** - hypothèse produit initiale,
+  Q19 - **quand ils pèsent sur cette feature**), + annexes face technique / face design. Le `<slug>` est un **slug git/SpecKit-safe** (`[a-z0-9-]` : minuscules,
   tirets, ASCII, ≤ ~4 mots) dérivé de l'intitulé métier. **`<id>-<slug>` EST le nom canonique** du
   répertoire SpecKit (`specs/<id>-<slug>/`) **et** de la branche git de la feature - jamais
   d'auto-numérotation SpecKit (collision entre développeurs). Reporter **le même `<id>-<slug>`** dans
@@ -160,14 +168,17 @@ jour en silence.
   **nom nu**, **jamais** `memory/domain.md`), car ce sont les seuls fichiers qui **voyagent avec**
   l'index ; les fichiers du paquet `assembleur-out/` - contexte technique, carte des features,
   pré-constitution - sont cités **en texte simple**, jamais en lien `../` cassable), `domain.md`
-  (langage ubiquitaire + entités - **remplace l'ancien GLOSSARY**), `architecture.md` (stack,
+  (langage ubiquitaire + entités, **plus la différenciation du produit (Q16)** - "non exprimée au
+  cadrage" si absente, jamais inventée - **remplace l'ancien GLOSSARY**), `architecture.md` (stack,
   composants, digest ADR, conventions, cibles qualité - **chaque section pointe le fichier complet
   d'`architecte-out/`** : `composants.md`, `decisions/`, `standards-ingenierie.md`,
   `facteurs-et-qualite.md`), `design.md` (réf. design system + guidelines : états, erreurs, a11y,
   **et les décisions d'expérience de l'atelier** - navigation, tailles d'écran, langues, ton -
   "sans objet" ou "non tranché" si l'atelier ne les a pas décidées, jamais inventées ; renvoi vers
   `designer-out/design-guidelines.md` et `coverage-report.md`), `features.md` (séquence + couplage +
-  walking skeleton + pointeurs des 3 faces).
+  walking skeleton + pointeurs des 3 faces, **plus les hypothèses et risques produit restant à
+  valider** - hypothèse produit initiale, Q19 - pour que la fabrication sache ce que le produit
+  doit encore prouver).
 - **`.claude/CLAUDE.md`** (gabarit `project-claude-md.md`, écrit **directement dans le `.claude/` du
   projet**) - instructions projet **< 200 lignes** pour la fabrication : identité, principes, la
   **règle design** (export committé), où vivent conventions/constitution, la séquence de features, les
@@ -189,8 +200,10 @@ jour en silence.
 sont les **seuls** artefacts écrits **hors `assembleur-out/`** : ils vont **directement dans le
 `.claude/` du projet** (à la racine du dossier de travail courant), pour être **actifs immédiatement**
 (Claude Code les charge dès la session suivante) sans copie manuelle. Créer `.claude/` et `.claude/memory/`
-s'ils manquent ; ne pas toucher au reste de `.claude/` (hooks, settings). Tout le reste du paquet reste
-dans `assembleur-out/`.
+s'ils manquent ; ne pas toucher au reste de `.claude/` (hooks, settings). Si un `CLAUDE.md` existe **à la
+racine du projet** (hors `.claude/`), le **signaler en clair** à l'humain sans le modifier : Claude Code
+charge les deux fichiers ensemble, et une contradiction entre eux se tranche par l'équipe, pas en
+silence. Tout le reste du paquet reste dans `assembleur-out/`.
 
 **Contenu seul** : aucune `(src:)`, aucun horodatage, aucun nom de personne dans le paquet.
 
@@ -246,7 +259,13 @@ concerné. **Aucun fichier annexe.** **Ne pas conclure** tant qu'un marqueur sub
 - `CLAUDE.md` et `memory/` (MEMORY.md + thématiques) sont écrits dans **`.claude/`** du projet.
 - **Aucun marqueur résiduel**, aucune `(src:)`, **rien écrit hors `assembleur-out/` - sauf**
   `.claude/CLAUDE.md` et `.claude/memory/` (déploiement).
-- Mettre à jour le manifeste **en silence**.
+- Mettre à jour le manifeste **en silence**, en renseignant le bloc `assembly` au complet :
+  `phase: "package"` ; `feature_seeds` = la liste des chemins des graines (`assembleur-out/features/...`) ;
+  `package_paths` = les chemins des autres fichiers du paquet (pré-constitution, feature-map,
+  contexte technique, rapport de cohérence, plan d'attaque) ; `coherence_report` = le chemin du
+  rapport ; `coherence_validated` = le verdict de la porte humaine de l'étape 3 (`true` **seulement**
+  si le garant a répondu "le paquet me convient" via `AskUserQuestion`, `false` sinon - jamais
+  auto-validé).
 
 ## Règles invariantes
 - **Paquet seul (une exception bornée).** N'écrit que dans `assembleur-out/`, jamais un fichier que

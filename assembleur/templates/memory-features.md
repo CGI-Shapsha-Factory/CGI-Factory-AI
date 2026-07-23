@@ -16,3 +16,8 @@
 - **Fonctionnelle** : la graine `assembleur-out/features/<id>-<slug>.md` - User Scenarios + FR.
 - **Technique** : `assembleur-out/technical-context.md` + l'annexe technique de la graine.
 - **Design** : [design](design.md) (système synchronisé + guidelines), appliqué à tous les écrans.
+
+## Hypothèses et risques produit à valider
+<!-- Ce que le produit doit encore prouver : l'hypothèse produit initiale du product brief et les
+     risques/hypothèses produit de la découverte. "Aucun capté au cadrage" si vide - jamais inventé. -->
+- [hypothèse ou risque produit, tel que formulé au cadrage]

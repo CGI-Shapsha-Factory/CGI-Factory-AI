@@ -41,6 +41,10 @@
 - [exclusion locale explicite : ce que CETTE feature ne fait pas]
 
 ## Assumptions
+<!-- Trois origines : (1) hypothèses/dépendances propres à la feature ; (2) risques et spikes
+     techniques de la feature (registre architecte) ; (3) hypothèses et risques PRODUIT qui pèsent
+     sur cette feature (hypothèse produit initiale du product brief, risques/hypothèses de la
+     découverte) - repris tels quels, jamais inventés. -->
 - [hypothèses / dépendances]
 
 ---

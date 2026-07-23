@@ -13,3 +13,7 @@
 sans détail d'implémentation. Alimente les *Key Entities* des graines de feature.]
 
 - **[Entité]** : [ce qu'elle représente] · attributs : [...] · relations : [...]
+
+## Différenciation
+[Ce qui distingue le produit des alternatives réellement utilisées, tel qu'exprimé à la découverte -
+"non exprimée au cadrage" si absente, jamais inventée.]

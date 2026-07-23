@@ -153,8 +153,10 @@ couplage, merge, constitution ; **couche autour de SpecKit, jamais de réécritu
 `references/linear-guide.md` (usage du MCP linear-prism : détection, installation, `save_issue`
 création **et mise à jour d'état**, `list_issue_statuses`, `blockedBy`, refus + instructions
 d'installation si le MCP est absent).
-Garde-fous déterministes : `scripts/check_assembly.py` (présence du paquet + aucun marqueur résiduel +
-couverture des features), `scripts/check_linear.py` (configuration du pont Linear posée - équipe
+Garde-fous déterministes : `scripts/check_assembly.py` (présence du paquet + déploiement `.claude/`
+complet avec import `@memory/MEMORY.md` actif hors backticks + aucun marqueur ni placeholder de
+gabarit résiduel + couverture bidirectionnelle features <-> graines + union des `ucs` = briefs
+déclarés + FR/SC présents dans chaque graine ; `_archives/` hors balayage), `scripts/check_linear.py` (configuration du pont Linear posée - équipe
 définie ; les tickets et leur état se vérifient dans Linear, seule source de vérité) et
 `scripts/check_cowork.py` (bloc `cowork` +
 `init-cowork.md` à la racine exposant une section GitHub et une section Linear). Gabarit :
