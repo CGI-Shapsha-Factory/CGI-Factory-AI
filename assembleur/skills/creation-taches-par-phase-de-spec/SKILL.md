@@ -1,9 +1,9 @@
 ---
-name: creation-task-linear
+name: creation-taches-par-phase-de-spec
 description: Après /speckit.tasks, crée un sous-ticket Linear par phase de specs/<feature>/tasks.md (label Task, titre descriptif, rattaché au ticket Feature de la feature) via le MCP linear-prism, avec confirmation phase par phase.
 ---
 
-# creation-task-linear
+# creation-taches-par-phase-de-spec
 
 **Deuxième niveau de tâches Linear (par phase d'implémentation).** À lancer **pendant la fabrication**,
 **après `/speckit.tasks`** - c'est-à-dire une fois que SpecKit a produit `specs/<feature>/tasks.md`. Ce

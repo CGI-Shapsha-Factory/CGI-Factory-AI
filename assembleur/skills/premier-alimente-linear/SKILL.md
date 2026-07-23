@@ -1,6 +1,6 @@
 ---
 name: premier-alimente-linear
-description: Première alimentation de Linear - transforme les features approuvées en tickets Linear (un ticket Feature par feature + un sous-ticket Task par Functional Requirement, tout en Backlog, label Feature seul), avec confirmation ticket par ticket, via le MCP linear-prism - juste avant install-speckit. Les sous-tickets par phase (label Task) restent créés plus tard par creation-task-linear, après /speckit.tasks.
+description: Première alimentation de Linear - transforme les features approuvées en tickets Linear (un ticket Feature par feature + un sous-ticket Task par Functional Requirement, tout en Backlog, label Feature seul), avec confirmation ticket par ticket, via le MCP linear-prism - juste avant install-speckit. Les sous-tickets par phase (label Task) restent créés plus tard par creation-taches-par-phase-de-spec, après /speckit.tasks.
 ---
 
 # premier-alimente-linear
@@ -151,4 +151,4 @@ tickets à désynchroniser).
 - **Rien d'inventé.** Seulement les features approuvées par la convergence.
 - **Manifeste en silence.** Aucun nom de clé à l'écran ; restitution en prose.
 
-Étape suivante : `/assembleur:install-speckit` - poser SpecKit dans le repo, puis fabriquer feature par feature (chaque ticket Linear pilote un cycle `/speckit.specify` -> `/speckit.plan` -> `/speckit.tasks` -> `/speckit.implement`). **Après `/speckit.tasks`** (une fois `specs/<feature>/tasks.md` produit), lancer `/assembleur:creation-task-linear` pour créer un **sous-ticket par phase** (label `Task`) rattaché au ticket `Feature` de chaque feature.
+Étape suivante : `/assembleur:install-speckit` - poser SpecKit dans le repo, puis fabriquer feature par feature (chaque ticket Linear pilote un cycle `/speckit.specify` -> `/speckit.plan` -> `/speckit.tasks` -> `/speckit.implement`). **Après `/speckit.tasks`** (une fois `specs/<feature>/tasks.md` produit), lancer `/assembleur:creation-taches-par-phase-de-spec` pour créer un **sous-ticket par phase** (label `Task`) rattaché au ticket `Feature` de chaque feature.

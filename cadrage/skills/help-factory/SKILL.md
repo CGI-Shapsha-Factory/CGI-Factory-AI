@@ -73,7 +73,7 @@ Lit les 3 contrats en parallèle, les converge, et produit un **paquet de handof
 | `premier-alimente-linear` | crée les tickets Linear : un `Feature` par feature + un sous-ticket `Task` par exigence fonctionnelle, tout en Backlog | **point de gel** du registre de features |
 | `install-speckit` | installe SpecKit dans le repo (`uv` sans admin, `specify init` non interactif) pour lancer les `/speckit.*` | après l'alimentation Linear |
 | `create-cowork-md` | génère `init-cowork.md` à la racine : le contexte de supervision du PO (liens GitHub + Linear) | à la demande |
-| `creation-task-linear` | après `/speckit.tasks` : un sous-ticket `Task` par phase de `tasks.md`, rattaché au ticket `Feature` | `tasks.md` existe |
+| `creation-taches-par-phase-de-spec` | après `/speckit.tasks` : un sous-ticket `Task` par phase de `tasks.md`, rattaché au ticket `Feature` | `tasks.md` existe |
 | `update-issue-linear` | met à jour l'état d'un ticket quand tu signales une tâche terminée ou avancée | à la demande, pendant la fabrication |
 | `revue-gemini` | **relecteur externe avant PR/merge** : un reviewer Gemini par dimension (sécurité, correction, perf, architecture, qualité, tests) sur le diff de branche, agrégé par sévérité. Contre l'excès de confiance de Claude sur son propre code | **avant d'ouvrir ou de merger** (consultatif) |
 
@@ -114,7 +114,7 @@ Pas une phase : mesure **ce que coûterait la fabrication au tarif API** (estima
 | `couts-rapport` | restitue un **tableau par session** (tokens input/output, cache lu/écrit + coût en euros) ; écrit un rapport **versionné** (`rapport-couts.md`, puis `-2`, `-3`... - jamais d'écrasement) | à tout moment |
 | `couts-total` | agrège toutes les sessions locales en un seul bilan partageable (total tokens, coût estimé, nombre de sessions) | pour le chef d'équipe |
 
-**Handoff final** : l'équipe prend le paquet de `assembleur-out/` -> `/assembleur:premier-alimente-linear` (un ticket Linear `Feature` par feature) -> `specify init` -> `/speckit.constitution` (depuis `pre-constitution.md`) -> les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) -> `/speckit.plan` -> `/speckit.tasks` -> `/assembleur:creation-task-linear` (un sous-ticket `Task` par phase) -> `/speckit.implement` (état des tickets via `/assembleur:update-issue-linear`).
+**Handoff final** : l'équipe prend le paquet de `assembleur-out/` -> `/assembleur:premier-alimente-linear` (un ticket Linear `Feature` par feature) -> `specify init` -> `/speckit.constitution` (depuis `pre-constitution.md`) -> les `/speckit.specify` dans l'ordre du `feature-map.md` (walking skeleton d'abord) -> `/speckit.plan` -> `/speckit.tasks` -> `/assembleur:creation-taches-par-phase-de-spec` (un sous-ticket `Task` par phase) -> `/speckit.implement` (état des tickets via `/assembleur:update-issue-linear`).
 
 **Fabrication en parallèle** : une branche = une feature = un développeur (numéro imposé par le registre, **jamais** d'auto-numérotation), **claim** du ticket `Feature` Linear avant de démarrer, l'avancement vit **dans Linear**, et les features **couplées** (même composant/état) se traitent **en séquence**. SpecKit offre aussi des portes de cohérence **natives optionnelles** (`/speckit.clarify`, `/speckit.analyze`). Règles complètes : `assembleur-out/attack-plan.md`.
 

@@ -89,7 +89,7 @@ Feature>", labelIds: ["<UUID Task>"], description: "<énoncé du FR, 1 ligne>", 
   commence par le jeton **`FR-00x -`** existe déjà -> ne pas recréer. **Rien n'est consigné dans le
   manifeste.**
 
-*(Niveau distinct, plus tard : `creation-task-linear` crée en plus un `Task` par **phase** de
+*(Niveau distinct, plus tard : `creation-taches-par-phase-de-spec` crée en plus un `Task` par **phase** de
 `tasks.md` après SpecKit - voir ci-dessous. Les deux niveaux coexistent sous la même Feature,
 distingués par leur jeton de titre : `FR-00x -` vs `Phase N -`.)*
 
@@ -100,7 +100,7 @@ donc **déjà créée**. Sur le ticket parent de la feature dépendante, poser :
 `save_issue({id: "<identifier de la feature>", blockedBy: ["<identifier de la dépendance>"]})`
 (ou passer `blockedBy` dès la création). `blocks`/`blockedBy` sont **append-only**.
 
-## Sous-tickets par phase (`tasks.md`) -> pour `creation-task-linear`
+## Sous-tickets par phase (`tasks.md`) -> pour `creation-taches-par-phase-de-spec`
 Après `/speckit.tasks`, chaque feature a un `specs/<feature>/tasks.md`. On crée **un vrai sous-ticket
 par phase** (contrairement à la checklist-dans-la-description du ticket de feature).
 
@@ -153,14 +153,14 @@ Ré-identification (avant toute création) :
   trouvé est **adopté** (réutiliser son `issue_id` comme `parentId`), jamais recréé.
 - **Task par FR** (`premier-alimente-linear`) : `list_issues({parentId})` + jeton **`FR-00x -`** en
   tête de titre.
-- **Task par phase** (`creation-task-linear`) : `list_issues({parentId})` + jeton **`Phase N -`** en
+- **Task par phase** (`creation-taches-par-phase-de-spec`) : `list_issues({parentId})` + jeton **`Phase N -`** en
   tête de titre.
 - **État d'avancement** (`update-issue-linear`) : `get_issue({id})` avant d'écrire.
 
 ### Phase déjà possédée par un ticket de maintenance (4e clé de jointure)
 Les trois clés ci-dessus rattachent un objet à un sous-ticket **que la fabrication a créé**. Il manquait
 la clé inverse : une phase dont le travail est **déjà suivi par un ticket d'anomalie ou d'évolution**,
-créé en aval par `maintenance`. Sans elle, `creation-task-linear` voit la phase comme manquante et crée un
+créé en aval par `maintenance`. Sans elle, `creation-taches-par-phase-de-spec` voit la phase comme manquante et crée un
 **doublon** - frère du ticket d'origine sous la même Feature, deux états à synchroniser, et la source de
 vérité unique tombe.
 
@@ -178,7 +178,7 @@ matcherait `FR-006`, `ADR-010`, `SC-001`, `TC-001` et supprimerait en silence de
 Règle : une phase marquée **et** dont l'identifiant **résout** (`get_issue`) n'est **ni créée ni
 proposée** - elle est énoncée ("Phase 7 déjà suivie par RAG-12"). Un marqueur qui ne résout pas est le
 seul cas à remonter à l'humain. Posé par `maintenance` (`realisation-evolution`, `correction-anomalie`), lu
-par `creation-task-linear` et par le hook `linear-sync/tasks_linear_hook.py` (qui, lui, ne peut que
+par `creation-taches-par-phase-de-spec` et par le hook `linear-sync/tasks_linear_hook.py` (qui, lui, ne peut que
 reconnaître le motif : il ne parle jamais à Linear).
 
 Vue d'ensemble des règles multi-développeurs (numérotation, couplage, merge, constitution) :

@@ -31,7 +31,7 @@ SpecKit est **centré sur un développeur unique** ; ses docs sont muettes sur l
   Timestamp **banni** (l'attribution des coûts et la sync Linear lisent `^\d{3}-`). Garde-fou
   `check_speckit_alignment.py` (doublon / timestamp / numéro hors registre = échec). Voir
   `speckit-mapping.md`.
-- **Linear = source de vérité de l'avancement.** Les sous-tickets **par phase** (`creation-task-linear`)
+- **Linear = source de vérité de l'avancement.** Les sous-tickets **par phase** (`creation-taches-par-phase-de-spec`)
   et l'**état** (`update-issue-linear`) vivent **dans Linear**, jamais dans `manifest.json` committé -
   pas de conflit de merge sur l'état. Voir `linear-guide.md`.
 - **Artefacts amont figés** une fois (constitution, `.claude/CLAUDE.md`, `memory/`) - jamais régénérés

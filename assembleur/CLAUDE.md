@@ -44,7 +44,7 @@ projet** (déploiement, pour qu'ils soient actifs sans copie manuelle).
   externe). Si le MCP `linear-prism` est **absent**, **ne rien créer** : refuser en clair et
   afficher les **instructions d'installation** (section "Installation du plugin linear-prism").
   Voir `references/linear-guide.md`.
-- `creation-task-linear` - **sous-tickets par phase (2ᵉ niveau de Task)** : à lancer **après
+- `creation-taches-par-phase-de-spec` - **sous-tickets par phase (2ᵉ niveau de Task)** : à lancer **après
   `/speckit.tasks`** (quand `specs/<feature>/tasks.md` existe). Pour chaque feature, parse les phases
   (`## Phase N:`) de son `tasks.md` et crée **un sous-ticket Linear par phase** (label **`Task`**, en
   **Backlog**, `parentId` = ticket `Feature`, **titre descriptif** généré - jamais le nom générique
@@ -73,10 +73,10 @@ projet** (déploiement, pour qu'ils soient actifs sans copie manuelle).
   init`, `specify init` non-interactif, test de fumée, **pose le registre de hooks
   `.specify/extensions.yml`** depuis `references/speckit-extensions.yml` - config d'équipe **non
   générée par `specify init`** qui branche les automations Linear de la Factory en **hooks optionnels**
-  (`after_tasks`->`creation-task-linear`, `after_implement`->`update-issue-linear`) -, **pose le hook
+  (`after_tasks`->`creation-taches-par-phase-de-spec`, `after_implement`->`update-issue-linear`) -, **pose le hook
   `PostToolUse` `tasks_linear_hook.py`** (`references/linear-sync/`) dans `.claude/` du repo cible : il
   détecte toute édition d'un `specs/<feature>/tasks.md` et **pousse l'agent** (`decision:block`) à lancer
-  `creation-task-linear` s'il manque un sous-ticket `Task` pour une phase - **le hook ne parle jamais à
+  `creation-taches-par-phase-de-spec` s'il manque un sous-ticket `Task` pour une phase - **le hook ne parle jamais à
   Linear** (MCP côté skill) -, bloc manifeste `speckit`). **Exceptions bornées** à "n'écrit jamais dans le repo cible" : `specify init` génère
   `.specify/` (jamais ce skill à la main) ; le registre `extensions.yml` et le bloc manifeste sont de la
   config Factory.

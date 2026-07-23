@@ -39,7 +39,7 @@ registre de l'architecte, **jamais** un numéro auto-généré. Enchaîner :
 4. `/speckit.plan` (Technical Context dans `technical-context.md` ; **relire aussi la graine**
    `features/NNN-slug.md` : ses annexes Face technique / Face design portent les composants, ADR
    et écrans propres à la feature, que le `spec.md` généré ne reprend pas) -> `/speckit.tasks` ->
-   **`/assembleur:creation-task-linear`** (un sous-ticket `Task` par phase, rattaché au ticket
+   **`/assembleur:creation-taches-par-phase-de-spec`** (un sous-ticket `Task` par phase, rattaché au ticket
    `Feature`) -> `/speckit.implement`.
 
 > Le numéro `NNN` = l'`id` du registre ; `SPECIFY_FEATURE_DIRECTORY` fige le répertoire, la branche fige
