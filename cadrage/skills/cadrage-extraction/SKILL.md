@@ -38,6 +38,11 @@ Si aucune source n'est passée en argument ni déclarée dans le chat, **regarde
 Ce dossier est **facultatif** : s'il est vide (ou absent), continuer normalement en demandant
 les sources - il n'est **jamais** obligatoire ni une porte de validation.
 
+**Matière déposée APRÈS le cadrage initial** (nouveau compte rendu de réunion, exigences
+nouvelles, corrections) : ne pas rejouer l'extraction - c'est le rôle de
+`cadrage-retour-client` (mode projet), qui détecte les fichiers non encore ingérés, les
+confronte à l'existant et met à jour les artefacts en place.
+
 - **Pages Notion** (hubs réunion, transcripts) - via les outils Notion
   disponibles (`notion-fetch`, `notion-search`).
 - **Fichiers fournis** - formats supportés : `.txt`, `.md`, transcripts, `.pdf`,
@@ -137,7 +142,11 @@ la proposer** si des sources riches sont déjà là - ce serait une friction inu
    - Hypothèse-clé : "Quelle est l'hypothèse que tu tiens pour acquise aujourd'hui et qui, si
      elle se révélait fausse, remettrait tout le projet en cause ?"
    **Facultatif et jamais insisté** ("rien ne me vient" fait passer) ; **calibré sur l'enjeu**
-   (appuyé pour un lancement critique, à peine effleuré pour un outil interne modeste). Ce qui
+   (appuyé pour un lancement critique, à peine effleuré pour un outil interne modeste). **Si un
+   compte rendu d'idéation récent porte déjà une section "Hypothèses à vérifier"** (une séance
+   vient d'explorer ces questions), **alléger ce temps ou le sauter en le disant** ("l'atelier a
+   déjà fait le tour des risques - un point à ajouter ?") plutôt que de redérouler les deux
+   questions. Ce qui
    remonte est de la **matière brute** : ça alimente les sections Frictions, Contraintes et
    Objectifs de la capture, et sert de **suggestion** à la question sur les incertitudes et
    hypothèses (Q19) - jamais validé d'office, confirmé par le flux normal. Ne pas creuser ici :

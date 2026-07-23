@@ -31,7 +31,7 @@ d'agir et contrôle sa sortie avant d'écrire le manifeste - sans jamais exposer
 | 3 | `cadrage-glossaire` | Construit le langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes), validé en bloc | capture_brute existe |
 | 4 | `cadrage-decoupage` | Vision -> découpage **fonctionnel** (use cases par valeur) + couplage (**hypothèse**) | vision_complete |
 | 5 | `cadrage-demonstrateur-brief` | Prompt Claude Design du démonstrateur (mode initial / adaptatif) | vision dispo. / retour dispo. |
-| 6 | `cadrage-retour-demonstrateur` | Ingère le retour client, résout et **invalide** les points | retour disponible |
+| 6 | `cadrage-retour-client` | Ingère tout retour client (nouveaux documents dans `source-contexte/` ou retour maquette), le confronte au cadrage, fait trancher le PO et met à jour les artefacts en place | retour ou nouveaux documents disponibles |
 | 7 | `cadrage-briefs` | Un brief auto-portant par feature (contrat central) | **decoupage_arbitrated ET demonstrateur_converged** |
 | 8 | `cadrage-completude` | **Étape terminale ET point de résolution unique** : bilan Definition of Ready + **résolution en session de tous les points ouverts**, puis relais vers l'architecte | aucune (rejouable) |
 | - | `help-factory` | Aide unique : carte des 4 plugins, un tableau par plugin (rôle, ordre, décisions humaines) | aucune |

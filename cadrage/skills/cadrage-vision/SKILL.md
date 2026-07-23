@@ -95,7 +95,7 @@ vision n'est pas complète.
 > demandée par l'utilisateur (cf. `references/regeneration-gate.md`).
 
 Rejoué sur des entrées mises à jour - typiquement une correction issue d'un
-retour de démonstrateur (`cadrage-retour-demonstrateur`) - ce skill **met à
+retour client (`cadrage-retour-client`) - ce skill **met à
 jour le product brief en place**, il ne le régénère pas à l'aveugle :
 - **Préserve** le contenu déjà validé ou inchangé.
 - **Applique** les corrections venues des entrées mises à jour.
@@ -106,6 +106,10 @@ jour le product brief en place**, il ne le régénère pas à l'aveugle :
 
 Réconciliation par identité de section / de point : aucune duplication. Recalcule
 `vision_complete` à partir de l'état réconcilié.
+
+> Ces règles de fusion sont aussi **exécutées inline** par `cadrage-retour-client`
+> (mode projet), qui applique directement les décisions tranchées en session dans
+> le product brief. Ce bloc reste la source de vérité des règles.
 
 ## Mise à jour du manifeste
 

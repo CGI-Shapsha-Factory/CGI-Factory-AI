@@ -40,7 +40,11 @@ Vérifier ces conditions **sans les annoncer** : ne jamais afficher de statut de
 orienter. Message cible :
 
 > "Avant de rédiger les briefs, il reste à faire la revue de couplage et à valider
-> le prototype - on s'en occupe d'abord ?"
+> le prototype, puis à refaire le point d'état - on s'en occupe d'abord ?"
+
+(Le passage par le point d'état - `cadrage-completude` - n'est pas optionnel : c'est lui
+seul qui constate la convergence du démonstrateur après le retour client ; sans lui, la
+porte des briefs reste fermée même une fois la maquette validée.)
 
 **Garde-fou déterministe (anti-contournement, obligatoire).** Avant toute génération, lancer
 `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_ready.py" <projet>/manifest.json` : il échoue

@@ -164,6 +164,11 @@ revue de couplage humaine doit le re-trancher. Le skill ne maintient jamais un
 drapeau "arbitré" sur une proposition modifiée. Un réjeu **sans** changement
 matériel (reformulation, marqueur levé) laisse l'arbitrage en l'état.
 
+> Ces règles de fusion - **y compris le reset d'arbitrage** - sont aussi
+> **exécutées inline** par `cadrage-retour-client` (mode projet), qui applique
+> directement les décisions tranchées en session dans le spec-index et la carte
+> de couplage. Ce bloc reste la source de vérité des règles.
+
 ## Mise à jour du manifeste
 
 Read-modify-write puis revalidation JSON :

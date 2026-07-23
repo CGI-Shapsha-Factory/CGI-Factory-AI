@@ -161,6 +161,12 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 }
 ```
 
+Le bloc `sources[]` enregistre chaque source ingérée (`type`, `ref`, `ingested_at`).
+Types en usage : source d'atelier (déclarée à l'extraction), `retour` (transcript de
+retour maquette) et `retour-projet` (nouveau document client déposé dans
+`cadrage-out/source-contexte/` après le cadrage initial, ingéré par
+`cadrage-retour-client`). Ce registre sert aussi de référence pour détecter par
+différence les fichiers de `source-contexte/` pas encore traités.
 Le bloc `prompts` trace les prompts générés (démonstrateur et livrables visuels),
 sauvegardés sous `cadrage-out/prompts/`. Le bloc `demonstrateur` porte la boucle
 d'itération ; `validation_points[]` ne sert qu'aux points actifs de cette boucle -

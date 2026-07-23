@@ -115,6 +115,10 @@ skill **met à jour le glossaire en place** :
 
 Aucune duplication. Recompte `terms` / `validated_terms` sur l'état réconcilié.
 
+> Ces règles de fusion sont aussi **exécutées inline** par `cadrage-retour-client`
+> (mode projet), qui applique directement les décisions tranchées en session dans
+> le glossaire. Ce bloc reste la source de vérité des règles.
+
 ## Mise à jour du manifeste
 
 Read-modify-write puis revalidation JSON :

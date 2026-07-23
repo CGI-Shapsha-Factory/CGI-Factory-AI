@@ -92,7 +92,7 @@ avec un **rendu propre et professionnel** (mise en page réelle, contenu réalis
 ## Mode ADAPTATIF (étape 8b)
 
 **Pré-requis (vérification silencieuse).** Un retour de démonstrateur a été ingéré
-(`cadrage-retour-demonstrateur` a tourné ; `demonstrateur.iterations` contient
+(`cadrage-retour-client` a tourné ; `demonstrateur.iterations` contient
 un retour récent) et la maquette courante est référencée
 (`demonstrateur.external_ref`).
 
@@ -162,4 +162,4 @@ Read-modify-write puis revalidation JSON :
 - **Skill indépendant.** Lit la vision / le retour et le manifeste, sans
   orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-retour-demonstrateur` - confronter la maquette au client puis ingérer son retour.
+Étape suivante : `/cadrage:cadrage-retour-client` - confronter la maquette au client puis ingérer son retour.

@@ -51,7 +51,7 @@ Après le setup, **vérifier l'état de l'amont** dans le cwd et le **signaler**
 - **Amont prêt** -> rien à signaler ; enchaîner sur `/designer:designer-ingestion`.
 - **Amont absent ou incomplet** -> **ne pas refuser**. Confirmer que l'atelier est amorcé, puis
   **avertir en clair** ce qui manque (flag `false` + skill amont à relancer - maquette ->
-  `/cadrage:cadrage-retour-demonstrateur`, cohérence archi -> `/architecte:architecte-coherence` - ou
+  `/cadrage:cadrage-retour-client`, cohérence archi -> `/architecte:architecte-coherence` - ou
   fichier `...-out/...` absent, par chemin) et indiquer que **l'ingestion** (`/designer:designer-ingestion`) a
   besoin de ces handoffs pour pré-remplir la checklist.
 

@@ -36,7 +36,7 @@ De la matière brute (transcripts, docs) au pack fonctionnel repris par l'archit
 | 3 | `cadrage-glossaire` | construit le langage métier du projet, validé en bloc | capture existe |
 | 4 | `cadrage-decoupage` | découpage fonctionnel en use cases (par valeur) + carte de couplage | vision faite |
 | 5 | `cadrage-demonstrateur-brief` | prompt Claude Design pour la maquette de validation | vision / retour dispo |
-| 6 | `cadrage-retour-demonstrateur` | ingère le retour client sur la maquette, propage les corrections | retour dispo |
+| 6 | `cadrage-retour-client` | ingère tout retour client (nouveaux documents de réunion ou retour maquette), le confronte au cadrage et met à jour les artefacts en place | retour ou nouveaux docs dispo |
 | 7 | `cadrage-briefs` | brief auto-portant par feature (dans `cadrage-out/features-fonctionnels-brief/`) | couplage arbitré + maquette validée |
 | 8 | `cadrage-completude` | **étape terminale ET point de résolution unique** : bilan + **résolution en session de tous les points ouverts**, puis relais vers l'architecte | *(rejouable)* - fin du cadrage |
 
