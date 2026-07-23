@@ -7,8 +7,8 @@
 #   optional : true  -> l'utilisateur est INVITE et peut refuser (le hook ne bloque jamais la phase).
 #   command  : nom du skill Factory a lancer, ecrit SANS POINT et sous la forme `plugin:skill`.
 #              why: les skills /speckit.* affichent `/{command}` en remplacant chaque point par un
-#              tiret (`a.b` -> `/a-b`). Un `assembleur.creation-tasks-linear` deviendrait donc
-#              `/assembleur-creation-tasks-linear`, qui n'existe pas ; la forme `assembleur:...`
+#              tiret (`a.b` -> `/a-b`). Un `assembleur.creation-taches-par-phase-de-spec` deviendrait donc
+#              `/assembleur-creation-taches-par-phase-de-spec`, qui n'existe pas ; la forme `assembleur:...`
 #              traverse la transformation intacte et donne la vraie commande.
 #
 # La Factory pilote Linear via ses propres skills (assembleur:*), pas via une extension SpecKit :
@@ -18,11 +18,11 @@ hooks:
   # Apres /speckit.tasks : refleter les phases du tasks.md en sous-tickets Task Linear.
   after_tasks:
     - extension: factory-linear
-      command: assembleur:creation-tasks-linear
+      command: assembleur:creation-taches-par-phase-de-spec
       enabled: true
       optional: true
-      prompt: "Creer les sous-tickets Task Linear (un par phase de tasks.md), rattaches au ticket Feature ? Lance /assembleur:creation-tasks-linear."
-      description: "Factory - reflete les phases du tasks.md en sous-tickets Task Linear (skill /assembleur:creation-tasks-linear)."
+      prompt: "Creer les sous-tickets Task Linear (un par phase de tasks.md), rattaches au ticket Feature ? Lance /assembleur:creation-taches-par-phase-de-spec."
+      description: "Factory - reflete les phases du tasks.md en sous-tickets Task Linear (skill /assembleur:creation-taches-par-phase-de-spec)."
       condition: null
 
   # Apres /speckit.implement : faire avancer l'etat du ticket Linear (feature/phase terminee).

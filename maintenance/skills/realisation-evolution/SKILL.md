@@ -104,7 +104,7 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
    Ingestion des pièces scannées au format PNG`). Si `/speckit.tasks` ne l'a pas produit ainsi,
    **corriger le titre de la phase** - c'est la seule écriture de ce skill dans `tasks.md`, et
    elle porte sur le titre seul. Sans ce marqueur, l'outillage aval (le skill
-   `/assembleur:creation-tasks-linear` et le hook `tasks.md`) proposera de créer un sous-ticket
+   `/assembleur:creation-taches-par-phase-de-spec` et le hook `tasks.md`) proposera de créer un sous-ticket
    `Task` pour cette phase : un **doublon** de ce ticket, frère sous la même Feature, avec deux
    états à synchroniser (cf. `assembleur/references/linear-guide.md`, 4e clé de jointure).
 6. **Implémentation cadrée (troisième discipline).** Lancer **`/speckit.implement`** en le
@@ -121,7 +121,7 @@ les chemins (`manifest.json`, `specs/`, `assembleur-out/`, `architecte-out/`) se
    les **tests** sont verts (feature + couplées), et **Linear suit** (commentaire de synthèse :
    ce qui a changé, la preuve de non-régression). Puis passer l'évolution à **terminé** (le
    statut de type `completed` de l'équipe, résolu par son nom, ex. "Done", état retourné
-   vérifié). **Ne pas appeler `/assembleur:creation-tasks-linear`** : ce ticket d'évolution
+   vérifié). **Ne pas appeler `/assembleur:creation-taches-par-phase-de-spec`** : ce ticket d'évolution
    **est** l'objet suivi de ce travail, et la phase de `tasks.md` en est un détail
    d'implémentation. Lui créer un sous-ticket de phase produirait un doublon frère sous la même
    Feature. L'avancement se trace ici, par le statut et les commentaires de ce ticket - comme

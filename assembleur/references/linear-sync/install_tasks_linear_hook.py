@@ -8,7 +8,7 @@ Deux gestes deterministes (jamais laisses au modele), miroir de l'enforcement ar
      (tests_guard/format_guard de l'architecte, SessionEnd du compteur de couts).
 
 Le hook lui-meme ne parle jamais a Linear : il detecte une derive tasks.md -> manifeste et pousse
-l'agent a lancer /assembleur:creation-tasks-linear (cf. tasks_linear_hook.py).
+l'agent a lancer /assembleur:creation-taches-par-phase-de-spec (cf. tasks_linear_hook.py).
 
 Usage : python install_tasks_linear_hook.py [racine_projet]   (defaut : cwd)
 """
