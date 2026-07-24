@@ -26,8 +26,9 @@ SKILL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
                      "skills", "help-factory", "SKILL.md")
 
 WIDTH = 96          # largeur de rendu, confortable dans un terminal standard
+ORDER_W = 5         # colonne d'ordre d'execution ("0", "0bis", "1"..."8", ou "-")
 NAME_W = 28         # colonne du nom de skill (le plus long en fait exactement 28)
-ROLE_W = WIDTH - NAME_W - 7     # le reste, une fois retires les bordures et separateurs
+ROLE_W = WIDTH - ORDER_W - NAME_W - 10   # le reste, une fois retires bordures et separateurs
 
 
 def sans_accent(text):
@@ -53,31 +54,46 @@ def plie(texte, largeur):
     return textwrap.wrap(texte, largeur, break_on_hyphens=False)
 
 
-def rangee(gauche, droite):
-    return "| " + gauche.ljust(NAME_W) + " | " + droite.ljust(ROLE_W) + " |"
+def rangee(ordre, gauche, droite):
+    return ("| " + ordre.ljust(ORDER_W) + " | " + gauche.ljust(NAME_W)
+            + " | " + droite.ljust(ROLE_W) + " |")
 
 
 def rend_tableau(lignes, titre):
-    """Encadre un tableau markdown : une ligne par skill, nom puis role. Rien d'autre."""
+    """Encadre un tableau markdown : une ligne par skill, ordre d'execution puis nom puis role.
+
+    La colonne d'ordre rend l'enchainement visible a l'utilisateur (les lignes sont deja
+    ecrites dans l'ordre d'execution) : elle reprend la colonne "#" du markdown si elle
+    existe, sinon numerote sequentiellement les lignes.
+    """
     entetes = [c.lower() for c in cellules(lignes[0])]
     i_nom = next((i for i, h in enumerate(entetes) if h == "skill"), 0)
     i_porte = next((i for i, h in enumerate(entetes) if h.startswith("porte")), len(entetes) - 1)
-    # colonne "#" (numerote des lignes deja ordonnees) et colonne porte : hors sujet ici
-    ignores = {i_nom, i_porte} | {i for i, h in enumerate(entetes) if h in ("#", "")}
-    separateur = "+" + "-" * (NAME_W + 2) + "+" + "-" * (ROLE_W + 2) + "+"
+    i_ordre = next((i for i, h in enumerate(entetes) if h == "#"), None)
+    # colonne "#" (rendue a part) et colonne porte : hors du role
+    ignores = {i_nom, i_porte, i_ordre} | {i for i, h in enumerate(entetes) if h == ""}
+    ignores.discard(None)
+    separateur = ("+" + "-" * (ORDER_W + 2) + "+" + "-" * (NAME_W + 2)
+                  + "+" + "-" * (ROLE_W + 2) + "+")
     entete = "-- " + titre + " " if titre else "-"
     sortie = ["+" + entete + "-" * (WIDTH - 2 - len(entete)) + "+",
-              rangee("skill", "role"), separateur]
+              rangee("#", "skill", "role"), separateur]
+    compteur = 0
     for ligne in lignes[2:]:                                        # [1] = separateur |---|
         cols = cellules(ligne)
         if len(cols) <= i_nom:
             continue
+        compteur += 1
+        if i_ordre is not None and i_ordre < len(cols) and nettoie(cols[i_ordre]):
+            ordre = plie(nettoie(cols[i_ordre]), ORDER_W) or [""]
+        else:
+            ordre = [str(compteur)]
         nom = plie(nettoie(cols[i_nom]), NAME_W) or [""]
         role = " ".join(nettoie(c) for j, c in enumerate(cols) if j not in ignores and nettoie(c))
         role = plie(role, ROLE_W) or [""]
         # une rangee par skill, sur autant de lignes que necessaire, puis un trait de separation
-        for g, d in zip_longest(nom, role, fillvalue=""):
-            sortie.append(rangee(g, d))
+        for o, g, d in zip_longest(ordre, nom, role, fillvalue=""):
+            sortie.append(rangee(o, g, d))
         sortie.append(separateur)
     return sortie + [""]
 

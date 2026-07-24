@@ -27,10 +27,15 @@ est `.factory/cadrage/product-brief.md` (copie installée par cadrage-init).
 
 ## Pré-requis (vérification silencieuse)
 
-`artifacts.capture_brute` existe dans le manifeste (le fichier est présent).
-Sinon, l'indiquer en clair et poser la suite **avec `AskUserQuestion`** - deux options,
-"faire l'extraction d'abord" (recommandé) et "vérifier le dossier de travail" - sans
-afficher de "porte".
+Deux conditions, vérifiées en silence :
+- `artifacts.capture_brute` existe dans le manifeste (le fichier est présent). Sinon,
+  l'indiquer en clair et poser la suite **avec `AskUserQuestion`** - deux options, "faire
+  l'extraction d'abord" (recommandé) et "vérifier le dossier de travail" - sans afficher de
+  "porte".
+- L'atelier de clarification a eu lieu (`ideation_complete` vrai). Sinon, indiquer en clair
+  qu'il faut d'abord étudier et compléter la matière extraite avec l'utilisateur
+  (`/cadrage:cadrage-ideation`) et s'arrêter là - la vision se bâtit sur une capture déjà
+  clarifiée, jamais sur des trous. Refus en langage naturel, sans nommer de champ ni de "porte".
 
 ## Porte de régénération (relance)
 Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si les sorties **de ce
@@ -119,7 +124,7 @@ Read-modify-write puis revalidation JSON :
 - `definition_of_ready.vision_complete = true` **si et seulement si** : les
   essentiels sont présents (problème, objectif business, partie prenante porteuse,
   IN non vide) **ET** OUT non vide **ET** critères de succès présents. Sinon `false`.
-- `phase = "vision"` (si la phase courante est `extraction`).
+- `phase = "vision"` (si la phase courante est `extraction` ou `ideation`).
 - `updated_at` à l'horodatage courant.
 
 > **Silencieux - jamais annoncé.** Ne **jamais** dire à l'utilisateur que le manifeste est mis à jour,

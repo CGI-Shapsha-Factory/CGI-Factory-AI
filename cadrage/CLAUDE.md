@@ -27,7 +27,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 - Le **workspace + manifeste** = créés **dans le projet client** par `cadrage-init`.
   Le plugin lit/écrit ces fichiers ; il ne les contient pas.
 
-## Les skills (9 du pipeline + `cadrage-ideation` facultatif + `help-factory`)
+## Les skills (10 du pipeline + `help-factory`)
 `help-factory` (hors pipeline) est l'**aide unique** de la Factory : elle affiche, de façon **statique** (rendu immédiat), la **carte des 6 plugins** (cadrage -> architecte -> designer -> assembleur -> SpecKit -> validation -> maintenance) avec **un tableau par plugin** (rôle de chaque skill, ordre, portes humaines). C'est la seule aide - il n'y a plus de `help-cadrage` (son détail est absorbé dans le tableau cadrage).
 
 **Servie par un hook, pas par le modèle.** Le contenu étant 100 % statique, le faire ré-émettre par le modèle coûtait ~1000 tokens de sortie et ~34 s par invocation. Le plugin **embarque donc son propre hook** (seul de la Factory dans ce cas ; les hooks de `couts`/`architecte`/`assembleur` sont posés dans le `.claude/` du projet par un script d'init) :
@@ -43,17 +43,17 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | # | skill | rôle | porte |
 |---|-------|------|-------|
 | 0 | `cadrage-init` | crée `.factory/` (gabarits, git-ignoré) + `cadrage-out/` (docs) + le **manifeste committé** `manifest.json` **à la racine** (le nom du projet est demandé par `cadrage-extraction`) | aucune |
-| 0bis | `cadrage-ideation` | **facultatif** - atelier d'idéation facilité (posture facilitateur : les idées viennent de l'utilisateur ; catalogue de techniques scriptées `references/techniques-ideation.md`, familles exploration + analytique dont pré-mortem, laddering, renversement d'hypothèses) ; le compte rendu (dont **hypothèses à vérifier** et **questions émergentes**) va dans `cadrage-out/source-contexte/ideation-<JJ-MM>.md`, repris comme source par `cadrage-extraction` (les deux dernières sections nourrissent Q19 et les points à creuser) ; n'écrit pas le manifeste, ne conditionne aucune porte | manifeste existe |
 | 1 | `cadrage-extraction` | tour de table à chaud (brain dump + **pré-mortem / hypothèses**) puis matière brute (fichier/multi/dossier ; .txt/.md/.pdf/.docx) -> `capture-brute.md` (contenu, **sans horodatage ni src**) + **passe découverte** (19 questions, interactive) -> `project-frame.md` | manifeste existe + 1 source |
-| 2 | `cadrage-vision` | capture -> `product-brief.md` (quoi/pourquoi, sans techno) | capture existe |
-| 3 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
-| 4 | `cadrage-decoupage` | découpage **fonctionnel** (use cases par valeur, **sans MVP**) + couplage (hypothèse) ; **table affichée en chat** ; arbitrage **en session, écrit en place** | `vision_complete` |
-| 5 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`, **direction visuelle délibérée anti-slop - palette dérivée du domaine, jamais le violet/indigo par défaut**), sauvé sous `cadrage-out/prompts/` - **fichier = corps du prompt seul** | vision dispo / retour dispo |
-| 6 | `cadrage-retour-client` | **intake universel du retour client**, deux modes auto-détectés et cumulables : **mode projet** (nouveaux fichiers dans `source-contexte/` détectés par diff avec `sources[]` -> relecture fan-out de `cadrage-out/` + `discovery` -> classement complète/remplace/contredit/à clarifier -> arbitrage PO **à résolution totale en session** (aucun marqueur d'incertitude persisté) -> mise à jour **en place** des artefacts, réjeu incrémental inline, portes recalculées à la baisse) ; **mode maquette** (ex-`retour-demonstrateur`, préservé : résout/invalide via `validation_points`) | retour ou nouveaux docs dispo |
-| 7 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
-| 8 | `cadrage-completude` | **porte de complétude & cohérence ET point de résolution unique** : relit `cadrage-out/` **en parallèle** (fan-out `cadrage-reader`), **challenge** le pack fonctionnel en **4 lentilles** (Complétude / Cohérence / Qualité des exigences / Validation-prêt-architecte - ancré DoR, INVEST, ISO 29148, BABOK, DDD, MoSCoW, traçabilité ; `references/completude-checklist-guide.md`), rend le verdict Definition of Ready (prose, **jamais de tableau**), et **résout chaque écart comme une décision** (jamais un constat nu : "que veux-tu faire ?" + recommandée/alternative/saisie + application en place), puis relais vers l'architecte | aucune (rejouable) |
+| 2 | `cadrage-ideation` | **atelier de clarification obligatoire, en aval de l'extraction** : étudie la matière extraite (`capture-brute`, `project-frame`, découverte), **cartographie les trous** (questions en suspens, sections minces, flux flou, hypothèses implicites), **brainstorme avec l'utilisateur** (posture facilitateur : les idées viennent de lui ; catalogue de techniques scriptées `references/techniques-ideation.md`) pour sortir les specs et détails, puis **enrichit en place** capture + project-frame et débloque les questions de découverte ; pose `ideation_complete` (garde `cadrage-vision`) | capture existe (extraction faite) |
+| 3 | `cadrage-vision` | capture -> `product-brief.md` (quoi/pourquoi, sans techno) | capture existe + **idéation faite** |
+| 4 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
+| 5 | `cadrage-decoupage` | découpage **fonctionnel** (use cases par valeur, **sans MVP**) + couplage (hypothèse) ; **table affichée en chat** ; arbitrage **en session, écrit en place** | `vision_complete` |
+| 6 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`, **direction visuelle délibérée anti-slop - palette dérivée du domaine, jamais le violet/indigo par défaut**), sauvé sous `cadrage-out/prompts/` - **fichier = corps du prompt seul** | vision dispo / retour dispo |
+| 7 | `cadrage-retour-client` | **intake universel du retour client**, deux modes auto-détectés et cumulables : **mode projet** (nouveaux fichiers dans `source-contexte/` détectés par diff avec `sources[]` -> relecture fan-out de `cadrage-out/` + `discovery` -> classement complète/remplace/contredit/à clarifier -> arbitrage PO **à résolution totale en session** (aucun marqueur d'incertitude persisté) -> mise à jour **en place** des artefacts, réjeu incrémental inline, portes recalculées à la baisse) ; **mode maquette** (ex-`retour-demonstrateur`, préservé : résout/invalide via `validation_points`) | retour ou nouveaux docs dispo |
+| 8 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
+| 9 | `cadrage-completude` | **porte de complétude & cohérence ET point de résolution unique** : relit `cadrage-out/` **en parallèle** (fan-out `cadrage-reader`), **challenge** le pack fonctionnel en **4 lentilles** (Complétude / Cohérence / Qualité des exigences / Validation-prêt-architecte - ancré DoR, INVEST, ISO 29148, BABOK, DDD, MoSCoW, traçabilité ; `references/completude-checklist-guide.md`), rend le verdict Definition of Ready (prose, **jamais de tableau**), et **résout chaque écart comme une décision** (jamais un constat nu : "que veux-tu faire ?" + recommandée/alternative/saisie + application en place), puis relais vers l'architecte | aucune (rejouable) |
 
-Flux : `cadrage-init` -> [`cadrage-ideation` facultatif si la matière est mince] -> `extraction` -> (`vision` ∥ `glossaire`) -> `decoupage` ->
+Flux : `cadrage-init` -> `extraction` -> `ideation` (atelier de clarification obligatoire, garde la vision) -> (`vision` ∥ `glossaire`) -> `decoupage` ->
 **boucle démonstrateur** [`demonstrateur-brief` ⟳ `retour-client` -> `completude`]
 jusqu'à convergence -> **revue de couplage humaine** -> `briefs` -> `completude` -> **`/architecte:architecte-init`**.
 `completude` est rejouable à tout moment (mesure le verdict **et** résout les points ouverts). Aide : `/cadrage:help-factory`.
@@ -86,6 +86,7 @@ spec_index{arbitrated}, briefs[]) ;
 `demonstrateur{client_validated, iterations[]}` ; `validation_points[]` (boucle démonstrateur
 uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
 `discovery[]` (19 entrées Q1-Q19, statut answered|pending|deferred|na, **sans champ `source`**) + `discovery_complete` ;
+`ideation_complete` (booléen ; posé par `cadrage-ideation`, **garde `cadrage-vision`** ; la phase peut valoir `ideation` entre `extraction` et `vision`) ;
 `definition_of_ready{}` (6 booléens) + `cadrage_complete`. Écriture = read-modify-write
 + revalidation JSON.
 
@@ -145,7 +146,9 @@ uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
 `references/discovery-questions.md` (lu par `cadrage-extraction`) ; statuts dans le
 bloc `discovery` du manifeste ; garde-fou déterministe `scripts/check_discovery.py`.
 Une question tranchée = `answered` (sans provenance écrite) ; laissée de côté =
-`deferred` (rien d'écrit dans l'artefact). Q2/Q6/Q7 (charge/dispo/perf)
+`deferred` (rien d'écrit dans l'artefact). L'atelier `cadrage-ideation`, en aval de
+l'extraction, **résout les questions restées `deferred`/`pending`** en les brainstormant
+avec l'utilisateur et les passe à `answered`. Q2/Q6/Q7 (charge/dispo/perf)
 = *seeds qualité* pour le plugin `architecte`.
 
 ## Invocation (pas de `commands/`)

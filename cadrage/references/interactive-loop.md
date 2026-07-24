@@ -10,9 +10,13 @@ inventée : on demande, on ne comble pas.**
   de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs points d'un
   coup, **même si une source (transcript) semble tout répondre** - une réponse issue d'une source
   **reste une suggestion à confirmer**, pas une validation.
-- **Toute question passe par l'outil `AskUserQuestion`. Sans exception.** Jamais une question
-  rédigée en prose dans le fil de la conversation : l'utilisateur doit toujours retrouver le même
-  geste - un intitulé, deux réponses possibles, et la saisie libre.
+- **Toute question passe par l'outil `AskUserQuestion`.** Jamais une question rédigée en prose
+  dans le fil de la conversation : l'utilisateur doit toujours retrouver le même geste - un
+  intitulé, deux réponses possibles, et la saisie libre. **Unique exception cadrée :** les
+  **questions produit Q14-Q19** de la passe découverte de `cadrage-extraction` sont posées **en
+  ouvert** (saisie libre uniquement, sans options pré-remplies) pour forcer l'utilisateur à les
+  formuler - voir son `SKILL.md`. Cette exception ne s'étend à **aucun** autre usage (couplage,
+  glossaire, complétude, Q1-Q13 gardent le format deux-options).
 - **Une question par appel.** L'outil sait en porter plusieurs : on ne s'en sert jamais. Un appel
   = une question, puis on s'arrête et on attend. Le groupage est interdit dans la cadrage, y
   compris pour des points de même nature.

@@ -149,6 +149,7 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
     { "id": "Q19", "question": "Quelles sont les principales incertitudes ou hypotheses a verifier ?", "status": "pending", "answer": null }
   ],
   "discovery_complete": false,
+  "ideation_complete": false,
   "definition_of_ready": {
     "vision_complete": false,
     "glossary_validated": false,
@@ -171,7 +172,10 @@ Le bloc `prompts` trace les prompts générés (démonstrateur et livrables visu
 sauvegardés sous `cadrage-out/prompts/`. Le bloc `demonstrateur` porte la boucle
 d'itération ; `validation_points[]` ne sert qu'aux points actifs de cette boucle -
 **aucun point de découpage ouvert ou laissé de côté n'y est persisté** (rien
-d'irrésolu n'est écrit). Toute écriture du manifeste est un **read-modify-write**
+d'irrésolu n'est écrit). Le drapeau `ideation_complete` (faux à l'init) est passé à vrai
+par `cadrage-ideation` une fois l'atelier de clarification tenu ; il **garde la vision**
+(`cadrage-vision` refuse tant qu'il est faux). La phase peut alors valoir `ideation` entre
+`extraction` et `vision`. Toute écriture du manifeste est un **read-modify-write**
 suivi d'une **revalidation JSON**.
 
 **Dates.** `created_at` et `updated_at` sont deux horodatages ISO 8601 réels et
@@ -208,4 +212,4 @@ création/mise à jour du manifeste, pas la date d'une source.
 - **Frontière claire.** Les gabarits installés appartiennent au projet ; le plugin
   reste la source canonique mais n'est pas modifié par le projet.
 
-Étape suivante : `/cadrage:cadrage-extraction` - dépouiller la matière brute de l'atelier en capture structurée. Si la matière est encore mince ou le besoin flou, `/cadrage:cadrage-ideation` (atelier d'idéation facultatif) peut la faire émerger d'abord - son compte rendu est ensuite repris comme source par l'extraction.
+Étape suivante : `/cadrage:cadrage-extraction` - dépouiller la matière brute de l'atelier en capture structurée. L'atelier d'idéation (`/cadrage:cadrage-ideation`) vient **après** l'extraction : il étudie la matière extraite, comble les trous et brainstorme les détails avec l'utilisateur.

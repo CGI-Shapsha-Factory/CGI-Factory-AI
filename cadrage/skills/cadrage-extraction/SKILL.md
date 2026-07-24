@@ -108,14 +108,6 @@ Juste après le nom du projet, **avant** le dépouillement et la passe découver
 court tour de table libre. Ces temps sont **facultatifs et jamais insistés** : "rien à
 ajouter" fait passer directement à la suite.
 
-**Atelier d'idéation si la matière est mince (une seule proposition, facultative).** Si peu ou
-pas de sources ont été fournies, ou si le sujet est manifestement encore en train de se former,
-proposer **avec `AskUserQuestion`** - deux options : "Cadrons d'abord les zones floues à voix
-haute (court atelier)" et "La matière est solide, on structure directement". Sur le premier
-choix, orienter vers `/cadrage:cadrage-ideation` (son compte rendu revient comme source, repris
-au chargement) puis reprendre l'extraction ; sur le second, continuer le tour de table. **Ne pas
-la proposer** si des sources riches sont déjà là - ce serait une friction inutile.
-
 1. **Invitation ouverte (un seul message).** Inviter l'utilisateur à vider son sac : tout ce
    qui lui semble important et qui n'est pas dans les sources - contexte, intuitions,
    contraintes, points non négociables, idées encore floues. Attendre la réponse, puis poser
@@ -142,11 +134,7 @@ la proposer** si des sources riches sont déjà là - ce serait une friction inu
    - Hypothèse-clé : "Quelle est l'hypothèse que tu tiens pour acquise aujourd'hui et qui, si
      elle se révélait fausse, remettrait tout le projet en cause ?"
    **Facultatif et jamais insisté** ("rien ne me vient" fait passer) ; **calibré sur l'enjeu**
-   (appuyé pour un lancement critique, à peine effleuré pour un outil interne modeste). **Si un
-   compte rendu d'idéation récent porte déjà une section "Hypothèses à vérifier"** (une séance
-   vient d'explorer ces questions), **alléger ce temps ou le sauter en le disant** ("l'atelier a
-   déjà fait le tour des risques - un point à ajouter ?") plutôt que de redérouler les deux
-   questions. Ce qui
+   (appuyé pour un lancement critique, à peine effleuré pour un outil interne modeste). Ce qui
    remonte est de la **matière brute** : ça alimente les sections Frictions, Contraintes et
    Objectifs de la capture, et sert de **suggestion** à la question sur les incertitudes et
    hypothèses (Q19) - jamais validé d'office, confirmé par le flux normal. Ne pas creuser ici :
@@ -157,13 +145,7 @@ la proposer** si des sources riches sont déjà là - ce serait une friction inu
 
 1. **Charger** le contenu de chaque source (Notion, ou fichier `.txt`/`.md`/
    transcript/`.pdf`/`.docx` selon les règles de la section Entrées). Écrire la
-   capture dans `cadrage-out/capture-brute.md`. **Cas particulier des comptes rendus
-   d'idéation** (`cadrage-out/source-contexte/ideation-<JJ-MM>.md`, produits par
-   `cadrage-ideation`) : les dépouiller comme toute source pour les sept sections, **et en
-   plus** reprendre nommément leurs deux sections finales - les **Hypothèses à vérifier**
-   deviennent des **suggestions** de la question sur les incertitudes et hypothèses (Q19), les
-   **Questions émergentes** deviennent des **points à creuser** dans la passe découverte. Ces
-   éléments restent des suggestions à confirmer par le flux normal, jamais des réponses validées.
+   capture dans `cadrage-out/capture-brute.md`.
 2. **Dépouiller** la matière et la classer dans les **sept sections fixes**
    (voir ci-dessous). Travailler section par section, sur l'ensemble des
    sources. Extraire le **contenu**, reformulé clair et lisible.
@@ -226,21 +208,32 @@ et le bloc `discovery` du manifeste.
    le transcript/docs une **réponse candidate** et la garder comme **suggestion à confirmer**.
    **Aucune question n'est `answered` à ce stade.**
 2. **Dérouler la boucle interactive - Q1 -> Q19, UNE À LA FOIS** (voir `references/interactive-loop.md`).
-   Poser **chaque** question **avec `AskUserQuestion`**, en français : l'intitulé de la question
-   précédé du compteur **"Qn/19"**, et **exactement deux options** - la **réponse recommandée**
-   (la suggestion tirée de la matière si elle existe, sinon la plus plausible ; sa `description`
-   dit ce qui la soutient) puis l'**alternative crédible** (la lecture concurrente de la matière,
-   ou le cas de figure opposé le plus fréquent). **Une question de découverte est toujours
-   esquivable : l'option 2 est donc "je laisse ce point de côté"**, et l'alternative de fond
-   passe dans la saisie libre - sans quoi le retrait n'existe plus à l'écran (cf.
-   `references/interactive-loop.md`). La saisie libre est ajoutée par l'outil : ne
-   jamais la fabriquer en troisième option. La **puce** porte le thème en clair
-   ("Utilisateurs", "Hébergement"), **jamais** le code de la question. **Aucune question en prose dans le fil.** Puis **POSE
-   UNE SEULE QUESTION, ARRÊTE-TOI, et ATTENDS la réponse** avant de passer à la suivante. **Jamais** plusieurs questions dans un même appel de l'outil ni dans un même message ; **jamais**
+   **POSE UNE SEULE QUESTION, ARRÊTE-TOI, et ATTENDS la réponse** avant de passer à la suivante.
+   **Jamais** plusieurs questions dans un même appel ni dans un même message ; **jamais**
    d'auto-complétion ; **jamais** `answered` sans réponse explicite. Ne jamais remplir de valeur démo.
+   Deux formes selon la question :
+   - **Q1 à Q13 : format deux options via `AskUserQuestion`.** L'intitulé précédé du compteur
+     **"Qn/19"**, et **exactement deux options** - la **réponse recommandée** (la suggestion tirée
+     de la matière si elle existe, sinon la plus plausible ; sa `description` dit ce qui la soutient)
+     puis l'**alternative crédible** (la lecture concurrente, ou le cas opposé le plus fréquent).
+     **Une question de découverte est toujours esquivable : l'option 2 est donc "je laisse ce point
+     de côté"**, l'alternative de fond passant dans la saisie libre - sans quoi le retrait n'existe
+     plus à l'écran. La saisie libre est ajoutée par l'outil : ne jamais la fabriquer en troisième
+     option. La **puce** porte le thème en clair ("Utilisateurs", "Hébergement"), **jamais** le code
+     de la question. **Aucune question en prose dans le fil** pour cette tranche.
+   - **Q14 à Q19 (questions produit) : posées en OUVERT, saisie libre uniquement.** Ne **pas**
+     utiliser `AskUserQuestion` et ne **pas** proposer de réponse recommandée ni d'alternative tirée
+     du transcript : poser la question **en clair dans le fil**, précédée du compteur **"Qn/19"** et
+     du thème en clair, puis **attendre la réponse tapée**. **On ne pré-remplit aucune de ces six
+     réponses depuis les sources** - le but est de **forcer l'utilisateur à les formuler lui-même**
+     (le brainstorm approfondi vit ensuite dans `cadrage-ideation`). Le contenu du transcript reste
+     capté dans la capture (sections Problème / Contraintes / Objectifs), mais la **réponse de
+     découverte** vient du texte tapé. Ces questions restent **esquivables** : une réponse tapée
+     "je laisse de côté / je ne sais pas" -> `deferred`. La **relance unique** sur réponse vague
+     s'applique comme ailleurs (coacher, pas quizzer).
    - Réponse explicite (suggestion acceptée ou saisie) -> statut `answered`. **Aucune `(src:)` écrite.**
-   - L'utilisateur laisse de côté (option 2, ou saisie libre équivalente) -> le champ est **omis**
-     (statut `deferred`, rien d'écrit dans l'artefact, pas de marqueur).
+   - L'utilisateur laisse de côté (option 2 pour Q1-Q13, ou réponse tapée équivalente pour Q14-Q19)
+     -> le champ est **omis** (statut `deferred`, rien d'écrit dans l'artefact, pas de marqueur).
    - **Q8 (contraintes légales / conformité / RGPD) est OPTIONNELLE.** La proposer **une seule fois**,
      sans insister. C'est la **seule question dont la forme des options est imposée** : option 1 =
      la contrainte pressentie dans la matière, **option 2 = "on gère ça nous-mêmes"**. Sans cette
@@ -314,4 +307,4 @@ Read-modify-write puis revalidation JSON :
 - **Skill indépendant.** Invocable seul ; la cohérence passe par le manifeste,
   pas par un orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-vision` - transformer la capture en vision produit.
+Étape suivante : `/cadrage:cadrage-ideation` - étudier la matière extraite, combler les trous et brainstormer les détails avec l'utilisateur avant de passer à la vision.

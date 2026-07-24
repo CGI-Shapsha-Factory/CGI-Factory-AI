@@ -50,6 +50,13 @@ option** - **jamais Azure par défaut**, même si le contexte mentionne Microsof
 l'utilisateur**, ne **rien supposer**, et n'écrire dans `project-frame.md` / le manifeste que la valeur
 **tranchée** (cf. invariant "proposer, pas décider").
 
+**Note - questions produit (Q14-Q19) : posées en OUVERT (saisie libre uniquement).** Contrairement
+à Q1-Q13, ces six questions ne sont **pas** posées via `AskUserQuestion` et **aucune réponse
+recommandée ou alternative n'est pré-remplie** depuis les sources : `cadrage-extraction` les pose
+**en clair dans le fil** (compteur `Qn/19` + thème), pour **forcer l'utilisateur à les formuler
+lui-même** (le brainstorm approfondi vit ensuite dans `cadrage-ideation`). Elles restent
+esquivables : une réponse tapée "je laisse de côté / je ne sais pas" -> `deferred`.
+
 **Note - questions produit (Q14-Q19) : réutilisées en aval.** Les réponses Q14 (problème),
 Q15 (pourquoi maintenant) et Q17 (signaux de succès) sont **reprises par `cadrage-vision`**
 comme suggestions pré-remplies du product-brief (même mécanisme que Q1/Q3/Q9 - on ne repose
