@@ -1,6 +1,6 @@
 {
   "name": "maintenance",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Traite les écarts après livraison : anomalies et évolutions créées complètes dans Linear par le PO, puis réalisées par le développeur en orchestrant SpecKit.",
   "author": {
     "name": "IA Factory"

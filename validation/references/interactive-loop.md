@@ -35,6 +35,11 @@ concernés. **Aucune information n'est inventée : on demande, on ne comble pas.
     Le testeur choisit un candidat ou saisit le sien. Une seule piste crédible ? Une option
     "aucune de ces adresses" suffit à ouvrir la saisie ; **ne jamais renoncer à l'outil faute de
     deuxième option évidente**.
+- **L'outil est le moyen, jamais le message.** Ne **jamais** annoncer la mécanique de
+  questionnement à l'utilisateur : pas de "via `AskUserQuestion`", pas de "je te pose la
+  question avec deux options", pas de "options tirées de la matière", pas de "je vais utiliser
+  l'outil...". La question **apparaît directement** ; si un mot d'introduction est utile, il
+  porte sur le **contenu** - jamais sur le mécanisme.
 - **Forme des options.** La **recommandation en premier** avec la mention "(recommandé)" dans
   son libellé, et une `description` courte qui dit ce que le choix implique concrètement.
   **Ne jamais fabriquer d'option "Saisir ma réponse"** : l'outil offre toujours la saisie libre.

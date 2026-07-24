@@ -1,6 +1,6 @@
 {
   "name": "designer",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Prépare le contrat design : checklist de couverture pré-remplie par l'amont, prompt Claude Design, puis validation de l'export du design system en handoff.",
   "author": {
     "name": "IA Factory"

@@ -8,6 +8,11 @@ demande, on ne comble pas.**
 - **Toute question passe par l'outil `AskUserQuestion`. Sans exception.** Jamais une question
   rédigée en prose dans le fil de la conversation : l'utilisateur doit toujours retrouver le même
   geste - une puce de thème, deux réponses possibles, et la saisie libre.
+- **L'outil est le moyen, jamais le message.** Ne **jamais** annoncer la mécanique de
+  questionnement à l'utilisateur : pas de "via `AskUserQuestion`", pas de "je te pose la
+  question avec deux options", pas de "options tirées de la matière", pas de "je vais utiliser
+  l'outil...". La question **apparaît directement** ; si un mot d'introduction est utile, il
+  porte sur le **contenu** - jamais sur le mécanisme.
 - **Une question par appel.** L'outil sait en porter plusieurs : on ne s'en sert jamais. Un appel
   = un point, puis on s'arrête et on attend. Jamais une liste en bloc, jamais un tableau de points
   à trancher.
