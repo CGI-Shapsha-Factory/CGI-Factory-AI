@@ -1,7 +1,7 @@
 {
   "name": "maintenance",
   "version": "0.2.0",
-  "description": "Phase de maintenance de la Factory (après la livraison d'une feature) : le PO crée dans Linear des anomalies et des évolutions complètes et bien rattachées à leur feature, le développeur les réalise en orchestrant les commandes SpecKit existantes (clarify, plan, tasks, implement cadré au périmètre). Frontière de la livraison (avant : rien ne se trace ; après : tout écart devient un objet suivi), requalification des évolutions déguisées, analyse d'impact par feature, et discipline de clôture (pas de fermeture tant que la spécification, les tâches et Linear ne sont pas à jour). 5 skills en français (maintenance-init, creation-anomalie, correction-anomalie, creation-evolution, realisation-evolution), via le MCP linear-prism.",
+  "description": "Traite les écarts après livraison : anomalies et évolutions créées complètes dans Linear par le PO, puis réalisées par le développeur en orchestrant SpecKit.",
   "author": {
     "name": "IA Factory"
   },

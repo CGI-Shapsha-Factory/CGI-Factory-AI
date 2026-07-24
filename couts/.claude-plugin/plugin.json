@@ -1,7 +1,7 @@
 {
   "name": "couts",
   "version": "0.6.0",
-  "description": "Mesure du coût de simulation de la fabrication au tarif API, sans latence : un hook SessionEnd lit le transcript en fin de session (5 catégories de tokens, dédup par message puis globale, table de prix datée par tier Haiku/Sonnet/Opus/Fable). Tout est confiné au dossier courant et git-ignoré ; couts-rapport produit un tableau par session (coût en euros, versionné) et couts-total un bilan agrégé partageable. 3 skills en français (couts-init, couts-rapport, couts-total), simulation seule.",
+  "description": "Mesure en fin de session le coût de simulation du projet au tarif API et le restitue en un tableau par session (tokens input/output + coût en euros).",
   "author": {
     "name": "IA Factory"
   },
