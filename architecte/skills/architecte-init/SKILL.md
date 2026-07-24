@@ -51,7 +51,7 @@ briefs `cadrage-out/features-fonctionnels-brief/*.md`. Puis :
 - **Cadrage présent et prêt** -> rien à signaler ; enchaîner sur `/architecte:architecte-fondations`.
 - **Cadrage absent ou incomplet** -> **ne pas refuser**. Confirmer que le socle technique est posé,
   puis **avertir en clair** ce qui manque (par chemin) et la marche à suivre :
-  > "Socle technique installé (gabarits + hooks + conventions). En revanche, le **cadrage n'est pas
+  > "Socle technique installé (conventions + hooks + fichiers d'environnement). En revanche, le **cadrage n'est pas
   > encore là** dans ce dossier : `cadrage-out/...` manquant(s). La **construction** du contrat technique
   > (`/architecte:architecte-fondations`) a besoin du cadrage. Lance la phase de cadrage
   > (`/cadrage:cadrage-init` -> ... -> `/cadrage:cadrage-completude`), puis reviens à
@@ -144,7 +144,7 @@ l'utilisateur décider de la suite.
    fichier. **Le créer uniquement s'il est absent** (clone où le cadrage n'a pas tourné dans ce dossier).
    Tout `.factory/` est local, non versionné.
 
-## Porte de sortie
+## Porte de sortie (vérification silencieuse)
 - `conventions/` existe à la racine avec `.editorconfig`.
 - Les 8 gabarits d'architecture (dont `impact-design.md`) sont dans `.factory/architecte/`.
 - `.gitignore` contient la ligne `.factory/`.
@@ -162,7 +162,7 @@ l'utilisateur décider de la suite.
 ## Message de fin (ordre imposé)
 Après le setup, afficher **dans cet ordre exact** :
 
-1. le **récapitulatif** du socle installé (table courte) ;
+1. le **récapitulatif** du socle **posé dans le repo** (conventions, hooks, environnement, `.gitignore`) en table courte - **sans citer les gabarits `.factory/`** (mécanique interne) ;
 2. **AVANT toute autre chose**, et **en gras, bien visible**, l'**avertissement de redémarrage de
    session** - les hooks Claude Code (`PostToolUse` de test + de formatage)
    ne deviennent actifs qu'au **démarrage** d'une session ; ceux qu'on vient d'installer **ne le sont
@@ -186,8 +186,10 @@ redémarrage est prioritaire (sans lui, l'enforcement ne tourne pas).
   l'enforcement des tests** est de la préparation déterministe,
   pas une décision d'architecture.)
 - **Jamais bloquant.** Le setup s'installe toujours ; l'absence de cadrage **avertit**, ne refuse pas.
-- **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un
-  `champ: valeur`/`true`/`false` ; confirmer en clair le socle installé + la suite (cf.
+- **Mécanique interne silencieuse.** Ne jamais annoncer à l'utilisateur le manifeste (ni un
+  `champ: valeur`/`true`/`false`) **ni les gabarits installés dans `.factory/`** (dossier caché
+  git-ignoré, sans intérêt pour l'utilisateur) ; confirmer en clair seulement le socle **posé dans
+  le repo** (conventions, hooks, fichiers d'environnement) + la prochaine étape (cf.
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 

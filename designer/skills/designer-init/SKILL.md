@@ -111,7 +111,7 @@ des **gestes humains** (jamais auto).*
    dupliquer), en **préservant** le reste. **Le créer uniquement s'il est absent** (clone où le cadrage
    n'a pas tourné ici). Tout `.factory/` est local, non versionné.
 
-## Porte de sortie
+## Porte de sortie (vérification silencieuse)
 - Les 4 gabarits sont dans `.factory/designer/`.
 - `.gitignore` contient la ligne `.factory/`.
 - Le dossier `designer-out/` existe à la racine, avec `designer-out/prompts/` (prêt à recevoir le prompt
@@ -125,8 +125,10 @@ des **gestes humains** (jamais auto).*
 ## Règles invariantes
 - **Aucune décision de design** ni génération de design system. Ce skill prépare l'atelier.
 - **Jamais bloquant.** Le setup s'amorce toujours ; l'amont manquant **avertit**, ne refuse pas.
-- **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un
-  `champ: valeur`/`true`/`false` ; confirmer en clair ce qui est amorcé + la suite (cf.
+- **Mécanique interne silencieuse.** Ne jamais annoncer à l'utilisateur le manifeste (ni un
+  `champ: valeur`/`true`/`false`) **ni les gabarits installés dans `.factory/`** (dossier caché
+  git-ignoré, sans intérêt pour l'utilisateur) ; confirmer en clair seulement ce qui lui est utile
+  (dossier de sortie, invitations, raccordements) + la prochaine étape (cf.
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 

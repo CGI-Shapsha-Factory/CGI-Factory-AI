@@ -172,7 +172,7 @@ cohérents, posés **au moment de l'exécution**. Ne pas confondre la date de la
 réunion ou de l'atelier avec la date du jour : ces deux champs portent l'instant de
 création/mise à jour du manifeste, pas la date d'une source.
 
-## Résultat attendu
+## Résultat attendu (vérification silencieuse)
 
 - `.factory/` (avec `cadrage/`), le **manifeste committé** `manifest.json` **à la racine**, et
   `cadrage-out/` (avec `source-contexte/`, `features-fonctionnels-brief/`,
@@ -193,8 +193,10 @@ création/mise à jour du manifeste, pas la date d'une source.
 
 - **Idempotent.** N'installe que le manquant ; ne détruit jamais un travail en
   cours.
-- **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un
-  `champ: valeur`/`true`/`false` ; confirmer en clair ce qui est installé + la suite (cf.
+- **Mécanique interne silencieuse.** Ne jamais annoncer à l'utilisateur le manifeste (ni un
+  `champ: valeur`/`true`/`false`) **ni les gabarits installés dans `.factory/`** (dossier caché
+  git-ignoré, sans intérêt pour l'utilisateur) ; confirmer en clair seulement ce qui lui est utile
+  (dossier de sortie, invitations, raccordements) + la prochaine étape (cf.
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste, pas par un
   orchestrateur.

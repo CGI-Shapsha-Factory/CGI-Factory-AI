@@ -91,7 +91,7 @@ sans écraser le bloc `assembly`).
 }
 ```
 
-## Vérification avant de conclure
+## Vérification avant de conclure (silencieuse)
 - Les gabarits de convergence sont dans `.factory/assembleur/`.
 - `.gitignore` contient la ligne `.factory/`.
 - `assembleur-out/` (avec `features/` et `memory/`) existe.
@@ -112,8 +112,10 @@ sans écraser le bloc `assembly`).
   et déjà committé dans le repo (la protection de branche est gérée côté GitHub) ; l'assembleur n'a
   donc **rien à poser** de ce côté.
 - **Paquet seul.** Aucun repo cible ; tout ira dans `assembleur-out/`.
-- **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher un
-  `champ: valeur`/`true`/`false` ; confirmer en clair ce qui est posé + la suite (cf.
+- **Mécanique interne silencieuse.** Ne jamais annoncer à l'utilisateur le manifeste (ni un
+  `champ: valeur`/`true`/`false`) **ni les gabarits installés dans `.factory/`** (dossier caché
+  git-ignoré, sans intérêt pour l'utilisateur) ; confirmer en clair seulement ce qui lui est utile
+  (dossier de sortie, invitations, raccordements) + la prochaine étape (cf.
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 

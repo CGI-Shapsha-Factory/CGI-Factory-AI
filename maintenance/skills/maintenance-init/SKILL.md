@@ -89,7 +89,7 @@ le bloc `maintenance`).
    pas encore d'objet et nommer ce qui manque (`/assembleur:premier-alimente-linear`, ou la
    fabrication SpecKit de la première feature).
 
-## Porte de sortie
+## Porte de sortie (vérification silencieuse)
 - Les 2 gabarits sont dans `.factory/maintenance/`.
 - `.gitignore` contient la ligne `.factory/`.
 - Le manifeste contient le bloc `maintenance` et reparse sans erreur.
@@ -103,8 +103,10 @@ le bloc `maintenance`).
 - **Aucune décision de maintenance.** Ce skill prépare le terrain ; il ne crée ni ne modifie aucun
   ticket d'anomalie ou d'évolution.
 - **Jamais bloquant.** Le setup s'amorce toujours ; l'amont manquant **avertit**, ne refuse pas.
-- **Manifeste silencieux.** Ne jamais annoncer que le manifeste est créé/mis à jour ni afficher
-  un `champ: valeur`/`true`/`false` ; confirmer en clair ce qui est amorcé + la suite (cf.
+- **Mécanique interne silencieuse.** Ne jamais annoncer à l'utilisateur le manifeste (ni un
+  `champ: valeur`/`true`/`false`) **ni les gabarits installés dans `.factory/`** (dossier caché
+  git-ignoré, sans intérêt pour l'utilisateur) ; confirmer en clair seulement ce qui lui est utile
+  (dossier de sortie, invitations, raccordements) + la prochaine étape (cf.
   `references/ux-conventions.md`).
 - **Typographie humaine** : aucun glyphe de style IA dans les sorties (cf. la section
   Typographie de `references/ux-conventions.md`).

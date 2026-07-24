@@ -1,6 +1,6 @@
 {
   "name": "assembleur",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "Fait converger les 3 contrats (fonctionnel, technique, design) en un paquet de handoff prêt pour SpecKit, alimente Linear en tickets et amorce le repo cible.",
   "author": {
     "name": "IA Factory"
