@@ -83,26 +83,15 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 6. **Inviter à centraliser le contexte** : afficher en clair, **en gras**, l'invitation
    suivante à l'utilisateur -
    > **Déposez tous vos fichiers de contexte du projet dans `cadrage-out/source-contexte/` : transcriptions, comptes rendus, fichiers Markdown, PDF, DOCX ou tout autre format.**
-   >
-   > C'est l'emplacement central de la matière brute, repris automatiquement par `cadrage-extraction`.
 
    Cette invitation est **facultative** : si l'utilisateur ne dépose rien, le cadrage
    **démarre quand même** (les sources pourront être fournies autrement). Ce dossier n'est
    **jamais** une porte de validation ni une source obligatoire.
 
-7. **Inviter à coller la maquette du démonstrateur** : afficher en clair, **en gras**, l'invitation
-   suivante à l'utilisateur -
-   > **Collez la maquette du démonstrateur - l'export généré par Claude Design - directement dans le dossier `cadrage-out/maquette-de-claude-design/`.**
-   >
-   > **Format attendu : le dossier de fichiers DÉZIPPÉ** (les fichiers HTML/CSS/JS et les assets tels quels) - **pas une archive ZIP**. Si vous n'avez qu'un `.zip`, **dézippez-le dans ce dossier**.
-   >
-   > *(Raison : la maquette reste ainsi directement consultable et lisible dans le repo ; un `.zip` est un blob binaire que git ne sait pas comparer et que les étapes suivantes devraient extraire.)*
-   >
-   > C'est l'emplacement de la **maquette de validation du cadrage** (le démonstrateur montré au client).
-
-   Cette invitation est **facultative** elle aussi : le dossier est créé **vide** à l'init et se
-   remplira quand la maquette existera (après `cadrage-demonstrateur-brief`). Il n'est **jamais** une
-   porte de validation ni une source obligatoire.
+   Ne **pas** afficher, à l'init, d'invitation à coller la maquette du démonstrateur : le dossier
+   `cadrage-out/maquette-de-claude-design/` est bien créé **vide**, mais son remplissage n'intervient
+   que plus tard (après `cadrage-demonstrateur-brief`). L'exposer dès l'init noierait l'utilisateur
+   d'informations prématurées.
 
 ```json
 {
@@ -193,8 +182,8 @@ création/mise à jour du manifeste, pas la date d'une source.
   sous `.factory/`.
 - L'utilisateur a reçu l'invitation **en gras** à déposer sa matière brute dans
   `cadrage-out/source-contexte/` (facultatif - n'empêche jamais de démarrer).
-- L'utilisateur a reçu l'invitation **en gras** à coller la maquette du démonstrateur (générée par
-  Claude Design) dans `cadrage-out/maquette-de-claude-design/` (facultatif - dossier créé **vide**).
+- Le dossier `cadrage-out/maquette-de-claude-design/` est créé **vide**, **sans** invitation
+  affichée à l'init (la maquette n'arrive qu'après `cadrage-demonstrateur-brief`).
 - `.gitignore` contient la ligne `.factory/`.
 - `manifest.json` reparse sans erreur, `phase = "init"`.
 - `project` est à `null` (il sera renseigné par `cadrage-extraction`) ; pas de champ `client`.
