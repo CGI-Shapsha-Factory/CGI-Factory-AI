@@ -120,7 +120,8 @@ uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
 - **Boucle interactive** (`references/interactive-loop.md`) : une question à la fois, **toujours
   posée avec `AskUserQuestion`** - **exactement deux options** (la recommandée d'abord, puis
   l'alternative crédible), l'outil ajoutant lui-même la saisie libre en troisième ligne. **Jamais
-  de question rédigée en prose dans le fil.** Un point non tranché est **omis**, jamais marqué. **Relance unique par défaut** : une réponse vague sur un point structurant est relancée **une seule
+  de question rédigée en prose dans le fil - sauf Q14-Q19 de la découverte** (zéro option voulue,
+  l'outil ne descend pas sous deux : question en prose, réponse tapée). Un point non tranché est **omis**, jamais marqué. **Relance unique par défaut** : une réponse vague sur un point structurant est relancée **une seule
   fois** (coacher, pas quizzer) ; si l'utilisateur maintient, on écrit tel quel. **Sondage
   approfondi sur choix explicite** : sur un point structurant à enjeu fort resté mince, on peut
   proposer (deux options) de creuser ensemble - laddering court, plafond de trois crans,

@@ -50,25 +50,27 @@ option** - **jamais Azure par défaut**, même si le contexte mentionne Microsof
 l'utilisateur**, ne **rien supposer**, et n'écrire dans `project-frame.md` / le manifeste que la valeur
 **tranchée** (cf. invariant "proposer, pas décider").
 
-**Note - questions produit (Q14-Q18) : via `AskUserQuestion`, sans suggestion de contenu.**
-Même geste que Q1-Q13 (la boucle ne s'interrompt jamais, aucune phrase de transition), mais
-**aucune réponse recommandée ni alternative pré-remplie** depuis les sources : les deux options
-sont **utilitaires** ("Je laisse ce point de côté" -> `deferred` ; "Reformule la question avec un
-exemple" -> reposée une fois, jamais de réponse suggérée), et la réponse de fond vient de la
-**saisie libre** - pour **forcer l'utilisateur à formuler lui-même** (le brainstorm approfondi vit
-ensuite dans `cadrage-ideation`).
+**Note - questions produit (Q14-Q18) : en prose dans le fil, sans `AskUserQuestion` ni option.**
+Même rythme que Q1-Q13 (la boucle ne s'interrompt jamais, aucune phrase de transition), mais la
+question est posée **directement dans la conversation** (compteur "Qn/19" + thème en tête) et
+l'utilisateur **tape sa réponse** : **aucune option affichée**, aucune réponse recommandée ni
+alternative pré-remplie depuis les sources - pour **forcer l'utilisateur à formuler lui-même**
+(le brainstorm approfondi vit ensuite dans `cadrage-ideation`). Il peut taper "je passe"
+(-> `deferred`) ; la reformulation avec un exemple n'arrive que s'il la demande ou n'a pas
+compris (une seule fois), jamais avec une réponse suggérée.
 
 **Note - Q19 (incertitudes / hypothèses) : déduction puis sondage adaptatif (style brainstorming).**
 On ne pose **pas** la question brute. `cadrage-extraction` **déduit** lui-même les incertitudes et
 hypothèses tacites du projet à partir de toute la matière (capture, réponses Q1-Q18),
-en visant les **angles morts non formulés**, puis **sonde chaque hypothèse une par une** en saisie
-libre (mécanisme inspiré de `superpowers:brainstorming` : une question de vérification à la fois,
-faire émerger l'inconnu). Chaque sonde passe **par `AskUserQuestion`** : la question ancrée dans le
-texte, **deux options utilitaires** ("Je laisse ce point de côté" -> sonde suivante ; "Ça suffit,
-on avance" -> convergence), la réponse de fond en **saisie libre**. Le **nombre de sondages est
-variable** : peu si le contexte est clair et complet, beaucoup s'il est flou/incomplet.
-**Arrêtable à chaque sonde** via l'option "Ça suffit, on avance" (pas de contrôle périodique
-séparé) ; les hypothèses non sondées passent oralement à `cadrage-ideation`. Les
+en visant les **angles morts non formulés**, puis **sonde chaque hypothèse une par une** en prose
+(mécanisme inspiré de `superpowers:brainstorming` : une question de vérification à la fois,
+faire émerger l'inconnu). Chaque sonde est posée **dans le fil, sans `AskUserQuestion` ni
+option** : la question ancrée dans le texte, la réponse **tapée** par l'utilisateur. Au début
+du sondage (une seule fois), rappeler qu'il peut taper "je passe" (-> sonde suivante) ou "ça
+suffit, on avance" (-> convergence). Le **nombre de sondages est variable** : peu si le contexte
+est clair et complet, beaucoup s'il est flou/incomplet. **Arrêtable à tout moment** par un simple
+"ça suffit" (pas de contrôle périodique séparé) ; les hypothèses non sondées passent oralement
+à `cadrage-ideation`. Les
 incertitudes/hypothèses confirmées sont synthétisées dans le champ Risques & hypothèses de
 `project-frame.md`.
 

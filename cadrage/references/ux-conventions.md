@@ -55,7 +55,10 @@ et on ne montre **jamais** que ça a eu lieu - on dit seulement **ce qui a été
 
 **Interdiction stricte de surfacer toute mécanique interne.** Ne **jamais** parler de
 "porte" / "porte d'entrée" / gate / drapeau, ni afficher un statut de pré-requis
-("vision_complete = false"), ni exposer le raisonnement de vérification d'étape. Si une
+("vision_complete = false"), ni exposer le raisonnement de vérification d'étape, ni citer un
+**nom d'outil interne** (`AskUserQuestion`, scripts, MCP), ni décrire le **geste de
+questionnement** ("via l'outil", "deux options", "options tirées de la matière", "saisie
+libre") : la question apparaît directement, sans préambule technique. Si une
 étape ne peut pas démarrer, soit **on pose une question en clair** à l'utilisateur, soit
 **on avance** quand la direction produit est explicite - jamais un avertissement type
 "⚠️ Porte d'entrée : ...".

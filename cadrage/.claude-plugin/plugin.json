@@ -1,6 +1,6 @@
 {
   "name": "cadrage",
-  "version": "0.11.8",
+  "version": "0.11.10",
   "description": "Capte le besoin client (transcripts, docs) et le transforme en contrat fonctionnel validé : vision, glossaire, découpage en features et un brief par feature, repris par l'architecte.",
   "author": {
     "name": "IA Factory"

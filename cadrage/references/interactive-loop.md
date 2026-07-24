@@ -10,15 +10,21 @@ inventée : on demande, on ne comble pas.**
   de l'utilisateur avant la suivante ; ne jamais enchaîner ni **auto-compléter** plusieurs points d'un
   coup, **même si une source (transcript) semble tout répondre** - une réponse issue d'une source
   **reste une suggestion à confirmer**, pas une validation.
-- **Toute question passe par l'outil `AskUserQuestion`. Sans exception.** Jamais une question
-  rédigée en prose dans le fil de la conversation : l'utilisateur doit toujours retrouver le même
-  geste - un intitulé, deux réponses possibles, et la saisie libre. **Variante cadrée (Q14-Q19
-  de la passe découverte de `cadrage-extraction`)** : l'outil reste obligatoire, mais **aucune
-  option de contenu** - les deux options sont **utilitaires** (retrait "je laisse ce point de
-  côté" ; reformulation avec exemple, ou "ça suffit, on avance" pour les sondes Q19) et la
-  réponse de fond passe par la **saisie libre**, pour forcer l'utilisateur à formuler lui-même
-  (voir le `SKILL.md` d'extraction). Cette variante ne s'étend à **aucun** autre usage (couplage,
-  glossaire, complétude, Q1-Q13 gardent les deux options de contenu).
+- **Toute question passe par l'outil `AskUserQuestion` - à UNE exception près.** Jamais une
+  question rédigée en prose dans le fil de la conversation : l'utilisateur doit toujours
+  retrouver le même geste - un intitulé, deux réponses possibles, et la saisie libre.
+  **L'exception : Q14-Q19 de la passe découverte de `cadrage-extraction`.** Ces questions
+  exigent **zéro option affichée** (réponse formulée par l'utilisateur, rien de suggéré), or
+  l'outil ne sait pas afficher moins de deux options plus la saisie libre : elles sont donc
+  posées **en prose dans le fil** et l'utilisateur tape sa réponse ("je passe" pour esquiver ;
+  "ça suffit, on avance" pour clore les sondes Q19 - voir le `SKILL.md` d'extraction). Cette
+  exception ne s'étend à **aucun** autre usage (couplage, glossaire, complétude, Q1-Q13
+  gardent l'outil et les deux options de contenu).
+- **L'outil est le moyen, jamais le message.** Ne **jamais** annoncer la mécanique de
+  questionnement à l'utilisateur : pas de "via `AskUserQuestion`", pas de "je te pose la
+  question avec deux options", pas de "options tirées de la matière", pas de "je vais utiliser
+  l'outil...". La question **apparaît directement** ; si un mot d'introduction est utile, il
+  porte sur le **contenu** ("Passons au nom du projet.") - jamais sur le mécanisme.
 - **Une question par appel.** L'outil sait en porter plusieurs : on ne s'en sert jamais. Un appel
   = une question, puis on s'arrête et on attend. Le groupage est interdit dans la cadrage, y
   compris pour des points de même nature.

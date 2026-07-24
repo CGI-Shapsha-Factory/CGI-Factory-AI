@@ -186,21 +186,23 @@ et le bloc `discovery` du manifeste.
      plus à l'écran. La saisie libre est ajoutée par l'outil : ne jamais la fabriquer en troisième
      option. La **puce** porte le thème en clair ("Utilisateurs", "Hébergement"), **jamais** le code
      de la question. **Aucune question en prose dans le fil** pour cette tranche.
-   - **Q14 à Q18 (questions produit) : via `AskUserQuestion`, SANS suggestion de contenu.**
-     Même geste que Q1-Q13 (compteur **"Qn/19"**, thème en puce, une question par appel), mais
-     **aucune option de contenu** : ne **jamais** proposer de réponse recommandée ni d'alternative
-     tirée du transcript. **Exactement deux options utilitaires** :
-     1. "Je laisse ce point de côté" -> `deferred` (le retrait reste visible) ;
-     2. "Reformule la question avec un exemple" -> reposer la même question reformulée/illustrée
-        (**une seule fois**), sans jamais suggérer la réponse.
-     **La réponse attendue est la saisie libre** (ajoutée par l'outil) ; la question peut le dire
-     sobrement ("réponds avec tes mots"). **On ne pré-remplit aucune de ces réponses depuis les
-     sources** - le but est de **forcer l'utilisateur à les formuler lui-même** (le brainstorm
-     approfondi vit ensuite dans `cadrage-ideation`). Le contenu du transcript reste capté dans la
-     capture (sections Problème / Contraintes / Objectifs), mais la **réponse de découverte**
-     vient du texte tapé. **Enchaînement direct après Q13 : aucune phrase de transition** ("on
-     passe aux questions produit...") - même rythme, question suivante directement. La **relance
-     unique** sur réponse vague s'applique comme ailleurs (coacher, pas quizzer).
+   - **Q14 à Q18 (questions produit) : en PROSE dans le fil, JAMAIS via `AskUserQuestion`.**
+     L'outil impose au moins deux options affichées ; ici on n'en veut **aucune** - la question
+     est donc posée **directement dans la conversation** et l'utilisateur **tape sa réponse**.
+     Garder le compteur **"Qn/19"** et le thème en tête de ligne (ex. "Q15/19 - Pourquoi
+     maintenant : ..."), **une seule question par message**, on attend la réponse avant la
+     suivante. **Aucune suggestion de contenu** : ne **jamais** proposer de réponse recommandée
+     ni d'alternative tirée du transcript. Dire sobrement dans la question qu'il peut répondre
+     avec ses mots ou taper "je passe" pour laisser le point de côté (-> `deferred`).
+     **Reformuler avec un exemple** uniquement s'il le demande ou si sa réponse montre qu'il n'a
+     pas compris la question (**une seule fois**), sans jamais suggérer la réponse.
+     **On ne pré-remplit aucune de ces réponses depuis les sources** - le but est de **forcer
+     l'utilisateur à les formuler lui-même** (le brainstorm approfondi vit ensuite dans
+     `cadrage-ideation`). Le contenu du transcript reste capté dans la capture (sections
+     Problème / Contraintes / Objectifs), mais la **réponse de découverte** vient du texte tapé.
+     **Enchaînement direct après Q13 : aucune phrase de transition** ("on passe aux questions
+     produit...") - même rythme, question suivante directement. La **relance unique** sur
+     réponse vague s'applique comme ailleurs (coacher, pas quizzer).
    - **Q19 (incertitudes / hypothèses) : NE PAS poser la question brute. Déduire puis sonder,
      façon brainstorming.** Mécanisme inspiré de `superpowers:brainstorming` (faire émerger
      l'inconnu, une question à la fois) :
@@ -210,24 +212,24 @@ et le bloc `discovery` du manifeste.
         **nombre suit le nombre d'angles morts réels** : peu si le contexte est clair et complet,
         beaucoup s'il est flou/incomplet (indices : questions restées `deferred`, sections minces,
         contradictions, cibles absentes, dépendances externes non tranchées).
-     2. **Sonder une par une, via `AskUserQuestion`** : transformer chaque hypothèse en une
-        **question de vérification ancrée** ("Le projet suppose X - est-ce voulu / vrai ?
-        qu'est-ce qui se passe si ce n'est pas le cas ?") portée par le texte de la question.
-        **Aucune option de contenu** ; **deux options utilitaires** :
-        1. "Je laisse ce point de côté" -> sonde suivante (l'hypothèse non sondée est transmise
-           oralement à l'atelier `cadrage-ideation`, jamais persistée comme marqueur) ;
-        2. "Ça suffit, on avance" -> fin du sondage, passage à la convergence.
-        La réponse de fond vient de la **saisie libre**. **Une seule question par appel**, on
-        attend la réponse avant la suivante. **Relance unique** sur réponse vague ; **jamais**
-        sur le légal (Q8). L'option "Ça suffit, on avance" étant présente sur chaque sonde,
-        **aucun contrôle d'arrêt séparé** n'est nécessaire : l'utilisateur peut clore à tout moment.
+     2. **Sonder une par une, en PROSE dans le fil** (jamais via `AskUserQuestion` - même règle
+        que Q14-Q18 : zéro option affichée, l'utilisateur tape sa réponse) : transformer chaque
+        hypothèse en une **question de vérification ancrée** ("Le projet suppose X - est-ce
+        voulu / vrai ? qu'est-ce qui se passe si ce n'est pas le cas ?"). Au **début du
+        sondage** (une seule fois, pas à chaque sonde), rappeler sobrement qu'il peut taper
+        "je passe" (-> sonde suivante ; l'hypothèse non sondée est transmise oralement à
+        l'atelier `cadrage-ideation`, jamais persistée comme marqueur) ou "ça suffit, on
+        avance" (-> fin du sondage, passage à la convergence). **Une seule question par
+        message**, on attend la réponse avant la suivante. **Relance unique** sur réponse
+        vague ; **jamais** sur le légal (Q8). L'arrêt étant possible à tout moment par un
+        simple "ça suffit", **aucun contrôle d'arrêt séparé** n'est nécessaire.
      3. **Converger** : synthétiser les incertitudes/hypothèses confirmées en une **liste**, écrite
         dans le champ Risques & hypothèses de `project-frame.md`. Q19 -> `answered` dès qu'une
         synthèse existe ; si l'utilisateur esquive d'emblée ("je laisse de côté") -> `deferred`.
    - Réponse explicite (suggestion acceptée ou saisie) -> statut `answered`. **Aucune `(src:)` écrite.**
-   - L'utilisateur laisse de côté (option "je laisse ce point de côté", quelle que soit la
-     tranche) -> le champ est **omis** (statut `deferred`, rien d'écrit dans l'artefact, pas de
-     marqueur).
+   - L'utilisateur laisse de côté (option "je laisse ce point de côté" sur Q1-Q13, ou "je
+     passe" tapé sur Q14-Q19) -> le champ est **omis** (statut `deferred`, rien d'écrit dans
+     l'artefact, pas de marqueur).
    - **Q8 (contraintes légales / conformité / RGPD) est OPTIONNELLE.** La proposer **une seule fois**,
      sans insister. C'est la **seule question dont la forme des options est imposée** : option 1 =
      la contrainte pressentie dans la matière, **option 2 = "on gère ça nous-mêmes"**. Sans cette
