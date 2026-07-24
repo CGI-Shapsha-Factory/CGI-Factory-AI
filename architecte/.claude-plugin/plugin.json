@@ -1,6 +1,6 @@
 {
   "name": "architecte",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Pose le contrat technique du projet : drivers et attributs qualité, composants, stack et ADR arbitrés par l'humain, walking skeleton, conventions et diagrammes.",
   "author": {
     "name": "IA Factory"

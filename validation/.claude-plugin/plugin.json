@@ -1,6 +1,6 @@
 {
   "name": "validation",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "Recette fonctionnelle d'une feature livrée : plan de test dérivé de la spec, exécution dans le navigateur avec preuves, rapport tracé dont le verdict reste humain.",
   "author": {
     "name": "IA Factory"
