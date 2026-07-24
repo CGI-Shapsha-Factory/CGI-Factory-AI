@@ -102,44 +102,9 @@ boucle interactive (`references/interactive-loop.md`).
 **Ne pas demander le nom du client.** Cette information n'est pas collectée par la
 factory - ne pas la poser, ne pas l'écrire dans le manifeste.
 
-## Tour de table à chaud (avant les questions structurées)
-
-Juste après le nom du projet, **avant** le dépouillement et la passe découverte, ouvrir un
-court tour de table libre. Ces temps sont **facultatifs et jamais insistés** : "rien à
-ajouter" fait passer directement à la suite.
-
-1. **Invitation ouverte (un seul message).** Inviter l'utilisateur à vider son sac : tout ce
-   qui lui semble important et qui n'est pas dans les sources - contexte, intuitions,
-   contraintes, points non négociables, idées encore floues. Attendre la réponse, puis poser
-   **une seule relance** : "quoi d'autre ?" (elle fait souvent remonter ce qu'on a failli
-   oublier). Ne pas entrer dans le détail à ce stade : les questions granulaires viennent
-   après, elles interrompraient le déballage. Ce qui est dit ici est de la **matière brute
-   comme une autre** : ça alimente les sections de la capture et sert de suggestion dans la
-   passe découverte, avec confirmation par le flux normal - rien n'est validé d'office.
-2. **Lecture de l'enjeu (une question).** Demander **avec `AskUserQuestion`** quel est l'enjeu
-   du projet, parmi outil interne, pilote / expérimentation, ou lancement public / critique :
-   **deux options** - les deux lectures les plus plausibles au vu de la matière -, la troisième
-   reste accessible par la saisie libre. Cette lecture est
-   une **calibration interne uniquement, jamais persistée telle quelle** : elle règle
-   l'intensité de la relance sur réponse mince (cf. `references/interactive-loop.md`) et la
-   richesse des suggestions proposées. Un enjeu fort justifie de creuser davantage ; un outil
-   interne modeste ne mérite pas un interrogatoire. (Le recouvrement avec la question sur le
-   type de projet est normal : c'est elle qui porte la réponse persistée.)
-3. **Projection d'échec et hypothèse-clé (deux relances ouvertes, prose).** Toujours dans le
-   registre du tour de table (prose, **pas** `AskUserQuestion` : on fait produire, on ne collecte
-   pas de décision), poser deux questions courtes l'une après l'autre, en attendant la réponse à
-   chaque fois :
-   - Pré-mortem : "Projetons-nous : on est [horizon réaliste] après la mise en service et le
-     projet est jugé décevant. Qu'est-ce qui a le plus probablement mal tourné ?"
-   - Hypothèse-clé : "Quelle est l'hypothèse que tu tiens pour acquise aujourd'hui et qui, si
-     elle se révélait fausse, remettrait tout le projet en cause ?"
-   **Facultatif et jamais insisté** ("rien ne me vient" fait passer) ; **calibré sur l'enjeu**
-   (appuyé pour un lancement critique, à peine effleuré pour un outil interne modeste). Ce qui
-   remonte est de la **matière brute** : ça alimente les sections Frictions, Contraintes et
-   Objectifs de la capture, et sert de **suggestion** à la question sur les incertitudes et
-   hypothèses (Q19) - jamais validé d'office, confirmé par le flux normal. Ne pas creuser ici :
-   le sondage détaillé, s'il est justifié, viendra pendant la passe découverte (relance unique,
-   puis sondage approfondi opt-in ; cf. `references/interactive-loop.md`).
+**Aussitôt le nom obtenu, enchaîner directement** sur le dépouillement (silencieux) puis la
+passe de découverte : **ne pas s'arrêter** sur un tour de table ou une invitation ouverte
+("qu'as-tu à ajouter ?") entre le nom et les questions structurées.
 
 ## Procédure
 
@@ -221,41 +186,48 @@ et le bloc `discovery` du manifeste.
      plus à l'écran. La saisie libre est ajoutée par l'outil : ne jamais la fabriquer en troisième
      option. La **puce** porte le thème en clair ("Utilisateurs", "Hébergement"), **jamais** le code
      de la question. **Aucune question en prose dans le fil** pour cette tranche.
-   - **Q14 à Q18 (questions produit) : posées en OUVERT, saisie libre uniquement.** Ne **pas**
-     utiliser `AskUserQuestion` et ne **pas** proposer de réponse recommandée ni d'alternative tirée
-     du transcript : poser la question **en clair dans le fil**, précédée du compteur **"Qn/19"** et
-     du thème en clair, puis **attendre la réponse tapée**. **On ne pré-remplit aucune de ces
-     réponses depuis les sources** - le but est de **forcer l'utilisateur à les formuler lui-même**
-     (le brainstorm approfondi vit ensuite dans `cadrage-ideation`). Le contenu du transcript reste
-     capté dans la capture (sections Problème / Contraintes / Objectifs), mais la **réponse de
-     découverte** vient du texte tapé. Ces questions restent **esquivables** : une réponse tapée
-     "je laisse de côté / je ne sais pas" -> `deferred`. La **relance unique** sur réponse vague
-     s'applique comme ailleurs (coacher, pas quizzer).
+   - **Q14 à Q18 (questions produit) : via `AskUserQuestion`, SANS suggestion de contenu.**
+     Même geste que Q1-Q13 (compteur **"Qn/19"**, thème en puce, une question par appel), mais
+     **aucune option de contenu** : ne **jamais** proposer de réponse recommandée ni d'alternative
+     tirée du transcript. **Exactement deux options utilitaires** :
+     1. "Je laisse ce point de côté" -> `deferred` (le retrait reste visible) ;
+     2. "Reformule la question avec un exemple" -> reposer la même question reformulée/illustrée
+        (**une seule fois**), sans jamais suggérer la réponse.
+     **La réponse attendue est la saisie libre** (ajoutée par l'outil) ; la question peut le dire
+     sobrement ("réponds avec tes mots"). **On ne pré-remplit aucune de ces réponses depuis les
+     sources** - le but est de **forcer l'utilisateur à les formuler lui-même** (le brainstorm
+     approfondi vit ensuite dans `cadrage-ideation`). Le contenu du transcript reste capté dans la
+     capture (sections Problème / Contraintes / Objectifs), mais la **réponse de découverte**
+     vient du texte tapé. **Enchaînement direct après Q13 : aucune phrase de transition** ("on
+     passe aux questions produit...") - même rythme, question suivante directement. La **relance
+     unique** sur réponse vague s'applique comme ailleurs (coacher, pas quizzer).
    - **Q19 (incertitudes / hypothèses) : NE PAS poser la question brute. Déduire puis sonder,
      façon brainstorming.** Mécanisme inspiré de `superpowers:brainstorming` (faire émerger
      l'inconnu, une question à la fois) :
      1. **Déduire** (silencieusement, sans afficher de mécanique) les incertitudes et hypothèses
         tacites sur lesquelles le projet repose, à partir de **toute** la matière (capture,
-        réponses Q1-Q18, tour de table). Viser surtout les **angles morts non formulés**. Le
+        réponses Q1-Q18). Viser surtout les **angles morts non formulés**. Le
         **nombre suit le nombre d'angles morts réels** : peu si le contexte est clair et complet,
         beaucoup s'il est flou/incomplet (indices : questions restées `deferred`, sections minces,
         contradictions, cibles absentes, dépendances externes non tranchées).
-     2. **Sonder une par une, en clair dans le fil** (saisie libre, **pas** d'`AskUserQuestion`) :
-        transformer chaque hypothèse en une **question de vérification** ("Le projet suppose X -
-        est-ce voulu / vrai ? qu'est-ce qui se passe si ce n'est pas le cas ?"). **Une seule
-        question par message**, on attend la réponse avant la suivante. **Relance unique** sur
-        réponse vague ; **jamais** sur le légal (Q8).
-     3. **Contrôle d'arrêt adaptatif** : après quelques sondages (env. 3-4), proposer **avec
-        `AskUserQuestion`** - deux options : "On continue" et "Ça suffit, on avance". L'utilisateur
-        peut **clore à tout moment** ; les hypothèses non sondées sont **transmises oralement à
-        l'atelier `cadrage-ideation`**, jamais persistées comme marqueur dans l'artefact.
-     4. **Converger** : synthétiser les incertitudes/hypothèses confirmées en une **liste**, écrite
+     2. **Sonder une par une, via `AskUserQuestion`** : transformer chaque hypothèse en une
+        **question de vérification ancrée** ("Le projet suppose X - est-ce voulu / vrai ?
+        qu'est-ce qui se passe si ce n'est pas le cas ?") portée par le texte de la question.
+        **Aucune option de contenu** ; **deux options utilitaires** :
+        1. "Je laisse ce point de côté" -> sonde suivante (l'hypothèse non sondée est transmise
+           oralement à l'atelier `cadrage-ideation`, jamais persistée comme marqueur) ;
+        2. "Ça suffit, on avance" -> fin du sondage, passage à la convergence.
+        La réponse de fond vient de la **saisie libre**. **Une seule question par appel**, on
+        attend la réponse avant la suivante. **Relance unique** sur réponse vague ; **jamais**
+        sur le légal (Q8). L'option "Ça suffit, on avance" étant présente sur chaque sonde,
+        **aucun contrôle d'arrêt séparé** n'est nécessaire : l'utilisateur peut clore à tout moment.
+     3. **Converger** : synthétiser les incertitudes/hypothèses confirmées en une **liste**, écrite
         dans le champ Risques & hypothèses de `project-frame.md`. Q19 -> `answered` dès qu'une
         synthèse existe ; si l'utilisateur esquive d'emblée ("je laisse de côté") -> `deferred`.
    - Réponse explicite (suggestion acceptée ou saisie) -> statut `answered`. **Aucune `(src:)` écrite.**
-   - L'utilisateur laisse de côté (option 2 pour Q1-Q13, réponse tapée équivalente pour Q14-Q18,
-     esquive d'emblée pour Q19) -> le champ est **omis** (statut `deferred`, rien d'écrit dans
-     l'artefact, pas de marqueur).
+   - L'utilisateur laisse de côté (option "je laisse ce point de côté", quelle que soit la
+     tranche) -> le champ est **omis** (statut `deferred`, rien d'écrit dans l'artefact, pas de
+     marqueur).
    - **Q8 (contraintes légales / conformité / RGPD) est OPTIONNELLE.** La proposer **une seule fois**,
      sans insister. C'est la **seule question dont la forme des options est imposée** : option 1 =
      la contrainte pressentie dans la matière, **option 2 = "on gère ça nous-mêmes"**. Sans cette

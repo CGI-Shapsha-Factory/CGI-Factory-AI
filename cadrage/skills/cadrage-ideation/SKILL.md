@@ -42,6 +42,17 @@ Les résultats **enrichissent en place** les artefacts extraits (aucun document 
 - **Ancrée sur les trous, pas sur une page blanche.** On ne relance pas dans le vide : chaque
   question part d'un manque précis repéré dans la matière extraite (une question de découverte
   restée sans réponse, une section mince, un flux ambigu).
+- **Questions ancrées, jamais gabarit.** Chaque question **cite l'élément concret du projet**
+  d'où elle part - un flux, un acteur, une contrainte, une réponse déjà donnée, nommés dans les
+  mots du projet. **Interdit** : toute question posable telle quelle sur n'importe quel projet
+  ("quel est l'enjeu ?", "qu'est-ce qui a mal tourné ?" sans ancrage). Test avant de poser : si
+  la question ne contient **aucun nom ni fait propre au projet**, la réécrire.
+  - Mauvais : "Projetons-nous 6 mois après la mise en service, le projet est jugé décevant -
+    qu'est-ce qui a mal tourné ?"
+  - Bon : "La capture dit que les collaborateurs abandonneront l'outil si les réponses ne sont
+    pas fiables. Si dans 6 mois le cabinet juge l'assistant décevant, qu'est-ce qui aura pesé le
+    plus : la fiabilité des réponses sur les dossiers, l'intégration avec les systèmes cités, ou
+    autre chose que tu vois venir ?"
 
 ## Entrées
 
@@ -79,11 +90,20 @@ ne régénère rien à l'aveugle) et applique les règles de fusion additive ci-
    la confirmer **avec `AskUserQuestion`** (deux options : la lecture recommandée et une
    alternative crédible). Si l'utilisateur demande une idée, en donner une seule puis lui
    rendre la main.
-5. **Converger, puis synthétiser.** Quand l'utilisateur a fait le tour (ou trou par trou),
+5. **Éprouver : pré-mortem et hypothèses (temps standard de chaque séance).** Après le
+   brainstorm des trous - jamais en ouverture, quand il y a de quoi ancrer chaque question -,
+   dérouler les techniques **analytiques** du catalogue (`references/techniques-ideation.md` :
+   pré-mortem, renversement d'hypothèses, cinq pourquoi si utile), **instanciées avec les
+   spécificités du projet** : l'horizon réaliste réel, les utilisateurs réels, les dépendances
+   et risques lisibles dans la matière. Une question par message, en **construisant sur les
+   réponses précédentes** - jamais un gabarit récité (cf. la règle "Questions ancrées"). Le
+   rendu (hypothèses fragiles, risques, signaux avancés) nourrit l'enrichissement en place
+   comme le reste de la séance (champ Risques & hypothèses du project-frame).
+6. **Converger, puis synthétiser.** Quand l'utilisateur a fait le tour (ou trou par trou),
    basculer explicitement en convergence : lui **tendre le miroir** (reformuler ce qu'il a
    clarifié), puis **ajouter les liens non évidents** que la séance a fait apparaître. Faire
    valider cette synthèse en clair.
-6. **Écrire les enrichissements en place.** Reporter les clarifications dans les artefacts
+7. **Écrire les enrichissements en place.** Reporter les clarifications dans les artefacts
    extraits (voir Sortie), en **fusion additive** : on complète, on ne réécrit pas à
    l'aveugle. Un acquis contredit par la séance est marqué `[REMIS EN CAUSE]` avec sa raison
    et tranché par l'humain, jamais supprimé ni réécrit en douce.
