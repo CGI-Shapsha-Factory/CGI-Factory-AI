@@ -76,7 +76,8 @@ disque.
   un captcha, rendre la main au testeur (il se connecte, puis l'exécution reprend).
 - **Preuves** : captures d'écran enregistrées dans
   `validation-out/<feature>/resultats/preuves-<outil>-<NN>/` (`<outil>` = `chrome` ici, `<NN>` = la
-  version de l'exécution en cours ; nommées par cas : `TC-<feature>-NNN-<n>.png`).
+  version de l'exécution en cours ; nommées par cas : `<slug>-<n>.png`, slug défini au contrat
+  de sortie commun).
 
 ## Voie 2 (repli) : le MCP Playwright, en session
 Mêmes cas, mêmes règles, via les outils `mcp__playwright__browser_*` :
@@ -88,7 +89,8 @@ Mêmes cas, mêmes règles, via les outils `mcp__playwright__browser_*` :
   `browser_console_messages` / `browser_network_requests` (diagnostic sur KO).
 - **Captures** : le MCP Playwright n'écrit que sous sa propre racine autorisée (un chemin hors
   de la session est refusé, et un nom relatif atterrit dans son dossier de sortie, pas dans
-  `preuves-playwright-<NN>/`). Capturer avec un nom relatif `TC-<feature>-NNN-<n>.png`, puis
+  `preuves-playwright-<NN>/`). Capturer avec un nom relatif `<slug>-<n>.png` (slug défini au
+  contrat de sortie commun), puis
   **déplacer** les fichiers dans `validation-out/<feature>/resultats/preuves-playwright-<NN>/`
   (`<NN>` = la version de l'exécution en cours) avant d'écrire les résultats - aucune preuve
   référencée ne doit rester dans le dossier de l'outil.
@@ -154,7 +156,13 @@ où `<outil>` est le **jeton de l'outil** utilisé et `<NN>` un numéro de versi
 chiffres**. À chaque exécution, prendre le plus petit `<NN>` libre **pour cet outil** (plus haut
 `<NN>` existant + 1, en partant de `01`) : on n'écrase jamais une exécution. Les captures de cette
 exécution vont dans `resultats/preuves-<outil>-<NN>/` (même `<outil>`, même `<NN>` que le
-fichier), nommées `TC-<feature>-NNN-<n>.png`. Rejouer le même plan avec un autre outil, ou une
+fichier), nommées `<slug>-<n>.png` : `<slug>` est un résumé du cas en **2 à 4 mots** en
+kebab-case (minuscules, sans accents, sans articles), dérivé de la colonne Intitulé du plan de
+test, pour qu'un humain reconnaisse le scénario au seul nom du fichier (ex.
+`connexion-refusee-1.png`) ; `<n>` est l'index de capture du cas (souvent `1`). Un slug est
+**unique par cas** dans le dossier (deux cas proches se distinguent par un mot de plus) ; la
+traçabilité vers l'identifiant `TC-<feature>-NNN` est portée par la colonne Preuve du fichier
+de résultats, pas par le nom du fichier. Rejouer le même plan avec un autre outil, ou une
 seconde fois avec le même outil, produit un couple fichier + dossier **distinct** - jamais de
 capture écrasée.
 

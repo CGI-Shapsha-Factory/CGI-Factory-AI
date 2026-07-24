@@ -88,7 +88,11 @@ et ne proposer le repli **qu'ensuite**, par une question.
   déjà joués gardent leur verdict, on ne rejoue pas le plan depuis le début.
 - Jouer le plan **cas par cas, dans l'ordre**, contre l'adresse de recette : préconditions,
   étapes, vérification du résultat attendu. Capture d'écran au point de vérification de chaque
-  cas, enregistrée dans `resultats/preuves-<outil>-<NN>/TC-<feature>-NNN-<n>.png`.
+  cas, enregistrée dans `resultats/preuves-<outil>-<NN>/<slug>-<n>.png`, où `<slug>` résume le
+  cas en 2 à 4 mots kebab-case (minuscules, sans accents, sans articles), dérivés de la colonne
+  Intitulé du plan et **unique par cas** dans le dossier - le nom du fichier doit suffire à un
+  humain pour reconnaître le scénario (ex. `connexion-refusee-1.png`) ; le lien avec
+  l'identifiant `TC-<feature>-NNN` est porté par la colonne Preuve des résultats.
 - Sur un écran de connexion ou un captcha : rendre la main au testeur (comptes de test du plan
   uniquement), puis reprendre.
 

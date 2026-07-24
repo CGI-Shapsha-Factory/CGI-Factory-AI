@@ -5,7 +5,10 @@
      l'outil (chrome / playwright / cowork) et <NN> la version sur DEUX chiffres (01, 02, ...).
      UN FICHIER PAR EXÉCUTION : prendre le plus petit <NN> libre POUR CET OUTIL (plus haut <NN>
      existant + 1, à partir de 01) - on n'écrase JAMAIS une exécution passée. Les captures de
-     cette exécution vont dans `resultats/preuves-<outil>-<NN>/` (même <outil>, même <NN>).
+     cette exécution vont dans `resultats/preuves-<outil>-<NN>/` (même <outil>, même <NN>),
+     nommées `<slug>-<n>.png` : <slug> = 2 à 4 mots kebab-case (minuscules, sans accents,
+     sans articles) résumant le cas depuis la colonne Intitulé du plan, unique par cas dans le
+     dossier ; la traçabilité vers TC-<feature>-NNN passe par la colonne Preuve ci-dessous.
      TOUT EST EN TABLES, et la synthèse est EN HAUT : le testeur doit savoir en deux secondes ce
      qui passe et ce qui casse, sans dérouler le fichier. Forme des tables (séparateurs entre
      lignes, étapes en <br>, cellule vide = "-") : section 4bis de `ux-conventions.md`.
@@ -49,9 +52,9 @@
 
 | Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve |
 |---|---|---|---|---|---|
-| TC-[numéro]-001 | (l'intitulé du cas, repris du plan) | OK | 1. (action réellement jouée)<br>2. (...) | (ce qui a été observé, factuel) | `preuves-[outil]-[NN]/TC-[numéro]-001-1.png` |
+| TC-[numéro]-001 | (l'intitulé du cas, repris du plan) | OK | 1. (action réellement jouée)<br>2. (...) | (ce qui a été observé, factuel) | `preuves-[outil]-[NN]/[slug]-1.png` (ex. `preuves-chrome-01/connexion-admin-1.png`) |
 |---|---|---|---|---|---|
-| TC-[numéro]-002 | (...) | KO | 1. (...)<br>2. (...) | (ce qui a été observé) | `preuves-[outil]-[NN]/TC-[numéro]-002-1.png` |
+| TC-[numéro]-002 | (...) | KO | 1. (...)<br>2. (...) | (ce qui a été observé) | `preuves-[outil]-[NN]/[slug]-1.png` |
 
 ## Écarts (KO et NON TESTABLE)
 

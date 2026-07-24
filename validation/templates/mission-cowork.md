@@ -33,7 +33,10 @@
    pas encore affiché, attendre puis rejouer l'étape une fois ; au deuxième échec, verdict KO.
 5. **Prouver chaque verdict** : une capture d'écran au point de vérification, enregistrée dans
    `validation-out/[feature]/resultats/preuves-cowork-[NN]/` (même `[NN]` que le fichier de
-   résultats ci-dessous ; nommée `TC-[feature]-NNN-<n>.png`). Sur KO, noter en plus,
+   résultats ci-dessous ; nommée `<slug>-<n>.png`, où `<slug>` résume le cas en 2 à 4 mots
+   kebab-case - minuscules, sans accents, sans articles - dérivés de la colonne Intitulé du
+   plan, unique par cas, ex. `connexion-refusee-1.png` ; le lien avec l'identifiant TC est
+   porté par la colonne Preuve des résultats). Sur KO, noter en plus,
    factuellement, ce qui est constaté par rapport à l'attendu.
 6. **Capturer le déroulé effectif** : pour chaque cas, noter les étapes réellement jouées,
    numérotées, en langage naturel - ce qui s'est vraiment passé (relances, contournements,
@@ -85,9 +88,9 @@ Quatre sections, dans cet ordre :
 
 | Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve |
 |---|---|---|---|---|---|
-| TC-[feature]-001 | [intitulé du plan] | OK | 1. ...<br>2. ... | [ce qui a été observé] | `preuves-cowork-[NN]/TC-[feature]-001-1.png` |
+| TC-[feature]-001 | [intitulé du plan] | OK | 1. ...<br>2. ... | [ce qui a été observé] | `preuves-cowork-[NN]/[slug]-1.png` |
 |---|---|---|---|---|---|
-| TC-[feature]-002 | [...] | KO | 1. ...<br>2. ... | [ce qui a été observé] | `preuves-cowork-[NN]/TC-[feature]-002-1.png` |
+| TC-[feature]-002 | [...] | KO | 1. ...<br>2. ... | [ce qui a été observé] | `preuves-cowork-[NN]/[slug]-1.png` |
 
 ## Écarts (KO et NON TESTABLE)
 
