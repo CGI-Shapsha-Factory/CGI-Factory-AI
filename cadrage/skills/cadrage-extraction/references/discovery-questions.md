@@ -50,12 +50,23 @@ option** - **jamais Azure par défaut**, même si le contexte mentionne Microsof
 l'utilisateur**, ne **rien supposer**, et n'écrire dans `project-frame.md` / le manifeste que la valeur
 **tranchée** (cf. invariant "proposer, pas décider").
 
-**Note - questions produit (Q14-Q19) : posées en OUVERT (saisie libre uniquement).** Contrairement
-à Q1-Q13, ces six questions ne sont **pas** posées via `AskUserQuestion` et **aucune réponse
+**Note - questions produit (Q14-Q18) : posées en OUVERT (saisie libre uniquement).** Contrairement
+à Q1-Q13, ces questions ne sont **pas** posées via `AskUserQuestion` et **aucune réponse
 recommandée ou alternative n'est pré-remplie** depuis les sources : `cadrage-extraction` les pose
 **en clair dans le fil** (compteur `Qn/19` + thème), pour **forcer l'utilisateur à les formuler
 lui-même** (le brainstorm approfondi vit ensuite dans `cadrage-ideation`). Elles restent
 esquivables : une réponse tapée "je laisse de côté / je ne sais pas" -> `deferred`.
+
+**Note - Q19 (incertitudes / hypothèses) : déduction puis sondage adaptatif (style brainstorming).**
+On ne pose **pas** la question brute. `cadrage-extraction` **déduit** lui-même les incertitudes et
+hypothèses tacites du projet à partir de toute la matière (capture, réponses Q1-Q18, tour de table),
+en visant les **angles morts non formulés**, puis **sonde chaque hypothèse une par une** en saisie
+libre (mécanisme inspiré de `superpowers:brainstorming` : une question de vérification à la fois,
+faire émerger l'inconnu). Le **nombre de sondages est variable** : peu si le contexte est clair et
+complet, beaucoup s'il est flou/incomplet. **Adaptatif et arrêtable** : après quelques questions,
+un contrôle "on continue / ça suffit" (deux options via `AskUserQuestion`) laisse l'utilisateur
+clore ; les hypothèses non sondées passent oralement à `cadrage-ideation`. Les incertitudes/hypothèses
+confirmées sont synthétisées dans le champ Risques & hypothèses de `project-frame.md`.
 
 **Note - questions produit (Q14-Q19) : réutilisées en aval.** Les réponses Q14 (problème),
 Q15 (pourquoi maintenant) et Q17 (signaux de succès) sont **reprises par `cadrage-vision`**

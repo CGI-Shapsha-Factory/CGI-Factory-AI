@@ -221,19 +221,41 @@ et le bloc `discovery` du manifeste.
      plus à l'écran. La saisie libre est ajoutée par l'outil : ne jamais la fabriquer en troisième
      option. La **puce** porte le thème en clair ("Utilisateurs", "Hébergement"), **jamais** le code
      de la question. **Aucune question en prose dans le fil** pour cette tranche.
-   - **Q14 à Q19 (questions produit) : posées en OUVERT, saisie libre uniquement.** Ne **pas**
+   - **Q14 à Q18 (questions produit) : posées en OUVERT, saisie libre uniquement.** Ne **pas**
      utiliser `AskUserQuestion` et ne **pas** proposer de réponse recommandée ni d'alternative tirée
      du transcript : poser la question **en clair dans le fil**, précédée du compteur **"Qn/19"** et
-     du thème en clair, puis **attendre la réponse tapée**. **On ne pré-remplit aucune de ces six
+     du thème en clair, puis **attendre la réponse tapée**. **On ne pré-remplit aucune de ces
      réponses depuis les sources** - le but est de **forcer l'utilisateur à les formuler lui-même**
      (le brainstorm approfondi vit ensuite dans `cadrage-ideation`). Le contenu du transcript reste
      capté dans la capture (sections Problème / Contraintes / Objectifs), mais la **réponse de
      découverte** vient du texte tapé. Ces questions restent **esquivables** : une réponse tapée
      "je laisse de côté / je ne sais pas" -> `deferred`. La **relance unique** sur réponse vague
      s'applique comme ailleurs (coacher, pas quizzer).
+   - **Q19 (incertitudes / hypothèses) : NE PAS poser la question brute. Déduire puis sonder,
+     façon brainstorming.** Mécanisme inspiré de `superpowers:brainstorming` (faire émerger
+     l'inconnu, une question à la fois) :
+     1. **Déduire** (silencieusement, sans afficher de mécanique) les incertitudes et hypothèses
+        tacites sur lesquelles le projet repose, à partir de **toute** la matière (capture,
+        réponses Q1-Q18, tour de table). Viser surtout les **angles morts non formulés**. Le
+        **nombre suit le nombre d'angles morts réels** : peu si le contexte est clair et complet,
+        beaucoup s'il est flou/incomplet (indices : questions restées `deferred`, sections minces,
+        contradictions, cibles absentes, dépendances externes non tranchées).
+     2. **Sonder une par une, en clair dans le fil** (saisie libre, **pas** d'`AskUserQuestion`) :
+        transformer chaque hypothèse en une **question de vérification** ("Le projet suppose X -
+        est-ce voulu / vrai ? qu'est-ce qui se passe si ce n'est pas le cas ?"). **Une seule
+        question par message**, on attend la réponse avant la suivante. **Relance unique** sur
+        réponse vague ; **jamais** sur le légal (Q8).
+     3. **Contrôle d'arrêt adaptatif** : après quelques sondages (env. 3-4), proposer **avec
+        `AskUserQuestion`** - deux options : "On continue" et "Ça suffit, on avance". L'utilisateur
+        peut **clore à tout moment** ; les hypothèses non sondées sont **transmises oralement à
+        l'atelier `cadrage-ideation`**, jamais persistées comme marqueur dans l'artefact.
+     4. **Converger** : synthétiser les incertitudes/hypothèses confirmées en une **liste**, écrite
+        dans le champ Risques & hypothèses de `project-frame.md`. Q19 -> `answered` dès qu'une
+        synthèse existe ; si l'utilisateur esquive d'emblée ("je laisse de côté") -> `deferred`.
    - Réponse explicite (suggestion acceptée ou saisie) -> statut `answered`. **Aucune `(src:)` écrite.**
-   - L'utilisateur laisse de côté (option 2 pour Q1-Q13, ou réponse tapée équivalente pour Q14-Q19)
-     -> le champ est **omis** (statut `deferred`, rien d'écrit dans l'artefact, pas de marqueur).
+   - L'utilisateur laisse de côté (option 2 pour Q1-Q13, réponse tapée équivalente pour Q14-Q18,
+     esquive d'emblée pour Q19) -> le champ est **omis** (statut `deferred`, rien d'écrit dans
+     l'artefact, pas de marqueur).
    - **Q8 (contraintes légales / conformité / RGPD) est OPTIONNELLE.** La proposer **une seule fois**,
      sans insister. C'est la **seule question dont la forme des options est imposée** : option 1 =
      la contrainte pressentie dans la matière, **option 2 = "on gère ça nous-mêmes"**. Sans cette
