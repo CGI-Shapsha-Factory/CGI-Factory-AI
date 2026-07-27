@@ -52,12 +52,14 @@ l'utilisateur**, ne **rien supposer**, et n'écrire dans `project-frame.md` / le
 
 **Note - questions produit (Q14-Q18) : en prose dans le fil, sans `AskUserQuestion` ni option.**
 Même rythme que Q1-Q13 (la boucle ne s'interrompt jamais, aucune phrase de transition), mais la
-question est posée **directement dans la conversation** (compteur "Qn/19" + thème en tête) et
-l'utilisateur **tape sa réponse** : **aucune option affichée**, aucune réponse recommandée ni
-alternative pré-remplie depuis les sources - pour **forcer l'utilisateur à formuler lui-même**
-(le brainstorm approfondi vit ensuite dans `cadrage-ideation`). Il peut taper "je passe"
-(-> `deferred`) ; la reformulation avec un exemple n'arrive que s'il la demande ou n'a pas
-compris (une seule fois), jamais avec une réponse suggérée.
+question est posée **directement dans la conversation** (compteur "Qn/19" en tête) et
+l'utilisateur **tape sa réponse**. **Le message = la question, rien d'autre** : aucune option
+affichée, aucune réponse recommandée ni alternative pré-remplie depuis les sources, aucune
+consigne de réponse ("avec tes mots", "je passe"...), aucune phrase d'attente après - pour
+**forcer l'utilisateur à formuler lui-même** (le brainstorm approfondi vit ensuite dans
+`cadrage-ideation`). S'il tape "je passe", le point part en `deferred` sans commentaire (jamais
+annoncé) ; la reformulation avec un exemple n'arrive que s'il la demande ou n'a pas compris
+(une seule fois), jamais avec une réponse suggérée.
 
 **Note - Q19 (incertitudes / hypothèses) : déduction puis sondage adaptatif (style brainstorming).**
 On ne pose **pas** la question brute. `cadrage-extraction` **déduit** lui-même les incertitudes et
@@ -65,11 +67,11 @@ hypothèses tacites du projet à partir de toute la matière (capture, réponses
 en visant les **angles morts non formulés**, puis **sonde chaque hypothèse une par une** en prose
 (mécanisme inspiré de `superpowers:brainstorming` : une question de vérification à la fois,
 faire émerger l'inconnu). Chaque sonde est posée **dans le fil, sans `AskUserQuestion` ni
-option** : la question ancrée dans le texte, la réponse **tapée** par l'utilisateur. Au début
-du sondage (une seule fois), rappeler qu'il peut taper "je passe" (-> sonde suivante) ou "ça
-suffit, on avance" (-> convergence). Le **nombre de sondages est variable** : peu si le contexte
-est clair et complet, beaucoup s'il est flou/incomplet. **Arrêtable à tout moment** par un simple
-"ça suffit" (pas de contrôle périodique séparé) ; les hypothèses non sondées passent oralement
+option** : **le message = la question, rien d'autre** (aucune consigne de réponse, aucune
+phrase d'attente). "je passe" tapé -> sonde suivante ; "ça suffit" tapé -> convergence - obéis
+sans jamais annoncer ces possibilités. Le **nombre de sondages est variable** : peu si le
+contexte est clair et complet, beaucoup s'il est flou/incomplet. **Arrêtable à tout moment**
+(pas de contrôle périodique séparé) ; les hypothèses non sondées passent oralement
 à `cadrage-ideation`. Les
 incertitudes/hypothèses confirmées sont synthétisées dans le champ Risques & hypothèses de
 `project-frame.md`.

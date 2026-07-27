@@ -187,13 +187,17 @@ et le bloc `discovery` du manifeste.
      option. La **puce** porte le thème en clair ("Utilisateurs", "Hébergement"), **jamais** le code
      de la question. **Aucune question en prose dans le fil** pour cette tranche.
    - **Q14 à Q18 (questions produit) : en PROSE dans le fil, JAMAIS via `AskUserQuestion`.**
-     L'outil impose au moins deux options affichées ; ici on n'en veut **aucune** - la question
-     est donc posée **directement dans la conversation** et l'utilisateur **tape sa réponse**.
-     Garder le compteur **"Qn/19"** et le thème en tête de ligne (ex. "Q15/19 - Pourquoi
-     maintenant : ..."), **une seule question par message**, on attend la réponse avant la
-     suivante. **Aucune suggestion de contenu** : ne **jamais** proposer de réponse recommandée
-     ni d'alternative tirée du transcript. Dire sobrement dans la question qu'il peut répondre
-     avec ses mots ou taper "je passe" pour laisser le point de côté (-> `deferred`).
+     L'outil impose au moins deux options affichées ; ici on n'en veut **aucune** - **ne pas
+     tenter l'appel** (même avec une seule option : il échoue). La question est posée
+     **directement dans la conversation** et l'utilisateur **tape sa réponse**.
+     **Le message = la question, rien d'autre.** Compteur **"Qn/19"** en tête (ex. "Q15/19 -
+     Pourquoi ce projet maintenant ?"), puis **fin du tour** : aucune consigne de réponse
+     ("tape ta réponse", "avec tes mots", "je passe"...), aucune phrase avant ni après
+     ("j'attends ta réponse", "on continue ensuite"...). L'utilisateur comprend qu'il doit
+     répondre. **Une seule question par message**, on attend la réponse avant la suivante.
+     **Aucune suggestion de contenu** : ne **jamais** proposer de réponse recommandée ni
+     d'alternative tirée du transcript. S'il tape "je passe" (ou équivalent), le point part en
+     `deferred` sans commentaire ; on ne lui annonce jamais cette possibilité.
      **Reformuler avec un exemple** uniquement s'il le demande ou si sa réponse montre qu'il n'a
      pas compris la question (**une seule fois**), sans jamais suggérer la réponse.
      **On ne pré-remplit aucune de ces réponses depuis les sources** - le but est de **forcer
@@ -213,16 +217,16 @@ et le bloc `discovery` du manifeste.
         beaucoup s'il est flou/incomplet (indices : questions restées `deferred`, sections minces,
         contradictions, cibles absentes, dépendances externes non tranchées).
      2. **Sonder une par une, en PROSE dans le fil** (jamais via `AskUserQuestion` - même règle
-        que Q14-Q18 : zéro option affichée, l'utilisateur tape sa réponse) : transformer chaque
-        hypothèse en une **question de vérification ancrée** ("Le projet suppose X - est-ce
-        voulu / vrai ? qu'est-ce qui se passe si ce n'est pas le cas ?"). Au **début du
-        sondage** (une seule fois, pas à chaque sonde), rappeler sobrement qu'il peut taper
-        "je passe" (-> sonde suivante ; l'hypothèse non sondée est transmise oralement à
-        l'atelier `cadrage-ideation`, jamais persistée comme marqueur) ou "ça suffit, on
-        avance" (-> fin du sondage, passage à la convergence). **Une seule question par
-        message**, on attend la réponse avant la suivante. **Relance unique** sur réponse
-        vague ; **jamais** sur le légal (Q8). L'arrêt étant possible à tout moment par un
-        simple "ça suffit", **aucun contrôle d'arrêt séparé** n'est nécessaire.
+        que Q14-Q18 : zéro option affichée, **le message = la question, rien d'autre**, aucune
+        consigne de réponse ni phrase d'attente) : transformer chaque hypothèse en une
+        **question de vérification ancrée** ("Le projet suppose X - est-ce voulu / vrai ?
+        qu'est-ce qui se passe si ce n'est pas le cas ?"). S'il tape "je passe" -> sonde
+        suivante (l'hypothèse non sondée est transmise oralement à l'atelier
+        `cadrage-ideation`, jamais persistée comme marqueur) ; "ça suffit" / "on avance" ->
+        fin du sondage, passage à la convergence - dans les deux cas on obéit **sans jamais
+        annoncer ces possibilités**. **Une seule question par message**, on attend la réponse
+        avant la suivante. **Relance unique** sur réponse vague ; **jamais** sur le légal (Q8).
+        L'arrêt étant possible à tout moment, **aucun contrôle d'arrêt séparé** n'est nécessaire.
      3. **Converger** : synthétiser les incertitudes/hypothèses confirmées en une **liste**, écrite
         dans le champ Risques & hypothèses de `project-frame.md`. Q19 -> `answered` dès qu'une
         synthèse existe ; si l'utilisateur esquive d'emblée ("je laisse de côté") -> `deferred`.

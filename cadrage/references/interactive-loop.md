@@ -16,10 +16,11 @@ inventée : on demande, on ne comble pas.**
   **L'exception : Q14-Q19 de la passe découverte de `cadrage-extraction`.** Ces questions
   exigent **zéro option affichée** (réponse formulée par l'utilisateur, rien de suggéré), or
   l'outil ne sait pas afficher moins de deux options plus la saisie libre : elles sont donc
-  posées **en prose dans le fil** et l'utilisateur tape sa réponse ("je passe" pour esquiver ;
-  "ça suffit, on avance" pour clore les sondes Q19 - voir le `SKILL.md` d'extraction). Cette
-  exception ne s'étend à **aucun** autre usage (couplage, glossaire, complétude, Q1-Q13
-  gardent l'outil et les deux options de contenu).
+  posées **en prose dans le fil** - **le message = la question, rien d'autre** (aucune consigne
+  de réponse, aucune phrase d'attente avant ou après), l'utilisateur tape sa réponse. Un
+  "je passe" ou "ça suffit, on avance" tapé est honoré sans être jamais annoncé (voir le
+  `SKILL.md` d'extraction). Cette exception ne s'étend à **aucun** autre usage (couplage,
+  glossaire, complétude, Q1-Q13 gardent l'outil et les deux options de contenu).
 - **L'outil est le moyen, jamais le message.** Ne **jamais** annoncer la mécanique de
   questionnement à l'utilisateur : pas de "via `AskUserQuestion`", pas de "je te pose la
   question avec deux options", pas de "options tirées de la matière", pas de "je vais utiliser
