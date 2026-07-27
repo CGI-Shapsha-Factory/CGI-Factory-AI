@@ -42,6 +42,9 @@ Les résultats **enrichissent en place** les artefacts extraits (aucun document 
 - **Ancrée sur les trous, pas sur une page blanche.** On ne relance pas dans le vide : chaque
   question part d'un manque précis repéré dans la matière extraite (une question de découverte
   restée sans réponse, une section mince, un flux ambigu).
+- **Un trou à la fois, jamais de carte.** Les trous repérés ne sont **jamais énumérés en
+  liste** à l'utilisateur : chacun est révélé à son tour, directement sous forme de question,
+  et on attend la réponse avant de passer au suivant.
 - **Questions ancrées, jamais gabarit.** Chaque question **cite l'élément concret du projet**
   d'où elle part - un flux, un acteur, une contrainte, une réponse déjà donnée, nommés dans les
   mots du projet. **Interdit** : toute question posable telle quelle sur n'importe quel projet
@@ -80,16 +83,26 @@ ne régénère rien à l'aveugle) et applique les règles de fusion additive ci-
 2. **Cartographier les trous.** Repérer précisément : les questions de découverte restées
    sans réponse ou laissées de côté, les sections minces de la capture, le flux fonctionnel
    ambigu ou incomplet, les hypothèses tenues pour acquises mais jamais explicitées, les
-   détails de spécification manquants. En faire une courte liste de points à clarifier.
-3. **Présenter la carte des trous** à l'utilisateur, en langage naturel (jamais de nom de
-   champ ni d'identifiant technique) : "voilà ce qui me semble encore flou ou absent - par
-   quoi veux-tu commencer ?".
-4. **Brainstormer chaque trou avec l'utilisateur.** Le prendre point par point : une relance
-   par message, en français, en rebondissant sur ce qu'il dit. Faire clarifier le flux, sortir
-   les détails, expliciter les hypothèses. Dès qu'une réponse fixe une décision ou une valeur,
-   la confirmer **avec `AskUserQuestion`** (deux options : la lecture recommandée et une
+   détails de spécification manquants. En faire une courte liste de points à clarifier -
+   **liste interne de travail, jamais montrée à l'utilisateur**.
+3. **Révéler les trous un par un, jamais en liste.** **Interdit : énumérer la carte des
+   trous** (liste numérotée des points flous, "par quoi veux-tu commencer ?") en un seul
+   message. Ouvrir la séance par une seule phrase très courte ("j'ai relu la matière
+   extraite, quelques points restent flous - on les prend un par un") immédiatement suivie,
+   dans le même message, de la **première question** : le premier trou est présenté
+   **directement sous forme de question ancrée** (règle "Questions ancrées"), en langage
+   naturel (jamais de nom de champ ni d'identifiant technique). Un seul trou par message,
+   puis **s'arrêter et attendre la réponse** avant d'aborder le suivant. Ordre : la zone
+   passée en argument d'abord si fournie, sinon l'ordre jugé le plus structurant. Si
+   l'utilisateur saute un point ou demande ce qui reste, un rappel bref des points restants
+   est alors permis - c'est le seul cas où plusieurs trous apparaissent dans un même message.
+4. **Approfondir le trou en cours avec l'utilisateur.** Une relance par message, en
+   français, en rebondissant sur ce qu'il dit. Faire clarifier le flux, sortir les détails,
+   expliciter les hypothèses. Dès qu'une réponse fixe une décision ou une valeur, la
+   confirmer **avec `AskUserQuestion`** (deux options : la lecture recommandée et une
    alternative crédible). Si l'utilisateur demande une idée, en donner une seule puis lui
-   rendre la main.
+   rendre la main. Le point clarifié, enchaîner sur le trou suivant (retour à l'étape 3)
+   jusqu'à épuisement des trous.
 5. **Éprouver : pré-mortem et hypothèses (temps standard de chaque séance).** Après le
    brainstorm des trous - jamais en ouverture, quand il y a de quoi ancrer chaque question -,
    dérouler les techniques **analytiques** du catalogue (`references/techniques-ideation.md` :
