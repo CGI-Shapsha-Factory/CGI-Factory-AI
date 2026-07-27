@@ -100,6 +100,12 @@ l'utilisateur :
 Un constat qui échoue à l'une de ces vérifications est **écarté sans bruit** - jamais montré.
 Tous les constats survivants sont traités, **sans plafond**.
 
+**Zéro constat retenu = fin de passe immédiate.** Si aucun constat ne survit à la vérification,
+la passe ne pose **aucune question** et n'émet **aucun appel d'outil** : on enchaîne directement
+sur la fin de passe (mise à jour silencieuse du manifeste). Ne **jamais** fabriquer une question
+"pour avoir quelque chose à demander" ni un appel `AskUserQuestion` de remplacement quand il n'y
+a rien à résoudre.
+
 ## La boucle de résolution : un constat, une question ouverte
 
 Pour chaque constat retenu, dans l'ordre de gravité :
@@ -108,7 +114,11 @@ Pour chaque constat retenu, dans l'ordre de gravité :
    d'ancrage factuel, puis la question. Ancrée dans **les mots du projet** (elle cite l'élément
    concret d'où elle part) ; **un seul point par message** ; jamais de liste numérotée de
    constats ; jamais de question gabarit posable sur n'importe quel projet (mêmes règles
-   d'ancrage que `cadrage-ideation`).
+   d'ancrage que `cadrage-ideation`). **Un tour en prose est un message de chat nu** : la
+   question, rien d'autre. **Ne jamais** émettre un `AskUserQuestion` "à vide" ou "de
+   remplacement" pour ce tour - ni options bidons (`a`/`b`/`x`, `placeholder`, "sans objet"),
+   ni narration de la règle ("switching to prose", "en prose", "non utilisé") : un tel appel
+   s'affiche à l'utilisateur et trahit la mécanique (cf. `references/interactive-loop.md`).
 2. **Attendre la réponse.** Réponse vague sur un point structurant : **une seule relance**
    (règle de relance unique de `references/interactive-loop.md`), puis on écrit tel quel.
    "On garde tel quel" est une réponse légitime : aucune modification, on passe au suivant.

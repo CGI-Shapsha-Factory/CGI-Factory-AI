@@ -84,6 +84,12 @@ l'utilisateur :
 Un constat qui échoue est **écarté sans bruit** - jamais montré. Tous les constats survivants sont
 traités, **sans plafond** ; l'utilisateur peut clore la boucle à tout moment ("ça me suffit").
 
+**Zéro constat retenu = fin de passe immédiate.** Si aucun constat ne survit à la vérification, la
+passe ne pose **aucune question** et n'émet **aucun appel d'outil** : on enchaîne directement sur la
+fin de passe (mise à jour silencieuse du manifeste). Ne **jamais** fabriquer une question "pour avoir
+quelque chose à demander" ni un appel `AskUserQuestion` de remplacement quand il n'y a rien à
+compléter.
+
 ## La boucle de complétion : un point, une question - deux modes
 
 Pour chaque constat retenu, du plus structurant au plus fin, poser **une seule question par
@@ -99,7 +105,10 @@ suivant. Le mode de la question dépend du constat (`mode question` renvoyé par
 - **Exploratoire** (un cadrage ouvert où la réponse se formule librement : "que doit ressentir un
   primo-visiteur sur l'écran d'accueil ?", "qu'est-ce qui distingue ce produit d'un tableur ?") ->
   **question en prose dans le fil**, une par message, réponse libre - même esprit que la passe
-  d'attaque.
+  d'attaque. **Un tour en prose est un message de chat nu** : la question, rien d'autre. **Ne jamais**
+  émettre un `AskUserQuestion` "à vide" ou "de remplacement" pour ce tour - ni options bidons
+  (`a`/`b`/`x`, `placeholder`, "sans objet"), ni narration de la règle ("switching to prose", "en
+  prose") : un tel appel s'affiche à l'utilisateur et trahit la mécanique.
 
 Dans les deux modes : ancrer la question dans **les mots du projet** (jamais une question gabarit
 posable sur n'importe quel projet) ; **relance unique par défaut** sur une réponse vague ; **sondage

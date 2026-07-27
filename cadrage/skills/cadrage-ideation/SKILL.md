@@ -35,10 +35,13 @@ Les résultats **enrichissent en place** les artefacts extraits (aucun document 
   s'arrête, on attend.
 - **Relances d'animation en prose, décisions avec `AskUserQuestion`.** Les relances qui font
   **produire** ("quoi d'autre sur ce point ?", "et si cette contrainte sautait ?") ne
-  collectent aucune décision et restent ouvertes - un menu y tuerait la divergence. Dès qu'une
-  réponse est **enregistrée ou oriente la suite** (un trou est comblé, un point tranché, la
-  séance se termine), la question passe par `AskUserQuestion`, **deux options** (cf.
-  `references/interactive-loop.md`).
+  collectent aucune décision et restent ouvertes - un menu y tuerait la divergence. Quand une
+  réponse **tranche un choix qui restait ouvert** (réponse vague, ou deux lectures crédibles à
+  départager), ce choix ouvert passe par `AskUserQuestion`, **deux options** (cf.
+  `references/interactive-loop.md`). **Mais l'outil ne sert jamais à faire re-cocher une
+  décision déjà claire** : si la relance en prose a déjà présenté le choix et que l'utilisateur
+  a répondu **sans ambiguïté**, sa réponse en prose fait foi - on l'enregistre directement, sans
+  la re-poser via l'outil (re-demander ce qui est déjà tranché est une redondance).
 - **Ancrée sur les trous, pas sur une page blanche.** On ne relance pas dans le vide : chaque
   question part d'un manque précis repéré dans la matière extraite (une question de découverte
   restée sans réponse, une section mince, un flux ambigu).
@@ -98,11 +101,13 @@ ne régénère rien à l'aveugle) et applique les règles de fusion additive ci-
    est alors permis - c'est le seul cas où plusieurs trous apparaissent dans un même message.
 4. **Approfondir le trou en cours avec l'utilisateur.** Une relance par message, en
    français, en rebondissant sur ce qu'il dit. Faire clarifier le flux, sortir les détails,
-   expliciter les hypothèses. Dès qu'une réponse fixe une décision ou une valeur, la
-   confirmer **avec `AskUserQuestion`** (deux options : la lecture recommandée et une
-   alternative crédible). Si l'utilisateur demande une idée, en donner une seule puis lui
-   rendre la main. Le point clarifié, enchaîner sur le trou suivant (retour à l'étape 3)
-   jusqu'à épuisement des trous.
+   expliciter les hypothèses. Quand une réponse fixe une décision ou une valeur, deux cas : si
+   la réponse en prose **tranche déjà le point sans ambiguïté**, l'écrire en place directement,
+   **sans la re-poser** ; si elle **reste vague** ou qu'un vrai choix recommandée-vs-alternative
+   **demeure ouvert**, ne router alors **que ce choix ouvert** par `AskUserQuestion` (deux
+   options : la lecture recommandée et une alternative crédible), une seule fois. Si
+   l'utilisateur demande une idée, en donner une seule puis lui rendre la main. Le point
+   clarifié, enchaîner sur le trou suivant (retour à l'étape 3) jusqu'à épuisement des trous.
 5. **Éprouver : pré-mortem et hypothèses (temps standard de chaque séance).** Après le
    brainstorm des trous - jamais en ouverture, quand il y a de quoi ancrer chaque question -,
    dérouler les techniques **analytiques** du catalogue (`references/techniques-ideation.md` :
@@ -193,4 +198,4 @@ Read-modify-write puis revalidation JSON :
   silence ; un acquis contredit est marqué `[REMIS EN CAUSE]` et tranché par l'humain.
 - **Contenu, pas provenance.** Aucun horodatage ni interlocuteur dans les artefacts.
 
-Étape suivante : `/cadrage:cadrage-vision` - transformer la capture désormais clarifiée en vision produit.
+**Étape suivante : `/cadrage:cadrage-vision` - transformer la capture désormais clarifiée en vision produit.**
