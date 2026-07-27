@@ -186,10 +186,17 @@ et le bloc `discovery` du manifeste.
      plus à l'écran. La saisie libre est ajoutée par l'outil : ne jamais la fabriquer en troisième
      option. La **puce** porte le thème en clair ("Utilisateurs", "Hébergement"), **jamais** le code
      de la question. **Aucune question en prose dans le fil** pour cette tranche.
+   - **Q14 à Q18 = un simple message de chat, aucun outil.** Ces tours ne passent par **aucun
+     outil** : tu écris la question dans la conversation, un point, **rien d'autre**. **Ne jamais**
+     émettre un appel d'outil "de remplacement" ou "à vide" pour un de ces tours - ni
+     `AskUserQuestion`, ni un autre - et **ne jamais** y mettre d'options bidons (`a`, `b`, `x`,
+     `placeholder`, "sans objet"...) ni y **narrer la règle** ("switching to prose", "non utilisé",
+     "par la règle Q18", "en prose", "placeholder"...). Ce texte **s'affiche à l'utilisateur** et
+     trahit la mécanique. Si tu te surprends à vouloir appeler `AskUserQuestion` sur Q14-Q18, **tu
+     ne le fais pas** : tu tapes la question. (Rappel : l'outil ne descend pas sous deux options
+     plus la saisie libre, or ici on n'en veut aucune - d'où le message de chat nu.)
    - **Q14 à Q17 (questions produit) : en PROSE dans le fil, JAMAIS via `AskUserQuestion`.**
-     L'outil impose au moins deux options affichées ; ici on n'en veut **aucune** - **ne pas
-     tenter l'appel** (même avec une seule option : il échoue). La question est posée
-     **directement dans la conversation** et l'utilisateur **tape sa réponse**.
+     La question est posée **directement dans la conversation** et l'utilisateur **tape sa réponse**.
      **Le message = la question, rien d'autre.** Compteur **"Qn/18"** en tête (ex. "Q16/18 -
      À quoi verra-t-on que l'application est un succès ?"), puis **fin du tour** : aucune consigne de réponse
      ("tape ta réponse", "avec tes mots", "je passe"...), aucun suffixe entre parenthèses après
@@ -221,7 +228,10 @@ et le bloc `discovery` du manifeste.
         contradictions, cibles absentes, dépendances externes non tranchées).
      2. **Sonder une par une, en PROSE dans le fil** (jamais via `AskUserQuestion` - même règle
         que Q14-Q17 : zéro option affichée, **le message = la question, rien d'autre**, aucune
-        consigne de réponse ni phrase d'attente) : transformer chaque hypothèse en une
+        consigne de réponse ni phrase d'attente). **La toute première sonde de Q18 est déjà un
+        simple message de chat** : n'ouvre pas le sondage par un appel d'outil "d'amorçage" ni un
+        appel à vide - tu enchaînes directement après Q17 avec la première question de vérification
+        tapée dans le fil. Transformer chaque hypothèse en une
         **question de vérification ancrée** ("Le projet suppose X - est-ce voulu / vrai ?
         qu'est-ce qui se passe si ce n'est pas le cas ?"). S'il tape "je passe" -> sonde
         suivante (l'hypothèse non sondée est transmise oralement à l'atelier
@@ -310,4 +320,4 @@ Read-modify-write puis revalidation JSON :
 - **Skill indépendant.** Invocable seul ; la cohérence passe par le manifeste,
   pas par un orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-ideation` - étudier la matière extraite, combler les trous et brainstormer les détails avec l'utilisateur avant de passer à la vision.
+**Étape suivante : `/cadrage:cadrage-ideation` - étudier la matière extraite, combler les trous et brainstormer les détails avec l'utilisateur avant de passer à la vision.**

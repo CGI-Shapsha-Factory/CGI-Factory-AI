@@ -33,6 +33,13 @@ inventée : on demande, on ne comble pas.**
   question avec deux options", pas de "options tirées de la matière", pas de "je vais utiliser
   l'outil...". La question **apparaît directement** ; si un mot d'introduction est utile, il
   porte sur le **contenu** ("Passons au nom du projet.") - jamais sur le mécanisme.
+  Cette interdiction couvre **tout terme de mécanique** : "placeholder", "prose", "règle",
+  "option", "non utilisé", "switching to prose", les codes internes de question (`Q8`, `Q18`),
+  ou toute mention de **comment** la question est posée. Elle couvre aussi le **canal** : ne
+  **jamais** émettre un appel d'outil "à vide" ou "de remplacement" (options bidons `a`/`b`/`x`,
+  champ rempli d'un "placeholder", question qui narre la règle) pour un tour censé être posé en
+  prose - un tel appel s'affiche à l'utilisateur et trahit la mécanique. Un tour en prose est un
+  **message de chat nu** : la question, rien d'autre, aucun outil.
 - **Une question par appel.** L'outil sait en porter plusieurs : on ne s'en sert jamais. Un appel
   = une question, puis on s'arrête et on attend. Le groupage est interdit dans la cadrage, y
   compris pour des points de même nature.
