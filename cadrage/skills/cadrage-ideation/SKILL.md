@@ -137,6 +137,39 @@ nouveau document, aucune source datée :
 pas de mention de technique par idée. Fusion par identité de section / de point : aucune
 duplication ; ce qui existait et reste valable est préservé.
 
+## Passe d'attaque (avant de conclure)
+
+Avant la mise à jour du manifeste, dérouler la passe d'attaque commune - protocole complet dans
+`references/attaque-protocole.md` (périmètre, fan-out, consolidation, vérification, boucle de
+questions, règles de correction). Résumé d'exécution :
+
+1. **Attaquer.** Dispatcher des sous-agents (`agentType: "attacker-cadrage"`) sur le périmètre
+   ci-dessous : un seul agent par défaut ; contenu volumineux -> 2 à 4 lots en **un seul
+   message** (appels parallèles), chaque lot recevant aussi la base amont en entier. Chaque
+   agent ne reçoit **que des fichiers** (jamais le fil ni les décisions de la session : le
+   regard neuf est le mécanisme). Les agents relisent tout et renvoient leurs constats
+   structurés ; ils attaquent, ils ne corrigent rien.
+2. **Consolider et vérifier.** Fusionner les constats en un rapport unique de session
+   (dédoublonné, trié par gravité), **jamais persisté, jamais montré en liste à
+   l'utilisateur** ; puis vérifier chaque constat contre le fichier (la citation existe, le
+   point n'est pas déjà résolu ni déjà tranché en séance) - constat invérifiable = écarté sans
+   bruit.
+3. **Résoudre un par un.** Pour chaque constat retenu : **une seule question ouverte en prose**
+   dans le fil (ancrée sur les mots du projet, un point par message, jamais de liste de
+   constats), attendre la réponse, appliquer la correction **en place** selon les règles de
+   fusion du skill ("on garde tel quel" est une réponse légitime : aucune modification), puis
+   passer au constat suivant. Aucun constat retenu laissé sans issue explicite ; une seule
+   passe, pas de re-attaque après corrections.
+
+Périmètre de cette passe :
+- Sorties de la séance : `cadrage-out/capture-brute.md` et `cadrage-out/project-frame.md`
+  (enrichis en place), plus l'état des questions de découverte.
+- Angle principal : la cohérence interne du couple enrichi - une clarification de la séance qui
+  contredit un passage resté en l'état, une réponse de découverte non répercutée, un flux
+  encore ambigu.
+- Les questions de la passe prolongent naturellement la séance (mêmes règles d'ancrage que
+  "Questions ancrées").
+
 ## Mise à jour du manifeste
 
 Read-modify-write puis revalidation JSON :

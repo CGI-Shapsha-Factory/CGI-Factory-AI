@@ -48,7 +48,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | 3 | `cadrage-vision` | capture -> `product-brief.md` (quoi/pourquoi, sans techno) | capture existe + **idéation faite** |
 | 4 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
 | 5 | `cadrage-decoupage` | découpage **fonctionnel** (use cases par valeur, **sans MVP**) + couplage (hypothèse) ; **table affichée en chat** ; arbitrage **en session, écrit en place** | `vision_complete` |
-| 6 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`, **direction visuelle délibérée anti-slop - palette dérivée du domaine, jamais le violet/indigo par défaut**), sauvé sous `cadrage-out/prompts/` - **fichier = corps du prompt seul** | vision dispo / retour dispo |
+| 6 | `cadrage-demonstrateur-brief` | prompt Claude Design (initial/adaptatif, **rendu pro** via `references/demonstrateur-prompt.md`, **direction visuelle délibérée anti-slop - palette dérivée du domaine, jamais le violet/indigo par défaut**), sauvé sous `cadrage-out/prompts/` - **fichier = corps du prompt seul**, clôturé par une **passe de complétion du prompt** (expert prompt engineering) | vision dispo / retour dispo |
 | 7 | `cadrage-retour-client` | **intake universel du retour client**, deux modes auto-détectés et cumulables : **mode projet** (nouveaux fichiers dans `source-contexte/` détectés par diff avec `sources[]` -> relecture fan-out de `cadrage-out/` + `discovery` -> classement complète/remplace/contredit/à clarifier -> arbitrage PO **à résolution totale en session** (aucun marqueur d'incertitude persisté) -> mise à jour **en place** des artefacts, réjeu incrémental inline, portes recalculées à la baisse) ; **mode maquette** (ex-`retour-demonstrateur`, préservé : résout/invalide via `validation_points`) | retour ou nouveaux docs dispo |
 | 8 | `cadrage-briefs` | brief auto-portant par feature (contrat central, 10 sections) | **arbitrage couplage + démonstrateur convergé** |
 | 9 | `cadrage-completude` | **porte de complétude & cohérence ET point de résolution unique** : relit `cadrage-out/` **en parallèle** (fan-out `cadrage-reader`), **challenge** le pack fonctionnel en **4 lentilles** (Complétude / Cohérence / Qualité des exigences / Validation-prêt-architecte - ancré DoR, INVEST, ISO 29148, BABOK, DDD, MoSCoW, traçabilité ; `references/completude-checklist-guide.md`), rend le verdict Definition of Ready (prose, **jamais de tableau**), et **résout chaque écart comme une décision** (jamais un constat nu : "que veux-tu faire ?" + recommandée/alternative/saisie + application en place), puis relais vers l'architecte | aucune (rejouable) |
@@ -56,7 +56,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 Flux : `cadrage-init` -> `extraction` -> `ideation` (atelier de clarification obligatoire, garde la vision) -> (`vision` ∥ `glossaire`) -> `decoupage` ->
 **boucle démonstrateur** [`demonstrateur-brief` ⟳ `retour-client` -> `completude`]
 jusqu'à convergence -> **revue de couplage humaine** -> `briefs` -> `completude` -> **`/architecte:architecte-init`**.
-`completude` est rejouable à tout moment (mesure le verdict **et** résout les points ouverts). Aide : `/cadrage:help-factory`.
+`completude` est rejouable à tout moment (mesure le verdict **et** résout les points ouverts). Cinq des skills de production (idéation, vision, glossaire, découpage, briefs) se clôturent par la **passe d'attaque** ; le **brief démonstrateur** se clôt par sa **passe de complétion du prompt** (cf. Conventions d'interaction) - dans les deux cas avant la mise à jour du manifeste. Aide : `/cadrage:help-factory`.
 **Après le cadrage initial**, tout nouveau document client déposé dans `cadrage-out/source-contexte/` se traite par `cadrage-retour-client` (mode projet), jamais en rejouant `extraction` : détection par diff avec `sources[]` (type `retour-projet`), analyse différentielle, arbitrage PO, mise à jour en place.
 **Plus de skill handoff** : l'architecte (puis l'assembleur) lisent directement les fichiers de `cadrage-out/` ; le handoff/convergence est le rôle de l'assembleur.
 
@@ -137,6 +137,25 @@ uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
   porte `cadrage-completude`, ancrée DoR / INVEST / ISO-IEEE 29148 / BABOK / DDD / MoSCoW /
   traçabilité. Agent de lecture : `agents/cadrage-reader.md` (lecture complète + sortie structurée
   + signalement d'anomalies, dispatché en parallèle par `cadrage-completude`).
+- **Passe d'attaque** (`references/attaque-protocole.md`) : relecture **adversariale** qui clôt
+  **cinq skills de production** (idéation, vision, glossaire, découpage,
+  briefs ; init, extraction, retour-client, completude et brief démonstrateur exclus - ce dernier a
+  sa passe de complétion dédiée) - sorties fraîches + base amont
+  attaquées (contradictions, manques, ambiguïtés, incohérences inter-artefacts, dépendances
+  manquantes) par des agents qui ne reçoivent **que les fichiers** (jamais le fil de session),
+  constats consolidés et **vérifiés contre les fichiers** en session (jamais persistés), puis
+  résolus une **question ouverte** à la fois (réponse libre, application en place, "on garde tel
+  quel" admis), en une seule passe. Agent : `agents/attacker-cadrage.md` (relecture complète +
+  constats structurés cités mot pour mot, dispatché en parallèle ; il attaque, il ne corrige pas).
+- **Passe de complétion du prompt** (`references/completion-prompt-protocole.md`) : relecture d'**expert
+  en prompt engineering** qui clôt `cadrage-demonstrateur-brief` (à la place de la passe d'attaque) - le
+  prompt Claude Design fraîchement produit + sa base amont sont mesurés contre une **checklist de brief
+  de design** (identité visuelle, écrans, comportements, expérience, états, contraintes techniques, cas
+  limites, auto-portance, cohérence amont), puis chaque trou se complète **avec l'utilisateur** une
+  question à la fois - **décision de design** via `AskUserQuestion` (deux options), **exploratoire** en
+  prose - correction **en place** dans le prompt, en une seule passe. Complète en initial, légère et
+  ciblée en adaptatif. Agent : `agents/prompt-engineer-cadrage.md` (diagnostic complet + constats
+  structurés cités mot pour mot, dispatché en parallèle ; il complète le diagnostic, il ne réécrit pas).
 - **Porte de régénération** (`references/regeneration-gate.md`) : à la **relance** d'un skill de
   génération dont les sorties existent déjà, proposer le choix **Repartir de zéro** (supprimer +
   regénérer) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, regénérer

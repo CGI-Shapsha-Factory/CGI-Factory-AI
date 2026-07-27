@@ -48,9 +48,10 @@ Un prompt médiocre donne une maquette médiocre. Pour produire un **prompt exce
   `spec-index.md`, avec pour chacun ce qu'on y fait.
 - **Injecter du contenu réaliste du domaine** (libellés, noms, données plausibles tirés
   du `glossaire.md` et de la vision) - **jamais** de "lorem ipsum".
-- **Demander les états utiles avec `AskUserQuestion`** sur les écrans clés : deux options (le
-  jeu d'états recommandé - contenu chargé et état vide avec message + action -, et le jeu élargi
-  qui ajoute erreur et chargement), la saisie libre pour un besoin particulier.
+- **Décider les états utiles sur les écrans clés.** Le jeu d'états (contenu chargé + état vide avec
+  message et action ; jeu élargi si erreur et chargement sont utiles) se **fige avec l'utilisateur
+  dans la passe de complétion** (plus bas) ; le prompt les **énonce alors concrètement**, écran par
+  écran, au lieu de déléguer la question à Claude Design.
 - **Cadrer le style** : navigation persistante, hiérarchie typo, **palette délibérée adaptée au
   domaine (jamais le violet/indigo par défaut)**, responsive, ton professionnel, aucun emoji.
   Reprendre tel quel le bloc "Style - direction visuelle délibérée" du gabarit (interdictions
@@ -130,6 +131,45 @@ fichier. L'utilisateur doit pouvoir ouvrir le fichier et tout copier sans rien n
   **borné aux changements** du retour, sans repartir de zéro.
 - Le fichier sauvegardé **ne contient que le prompt** (aucun titre/date/mode/version).
 - Le prompt est **sauvegardé** sous `cadrage-out/prompts/` et tracé au manifeste.
+
+## Passe de complétion du prompt (avant de conclure)
+
+Avant la mise à jour du manifeste, dérouler la passe de complétion du prompt - protocole complet
+dans `references/completion-prompt-protocole.md` (checklist des dimensions, fan-out, consolidation,
+vérification, boucle de questions à deux modes, règles de correction). Cette passe **remplace la
+passe d'attaque générique** pour ce skill : elle en absorbe la cohérence amont et y ajoute la
+complétion du brief de design, pour livrer à Claude Design un prompt complet et fiable. Résumé
+d'exécution :
+
+1. **Diagnostiquer.** Dispatcher des sous-agents (`agentType: "prompt-engineer-cadrage"`) sur le
+   périmètre ci-dessous : un seul agent par défaut ; contenu volumineux -> 2 à 4 lots en **un seul
+   message** (appels parallèles), chaque lot recevant aussi la base amont en entier. Chaque agent
+   ne reçoit **que des fichiers** (jamais le fil ni les décisions de la session : le regard neuf
+   est le mécanisme). Les agents mesurent le prompt contre la checklist de brief de design et
+   renvoient leurs constats structurés ; ils diagnostiquent, ils ne réécrivent pas.
+2. **Consolider et vérifier.** Fusionner les constats en un rapport unique de session
+   (dédoublonné, ordonné du plus structurant au plus fin), **jamais persisté, jamais montré en
+   liste à l'utilisateur** ; puis vérifier chaque constat contre le fichier (la citation existe, le
+   point n'est pas déjà couvert ni déjà tranché en séance) - constat invérifiable = écarté sans
+   bruit.
+3. **Compléter un point à la fois.** Pour chaque constat retenu, une seule question par message :
+   **décision de design** (un choix à figer) via **`AskUserQuestion`, deux options** (recommandée
+   avec son coût + alternative crédible), **exploratoire** (cadrage ouvert) en **prose** dans le
+   fil ; ancrée sur les mots du projet, un point par message. Attendre la réponse, appliquer la
+   correction **en place** dans le prompt ("on garde tel quel" est une réponse légitime : aucune
+   modification), puis passer au suivant. On vise la meilleure maquette possible (pas seulement les
+   trous bloquants) ; l'utilisateur peut clore la boucle à tout moment. Une seule passe.
+
+Périmètre de cette passe :
+- Sortie du skill : le prompt sauvegardé sous `cadrage-out/prompts/` dans cette session.
+- Base amont : `cadrage-out/spec-index.md`, `cadrage-out/product-brief.md`,
+  `cadrage-out/glossaire.md`.
+- Neuf dimensions balayées : identité visuelle, écrans & périmètre, comportements, expérience,
+  états & contenu réaliste, contraintes techniques, cas limites, auto-portance, cohérence amont.
+- **Mode initial** : passe complète. **Mode adaptatif** : passe légère et ciblée - seulement la
+  clarté et la complétude du delta demandé, sans rouvrir le design déjà validé.
+- Les corrections s'appliquent dans le fichier prompt lui-même, qui reste corps seul, prêt à
+  coller.
 
 ## Mise à jour du manifeste
 

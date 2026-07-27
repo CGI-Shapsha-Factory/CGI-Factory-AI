@@ -43,6 +43,12 @@ boucle jusqu'à `demonstrateur_converged` -> **revue de couplage humaine** -> br
 -> completude -> **`/architecte:architecte-init`**. Il n'y a **plus de skill handoff** :
 l'architecte (puis l'assembleur) lisent directement les fichiers de `cadrage-out/`.
 
+À la fin de chaque skill de production (de l'atelier de clarification aux briefs), une **passe
+d'attaque** relit les sorties fraîches et leur base amont avec un regard adversarial (agents
+dédiés, contexte isolé), vérifie chaque constat sur pièces, puis résout chaque faiblesse avec
+l'utilisateur, une question ouverte à la fois, correction appliquée en place (protocole :
+`references/attaque-protocole.md`).
+
 ### La boucle démonstrateur (incrémentale)
 
 La cadrage n'est pas linéaire : le client réagit à un démonstrateur, ses
@@ -113,6 +119,7 @@ un brief dérive d'une vision stable.
 cadrage/
 ├── .claude-plugin/plugin.json     # manifeste du plugin
 ├── skills/                        # un dossier SKILL.md par skill (dont cadrage-init)
+├── agents/                        # sous-agents (cadrage-reader, attacker-cadrage)
 ├── references/                    # conventions partagées (boucle interactive, UX)
 ├── scripts/                       # check_discovery.py (garde-fou déterministe)
 ├── templates/                     # gabarits FR des artefacts (project-frame, product-brief,
