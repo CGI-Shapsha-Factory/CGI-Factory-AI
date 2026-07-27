@@ -192,7 +192,10 @@ et le bloc `discovery` du manifeste.
      **directement dans la conversation** et l'utilisateur **tape sa réponse**.
      **Le message = la question, rien d'autre.** Compteur **"Qn/18"** en tête (ex. "Q16/18 -
      À quoi verra-t-on que l'application est un succès ?"), puis **fin du tour** : aucune consigne de réponse
-     ("tape ta réponse", "avec tes mots", "je passe"...), aucune phrase avant ni après
+     ("tape ta réponse", "avec tes mots", "je passe"...), aucun suffixe entre parenthèses après
+     le point d'interrogation - INTERDIT : `Q16/18 - À quoi verra-t-on que l'application est un
+     succès ? (tape ta réponse, ou "je passe")` ; CORRECT : `Q16/18 - À quoi verra-t-on que
+     l'application est un succès ?` -, aucune phrase avant ni après
      ("j'attends ta réponse", "on continue ensuite"...). L'utilisateur comprend qu'il doit
      répondre. **Une seule question par message**, on attend la réponse avant la suivante.
      **Aucune suggestion de contenu** : ne **jamais** proposer de réponse recommandée ni

@@ -54,7 +54,8 @@ Même rythme que Q1-Q13 (la boucle ne s'interrompt jamais, aucune phrase de tran
 question est posée **directement dans la conversation** (compteur "Qn/18" en tête) et
 l'utilisateur **tape sa réponse**. **Le message = la question, rien d'autre** : aucune option
 affichée, aucune réponse recommandée ni alternative pré-remplie depuis les sources, aucune
-consigne de réponse ("avec tes mots", "je passe"...), aucune phrase d'attente après - pour
+consigne de réponse ni suffixe entre parenthèses - jamais de `(tape ta réponse, ou "je passe")`
+après le point d'interrogation -, aucune phrase d'attente après - pour
 **forcer l'utilisateur à formuler lui-même** (le brainstorm approfondi vit ensuite dans
 `cadrage-ideation`). S'il tape "je passe", le point part en `deferred` sans commentaire (jamais
 annoncé) ; la reformulation avec un exemple n'arrive que s'il la demande ou n'a pas compris
