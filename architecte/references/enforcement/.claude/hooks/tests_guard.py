@@ -21,7 +21,7 @@ import sys
 SOURCE_EXTS = {".py", ".ts", ".tsx", ".js", ".jsx", ".go", ".cs", ".java"}
 SKIP_NAME = {"__init__.py", "conftest.py", "setup.py", "manage.py", "index.ts", "index.js"}
 SKIP_DIR = {"node_modules", "dist", "build", ".venv", "venv", "__pycache__", ".git",
-            "migrations", ".angular", "bin", "obj", "coverage"}
+            "migrations", ".angular", "bin", "obj", "coverage", ".claude"}
 SKIP_SUFFIX = (".config.js", ".config.ts", ".d.ts", ".module.ts")
 
 
