@@ -27,6 +27,9 @@ inventée : on demande, on ne comble pas.**
      (elle se solde par un `[SANS OBJET : raison]`, cf. `coherence-checklist-guide.md`) et
      l'alternative de fond passe dans la saisie libre : sans quoi ce dénouement disparaît
      de l'écran et l'utilisateur tranche par défaut pour avancer.
+  - **Aucun jugement de coût.** Une `description` d'option ne qualifie jamais le prix
+    (cher, économique, gratuit, coûteux...) ni n'estime une facture : les compromis
+    affichés sont techniques et factuels ; le budget est arbitré par l'humain.
   - **Ne jamais écrire soi-même une option "Saisir ma réponse"** : elle ferait une
     quatrième ligne, en doublon de celle que l'outil ajoute.
 - **Pas de retrait ailleurs.** Une réponse d'architecture, un choix de stack, un arbitrage

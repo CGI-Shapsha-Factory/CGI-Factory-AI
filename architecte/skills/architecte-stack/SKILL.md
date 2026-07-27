@@ -73,6 +73,15 @@ seul fournisseur (pas d'"Azure-vs-Azure"). Le **fournisseur cloud** et le **dép
 l'utilisateur l'a **dit explicitement** - et alors, le lui **confirmer comme sa décision**, ne
 pas l'affirmer.
 
+**Pas de jugement de coût (obligatoire).** Les descriptions d'options et la discussion ne
+portent **jamais** d'appréciation de prix ou de coût : pas de "cher" / "pas cher" /
+"coûteux" / "gratuit" / "économique", pas d'estimation de facture, pas d'avertissement
+"cette option coûtera plus". L'évaluation budgétaire appartient **entièrement à l'humain**.
+Les compromis présentés restent **techniques et factuels** (maturité, écosystème,
+performance, complexité opérationnelle). Si l'utilisateur demande explicitement le coût,
+répondre par des **faits vérifiables** (modèle de licence, existence d'un palier gratuit)
+sans verdict "cher / pas cher".
+
 **Expérience ≠ décision.** Si l'utilisateur mentionne connaître une techno ("je maîtrise
 React"), **ne pas l'adopter d'office** : demander **avec `AskUserQuestion`** "Puisque tu connais
 React, on part là-dessus ou on évalue d'autres options ?" - deux options, "on part sur React" et
@@ -168,7 +177,9 @@ manifeste en silence (walking skeleton = l'`id` correspondant).
   **présentée en options + compromis**, puis **tranchée par l'humain** ; on **attend** sa
   décision avant d'écrire. **Aucun auto-choix**, **aucun biais** vers un fournisseur (jamais
   des options d'un seul écosystème) ; l'**expérience** de l'utilisateur avec une techno ne
-  vaut pas décision (on lui demande). Les ADR ne consignent que des décisions validées.
+  vaut pas décision (on lui demande). Les compromis présentés sont **techniques** :
+  **aucun jugement de coût ou de prix** n'est émis sur une techno - le budget est
+  l'affaire de l'humain. Les ADR ne consignent que des décisions validées.
 - **Versions exactes épinglées** pour chaque techno (jamais "latest" / "stable" / vide).
 - **Rien d'affiché de la mécanique.** Aucun nom de variable/clé manifeste, aucun
   identifiant codé, aucun tableau (voir `references/ux-conventions.md`). Le manifeste

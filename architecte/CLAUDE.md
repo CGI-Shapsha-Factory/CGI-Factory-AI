@@ -108,7 +108,8 @@ python scripts/check_architecture.py <projet>/manifest.json
 
 ## Invariants
 Proposer/pas décider (**jamais la stack à la place de l'utilisateur** : options + compromis +
-arbitrage humain, **sans biais fournisseur** ; l'expérience avec une techno ne vaut pas décision ;
+arbitrage humain, **sans biais fournisseur** ; **aucun jugement de coût/prix** sur une techno -
+le budget est arbitré par l'humain ; l'expérience avec une techno ne vaut pas décision ;
 ADR consignés **après** décision ; cohérence validée par l'humain) ; **composant frontend** porté
 par l'architecte dès qu'il y a des écrans (le designer garde le design system visuel) ; **versions
 exactes épinglées** pour chaque techno (jamais "latest") ; **documents versionnés** (front-matter
