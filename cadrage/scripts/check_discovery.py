@@ -2,7 +2,7 @@
 """Garde-fou deterministe (sans IA) de la passe decouverte.
 
 Lit le manifeste d'un projet (`manifest.json` a la racine par defaut ; repli
-`cadrage-out/manifest.json` legacy) et echoue si la couverture des 19 questions de cadrage est incomplete :
+`cadrage-out/manifest.json` legacy) et echoue si la couverture des 18 questions de cadrage est incomplete :
   - une question au statut `pending` -> non posee, trou bloquant.
 
 Aucune provenance n'est exigee (on n'ecrit pas de `source`). Une question
@@ -23,7 +23,7 @@ import json
 import os
 import sys
 
-REQUIRED_IDS = [f"Q{i}" for i in range(1, 20)]
+REQUIRED_IDS = [f"Q{i}" for i in range(1, 19)]
 OK_STATUSES = {"answered", "na", "deferred"}
 STRICT_OK_STATUSES = {"answered", "na"}
 

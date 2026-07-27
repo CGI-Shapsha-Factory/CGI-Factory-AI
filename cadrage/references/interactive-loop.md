@@ -13,7 +13,7 @@ inventée : on demande, on ne comble pas.**
 - **Toute question passe par l'outil `AskUserQuestion` - à UNE exception près.** Jamais une
   question rédigée en prose dans le fil de la conversation : l'utilisateur doit toujours
   retrouver le même geste - un intitulé, deux réponses possibles, et la saisie libre.
-  **L'exception : Q14-Q19 de la passe découverte de `cadrage-extraction`.** Ces questions
+  **L'exception : Q14-Q18 de la passe découverte de `cadrage-extraction`.** Ces questions
   exigent **zéro option affichée** (réponse formulée par l'utilisateur, rien de suggéré), or
   l'outil ne sait pas afficher moins de deux options plus la saisie libre : elles sont donc
   posées **en prose dans le fil** - **le message = la question, rien d'autre** (aucune consigne

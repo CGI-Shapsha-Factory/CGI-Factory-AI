@@ -1,6 +1,6 @@
 # Questions de découverte (cadrage du projet client)
 
-Liste **figée** des 19 questions de cadrage à couvrir pour tout projet. Lue par
+Liste **figée** des 18 questions de cadrage à couvrir pour tout projet. Lue par
 `cadrage-extraction` (passe de découverte). Chaque question est : cherchée dans les
 sources (transcript / docs), puis si absente, **posée à l'utilisateur une par
 une**. Réponses -> `project-frame.md` + le bloc `discovery` du manifeste.
@@ -26,11 +26,10 @@ un attribut qualité brut que le plugin **architecte** transformera en driver/sc
 | Q12 | Budget pour l'infrastructure ? | opérationnel | Budget infra | - |
 | Q13 | Besoins spécifiques d'authentification / autorisation ? | sécurité/auth | Auth & autorisation | - |
 | Q14 | Quel problème principal l'application résout-elle ? que coûte la situation actuelle ? | produit | Problème & enjeu | - |
-| Q15 | Pourquoi ce projet maintenant ? qu'est-ce qui déclenche le besoin ? | produit | Problème & enjeu | - |
-| Q16 | Qu'est-ce qui distinguera l'application des alternatives utilisées aujourd'hui ? | produit | Différenciation | - |
-| Q17 | À quoi verra-t-on que l'application est un succès ? | produit | Signaux de succès | - |
-| Q18 | Sur quels supports l'application sera-t-elle utilisée ? (web, mobile, desktop, plusieurs) | produit | Supports & accès | - |
-| Q19 | Quelles sont les principales incertitudes ou hypothèses à vérifier ? | produit | Risques & hypothèses | - |
+| Q15 | Qu'est-ce qui distinguera l'application des alternatives utilisées aujourd'hui ? | produit | Différenciation | - |
+| Q16 | À quoi verra-t-on que l'application est un succès ? | produit | Signaux de succès | - |
+| Q17 | Sur quels supports l'application sera-t-elle utilisée ? (web, mobile, desktop, plusieurs) | produit | Supports & accès | - |
+| Q18 | Quelles sont les principales incertitudes ou hypothèses à vérifier ? | produit | Risques & hypothèses | - |
 
 **Note - Q8 (contraintes légales / conformité / RGPD) : OPTIONNELLE, jamais poussée.** La conformité
 (RGPD, hébergement UE, secret professionnel, non-entraînement des modèles, etc.) est **gérée
@@ -50,9 +49,9 @@ option** - **jamais Azure par défaut**, même si le contexte mentionne Microsof
 l'utilisateur**, ne **rien supposer**, et n'écrire dans `project-frame.md` / le manifeste que la valeur
 **tranchée** (cf. invariant "proposer, pas décider").
 
-**Note - questions produit (Q14-Q18) : en prose dans le fil, sans `AskUserQuestion` ni option.**
+**Note - questions produit (Q14-Q17) : en prose dans le fil, sans `AskUserQuestion` ni option.**
 Même rythme que Q1-Q13 (la boucle ne s'interrompt jamais, aucune phrase de transition), mais la
-question est posée **directement dans la conversation** (compteur "Qn/19" en tête) et
+question est posée **directement dans la conversation** (compteur "Qn/18" en tête) et
 l'utilisateur **tape sa réponse**. **Le message = la question, rien d'autre** : aucune option
 affichée, aucune réponse recommandée ni alternative pré-remplie depuis les sources, aucune
 consigne de réponse ("avec tes mots", "je passe"...), aucune phrase d'attente après - pour
@@ -61,9 +60,9 @@ consigne de réponse ("avec tes mots", "je passe"...), aucune phrase d'attente a
 annoncé) ; la reformulation avec un exemple n'arrive que s'il la demande ou n'a pas compris
 (une seule fois), jamais avec une réponse suggérée.
 
-**Note - Q19 (incertitudes / hypothèses) : déduction puis sondage adaptatif (style brainstorming).**
+**Note - Q18 (incertitudes / hypothèses) : déduction puis sondage adaptatif (style brainstorming).**
 On ne pose **pas** la question brute. `cadrage-extraction` **déduit** lui-même les incertitudes et
-hypothèses tacites du projet à partir de toute la matière (capture, réponses Q1-Q18),
+hypothèses tacites du projet à partir de toute la matière (capture, réponses Q1-Q17),
 en visant les **angles morts non formulés**, puis **sonde chaque hypothèse une par une** en prose
 (mécanisme inspiré de `superpowers:brainstorming` : une question de vérification à la fois,
 faire émerger l'inconnu). Chaque sonde est posée **dans le fil, sans `AskUserQuestion` ni
@@ -76,12 +75,12 @@ contexte est clair et complet, beaucoup s'il est flou/incomplet. **Arrêtable à
 incertitudes/hypothèses confirmées sont synthétisées dans le champ Risques & hypothèses de
 `project-frame.md`.
 
-**Note - questions produit (Q14-Q19) : réutilisées en aval.** Les réponses Q14 (problème),
-Q15 (pourquoi maintenant) et Q17 (signaux de succès) sont **reprises par `cadrage-vision`**
+**Note - questions produit (Q14-Q18) : réutilisées en aval.** Les réponses Q14 (problème)
+et Q16 (signaux de succès) sont **reprises par `cadrage-vision`**
 comme suggestions pré-remplies du product-brief (même mécanisme que Q1/Q3/Q9 - on ne repose
-pas la question, on fait confirmer). Q16 (différenciation) nourrit la section "Alternatives
-réellement utilisées" de la capture et le product-brief. Q18 (supports) informe le designer
-en aval via le project-frame. Q19 (incertitudes / hypothèses) alimente l'"Hypothèse produit
+pas la question, on fait confirmer). Q15 (différenciation) nourrit la section "Alternatives
+réellement utilisées" de la capture et le product-brief. Q17 (supports) informe le designer
+en aval via le project-frame. Q18 (incertitudes / hypothèses) alimente l'"Hypothèse produit
 initiale" du product-brief et sert de candidat aux points de validation du démonstrateur.
 
 **Statuts possibles par question** (le bloc `discovery` du manifeste) :

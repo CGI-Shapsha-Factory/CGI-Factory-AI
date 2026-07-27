@@ -34,7 +34,7 @@ n'est persisté.
 - L'ensemble des artefacts de `cadrage-out/` : capture-brute, project-frame,
   product-brief, glossaire, spec-index, coupling-map,
   `features-fonctionnels-brief/*`.
-- Le manifeste : bloc `discovery` (les 19 questions Q1-Q19 et leurs réponses),
+- Le manifeste : bloc `discovery` (les 18 questions Q1-Q18 et leurs réponses),
   `validation_points`, `demonstrateur` (`current_version`, `external_ref`).
 - En mode maquette : le **transcript de retour**, déclaré comme source de type
   `retour` - distinct d'un transcript d'atelier classique.
@@ -68,7 +68,7 @@ Comme `cadrage-completude` : dispatcher des agents `cadrage-reader`
 (`agents/cadrage-reader.md`) en **fan-out** sur les artefacts de `cadrage-out/`
 (capture-brute, project-frame, product-brief, glossaire, spec-index,
 coupling-map, un lot pour les briefs), et lire directement le manifeste
-(`discovery` avec les réponses aux 19 questions, `validation_points`,
+(`discovery` avec les réponses aux 18 questions, `validation_points`,
 `demonstrateur`). Relire depuis les fichiers committés, jamais la mémoire du
 chat. Cette relecture est **automatique** : aucune intervention du PO.
 
@@ -78,7 +78,7 @@ Confronter chaque information du corpus delta à la connaissance existante en
 s'appuyant sur les identités structurelles (les artefacts ne portent aucune
 provenance) :
 
-- les réponses `Q1..Q19` du bloc `discovery` (la question d'origine et sa
+- les réponses `Q1..Q18` du bloc `discovery` (la question d'origine et sa
   réponse enregistrée) ;
 - les sections du product-brief (problème, objectif business, périmètre IN/OUT,
   contraintes, critères de succès, hypothèse produit) ;

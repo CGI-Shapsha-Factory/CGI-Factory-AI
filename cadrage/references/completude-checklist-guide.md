@@ -71,7 +71,7 @@ alimentés par les lentilles ci-dessous.
       relève jamais ce critère lui-même**, il le lit) [Socle, coupling-map.md]
 - [ ] DOR4 **Tous les briefs complets** - chaque brief est-il sorti de l'état d'ébauche ?
       [Socle, features-fonctionnels-brief/]
-- [ ] DOR5 **Aucun trou de découverte bloquant** - les 19 questions sont-elles couvertes (Q8
+- [ ] DOR5 **Aucun trou de découverte bloquant** - les 18 questions sont-elles couvertes (Q8
       légal/RGPD optionnelle si laissée à l'équipe) ? [Socle, check_discovery.py --strict]
 - [ ] DOR6 **Démonstrateur convergé** - le client a-t-il validé la maquette ? [Socle,
       manifeste `demonstrateur`]

@@ -32,7 +32,7 @@ De la matière brute (transcripts, docs) au pack fonctionnel repris par l'archit
 | # | skill | rôle | porte / ordre |
 |---|-------|------|---------------|
 | 0 | `cadrage-init` | crée `.factory/` + `cadrage-out/` + le manifeste | à lancer en premier |
-| 1 | `cadrage-extraction` | dépouille les sources en capture + passe de découverte (19 questions) | manifeste + ≥1 source |
+| 1 | `cadrage-extraction` | dépouille les sources en capture + passe de découverte (18 questions) | manifeste + ≥1 source |
 | 2 | `cadrage-ideation` | atelier obligatoire : étudie la matière extraite, comble les trous, brainstorme les specs avec l'utilisateur ; enrichit la capture en place | après l'extraction |
 | 3 | `cadrage-vision` | synthétise la capture en vision produit (le quoi / le pourquoi) | capture + idéation faites |
 | 4 | `cadrage-glossaire` | construit le langage métier du projet, validé en bloc | capture existe |

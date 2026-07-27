@@ -57,7 +57,7 @@ Les résultats **enrichissent en place** les artefacts extraits (aucun document 
 ## Entrées
 
 - `cadrage-out/capture-brute.md` et `cadrage-out/project-frame.md` (la matière extraite).
-- L'état de la passe de découverte (les 19 questions : lesquelles sont répondues, lesquelles
+- L'état de la passe de découverte (les 18 questions : lesquelles sont répondues, lesquelles
   sont restées en suspens ou laissées de côté).
 - Facultatif : une zone à creuser passée en argument
   (`/cadrage:cadrage-ideation <zone>` -> disponible via `$ARGUMENTS`), utilisée comme point

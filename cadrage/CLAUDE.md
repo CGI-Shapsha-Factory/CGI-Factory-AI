@@ -43,7 +43,7 @@ Tout JSON écrit par un skill (le manifeste runtime) doit reparser sans erreur.
 | # | skill | rôle | porte |
 |---|-------|------|-------|
 | 0 | `cadrage-init` | crée `.factory/` (gabarits, git-ignoré) + `cadrage-out/` (docs) + le **manifeste committé** `manifest.json` **à la racine** (le nom du projet est demandé par `cadrage-extraction`) | aucune |
-| 1 | `cadrage-extraction` | nom du projet puis **directement** matière brute (fichier/multi/dossier ; .txt/.md/.pdf/.docx) -> `capture-brute.md` (contenu, **sans horodatage ni src**) + **passe découverte** (19 questions, interactive, sans tour de table intermédiaire) -> `project-frame.md` | manifeste existe + 1 source |
+| 1 | `cadrage-extraction` | nom du projet puis **directement** matière brute (fichier/multi/dossier ; .txt/.md/.pdf/.docx) -> `capture-brute.md` (contenu, **sans horodatage ni src**) + **passe découverte** (18 questions, interactive, sans tour de table intermédiaire) -> `project-frame.md` | manifeste existe + 1 source |
 | 2 | `cadrage-ideation` | **atelier de clarification obligatoire, en aval de l'extraction** : étudie la matière extraite (`capture-brute`, `project-frame`, découverte), **cartographie les trous** (questions en suspens, sections minces, flux flou, hypothèses implicites), **brainstorme avec l'utilisateur** (posture facilitateur : les idées viennent de lui ; catalogue de techniques scriptées `references/techniques-ideation.md`) pour sortir les specs et détails, puis **enrichit en place** capture + project-frame et débloque les questions de découverte ; pose `ideation_complete` (garde `cadrage-vision`) | capture existe (extraction faite) |
 | 3 | `cadrage-vision` | capture -> `product-brief.md` (quoi/pourquoi, sans techno) | capture existe + **idéation faite** |
 | 4 | `cadrage-glossaire` | langage ubiquitaire **du projet** (termes métier, pas les outils/acronymes) ; **affiché en chat, validé en bloc** | capture existe |
@@ -85,7 +85,7 @@ nouveaux de `source-contexte/`) ; `artifacts{}` (capture_brute, project_frame, p
 spec_index{arbitrated}, briefs[]) ;
 `demonstrateur{client_validated, iterations[]}` ; `validation_points[]` (boucle démonstrateur
 uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
-`discovery[]` (19 entrées Q1-Q19, statut answered|pending|deferred|na, **sans champ `source`**) + `discovery_complete` ;
+`discovery[]` (18 entrées Q1-Q18, statut answered|pending|deferred|na, **sans champ `source`**) + `discovery_complete` ;
 `ideation_complete` (booléen ; posé par `cadrage-ideation`, **garde `cadrage-vision`** ; la phase peut valoir `ideation` entre `extraction` et `vision`) ;
 `definition_of_ready{}` (6 booléens) + `cadrage_complete`. Écriture = read-modify-write
 + revalidation JSON.
@@ -120,7 +120,7 @@ uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
 - **Boucle interactive** (`references/interactive-loop.md`) : une question à la fois, **toujours
   posée avec `AskUserQuestion`** - **exactement deux options** (la recommandée d'abord, puis
   l'alternative crédible), l'outil ajoutant lui-même la saisie libre en troisième ligne. **Jamais
-  de question rédigée en prose dans le fil - sauf Q14-Q19 de la découverte** (zéro option voulue,
+  de question rédigée en prose dans le fil - sauf Q14-Q18 de la découverte** (zéro option voulue,
   l'outil ne descend pas sous deux : question en prose, réponse tapée). Un point non tranché est **omis**, jamais marqué. **Relance unique par défaut** : une réponse vague sur un point structurant est relancée **une seule
   fois** (coacher, pas quizzer) ; si l'utilisateur maintient, on écrit tel quel. **Sondage
   approfondi sur choix explicite** : sur un point structurant à enjeu fort resté mince, on peut
@@ -143,7 +143,7 @@ uniquement - aucun point de découpage ouvert n'y est persisté) ; `prompts[]` ;
   au nom canonique) ; jamais d'écrasement sans choix explicite. Distinct du réjeu incrémental (fusion
   en place des corrections amont).
 
-## Découverte (19 questions)
+## Découverte (18 questions)
 `references/discovery-questions.md` (lu par `cadrage-extraction`) ; statuts dans le
 bloc `discovery` du manifeste ; garde-fou déterministe `scripts/check_discovery.py`.
 Une question tranchée = `answered` (sans provenance écrite) ; laissée de côté =

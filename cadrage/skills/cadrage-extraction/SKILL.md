@@ -157,28 +157,28 @@ délais.
 Les outcomes et buts cités.
 ```
 
-## Passe découverte (19 questions de cadrage) : **interactive, une question à la fois**
+## Passe découverte (18 questions de cadrage) : **interactive, une question à la fois**
 
-En plus de la capture, exécuter la **passe découverte** sur les 19 questions de
-`references/discovery-questions.md` (Q1-Q19). Elle remplit
+En plus de la capture, exécuter la **passe découverte** sur les 18 questions de
+`references/discovery-questions.md` (Q1-Q18). Elle remplit
 `cadrage-out/project-frame.md` (gabarit `.factory/cadrage/project-frame.md`)
 et le bloc `discovery` du manifeste.
 
-> ⚠️ **Workflow OBLIGATOIRE, jamais en lot.** On **déroule les 19 questions une par une**, même
+> ⚠️ **Workflow OBLIGATOIRE, jamais en lot.** On **déroule les 18 questions une par une**, même
 > quand le transcript semble déjà répondre : le transcript fournit une **suggestion à confirmer**,
-> pas une réponse validée. **Interdit** : remplir les 19 d'un coup depuis les sources et annoncer un
+> pas une réponse validée. **Interdit** : remplir les 18 d'un coup depuis les sources et annoncer un
 > bilan sans avoir rien demandé à l'utilisateur.
 
 1. **Préparer les suggestions (sans rien écrire, sans rien valider).** Pour chaque Qn, chercher dans
    le transcript/docs une **réponse candidate** et la garder comme **suggestion à confirmer**.
    **Aucune question n'est `answered` à ce stade.**
-2. **Dérouler la boucle interactive - Q1 -> Q19, UNE À LA FOIS** (voir `references/interactive-loop.md`).
+2. **Dérouler la boucle interactive - Q1 -> Q18, UNE À LA FOIS** (voir `references/interactive-loop.md`).
    **POSE UNE SEULE QUESTION, ARRÊTE-TOI, et ATTENDS la réponse** avant de passer à la suivante.
    **Jamais** plusieurs questions dans un même appel ni dans un même message ; **jamais**
    d'auto-complétion ; **jamais** `answered` sans réponse explicite. Ne jamais remplir de valeur démo.
    Deux formes selon la question :
    - **Q1 à Q13 : format deux options via `AskUserQuestion`.** L'intitulé précédé du compteur
-     **"Qn/19"**, et **exactement deux options** - la **réponse recommandée** (la suggestion tirée
+     **"Qn/18"**, et **exactement deux options** - la **réponse recommandée** (la suggestion tirée
      de la matière si elle existe, sinon la plus plausible ; sa `description` dit ce qui la soutient)
      puis l'**alternative crédible** (la lecture concurrente, ou le cas opposé le plus fréquent).
      **Une question de découverte est toujours esquivable : l'option 2 est donc "je laisse ce point
@@ -186,12 +186,12 @@ et le bloc `discovery` du manifeste.
      plus à l'écran. La saisie libre est ajoutée par l'outil : ne jamais la fabriquer en troisième
      option. La **puce** porte le thème en clair ("Utilisateurs", "Hébergement"), **jamais** le code
      de la question. **Aucune question en prose dans le fil** pour cette tranche.
-   - **Q14 à Q18 (questions produit) : en PROSE dans le fil, JAMAIS via `AskUserQuestion`.**
+   - **Q14 à Q17 (questions produit) : en PROSE dans le fil, JAMAIS via `AskUserQuestion`.**
      L'outil impose au moins deux options affichées ; ici on n'en veut **aucune** - **ne pas
      tenter l'appel** (même avec une seule option : il échoue). La question est posée
      **directement dans la conversation** et l'utilisateur **tape sa réponse**.
-     **Le message = la question, rien d'autre.** Compteur **"Qn/19"** en tête (ex. "Q15/19 -
-     Pourquoi ce projet maintenant ?"), puis **fin du tour** : aucune consigne de réponse
+     **Le message = la question, rien d'autre.** Compteur **"Qn/18"** en tête (ex. "Q16/18 -
+     À quoi verra-t-on que l'application est un succès ?"), puis **fin du tour** : aucune consigne de réponse
      ("tape ta réponse", "avec tes mots", "je passe"...), aucune phrase avant ni après
      ("j'attends ta réponse", "on continue ensuite"...). L'utilisateur comprend qu'il doit
      répondre. **Une seule question par message**, on attend la réponse avant la suivante.
@@ -207,17 +207,17 @@ et le bloc `discovery` du manifeste.
      **Enchaînement direct après Q13 : aucune phrase de transition** ("on passe aux questions
      produit...") - même rythme, question suivante directement. La **relance unique** sur
      réponse vague s'applique comme ailleurs (coacher, pas quizzer).
-   - **Q19 (incertitudes / hypothèses) : NE PAS poser la question brute. Déduire puis sonder,
+   - **Q18 (incertitudes / hypothèses) : NE PAS poser la question brute. Déduire puis sonder,
      façon brainstorming.** Mécanisme inspiré de `superpowers:brainstorming` (faire émerger
      l'inconnu, une question à la fois) :
      1. **Déduire** (silencieusement, sans afficher de mécanique) les incertitudes et hypothèses
         tacites sur lesquelles le projet repose, à partir de **toute** la matière (capture,
-        réponses Q1-Q18). Viser surtout les **angles morts non formulés**. Le
+        réponses Q1-Q17). Viser surtout les **angles morts non formulés**. Le
         **nombre suit le nombre d'angles morts réels** : peu si le contexte est clair et complet,
         beaucoup s'il est flou/incomplet (indices : questions restées `deferred`, sections minces,
         contradictions, cibles absentes, dépendances externes non tranchées).
      2. **Sonder une par une, en PROSE dans le fil** (jamais via `AskUserQuestion` - même règle
-        que Q14-Q18 : zéro option affichée, **le message = la question, rien d'autre**, aucune
+        que Q14-Q17 : zéro option affichée, **le message = la question, rien d'autre**, aucune
         consigne de réponse ni phrase d'attente) : transformer chaque hypothèse en une
         **question de vérification ancrée** ("Le projet suppose X - est-ce voulu / vrai ?
         qu'est-ce qui se passe si ce n'est pas le cas ?"). S'il tape "je passe" -> sonde
@@ -228,11 +228,11 @@ et le bloc `discovery` du manifeste.
         avant la suivante. **Relance unique** sur réponse vague ; **jamais** sur le légal (Q8).
         L'arrêt étant possible à tout moment, **aucun contrôle d'arrêt séparé** n'est nécessaire.
      3. **Converger** : synthétiser les incertitudes/hypothèses confirmées en une **liste**, écrite
-        dans le champ Risques & hypothèses de `project-frame.md`. Q19 -> `answered` dès qu'une
+        dans le champ Risques & hypothèses de `project-frame.md`. Q18 -> `answered` dès qu'une
         synthèse existe ; si l'utilisateur esquive d'emblée ("je laisse de côté") -> `deferred`.
    - Réponse explicite (suggestion acceptée ou saisie) -> statut `answered`. **Aucune `(src:)` écrite.**
    - L'utilisateur laisse de côté (option "je laisse ce point de côté" sur Q1-Q13, ou "je
-     passe" tapé sur Q14-Q19) -> le champ est **omis** (statut `deferred`, rien d'écrit dans
+     passe" tapé sur Q14-Q18) -> le champ est **omis** (statut `deferred`, rien d'écrit dans
      l'artefact, pas de marqueur).
    - **Q8 (contraintes légales / conformité / RGPD) est OPTIONNELLE.** La proposer **une seule fois**,
      sans insister. C'est la **seule question dont la forme des options est imposée** : option 1 =
@@ -252,7 +252,7 @@ et le bloc `discovery` du manifeste.
 3. **Écrire** les réponses dans `project-frame.md` (chaque champ = le contenu décidé, **sans `(src:)`** ;
    un champ non tranché est **omis**). Le project-frame vit sous
    `cadrage-out/project-frame.md`. Les réponses Q1 (qui utilise), Q3 (rôles),
-   Q9 (type de projet), Q14 (problème), Q15 (pourquoi maintenant) et Q17 (signaux
+   Q9 (type de projet), Q14 (problème) et Q16 (signaux
    de succès) seront aussi reprises côté vision par `cadrage-vision` (suggestions
    pré-remplies du product-brief, à confirmer, jamais reposées à froid).
 

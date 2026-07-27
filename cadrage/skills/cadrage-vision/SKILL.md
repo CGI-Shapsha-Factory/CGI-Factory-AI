@@ -19,8 +19,8 @@ dans la matière.
 
 `cadrage-out/capture-brute.md` et `cadrage-out/project-frame.md`
 (pour reprendre Q1 qui utilise, Q3 rôles, Q9 type de projet, ainsi que les réponses
-produit de la découverte : Q14 problème et coût du statu quo, Q15 pourquoi maintenant,
-Q17 signaux de succès - reprises comme **suggestions pré-remplies** des sections
+produit de la découverte : Q14 problème et coût du statu quo,
+Q16 signaux de succès - reprises comme **suggestions pré-remplies** des sections
 Problème, Objectif business et Critères de succès, à confirmer en session, jamais
 reposées à froid). Le gabarit de sortie
 est `.factory/cadrage/product-brief.md` (copie installée par cadrage-init).
@@ -46,7 +46,7 @@ générer directement, sans porte.
 
 ## Procédure
 
-1. **Lire** la capture brute, le `project-frame.md` (Q1/Q3/Q9 + Q14/Q15/Q17) et le manifeste.
+1. **Lire** la capture brute, le `project-frame.md` (Q1/Q3/Q9 + Q14/Q16) et le manifeste.
 2. **Remplir le product brief** section par section, en n'utilisant **que** la
    matière de la capture. **Aucune provenance écrite** (pas de `(src:)`, pas
    d'horodatage) ; un élément non soutenu par la matière est **omis** ou **demandé

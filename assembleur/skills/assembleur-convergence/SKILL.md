@@ -62,7 +62,7 @@ parallèles) puis synthétiser leurs retours :
    hors-périmètre global, contraintes (légales/sécurité/données),
    et - depuis `project-frame.md` - les réponses de découverte qui pèsent sur la fabrication :
    **cible d'hébergement/déploiement (Q11), budget infra (Q12), responsable d'exploitation (Q10),
-   disponibilité/perf visées (Q6/Q7)**, ainsi que les **risques et hypothèses produit (Q19)**,
+   disponibilité/perf visées (Q6/Q7)**, ainsi que les **risques et hypothèses produit (Q18)**,
    la **différenciation (Q16)** et les **signaux de succès observables (Q17)** - ce que le produit
    doit encore prouver ne s'arrête pas à la frontière SpecKit ; et **par use case** : user stories, critères d'acceptation
    (Given/When/Then), **critères de succès mesurables avec leur cible chiffrée - repris tous, y
@@ -104,7 +104,7 @@ de `artifacts.briefs[]` a-t-il bien été ouvert par son `.path` et rendu sous s
 chaque feature porte-t-elle son **hors-périmètre local** ? **chaque critère de succès chiffré
 d'un brief est-il remonté** (aucun perdu, aucun arrondi) ? les **entités et relations du modèle de données (ERD)**
 sont-elles capturées, les **contraintes de déploiement/hébergement** présentes, les **risques/spikes**
-remontés ? l'**hypothèse produit initiale** et les **risques/hypothèses produit (Q19)** sont-ils
+remontés ? l'**hypothèse produit initiale** et les **risques/hypothèses produit (Q18)** sont-ils
 remontés (ou explicitement absents du cadrage) ? les **décisions d'expérience** (navigation, tailles d'écran, langues, ton) sont-elles
 reprises ou explicitement marquées absentes ? un lot est-il revenu incomplet ? deux lots se
 contredisent-ils ? **Relire** le lot concerné
@@ -149,7 +149,7 @@ jour en silence.
   écartée), **Hors
   périmètre (cette feature)** (<- hors-périmètre local du brief), Assumptions (**absorbe les
   risques/spikes de la feature, et les hypothèses/risques produit** - hypothèse produit initiale,
-  Q19 - **quand ils pèsent sur cette feature**), + annexes face technique / face design. Le `<slug>` est un **slug git/SpecKit-safe** (`[a-z0-9-]` : minuscules,
+  Q18 - **quand ils pèsent sur cette feature**), + annexes face technique / face design. Le `<slug>` est un **slug git/SpecKit-safe** (`[a-z0-9-]` : minuscules,
   tirets, ASCII, ≤ ~4 mots) dérivé de l'intitulé métier. **`<id>-<slug>` EST le nom canonique** du
   répertoire SpecKit (`specs/<id>-<slug>/`) **et** de la branche git de la feature - jamais
   d'auto-numérotation SpecKit (collision entre développeurs). Reporter **le même `<id>-<slug>`** dans
@@ -177,7 +177,7 @@ jour en silence.
   "sans objet" ou "non tranché" si l'atelier ne les a pas décidées, jamais inventées ; renvoi vers
   `designer-out/design-guidelines.md` et `coverage-report.md`), `features.md` (séquence + couplage +
   walking skeleton + pointeurs des 3 faces, **plus les hypothèses et risques produit restant à
-  valider** - hypothèse produit initiale, Q19 - pour que la fabrication sache ce que le produit
+  valider** - hypothèse produit initiale, Q18 - pour que la fabrication sache ce que le produit
   doit encore prouver).
 - **`.claude/CLAUDE.md`** (gabarit `project-claude-md.md`, écrit **directement dans le `.claude/` du
   projet**) - instructions projet **< 200 lignes** pour la fabrication : identité, principes, la
