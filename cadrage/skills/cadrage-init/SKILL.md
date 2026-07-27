@@ -77,9 +77,15 @@ déjà, ne pas l'écraser ; n'installer que le manquant.
 5. **Git-ignore `.factory/` (première version du `.gitignore` du projet)** : le cadrage **génère la
    première version** du `.gitignore` du projet - le seul `-init` qui le crée normalement. S'assurer
    qu'il **contient** la ligne `.factory/` : le **créer s'il est absent**, sinon **ajouter** la ligne
-   manquante (sans dupliquer si déjà présente), en **préservant** le reste. Les phases aval (architecte,
-   designer, assembleur) ne font ensuite que **compléter** ce même fichier - elles ne le réécrivent
-   jamais. Tout `.factory/` est local, non versionné.
+   manquante (sans dupliquer si déjà présente), en **préservant** le reste. La première version est
+   **minimale** : `.factory/` et `.claude/settings.local.json`, **rien d'autre** - aucune ligne
+   improvisée (node_modules, IDE...), la stack n'étant pas encore connue. **Ne JAMAIS ignorer
+   `.claude/`** : ce dossier voyage avec le repo (CLAUDE.md, `memory/`, hooks et `settings.json`
+   déployés par la Factory) ; seul `.claude/settings.local.json` (personnel) est ignoré. Si un
+   `.gitignore` existant contient une ligne qui ignore `.claude/` (ou `.claude`), **retirer cette
+   seule ligne** (suppression chirurgicale, le reste préservé) en le signalant. Les phases aval
+   (architecte, designer, assembleur) ne font ensuite que **compléter** ce même fichier - elles ne
+   le réécrivent jamais. Tout `.factory/` est local, non versionné.
 6. **Inviter à centraliser le contexte** : afficher en clair, **en gras**, l'invitation
    suivante à l'utilisateur -
    > **Déposez tous vos fichiers de contexte du projet dans `cadrage-out/source-contexte/` : transcriptions, comptes rendus, fichiers Markdown, PDF, DOCX ou tout autre format.**
@@ -184,7 +190,8 @@ création/mise à jour du manifeste, pas la date d'une source.
   `cadrage-out/source-contexte/` (facultatif - n'empêche jamais de démarrer).
 - Le dossier `cadrage-out/maquette-de-claude-design/` est créé **vide**, **sans** invitation
   affichée à l'init (la maquette n'arrive qu'après `cadrage-demonstrateur-brief`).
-- `.gitignore` contient la ligne `.factory/`.
+- `.gitignore` contient la ligne `.factory/` et n'ignore **pas** `.claude/` (seule exception :
+  `.claude/settings.local.json`).
 - `manifest.json` reparse sans erreur, `phase = "init"`.
 - `project` est à `null` (il sera renseigné par `cadrage-extraction`) ; pas de champ `client`.
 - Rien d'existant n'a été écrasé (idempotence).

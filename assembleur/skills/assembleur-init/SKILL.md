@@ -75,7 +75,10 @@ sans écraser le bloc `assembly`).
    par le cadrage** et **committé** - présent dans un clone frais. **Ne jamais le réécrire ni l'écraser** :
    s'assurer seulement qu'il **contient** la ligne `.factory/` - l'**ajouter** si elle manque (sans
    dupliquer), en **préservant** le reste. **Le créer uniquement s'il est absent** (clone où le cadrage
-   n'a pas tourné ici). Tout `.factory/` est local, non versionné.
+   n'a pas tourné ici). Tout `.factory/` est local, non versionné. **Jamais de ligne ignorant
+   `.claude/`** (l'assembleur y déploie CLAUDE.md + `memory/`, qui doivent être committés ; seule
+   `.claude/settings.local.json` peut l'être) - si elle est présente, retirer cette seule ligne en
+   le signalant.
 3. **Créer le dossier de sortie** `assembleur-out/` avec ses sous-dossiers `features/`
    et `memory/` (vides).
 4. **Étendre le manifeste** `manifest.json` : ajouter le bloc `assembly`

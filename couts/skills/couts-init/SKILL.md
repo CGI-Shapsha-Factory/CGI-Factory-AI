@@ -50,7 +50,8 @@ dossier où il est posé, et ne mesure **que** les sessions lancées dans ce dos
    (si absent).
 3. **Journal** : créer `.factory/couts/` ; **git-ignorer tout `.factory/`** en ajoutant la ligne
    `.factory/` au `.gitignore` du dossier courant (le créer si absent ; ne pas dupliquer si déjà
-   présent). Tout `.factory/` est local, non versionné.
+   présent). Tout `.factory/` est local, non versionné. **Jamais de ligne ignorant `.claude/`**
+   (le hook de coûts y vit et voyage avec le repo ; seule `.claude/settings.local.json` peut l'être).
 4. **Manifeste (optionnel, silencieux)** : si `<dossier courant>/manifest.json` existe, y
    ajouter le bloc `costs` `{ "installed": true, "hook": "SessionEnd", "price_table_date": "<date>",
    "gitignored": true }`. **S'il n'existe pas, ne rien créer** - l'outil fonctionne sans.

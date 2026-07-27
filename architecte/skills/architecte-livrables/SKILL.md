@@ -127,7 +127,9 @@ Python/Node/Vite/Go, Angular, .NET, Spring), **enrichi d'un slot par dépendance
   par le cadrage, ligne `.factory/` posée par `architecte-init`). **Y ajouter** seulement les lignes
   manquantes pour **ignorer** `.env` et `.env.*.local` (sans dupliquer, en **préservant** tout le
   reste) et laisser **`.env.example` committé**. **Le créer uniquement s'il est absent** ; ne jamais
-  l'écraser.
+  l'écraser. **Jamais de ligne ignorant `.claude/`** (il voyage avec le repo ; seule
+  `.claude/settings.local.json` peut l'être) - si elle est présente, retirer cette seule ligne en
+  le signalant.
 
 Confirmer en clair les fichiers créés. Mettre à jour le manifeste **en silence** - `env_files` porte la
 **liste des fichiers écrits** (le garde-fou vérifie qu'ils existent) :

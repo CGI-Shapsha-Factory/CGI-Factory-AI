@@ -142,7 +142,10 @@ l'utilisateur décider de la suite.
    frais. Ici, **ne jamais le réécrire ni l'écraser** : s'assurer seulement qu'il **contient** la ligne
    `.factory/` - l'**ajouter** si elle manque (sans dupliquer), en **préservant** tout le reste du
    fichier. **Le créer uniquement s'il est absent** (clone où le cadrage n'a pas tourné dans ce dossier).
-   Tout `.factory/` est local, non versionné.
+   Tout `.factory/` est local, non versionné. **Ne JAMAIS ajouter de ligne ignorant `.claude/`** : ce
+   dossier voyage avec le repo (CLAUDE.md, mémoire, hooks d'enforcement posés ici même) ; seule
+   `.claude/settings.local.json` peut être ignorée. Si une ligne `.claude/` (ou `.claude`) est déjà
+   présente, **retirer cette seule ligne** en le signalant (le reste préservé).
 
 ## Porte de sortie (vérification silencieuse)
 - `conventions/` existe à la racine avec `.editorconfig`.
