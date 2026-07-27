@@ -24,7 +24,10 @@ import sys
 
 SCHEMA = 3
 PLUGINS = ("cadrage", "architecte", "designer", "assembleur")
-BRANCH_FEATURE_RE = re.compile(r"^(\d{3})-")
+# Prefixe de branche optionnel : le NNN est cherche apres le dernier "/", ce qui accepte
+# aussi bien "001-slug" que "feature/001-slug". Sans cela, l'attribution des couts par
+# feature retombe silencieusement sur "phase"/"autre".
+BRANCH_FEATURE_RE = re.compile(r"^(?:.*/)?(\d{3})-")
 SLASH_RE = re.compile(r"/(cadrage|architecte|designer|assembleur)\s*:")
 SKILL_RE = re.compile(r"\b(cadrage|architecte|designer|assembleur)-[a-z\-]+", re.IGNORECASE)
 TIERS = ("haiku", "sonnet", "opus", "fable")
