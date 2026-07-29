@@ -2,7 +2,7 @@
 
 > Gabarit statique lu par `/designer:designer-prompt` une fois la **couverture jugée
 > suffisante**. **Cet en-tête reste dans le plugin** ; le fichier sauvegardé sous
-> `designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md` ne contient **que le corps du prompt**
+> `designer-out/prompts/prompt-<N>.md` ne contient **que le corps du prompt**
 > (le bloc de code ci-dessous, rempli), **sans titre, sans note, sans métadonnée, sans pied
 > de page** - cf. `references/ux-conventions.md` §3bis.
 >

@@ -91,11 +91,15 @@ Cinq types de faiblesse, balayés systématiquement :
 Pour chaque constat consolidé, l'orchestrateur **revérifie sur pièces** avant de déranger
 l'utilisateur :
 1. la `citation` du constat **existe mot pour mot** dans l'artefact, à l'endroit indiqué
-   (relecture ciblée) ;
+   (relecture ciblée **avec l'outil Read - jamais une commande shell/Bash**) ;
 2. la faiblesse n'est pas **déjà résolue** ailleurs dans le même artefact (l'attaquant a pu
    lire une section sans voir la réponse dans une autre) ;
 3. le constat ne **rouvre pas un point que l'utilisateur a explicitement tranché** dans cette
    session (cf. `ux-conventions.md` : ne jamais ré-insister sur un point tranché).
+
+**Cette vérification se fait entièrement en amont, avant de poser la première question** - jamais
+entre deux tours, jamais après une question déjà posée. C'est une **relecture** (outil Read), pas
+une commande shell.
 
 Un constat qui échoue à l'une de ces vérifications est **écarté sans bruit** - jamais montré.
 Tous les constats survivants sont traités, **sans plafond**.
@@ -119,9 +123,13 @@ Pour chaque constat retenu, dans l'ordre de gravité :
    remplacement" pour ce tour - ni options bidons (`a`/`b`/`x`, `placeholder`, "sans objet"),
    ni narration de la règle ("switching to prose", "en prose", "non utilisé") : un tel appel
    s'affiche à l'utilisateur et trahit la mécanique (cf. `references/interactive-loop.md`).
-2. **Attendre la réponse.** Réponse vague sur un point structurant : **une seule relance**
-   (règle de relance unique de `references/interactive-loop.md`), puis on écrit tel quel.
-   "On garde tel quel" est une réponse légitime : aucune modification, on passe au suivant.
+2. **Attendre la réponse - le tour s'arrête net après la question.** Une fois la question écrite,
+   n'émets plus rien : aucun texte, **aucun appel d'outil** (ni `AskUserQuestion`, ni Bash, ni
+   Read/Grep), et **jamais** une seconde emission de la même question encore ouverte. La suite
+   (correction, constat suivant) n'a lieu qu'**au tour suivant**, une fois la réponse reçue.
+   Réponse vague sur un point structurant : **une seule relance** (règle de relance unique de
+   `references/interactive-loop.md`), puis on écrit tel quel. "On garde tel quel" est une réponse
+   légitime : aucune modification, on passe au suivant.
 3. **Appliquer la correction en place** dans le ou les artefacts concernés, selon les règles de
    fusion du skill (réjeu incrémental / fusion additive : fusion par identité de section, de
    terme ou de use case, préservation du valide, aucune provenance, artefacts propres et

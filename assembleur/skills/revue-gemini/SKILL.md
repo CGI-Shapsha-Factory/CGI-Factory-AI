@@ -91,7 +91,7 @@ Afficher **un seul tableau** bien presente (aucun fichier ecrit) :
 Precede d'**une ligne de synthese** : total par severite (ex. "2 critical, 3 high, 5 medium, 1 low"),
 **dimensions couvertes** et **non couvertes** (avec la raison : quota/reseau/...). Si **aucun finding** :
 le dire clairement ("Gemini n'a rien releve de bloquant sur le diff - revue independante passee").
-Terminer par **une** phrase de suite ("Etape suivante : ..." - corriger les critical/high avant la PR,
+Terminer par **une** phrase de suite ("Étape suivante : ..." - corriger les critical/high avant la PR,
 ou relancer apres correction). **Consultatif** : ne jamais presenter ca comme un blocage automatique.
 
 ## Cas limites (tous geres, jamais bloquant)
@@ -118,5 +118,5 @@ ou relancer apres correction). **Consultatif** : ne jamais presenter ca comme un
 - **Secrets : convention architecte.** La cle vit dans `.env` (git-ignore), jamais committee ;
   `.env.example` ne porte qu'un placeholder.
 
-Etape suivante : corriger d'abord les findings **critical**/**high** signales par le reviewer independant,
-puis relancer `/assembleur:revue-gemini` avant d'ouvrir ou de merger la PR.
+**Étape suivante : corriger d'abord les findings critical/high signales par le reviewer independant,
+puis relancer `/assembleur:revue-gemini` avant d'ouvrir ou de merger la PR.**

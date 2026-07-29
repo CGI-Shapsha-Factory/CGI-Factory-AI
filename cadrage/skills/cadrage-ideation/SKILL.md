@@ -42,6 +42,18 @@ Les résultats **enrichissent en place** les artefacts extraits (aucun document 
   décision déjà claire** : si la relance en prose a déjà présenté le choix et que l'utilisateur
   a répondu **sans ambiguïté**, sa réponse en prose fait foi - on l'enregistre directement, sans
   la re-poser via l'outil (re-demander ce qui est déjà tranché est une redondance).
+- **Jamais de placeholder : un tour ouvert est un message de chat nu.** Toute question ouverte de
+  la séance - révélation d'un trou, relance d'animation, script de technique, pré-mortem, question
+  de la passe d'attaque - est un **simple message de chat** : la question, rien d'autre, **aucun
+  appel d'outil**. **Ne jamais** émettre un `AskUserQuestion` "à vide" ou "de remplacement" pour un
+  tel tour - **jamais** d'options bidons (`a`/`b`/`x`, `placeholder`, "sans objet"), **jamais** de
+  narration de la règle ("en prose", "switching to prose", "non utilisé"), **jamais** un champ
+  rempli d'un texte d'attente : un tel appel **s'affiche à l'utilisateur** et trahit la mécanique.
+  Si tu te surprends à vouloir appeler l'outil sur un tour ouvert, **tu ne le fais pas** : tu tapes
+  la question. Et quand l'outil **est** légitimement utilisé (un choix encore ouvert, cf. bullet
+  précédent, ou le choix d'une technique), il porte **deux vraies options composées** à partir de
+  la matière - **jamais** `a`/`b`/`placeholder` ; si tu ne peux pas composer deux vraies options, le
+  tour reste en prose.
 - **Ancrée sur les trous, pas sur une page blanche.** On ne relance pas dans le vide : chaque
   question part d'un manque précis repéré dans la matière extraite (une question de découverte
   restée sans réponse, une section mince, un flux ambigu).
@@ -156,15 +168,21 @@ questions, règles de correction). Résumé d'exécution :
    structurés ; ils attaquent, ils ne corrigent rien.
 2. **Consolider et vérifier.** Fusionner les constats en un rapport unique de session
    (dédoublonné, trié par gravité), **jamais persisté, jamais montré en liste à
-   l'utilisateur** ; puis vérifier chaque constat contre le fichier (la citation existe, le
+   l'utilisateur** ; puis vérifier chaque constat contre le fichier **avec l'outil Read (jamais
+   une commande shell/Bash), entièrement avant la première question** (la citation existe, le
    point n'est pas déjà résolu ni déjà tranché en séance) - constat invérifiable = écarté sans
    bruit.
 3. **Résoudre un par un.** Pour chaque constat retenu : **une seule question ouverte en prose**
    dans le fil (ancrée sur les mots du projet, un point par message, jamais de liste de
-   constats), attendre la réponse, appliquer la correction **en place** selon les règles de
-   fusion du skill ("on garde tel quel" est une réponse légitime : aucune modification), puis
-   passer au constat suivant. Aucun constat retenu laissé sans issue explicite ; une seule
-   passe, pas de re-attaque après corrections.
+   constats) - **message de chat nu, jamais de placeholder `AskUserQuestion`** (mêmes règles que
+   le bullet "Jamais de placeholder"). **Une fois la question posée, le tour s'arrête net :
+   n'émets plus rien - aucune commande (ni Bash, ni Read/Grep, ni `AskUserQuestion`) et jamais
+   une seconde emission de la même question.** Attendre la réponse, appliquer la correction **en place**
+   selon les règles de fusion du skill ("on garde tel quel" est une réponse légitime : aucune
+   modification), puis passer au constat suivant. Aucun constat retenu laissé sans issue
+   explicite ; une seule passe, pas de re-attaque après corrections. **Zéro constat retenu (rien
+   ne survit à la vérification) : aucune question, aucun appel d'outil - on passe directement à la
+   convergence puis à la mise à jour du manifeste.**
 
 Périmètre de cette passe :
 - Sorties de la séance : `cadrage-out/capture-brute.md` et `cadrage-out/project-frame.md`

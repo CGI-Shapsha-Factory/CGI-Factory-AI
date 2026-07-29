@@ -225,7 +225,7 @@ Read-modify-write puis revalidation JSON :
 Le dashboard Definition of Ready (jauge de complétude, statut par critère, verdict maître, ce qui
 manque) se génère dans Claude Design. Le prompt prêt à coller est dans
 `references/dashboard-dor-prompt.md` (gabarit statique). Le prompt utilisé est sauvegardé sous
-`cadrage-out/prompts/<NNN>-<JJ-MM>-dashboard-dor.md` et tracé dans `prompts[]`. Le fichier
+`cadrage-out/prompts/prompt-<N>.md` (numéro de séquence suivant) et tracé dans `prompts[]`. Le fichier
 sauvegardé ne contient **que le corps du prompt** (le bloc de code du gabarit), sans
 titre/date/mode/version (cf. `references/ux-conventions.md`).
 
@@ -250,4 +250,4 @@ titre/date/mode/version (cf. `references/ux-conventions.md`).
 **Handoff (avant de passer la main).** Committer `manifest.json` (verdict cadrage **scellé**)
 **et** `cadrage-out/` - l'architecte lit le **repo committé**, pas ta session ni ta machine.
 
-Étape suivante : `/architecte:architecte-init` - une fois le cadrage terminé, l'architecte lit directement les fichiers de `cadrage-out/` pour bâtir le contrat technique.
+**Étape suivante : `/architecte:architecte-init` - une fois le cadrage terminé, l'architecte lit directement les fichiers de `cadrage-out/` pour bâtir le contrat technique.**

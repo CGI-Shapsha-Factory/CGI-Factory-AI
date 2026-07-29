@@ -32,12 +32,12 @@ Avant toute (re)génération, appliquer `references/regeneration-gate.md`. Si le
 skill** existent déjà, proposer le choix **Repartir de zéro** (supprimer puis générer à neuf,
 `version: 1`) ou **Garder les deux (versionner)** (archiver l'existant sous `_archives/`, régénérer
 au nom canonique en `version: N+1`) et **attendre** le choix - la porte se pose **avec `AskUserQuestion`** (deux options, cf. `references/regeneration-gate.md`). Les prompts sous `prompts/` sont des
-**fichiers plats numérotés** (`<NNN>-<JJ-MM>-...md`) : un nouveau prompt prend le **numéro suivant**
+**fichiers plats numérotés** (`prompt-<N>.md` : `prompt-1.md`, `prompt-2.md`...) : un nouveau prompt prend le **numéro suivant**
 sans jamais écraser les précédents (déjà non destructif) - la porte ne vise donc que les livrables au
 nom canonique. Premier passage (rien n'existe) : générer directement, sans porte.
 
 ## Procédure : générer les sorties
-- **Prompt Claude Design** -> `designer-out/prompts/<NNN>-<JJ-MM>-claude-design.md` (fichier plat ; gabarit
+- **Prompt Claude Design** -> `designer-out/prompts/prompt-<N>.md` (fichier plat ; gabarit
   `templates/claude-design-prompt.md`) : fondation à produire, direction stylistique (maquette =
   inspiration, marque si présente sinon direction à poser), **stack cible**, et **consignes de discipline**
   (tous les états par composant, tous les parcours, erreurs + états vides, marquer ce qui manque). Les items
@@ -91,6 +91,6 @@ l'utilisateur **ce qui a été produit** et **la suite**) :
 - **Pas de fuite de champ** ni de jargon en sortie utilisateur ; **manifeste mis à jour en silence** (voir
   `references/ux-conventions.md`).
 
-Étape suivante : lance **Claude Design** avec le prompt produit, **dépose l'export dans
-`designer-out/maquette-de-claude-design/`** (dossier ou ZIP), puis `/designer:designer-coherence` -
-valider le système généré et préparer le handoff.
+**Étape suivante : lance Claude Design avec le prompt produit, dépose l'export dans
+`designer-out/maquette-de-claude-design/` (dossier ou ZIP), puis `/designer:designer-coherence` -
+valider le système généré et préparer le handoff.**

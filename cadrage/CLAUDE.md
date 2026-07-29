@@ -71,7 +71,7 @@ cadrage-out/                       # documents générés, COMMITTÉ (à la raci
 ├── capture-brute, project-frame, product-brief, glossaire,
 │   spec-index, coupling-map, completude-report
 └── features-fonctionnels-brief/   # un brief par feature (<feature>.md)
-cadrage-out/prompts/               # prompts générés, en <NNN>-<JJ-MM>-<nom>.md (fichiers plats)
+cadrage-out/prompts/               # prompts générés, en prompt-<N>.md (fichiers plats numérotés)
 ```
 Chaque plugin écrit dans son propre dossier de sortie à la racine (`cadrage-out/`,
 `architecte-out/`, `designer-out/`, `assembleur-out/`) et lit ceux de l'amont.

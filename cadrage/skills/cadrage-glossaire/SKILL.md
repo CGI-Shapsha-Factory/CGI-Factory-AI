@@ -133,15 +133,22 @@ questions, règles de correction). Résumé d'exécution :
    structurés ; ils attaquent, ils ne corrigent rien.
 2. **Consolider et vérifier.** Fusionner les constats en un rapport unique de session
    (dédoublonné, trié par gravité), **jamais persisté, jamais montré en liste à
-   l'utilisateur** ; puis vérifier chaque constat contre le fichier (la citation existe, le
+   l'utilisateur** ; puis vérifier chaque constat contre le fichier **avec l'outil Read (jamais
+   une commande shell/Bash), entièrement avant la première question** (la citation existe, le
    point n'est pas déjà résolu ni déjà tranché en séance) - constat invérifiable = écarté sans
    bruit.
 3. **Résoudre un par un.** Pour chaque constat retenu : **une seule question ouverte en prose**
    dans le fil (ancrée sur les mots du projet, un point par message, jamais de liste de
-   constats), attendre la réponse, appliquer la correction **en place** selon les règles de
-   fusion du skill ("on garde tel quel" est une réponse légitime : aucune modification), puis
-   passer au constat suivant. Aucun constat retenu laissé sans issue explicite ; une seule
-   passe, pas de re-attaque après corrections.
+   constats) - **message de chat nu : la question, rien d'autre, aucun appel d'outil** (jamais
+   de `AskUserQuestion` "à vide" ou "de remplacement", pas d'options bidons `a`/`b`/`x`/`placeholder`,
+   pas de narration de la règle ; cf. `references/interactive-loop.md`). **Une fois la question
+   posée, le tour s'arrête net : n'émets plus rien - aucune commande (ni Bash, ni Read/Grep, ni
+   `AskUserQuestion`) et jamais une seconde emission de la même question.** Attendre la réponse,
+   appliquer la correction **en place** selon les règles de fusion du skill ("on garde tel quel"
+   est une réponse légitime : aucune modification), puis passer au constat suivant. Aucun constat
+   retenu laissé sans issue explicite ; une seule passe, pas de re-attaque après corrections.
+   **Zéro constat retenu (rien ne survit à la vérification) : aucune question, aucun appel
+   d'outil - on passe directement à la mise à jour du manifeste.**
 
 Périmètre de cette passe :
 - Sortie du skill : `cadrage-out/glossaire.md`.
@@ -174,4 +181,4 @@ Read-modify-write puis revalidation JSON :
   `glossary_validated` ne s'allume pas tout seul.
 - **Contenu, pas provenance.** Aucune `(src:)` dans l'artefact.
 
-Étape suivante : `/cadrage:cadrage-decoupage` - découper la vision en use cases de valeur une fois le vocabulaire figé.
+**Étape suivante : `/cadrage:cadrage-decoupage` - découper la vision en use cases de valeur une fois le vocabulaire figé.**

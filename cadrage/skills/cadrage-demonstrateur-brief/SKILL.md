@@ -110,9 +110,10 @@ rapide et ne pas casser l'acquis.
 
 ## Sauvegarde du prompt
 
-Écrire le prompt dans `cadrage-out/prompts/<NNN>-<JJ-MM>-<nom>.md` où `NNN` est le
-prochain numéro par plugin (incrément du dernier `prompts[].n` du manifeste ; compteur dans `cadrage-out/prompts/`), `JJ-MM` la
-date du jour, et `<nom>` le sujet (ex. `demonstrateur-initial`, `demonstrateur-delta-v2`).
+Écrire le prompt dans `cadrage-out/prompts/prompt-<N>.md` où `N` est le **prochain numéro
+de séquence** du plugin : `prompt-1.md`, `prompt-2.md`, `prompt-3.md`... - incrément du plus grand
+`prompt-<N>.md` déjà présent dans `cadrage-out/prompts/` (cohérent avec le dernier `prompts[].n` du
+manifeste). Aucune date ni sujet dans le nom de fichier.
 
 **Le fichier sauvegardé ne contient QUE le corps du prompt prêt à coller** (le bloc de
 code du gabarit, rempli) : **aucun titre, aucune ligne `Date : ... | Mode : ... | Version :
@@ -202,4 +203,4 @@ Read-modify-write puis revalidation JSON :
 - **Skill indépendant.** Lit la vision / le retour et le manifeste, sans
   orchestrateur.
 
-Étape suivante : `/cadrage:cadrage-retour-client` - confronter la maquette au client puis ingérer son retour.
+**Étape suivante : `/cadrage:cadrage-retour-client` - confronter la maquette au client puis ingérer son retour.**

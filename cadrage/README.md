@@ -144,7 +144,7 @@ cadrage-out/                       # documents générés, COMMITTÉ (à la raci
 ├── capture-brute, project-frame, product-brief, glossaire,
 │   spec-index, coupling-map, completude-report
 └── features-fonctionnels-brief/   # un brief par feature (<feature>.md)
-cadrage-out/prompts/               # prompts générés, en <NNN>-<JJ-MM>-<nom>.md (fichiers plats)
+cadrage-out/prompts/               # prompts générés, en prompt-<N>.md (fichiers plats numérotés)
 ```
 `cadrage-init` **ne demande aucun nom** ; c'est `cadrage-extraction` qui demande le **nom du projet** (le nom du client n'est jamais collecté).
 Le plugin est l'outil ; `.factory/`, `cadrage-out/` et `cadrage-out/prompts/` portent l'état
