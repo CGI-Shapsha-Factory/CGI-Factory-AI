@@ -71,9 +71,12 @@ le fil ; il ne crée jamais un ticket sans accord explicite.
   de la porte de recette** (valider la livraison, valider avec réserves, refuser) - sur ce
   premier projet, en mode sans orchestrateur, **le testeur est juge et valideur** de chaque
   validation. Le skill ne prononce jamais le verdict lui-même.
-- Le verdict s'inscrit dans le **rapport committé** (il voyage avec le repo) et dans **Linear**
-  (commentaire sur le ticket Feature ; changement de statut seulement sur confirmation).
-  **Jamais dans le manifeste** : l'avancement vit dans Linear.
+- Le verdict s'inscrit dans le **rapport committé** (`rapport-de-validation.pdf`, il voyage avec
+  le repo) et dans **Linear** (commentaire sur le ticket Feature ; changement de statut
+  seulement sur confirmation). **Jamais dans le manifeste** : l'avancement vit dans Linear.
+- Le rapport n'est **imprimé qu'une fois le verdict prononcé** : un PDF présent atteste que la
+  porte de recette a été franchie. Il porte un bloc de signature (verdict, date, testeur, visa)
+  pour être présenté et signé en réunion de recette.
 
 ## Fiabilité d'exécution (contre les faux verdicts)
 - **Relance unique avec tri avant de conclure KO** : sur un échec, distinguer d'abord

@@ -16,9 +16,12 @@ L'adresse de l'environnement de recette absente n'est jamais bloquante : elle es
 Avec une feature en second argument (le nom de son dossier sous validation-out/), echoue si :
   - le plan `validation-out/<feature>/plan-de-test.md` est absent ;
   - un cas de test du plan ne cite pas son critere source ;
-  - le rapport `rapport-de-validation.md` existe mais son verdict n'est pas rempli (le gabarit
-    contient toujours le titre de la section : on exige une ligne `- **Verdict** : <valeur>`
-    dont la valeur n'est pas le placeholder entre parentheses du gabarit).
+  - les donnees du rapport existent (`.factory/validation/rapport-<feature>.json`) mais le
+    `rapport-de-validation.pdf` n'a pas ete produit - le PDF n'etant ecrit qu'apres le verdict
+    humain, son absence signale une porte de recette non franchie ;
+  - repli historique : un ancien `rapport-de-validation.md` existe mais son verdict n'est pas
+    rempli (on exige une ligne `- **Verdict** : <valeur>` dont la valeur n'est pas le
+    placeholder entre parentheses du gabarit).
 
 Exit 0 si tout est present, sinon 1.
 
@@ -31,7 +34,7 @@ import re
 import sys
 
 GABARITS = ("plan-de-test.md", "execution-resultats.md", "mission-cowork.md",
-            "rapport-de-validation.md")
+            "rapport-de-validation.html")
 
 
 def _manifest_path(argv):
@@ -112,20 +115,33 @@ def _check_feature(root, feature, problems):
         contenu = f.read()
     _check_plan(contenu, feature, problems)
 
+    donnees = os.path.join(root, ".factory", "validation", f"rapport-{feature}.json")
+    pdf = os.path.join(fdir, "rapport-de-validation.pdf")
+    if os.path.isfile(donnees) and not os.path.isfile(pdf):
+        problems.append(
+            f"rapport non produit (validation-out/{feature}/rapport-de-validation.pdf) - le PDF "
+            f"n'est ecrit qu'apres le verdict humain : la porte de recette n'a pas ete franchie")
+
+    _check_rapport_md(fdir, feature, problems)
+
+
+def _check_rapport_md(fdir, feature, problems):
+    """Repli historique : rapport en Markdown produit avant le passage au PDF."""
     rapport = os.path.join(fdir, "rapport-de-validation.md")
-    if os.path.isfile(rapport):
-        with open(rapport, encoding="utf-8-sig") as f:
-            rcontenu = f.read()
-        section = re.search(r"^##\s+Verdict de recette\s*$(.*)", rcontenu,
-                            flags=re.MULTILINE | re.DOTALL)
-        verdict = None
-        if section:
-            verdict = re.search(r"^\s*-\s+\*\*Verdict\*\*\s*:\s*(\S.*)$", section.group(1),
-                                flags=re.MULTILINE)
-        if not section or not verdict or verdict.group(1).lstrip().startswith("("):
-            problems.append(
-                f"rapport sans verdict rempli (validation-out/{feature}/rapport-de-validation.md) - "
-                f"la porte de recette n'a pas ete franchie proprement")
+    if not os.path.isfile(rapport):
+        return
+    with open(rapport, encoding="utf-8-sig") as f:
+        rcontenu = f.read()
+    section = re.search(r"^##\s+Verdict de recette\s*$(.*)", rcontenu,
+                        flags=re.MULTILINE | re.DOTALL)
+    verdict = None
+    if section:
+        verdict = re.search(r"^\s*-\s+\*\*Verdict\*\*\s*:\s*(\S.*)$", section.group(1),
+                            flags=re.MULTILINE)
+    if not section or not verdict or verdict.group(1).lstrip().startswith("("):
+        problems.append(
+            f"rapport sans verdict rempli (validation-out/{feature}/rapport-de-validation.md) - "
+            f"la porte de recette n'a pas ete franchie proprement")
 
 
 def main(argv):

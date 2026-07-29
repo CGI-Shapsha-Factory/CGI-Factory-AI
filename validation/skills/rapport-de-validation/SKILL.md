@@ -1,6 +1,6 @@
 ---
 name: rapport-de-validation
-description: Assemble le rapport de recette tracé exigence par exigence, trie chaque écart avec le testeur (anomalie, évolution ou critère flou, renvoi vers les skills maintenance) et recueille le verdict humain de la porte de recette.
+description: Assemble le rapport de recette tracé exigence par exigence, trie chaque écart avec le testeur (anomalie, évolution ou critère flou, renvoi vers les skills maintenance), recueille le verdict humain de la porte de recette et produit le rapport en PDF.
 ---
 
 # rapport-de-validation
@@ -12,8 +12,16 @@ résultats d'exécution en un **rapport de recette tracé exigence par exigence*
 testeur est juge et valideur.**
 
 ## Objectif
-Produire `validation-out/<feature>/rapport-de-validation.md` (matrice critère -> cas -> verdict
--> preuve -> décision) et inscrire le verdict humain dans le rapport et dans Linear.
+Produire `validation-out/<feature>/rapport-de-validation.pdf` - un **document présentable**
+(A4 paysage : verdict, chiffres clés, matrice critère -> cas -> verdict -> preuve -> décision,
+écarts détaillés avec leur capture, bloc de signature) - et inscrire le verdict humain dans ce
+rapport et dans Linear.
+
+Le skill **n'écrit ni HTML ni CSS** : il assemble les **données** du rapport dans
+`.factory/validation/rapport-<feature>.json` (mécanique cachée, git-ignorée, régénérable),
+puis `scripts/build_rapport_pdf.py` les met en page avec le gabarit
+`rapport-de-validation.html`. Toute la mise en forme vit dans le gabarit, jamais dans la
+session.
 
 ## Pré-requis (vérification silencieuse)
 - Le plan existe (`validation-out/<feature>/plan-de-test.md`) et au moins un fichier de
@@ -38,28 +46,66 @@ Produire `validation-out/<feature>/rapport-de-validation.md` (matrice critère -
 - Le traitement des écarts passe par le plugin maintenance : si le bloc `maintenance` du manifeste
   manque, signaler qu'il faudra lancer `/maintenance:maintenance-init` avant de créer le premier
   ticket (on peut quand même assembler le rapport).
+- **Le rendu PDF a besoin de Chrome (ou Chromium, ou Edge) installé.** Ne **jamais** bloquer
+  là-dessus en début de skill : le tri des écarts et le verdict se font d'abord ; l'absence de
+  navigateur ne se traite qu'au moment du rendu (cf. Étape 4).
 
 ## Procédure
 
-### Étape 1 : assembler la matrice de traçabilité
-Depuis le gabarit `rapport-de-validation.md` - celui du **plugin** fait foi : si la copie
-`.factory/validation/rapport-de-validation.md` en diffère, la remplacer avant d'écrire (cf.
-`references/regles-validation.md`). Une ligne **par critère** du
-plan, dans l'ordre des colonnes du gabarit : **ce qui est vérifié** (la phrase reprise de la
-vue d'ensemble du plan, jamais une référence de spécification nue), le cas de test, le verdict
-de l'exécution, la preuve, puis la **Source** (référence compacte) et la décision. Aucun critère ne
-disparaît : un cas absent des résultats apparaît "non exécuté" et compte comme un écart à
-trier. Si `validation-out/<feature>/rapport-de-validation.md` existe déjà, poser la **porte de
+### Étape 1 : assembler les données de la matrice
+Une entrée **par critère** du plan, dans l'ordre du plan : **ce qui est vérifié** (la phrase
+reprise de la vue d'ensemble du plan, jamais une référence de spécification nue), le cas de
+test, le verdict de l'exécution, la preuve, la **Source** (référence compacte) et la décision.
+Aucun critère ne disparaît : un cas absent des résultats apparaît "non exécuté" et compte comme
+un écart à trier.
+
+Écrire ces données dans `.factory/validation/rapport-<feature>.json` (créer le dossier s'il
+manque). Structure attendue par le script - les champs vides sont omis, jamais inventés :
+
+```json
+{
+  "projet": "(nom du projet, depuis le manifeste)",
+  "feature": { "numero": "001", "intitule": "(intitulé de la feature)",
+               "sous_titre": "(facultatif, sinon dérivé)" },
+  "recette": { "date": "JJ-MM-AAAA", "environnement": "(URL testée)",
+               "outil": "(outil d'exécution, en toutes lettres)",
+               "outil_court": "(2 ou 3 mots, pour l'en-tête)",
+               "fichier_resultats": "resultats/execution-<outil>-<NN>.md",
+               "executions_confirmatives": ["(les autres exécutions au même résultat)"],
+               "plan": "plan-de-test.md", "specification": "specs/<feature>/spec.md",
+               "testeur": "(nom, ou vide si le visa est manuscrit)" },
+  "chiffres": { "criteres": 0, "cas": 0, "ok": 0, "ecarts": 0, "non_testable": 0 },
+  "synthese": ["(un paragraphe factuel)", "(...)"],
+  "encadre_synthese": "(facultatif : une phrase de contexte)",
+  "encadre_matrice": "(facultatif : où sont rangées les preuves)",
+  "cas": [ { "ref": "TC-001-001", "phrase": "(ce qui est vérifié)",
+             "verdict": "OK | KO | NON TESTABLE | NON EXECUTE",
+             "preuve": "(nom du fichier de capture)", "source": "(référence compacte)",
+             "decision": "(vide, ou Anomalie / Evolution / Clarifié / Sans suite)" } ],
+  "ecarts": [ { "ref": "TC-001-009", "titre": "(le comportement attendu, en une phrase)",
+                "nature": "Anomalie", "attendu": "(...)", "constate": "(...)",
+                "criteres_echec": "(les critères cités)", "nature_motif": "(pourquoi cette nature)",
+                "diagnostic": "(console, réseau, reproductibilité)", "suite": "(le ticket ou la décision)",
+                "preuve_image": "resultats/preuves-<outil>-<NN>/<capture>.png",
+                "legende": "(ce que montre la capture)" } ],
+  "verdict": { "valeur": "(rempli à l'Étape 3, jamais avant)", "note": "(...)",
+               "aside_libelle": "Réserves ouvertes", "aside_valeur": "(...)" }
+}
+```
+
+Dans les textes, seules trois marques sont interprétées : `**gras**`, `` `code` `` et le retour
+à la ligne. **Aucune balise HTML** : le script échappe tout le reste.
+
+Si `validation-out/<feature>/rapport-de-validation.pdf` existe déjà, poser la **porte de
 régénération avec `AskUserQuestion`** avant d'écrire, en nommant le fichier - **deux options
 explicites, la saisie libre restant ouverte** (le "Other" de l'outil) : **repartir de zéro**
 (supprimer le rapport existant puis regénérer au nom canonique) ou **garder les deux
 (versionner)** (archiver l'existant sous
-`validation-out/<feature>/_archives/rapport-de-validation-v<N>.md`, `N` = index croissant, puis
+`validation-out/<feature>/_archives/rapport-de-validation-v<N>.pdf`, `N` = index croissant, puis
 regénérer au nom canonique, qui porte toujours la version la plus récente). La **saisie libre**
 est la troisième voie : le testeur précise une autre consigne (renommer l'existant, garder tel
 quel et s'arrêter) et le skill **l'applique** ; **jamais d'écrasement ni de suppression sans un
-geste explicite** (une consigne non actionnable se re-demande). Écrire aussi la synthèse
-chiffrée, en prose.
+geste explicite** (une consigne non actionnable se re-demande).
 
 ### Étape 2 : trier chaque écart avec le testeur (un par un)
 Pour chaque verdict KO, NON TESTABLE ou non exécuté : présenter le constat factuel (constaté vs
@@ -86,10 +132,10 @@ ligne). Les natures possibles (cf. `references/regles-validation.md`) :
   `references/regles-validation.md`, section Linear).
 - **Sans suite** : le testeur peut décider de ne pas donner suite ; sa décision s'écrit telle
   quelle dans le rapport.
-Chaque décision prise est reportée dans le rapport (colonne "Décision sur l'écart" + bloc
-"Écarts et suites données", avec l'identifiant Linear natif des tickets créés). Un écart que
-le testeur laisse de côté reste **sans décision** dans la matrice : on le lui rappelle
-oralement, et la porte de recette n'est pas franchissable tant qu'il en reste.
+Chaque décision prise alimente les données : la colonne `decision` du cas concerné, et une
+entrée dans `ecarts` (avec l'identifiant Linear natif du ticket créé, s'il y en a un). Un écart
+que le testeur laisse de côté reste **sans décision** : on le lui rappelle oralement, et la
+porte de recette n'est pas franchissable tant qu'il en reste.
 
 ### Étape 3 : la porte de recette (verdict humain)
 Quand tous les écarts sont triés : afficher le récapitulatif final (la matrice en tableau
@@ -98,19 +144,39 @@ ton verdict de recette pour cette feature ?" - trois options, "livraison validé
 avec réserves" et "refusée", chacune décrite par ce qu'elle implique concrètement pour cette
 feature (ce qui reste ouvert, ce qui repart en correction). Le verdict le plus cohérent avec
 les résultats peut être placé en premier avec la mention "(recommandé)" et son argument dans la
-description, mais **le skill ne prononce jamais le verdict lui-même** : il attend le choix. Puis :
-1. inscrire le verdict, la date et les réserves (tickets Linear restant ouverts) dans la
-   section "Verdict de recette" du rapport - cette section n'existe remplie que par ce geste ;
-2. **Linear** : déposer un commentaire de synthèse sur le ticket `Feature` de la feature
-   (résolu par le numéro en tête de titre via `list_issues({team, label Feature})` ;
-   `save_comment` avec le verdict, les compteurs et le chemin du rapport). Le **statut** du
-   ticket, lui, n'est **jamais déduit du verdict** : poser une question `AskUserQuestion` -
-   "laisser le statut tel quel" (en premier avec la mention "(recommandé)") ou passer le ticket
-   à l'un des états réellement disponibles, une option par état pertinent résolu via
-   `list_issue_statuses`. N'appliquer que sur ce choix explicite, et vérifier l'état retourné
-   (un état non résolu est ignoré en silence par Linear). Si le MCP `linear-prism`
-   est muet : le verdict reste dans le rapport, signaler que le commentaire Linear attendra
-   et afficher l'installation du MCP (section Linear de `references/regles-validation.md`).
+description, mais **le skill ne prononce jamais le verdict lui-même** : il attend le choix.
+
+Le verdict choisi, sa date et ses réserves (tickets Linear restant ouverts) s'écrivent alors
+dans le bloc `verdict` des données. **Ce bloc n'est rempli que par ce geste** : tant que le
+testeur n'a pas tranché, il reste vide et le script refuse de produire le PDF.
+
+### Étape 4 : produire le PDF
+Lancer le rendu déterministe :
+```bash
+python <plugin>/scripts/build_rapport_pdf.py manifest.json <feature>
+```
+Il écrit `validation-out/<feature>/rapport-de-validation.pdf` et affiche le nombre de pages.
+**Lire sa sortie** : une ligne "attention" signale une capture introuvable ou une page qui
+déborde (raccourcir le texte concerné ou baisser `lignes_par_page` dans les données, puis
+relancer). Ne jamais annoncer un rapport livré sans que le script ait confirmé l'écriture.
+
+Si le script échoue faute de navigateur : **le dire clairement**, laisser les données en place
+(rien n'est perdu, le tri et le verdict sont déjà dedans), afficher ce qu'il faut installer, et
+poser **avec `AskUserQuestion`** ce que le testeur veut faire - installer Chrome puis relancer
+le rendu (en premier), ou reprendre plus tard. **Jamais de cul-de-sac.**
+
+### Étape 5 : tracer dans Linear
+Déposer un commentaire de synthèse sur le ticket `Feature` de la feature (résolu par le numéro
+en tête de titre via `list_issues({team, label Feature})` ; `save_comment` avec le verdict, les
+compteurs et le chemin du PDF). Le **statut** du ticket, lui, n'est **jamais déduit du
+verdict** : poser une question `AskUserQuestion` - "laisser le statut tel quel" (en premier
+avec la mention "(recommandé)") ou passer le ticket à l'un des états réellement disponibles,
+une option par état pertinent résolu via `list_issue_statuses`. N'appliquer que sur ce choix
+explicite, et vérifier l'état retourné (un état non résolu est ignoré en silence par Linear).
+Si le MCP `linear-prism` est muet : le verdict reste dans le rapport, signaler que le
+commentaire Linear attendra et afficher l'installation du MCP (section Linear de
+`references/regles-validation.md`).
+
 Le verdict ne s'écrit **jamais dans le manifeste** : le rapport committé voyage avec le repo,
 l'avancement vit dans Linear.
 
@@ -119,25 +185,33 @@ Lancer le garde-fou déterministe et s'arrêter s'il échoue :
 ```bash
 python <plugin>/scripts/check_validation.py manifest.json <feature>
 ```
-(Pour la feature : plan présent et tracé, et si le rapport existe, son verdict **rempli** -
-la seule présence du titre de section ne suffit pas.)
+(Pour la feature : plan présent et tracé, et si les données du rapport existent, le **PDF**
+produit - le PDF n'étant écrit qu'après le verdict, sa présence atteste la porte de recette.)
 
 ## Règles invariantes
 - **La validation détecte, la maintenance traite.** Aucune anomalie ni évolution n'est créée ici
   en direct : toujours via les skills maintenance et leurs portes.
 - **Le tri d'un écart et le verdict sont humains.** Le skill propose et pré-remplit ; le
   testeur tranche. Pas de porte de recette tant qu'un écart n'est pas trié.
+- **Le PDF n'existe qu'après le verdict.** On n'imprime pas un rapport dont la porte n'a pas
+  été franchie ; le script refuse d'ailleurs de le faire.
+- **Jamais de mise en forme écrite en session.** Le skill remplit des données ; le gabarit et le
+  script font la mise en page. Ne jamais fabriquer de HTML, de CSS ni de commande Chrome à la
+  main, et ne jamais retoucher le gabarit pour un rapport particulier.
 - **Traçabilité totale** : aucun critère du plan n'est absent de la matrice.
 - Manifeste silencieux, restitutions en prose, typographie humaine (cf.
-  `references/ux-conventions.md`).
+  `references/ux-conventions.md`) - y compris dans les données du rapport : guillemets droits,
+  tiret simple, "..." en trois points, jamais de flèche unicode ni de coche/croix.
+- **Mécanique interne silencieuse** : ne jamais annoncer au testeur le fichier de données de
+  `.factory/` (dossier caché, git-ignoré, sans intérêt pour lui) ; on lui confirme le PDF.
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, en la
   cadrant sur le verdict qui vient d'être prononcé (cf. la section 5 de
   `references/ux-conventions.md`).
 - **Jamais de cul-de-sac, et toute question passe par `AskUserQuestion`.** Fichier de résultats,
-  nature de chaque écart, verdict de recette, changement de statut Linear **et les réponses
-  libres** (texte d'un constat, motif d'une réserve) - pour celles-ci, les options portent les
-  formulations plausibles et la saisie libre reste ouverte. **Aucune question rédigée en prose
-  dans le fil.** Un refus se termine par une question proposant les issues réellement praticables
-  (cf. `references/interactive-loop.md`).
+  nature de chaque écart, verdict de recette, changement de statut Linear, échec du rendu **et
+  les réponses libres** (texte d'un constat, motif d'une réserve) - pour celles-ci, les options
+  portent les formulations plausibles et la saisie libre reste ouverte. **Aucune question
+  rédigée en prose dans le fil.** Un refus se termine par une question proposant les issues
+  réellement praticables (cf. `references/interactive-loop.md`).
 
-Étape suivante : selon le verdict - livraison validée, `/validation:plan-de-validation` pour recetter la feature livrée suivante. Validée avec réserves ou refusée : `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` pour les écarts triés qui n'ont pas encore leur ticket, puis `/maintenance:correction-anomalie` (ou `/maintenance:realisation-evolution`) côté développeur, et enfin `/validation:execution-validation` pour rejouer les cas en échec et lever les réserves.
+**Étape suivante : selon le verdict - livraison validée, `/validation:plan-de-validation` pour recetter la feature livrée suivante. Validée avec réserves ou refusée : `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` pour les écarts triés qui n'ont pas encore leur ticket, puis `/maintenance:correction-anomalie` (ou `/maintenance:realisation-evolution`) côté développeur, et enfin `/validation:execution-validation` pour rejouer les cas en échec et lever les réserves.**

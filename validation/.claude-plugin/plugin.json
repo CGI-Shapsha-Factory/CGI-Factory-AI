@@ -1,7 +1,7 @@
 {
   "name": "validation",
-  "version": "0.12.3",
-  "description": "Recette fonctionnelle d'une feature livrée : plan de test dérivé de la spec, exécution dans le navigateur avec preuves, rapport tracé dont le verdict reste humain.",
+  "version": "0.13.0",
+  "description": "Recette fonctionnelle d'une feature livrée : plan de test dérivé de la spec, exécution dans le navigateur avec preuves, rapport PDF tracé dont le verdict reste humain.",
   "author": {
     "name": "IA Factory"
   },
@@ -13,6 +13,7 @@
     "navigateur",
     "non-regression",
     "linear",
-    "speckit"
+    "speckit",
+    "pdf"
   ]
 }

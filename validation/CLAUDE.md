@@ -11,8 +11,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 l'environnement de recette (extension Chrome "Claude in Chrome" en priorité, MCP Playwright
 en repli, ou mission différée pour Claude Cowork) en **capturant le déroulé effectif** de
 chaque cas, et produire un **rapport de recette tracé exigence
-par exigence** dont le **verdict reste humain** (porte de recette : le testeur est juge et
-valideur). Ce n'est **pas un projet applicatif** : des **skills Markdown** + un
+par exigence** - un **PDF présentable** (A4 paysage : verdict, chiffres clés, matrice, écarts
+avec leur capture, bloc de signature) - dont le **verdict reste humain** (porte de recette : le
+testeur est juge et valideur). Ce n'est **pas un projet applicatif** : des **skills Markdown** + un
 `plugin.json`. Pas de build, pas de lint, pas de tests unitaires.
 
 **La validation détecte et trace ; la maintenance traite.** Le tri d'un écart distingue le
@@ -36,7 +37,7 @@ Invocation directe `/validation:<skill>` + auto-invocation par la description. P
 | 0 | `validation-init` | **quatre** gabarits dans `.factory/validation/` + bloc manifeste `validation` (adresse de recette, outil habituel - config statique seule) + `.gitignore` complété + état de l'amont signalé (specs/, Linear, maintenance) | jamais bloquant |
 | 1 | `plan-de-validation` | `specs/<feature>/spec.md` -> `validation-out/<feature>/plan-de-test.md` : plan **entièrement en tableaux** (vue d'ensemble + déroulé par thème + critères à clarifier), **une ligne = un scénario** `TC-<feature>-NNN` (Given/When/Then traduit en préconditions / étapes séparées par `<br>` / résultat observable), critère **jamais recopié verbatim** (colonne `Source` compacte pour la traçabilité, colonne `Ce qui est vérifié` en phrase française), critère flou = `à clarifier` avec raison dans sa seule table, données de test collectées en boucle interactive, porte de régénération à la relance | **plan validé par le testeur** (humain) |
 | 2 | `execution-validation` | **préflight de disponibilité** des outils avant le choix (l'état "disponible / à installer" est porté dans les options, et "(recommandé)" ne va qu'à un outil qui répond), puis choix à chaque lancement : extension Chrome (non installable par le skill - marche à suivre `/chrome`, `claude --chrome`, Web Store ; impasses nommées : clé API / `setup-token`, WSL, fournisseur tiers) / Playwright en repli (**installé directement** par le skill : `claude mcp add playwright --scope <user\|project> -- npx -y @playwright/mcp@latest`, après confirmation et choix de portée, Node 18+ requis, **redémarrage de session obligatoire** avant usage) / mission Cowork différée via `mission-cowork.md` auto-portant, toujours disponible -> `resultats/execution-<outil>-<NN>.md` (jeton d'outil `chrome`/`playwright`/`cowork` + version 2 chiffres, plus petit `<NN>` libre par outil, jamais écrasé ; gabarit `execution-resultats.md`) au **contrat commun, entièrement en tables** : contexte d'exécution, **synthèse en haut** (OK/KO/NON TESTABLE), une ligne par cas (`Cas | Intitulé | Verdict | Déroulé effectif | Constaté | Preuve` - déroulé requis même sur OK : il dit ce qui a vraiment été joué, ce que le plan ne dit pas), et une table **Écarts** qui porte seule le diagnostic (attendu, constaté, console et réseau) + captures dans `resultats/preuves-<outil>-<NN>/` (même outil et même version que le fichier ; nommées `<slug>-<n>.png`, slug de 2 à 4 mots kebab-case tiré de l'intitulé du cas, unique par cas, lisible par un humain - le lien vers le TC passe par la colonne Preuve) | le testeur choisit l'outil ; l'IA constate, ne juge pas |
-| 3 | `rapport-de-validation` | matrice de traçabilité (critère -> cas -> verdict -> preuve -> décision) + tri des écarts un par un avec le testeur (anomalie / évolution / flou -> renvois `/maintenance:*`) + **porte de recette** : verdict humain inscrit dans le rapport et commenté sur le ticket `Feature` Linear | **verdict de recette** (humain) |
+| 3 | `rapport-de-validation` | matrice de traçabilité (critère -> cas -> verdict -> preuve -> décision) + tri des écarts un par un avec le testeur (anomalie / évolution / flou -> renvois `/maintenance:*`) + **porte de recette** : verdict humain, puis **rendu du rapport en PDF** (`rapport-de-validation.pdf`, A4 paysage, présentable en réunion) et commentaire sur le ticket `Feature` Linear. Le skill remplit des **données** (`.factory/validation/rapport-<feature>.json`) ; la mise en page vit dans le gabarit `rapport-de-validation.html` et le script `build_rapport_pdf.py` - **jamais de HTML/CSS écrit en session**. Le PDF n'est produit **qu'après** le verdict : sa présence atteste la porte | **verdict de recette** (humain) |
 
 Flux : `validation-init` -> (par feature livrée) `plan-de-validation` -> `execution-validation`
 -> `rapport-de-validation` -> écarts traités côté maintenance (`correction-anomalie`,
@@ -45,14 +46,21 @@ Flux : `validation-init` -> (par feature livrée) `plan-de-validation` -> `execu
 ## Workspace & manifeste
 ```
 .factory/validation/               # gabarits (git-ignoré, reposé par validation-init)
+└── rapport-<feature>.json         # données du rapport (git-ignoré, régénérable, re-rendable)
 validation-out/<feature>/          # committé - le handoff de la validation
 ├── plan-de-test.md
 ├── mission-cowork.md              # seulement si la voie Cowork est choisie
 ├── resultats/execution-<outil>-<NN>.md   # une exécution = un fichier (outil + version), jamais écrasé
 ├── resultats/preuves-<outil>-<NN>/*.png  # captures de cette exécution (même outil et version), nommées <slug>-<n>.png (slug 2-4 mots depuis l'intitulé du cas, unique par cas)
-├── rapport-de-validation.md          # matrice + écarts + Verdict de recette
+├── rapport-de-validation.pdf      # LE livrable : verdict + chiffres + matrice + écarts + signature
 └── _archives/                     # versions archivées par la porte de régénération
 ```
+**Le rapport est un PDF, pas un Markdown** (écart assumé au reste de la Factory) : c'est un
+document montré en réunion de recette et signé. Conséquence acceptée : il n'est pas diffable en
+git. Les **données** qui l'ont produit restent dans `.factory/validation/rapport-<feature>.json`,
+donc un rendu peut être rejoué sans refaire le tri. Dépendances du rendu : **Chrome, Chromium ou
+Edge** installé (impression) ; **Pillow facultatif** (recadrage des captures de preuve, repli
+silencieux sur l'image entière s'il manque).
 Bloc manifeste `validation` : `{ phase, environnement_recette, outil_prefere }` -
 **configuration statique seulement**. Les verdicts, l'avancement et les écarts vivent dans le
 rapport committé et **dans Linear** (jamais dans le manifeste : concurrence multi-dev).
@@ -71,22 +79,27 @@ mission Cowork, contrat de sortie commun). Porte de régénération : même prin
 l'assembleur (jamais d'écrasement sans choix explicite, question posée **avant** de
 regénérer), en **trois voies** posées identiquement dans les 3 skills producteurs
 (`plan-de-validation` -> `plan-de-test.md`, `execution-validation` -> `mission-cowork.md`,
-`rapport-de-validation` -> `rapport-de-validation.md`) : (1) **repartir de zéro** (supprimer +
+`rapport-de-validation` -> `rapport-de-validation.pdf`) : (1) **repartir de zéro** (supprimer +
 regénérer), (2) **garder les deux (versionner)**, (3) **saisie libre** (le "Other" natif
 d'`AskUserQuestion`, comportement défini : le testeur précise une consigne - renommer, garder
 tel quel - et le skill l'applique ; jamais d'écrasement ni de suppression sans geste explicite,
 une consigne non actionnable se re-demande). **Écart assumé** vs l'assembleur : les archives
-vivent **par feature** sous `validation-out/<feature>/_archives/` (nommées `<nom>-v<N>.md`,
+vivent **par feature** sous `validation-out/<feature>/_archives/` (nommées `<nom>-v<N>.<ext>`,
 `N` = index croissant - pas de front-matter `version:` dans les gabarits), car tout le livrable
 de la validation est rangé par feature. Les résultats d'exécution, eux, ne passent **jamais**
 par la porte : un fichier par exécution, **nommé par outil + version** (`execution-<outil>-<NN>.md`
 avec ses captures dans `resultats/preuves-<outil>-<NN>/`, plus petit `<NN>` libre par outil),
 jamais écrasé.
 Garde-fou déterministe : `scripts/check_validation.py` (bloc `validation` + gabarits en
-place ; par feature : plan présent et tracé, et si le rapport existe, **verdict rempli**
-- la présence du titre de section ne suffit pas, le gabarit le contient toujours).
-Gabarits : `templates/{plan-de-test,execution-resultats,mission-cowork,rapport-de-validation}.md`.
-**Tous les livrables sont en tables** (le fichier de résultats d'exécution y est passé aussi) :
+place ; par feature : plan présent et tracé, et si les données du rapport existent, **le PDF
+produit** - il n'est écrit qu'après le verdict, donc sa présence atteste la porte ; un ancien
+rapport Markdown reste contrôlé sur son verdict, en repli).
+Rendu du rapport : `scripts/build_rapport_pdf.py` (données JSON + gabarit HTML -> PDF via
+Chrome headless ; pagination, numéros de page, pastilles et encadrés calculés là, jamais en
+session).
+Gabarits : `templates/{plan-de-test,execution-resultats,mission-cowork}.md` +
+`templates/rapport-de-validation.html`.
+**Tous les livrables Markdown sont en tables** (le fichier de résultats d'exécution y est passé aussi) :
 forme imposée par la **section 4bis de `references/ux-conventions.md`** - une ligne de séparation
 `|---|---|` entre chaque ligne de données (lisibilité du Markdown brut ; les garde-fous
 l'ignorent, `CAS_RE` n'apparie que les lignes `TC-NNN-NNN`), étapes numérotées séparées par
@@ -108,8 +121,10 @@ trace ; MCP absent = signaler, jamais d'écriture silencieuse ratée.
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python -m py_compile scripts/check_validation.py
+python -m py_compile scripts/check_validation.py scripts/build_rapport_pdf.py
 python scripts/check_validation.py <projet>/manifest.json [<feature>]
+# rendu du rapport (le projet doit porter .factory/validation/rapport-<feature>.json)
+python scripts/build_rapport_pdf.py <projet>/manifest.json <feature>
 ```
 
 ## Invariants
@@ -118,7 +133,9 @@ exécution ; le tri de chaque écart et le verdict de recette sont humains ; le 
 prononce jamais le verdict. **Un critère = un cas, cité** (traçabilité totale, aucun critère
 écarté en silence). **Jamais interpréter un critère flou** (A CLARIFIER au plan,
 NON TESTABLE à l'exécution). **Détection ici, traitement côté maintenance** (jamais de ticket
-d'anomalie/évolution créé en direct). **Contrat de sortie commun** aux trois voies
+d'anomalie/évolution créé en direct). **Le rapport PDF n'est imprimé qu'après le verdict**
+(le script le refuse sinon) et **aucune mise en forme ne s'écrit en session** : le skill remplit
+des données, le gabarit et le script font la page. **Contrat de sortie commun** aux trois voies
 d'exécution. **Fiabilité** : relance unique triée avant KO, budget d'étapes borné, preuve à
 chaque verdict, jamais d'action destructive sans confirmation, données de test uniquement.
 **Aucun état d'avancement dans le manifeste** (rapport committé + Linear). Restitutions en

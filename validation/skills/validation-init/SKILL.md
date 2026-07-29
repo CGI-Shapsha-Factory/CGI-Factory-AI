@@ -1,6 +1,6 @@
 ---
 name: validation-init
-description: Amorce la phase de validation fonctionnelle : installe les gabarits (plan de test, résultats d'exécution, mission Cowork, rapport de recette), étend le manifeste et enregistre l'environnement de recette.
+description: Amorce la phase de validation fonctionnelle : installe les gabarits (plan de test, résultats d'exécution, mission Cowork, mise en page du rapport de recette), étend le manifeste et enregistre l'environnement de recette.
 ---
 
 # validation-init
@@ -31,7 +31,7 @@ validation peut être menée par **une autre personne**, sur une **autre machine
 **clone frais** où **aucun `.factory/` n'existe encore**. Ce skill ne présuppose donc
 **jamais** un `.factory/` déjà présent : **avant toute autre chose**, il (re)pose dans
 `.factory/validation/` les quatre gabarits (`plan-de-test.md`, `execution-resultats.md`,
-`mission-cowork.md`, `rapport-de-validation.md`) et le bloc `validation` du manifeste
+`mission-cowork.md`, `rapport-de-validation.html`) et le bloc `validation` du manifeste
 `manifest.json` (créé s'il manque).
 
 ## Setup inconditionnel + état de l'amont (jamais bloquant)
@@ -48,7 +48,8 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
 ## Procédure
 1. **Installer les gabarits** dans `.factory/validation/` (copier depuis le plugin
    `templates/`) : `plan-de-test.md`, `execution-resultats.md`, `mission-cowork.md`,
-   `rapport-de-validation.md`. **Toujours écraser ceux qui existent déjà** : ils sont
+   `rapport-de-validation.html` (la mise en page du rapport de recette imprimé - le gabarit du
+   **plugin** fait toujours foi). **Toujours écraser ceux qui existent déjà** : ils sont
    git-ignorés, régénérables, et n'ont aucune valeur propre - un projet initialisé avec une
    version antérieure du plugin garderait sinon un gabarit périmé et continuerait de produire
    des artefacts à l'ancienne forme. Créer `validation-out/` s'il n'existe pas.
@@ -90,6 +91,9 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
    - Bloc `maintenance` absent du manifeste -> signaler que le traitement des écarts passera par le
      plugin maintenance : lancer `/maintenance:maintenance-init` avant le premier bilan (les anomalies et
      évolutions se créent là-bas, jamais ici).
+   - Aucun navigateur Chrome, Chromium ou Edge installé -> signaler que le rapport de recette
+     est imprimé en PDF par un navigateur, et qu'il faudra en installer un avant le bilan (le
+     plan et l'exécution, eux, ne le demandent pas).
 
 ## Porte de sortie (vérification silencieuse)
 - Les 4 gabarits sont dans `.factory/validation/` et `validation-out/` existe.
@@ -119,4 +123,4 @@ JSON valide `{ "validation": { ... } }` (les autres phases le complètent par fu
   jamais la main sans question quand on attend quelque chose du testeur (cf.
   `references/interactive-loop.md`).
 
-Étape suivante : `/validation:plan-de-validation` - dériver le plan de test de la feature livrée à recetter. Ou `/maintenance:maintenance-init` d'abord si le terrain de maintenance manque (il faut l'avoir posé avant le premier bilan, c'est là que se créent les anomalies et les évolutions). Ou `/assembleur:premier-alimente-linear` si les tickets Linear n'ont jamais été créés et que tu veux que le rapport soit relié à sa feature.
+**Étape suivante : `/validation:plan-de-validation` - dériver le plan de test de la feature livrée à recetter. Ou `/maintenance:maintenance-init` d'abord si le terrain de maintenance manque (il faut l'avoir posé avant le premier bilan, c'est là que se créent les anomalies et les évolutions). Ou `/assembleur:premier-alimente-linear` si les tickets Linear n'ont jamais été créés et que tu veux que le rapport soit relié à sa feature.**

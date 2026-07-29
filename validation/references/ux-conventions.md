@@ -84,8 +84,10 @@ partagés, pas des codes internes.
 
 ## 4bis. Forme des tables écrites dans les artefacts
 La section 4 dit **ce qu'on met** dans une table ; celle-ci dit **comment on l'écrit**. Elle
-s'applique à **toute** table d'un fichier produit par la validation (plan de test, résultats
-d'exécution, rapport de recette). But : que le fichier reste lisible
+s'applique à **toute** table d'un fichier **Markdown** produit par la validation (plan de test,
+résultats d'exécution). *Le rapport de recette, lui, est un **PDF** mis en page par le gabarit
+du plugin : ses tables ne s'écrivent pas à la main et cette section ne le concerne pas.* But :
+que le fichier reste lisible
 **en Markdown brut**, pas seulement une fois rendu - une cellule de déroulé peut faire dix
 lignes à l'écran, et sans repère on ne voit plus où un cas finit et où le suivant commence.
 

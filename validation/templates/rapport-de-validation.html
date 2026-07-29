@@ -1,0 +1,419 @@
+<!-- Gabarit du rapport de recette (PDF).
+
+     Rendu par `scripts/build_rapport_pdf.py` : le script decoupe ce fichier sur les marqueurs
+     `<!-- ##NOM## -->`, substitue les jetons `{{JETON}}` avec les donnees du rapport, assemble
+     les pages, puis imprime en PDF via Chrome headless.
+
+     Tout le visuel vit ICI. Le script ne fabrique aucune balise de mise en forme et le modele
+     n'ecrit jamais de CSS : il ne remplit que des donnees.
+
+     Format : A4 paysage (les tables larges restent lisibles au videoprojecteur).
+     Points deja corriges - ne pas les defaire :
+       - le pied de page est en `margin-top:auto` dans un `.page` en flex, JAMAIS en
+         `position:fixed` (il remontait en haut des pages suivantes) ;
+       - `overflow-wrap:break-word` sur les cellules qui portent des chemins de fichiers ;
+       - `page-break-inside:avoid` sur les lignes de table ;
+       - la hauteur utile d'une page (`min-height`) tient compte des marges `@page`.
+
+     Typographie : guillemets droits, tiret simple, "..." en trois points, jamais de fleche
+     unicode ni de coche/croix (cf. la section Typographie de references/ux-conventions.md). -->
+
+<!-- ##DOCUMENT## -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>{{TITRE_DOC}}</title>
+<style>
+  @page { size: A4 landscape; margin: 13mm 14mm 15mm 14mm; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+    color: #16233a;
+    font-size: 9.4pt;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    page-break-after: always;
+    display: flex; flex-direction: column;
+    min-height: 179mm;
+  }
+  .page:last-child { page-break-after: auto; }
+  .pagefoot {
+    margin-top: auto; padding-top: 6px; border-top: 1px solid #e6ebf2;
+    display: flex; justify-content: space-between;
+    font-size: 7pt; color: #97a2b3;
+  }
+
+  /* ---------- en-tete ---------- */
+  .masthead {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-bottom: 2.5px solid #10243e; padding-bottom: 9px; margin-bottom: 16px;
+  }
+  .masthead .eyebrow {
+    font-size: 7.6pt; letter-spacing: .16em; text-transform: uppercase;
+    color: #6b7a90; font-weight: 600; margin-bottom: 3px;
+  }
+  .masthead h1 { font-size: 19pt; margin: 0; color: #10243e; letter-spacing: -.01em; font-weight: 650; }
+  .masthead .sub { font-size: 9pt; color: #55637a; margin-top: 3px; }
+  .masthead .idblock { text-align: right; font-size: 8.2pt; color: #55637a; line-height: 1.7; }
+  .masthead .idblock b { color: #10243e; font-weight: 600; }
+
+  .runhead {
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid #dbe2ec; padding-bottom: 7px; margin-bottom: 14px;
+  }
+  .runhead .t { font-size: 12.5pt; font-weight: 650; color: #10243e; }
+  .runhead .n { font-size: 8pt; color: #7b879b; letter-spacing: .08em; text-transform: uppercase; }
+
+  /* ---------- verdict ---------- */
+  .verdict {
+    display: flex; align-items: stretch; gap: 0;
+    border-radius: 4px; margin-bottom: 15px; overflow: hidden;
+  }
+  .verdict .vmain { padding: 12px 16px; flex: 1; }
+  .verdict .vlabel {
+    font-size: 7.6pt; letter-spacing: .15em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 2px;
+  }
+  .verdict .vvalue { font-size: 15pt; font-weight: 680; letter-spacing: -.01em; }
+  .verdict .vnote { font-size: 8.6pt; margin-top: 4px; max-width: 155mm; }
+  .verdict .vdate {
+    padding: 12px 16px; text-align: right;
+    min-width: 44mm; display: flex; flex-direction: column; justify-content: center;
+  }
+  .verdict .vdate .k { font-size: 7.4pt; letter-spacing: .13em; text-transform: uppercase; font-weight: 700; }
+  .verdict .vdate .v { font-size: 11pt; font-weight: 620; }
+
+  /* validee avec reserves : ambre */
+  .v-reserve { border: 1px solid #e8cf9c; border-left: 5px solid #c98a12; background: #fdf7ea; }
+  .v-reserve .vlabel, .v-reserve .vdate .k { color: #8a6412; }
+  .v-reserve .vvalue, .v-reserve .vdate .v { color: #6f4d09; }
+  .v-reserve .vnote { color: #6c5a33; }
+  .v-reserve .vdate { border-left: 1px solid #eadcb8; }
+  /* livraison validee : vert */
+  .v-ok { border: 1px solid #b9e0cd; border-left: 5px solid #0b7a4b; background: #f2fbf6; }
+  .v-ok .vlabel, .v-ok .vdate .k { color: #0b7a4b; }
+  .v-ok .vvalue, .v-ok .vdate .v { color: #075e39; }
+  .v-ok .vnote { color: #34614e; }
+  .v-ok .vdate { border-left: 1px solid #c9e6d8; }
+  /* refusee : rouge */
+  .v-ko { border: 1px solid #f0c2bd; border-left: 5px solid #b3261e; background: #fdf4f3; }
+  .v-ko .vlabel, .v-ko .vdate .k { color: #b3261e; }
+  .v-ko .vvalue, .v-ko .vdate .v { color: #8c1c16; }
+  .v-ko .vnote { color: #74423e; }
+  .v-ko .vdate { border-left: 1px solid #f2cdc9; }
+
+  /* ---------- chiffres cles ---------- */
+  .kpis { display: flex; gap: 9px; margin-bottom: 16px; }
+  .kpi {
+    flex: 1; border: 1px solid #dbe2ec; border-radius: 4px; padding: 10px 13px;
+    background: #fbfcfe;
+  }
+  .kpi .n { font-size: 20pt; font-weight: 660; line-height: 1.05; color: #10243e; font-variant-numeric: tabular-nums; }
+  .kpi .l { font-size: 7.7pt; letter-spacing: .08em; text-transform: uppercase; color: #6b7a90; font-weight: 600; margin-top: 3px; }
+  .kpi.ok .n { color: #0b7a4b; }
+  .kpi.ok { border-color: #b9e0cd; background: #f2fbf6; }
+  .kpi.ko .n { color: #b3261e; }
+  .kpi.ko { border-color: #f0c2bd; background: #fdf4f3; }
+
+  /* ---------- deux colonnes ---------- */
+  .cols { display: flex; gap: 18px; align-items: flex-start; }
+  .col-main { flex: 1.55; }
+  .col-side { flex: 1; }
+
+  h2 {
+    font-size: 8.4pt; letter-spacing: .15em; text-transform: uppercase;
+    color: #1b4f7f; font-weight: 700; margin: 0 0 8px 0;
+    padding-bottom: 5px; border-bottom: 1px solid #dbe2ec;
+  }
+  p { margin: 0 0 8px 0; text-align: justify; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ---------- tables ---------- */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: #10243e; color: #fff; font-size: 7.7pt; font-weight: 600;
+    letter-spacing: .07em; text-transform: uppercase;
+    padding: 7px 9px; text-align: left; vertical-align: middle;
+  }
+  tbody td {
+    padding: 5px 8px; border-bottom: 1px solid #e6ebf2; vertical-align: top;
+  }
+  tbody tr:nth-child(even) td { background: #f7f9fc; }
+  tbody tr.row-ko td { background: #fdf4f3; }
+  tbody tr.row-nt td { background: #fbf7ee; }
+  tbody tr { page-break-inside: avoid; }
+  td.c { text-align: center; white-space: nowrap; }
+  td.ref { font-family: "Consolas", "SF Mono", monospace; font-size: 8.1pt; white-space: nowrap; font-weight: 600; color: #10243e; }
+  td.phrase { font-size: 8.4pt; line-height: 1.42; }
+  td.proof {
+    font-family: "Consolas", "SF Mono", monospace; font-size: 7pt; color: #5b6a82;
+    overflow-wrap: break-word; word-break: break-word; line-height: 1.4;
+  }
+  td.src { font-size: 7.5pt; color: #5b6a82; line-height: 1.4; }
+  .muted { color: #a7b1c2; }
+
+  .info-table td { padding: 6px 0; border-bottom: 1px solid #e6ebf2; font-size: 8.7pt; }
+  .info-table td.k { color: #6b7a90; width: 38%; font-weight: 600; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table td.v { color: #16233a; overflow-wrap: break-word; word-break: break-word; }
+  .mono { font-family: "Consolas", "SF Mono", monospace; font-size: 8pt; }
+
+  /* ---------- badges ---------- */
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 11px;
+    font-size: 7.6pt; font-weight: 700; letter-spacing: .05em;
+  }
+  .badge-ok { background: #e3f5ec; color: #0b7a4b; border: 1px solid #b9e0cd; }
+  .badge-ko { background: #fdeceb; color: #b3261e; border: 1px solid #f0c2bd; }
+  .badge-nt { background: #fdf7ea; color: #8a6412; border: 1px solid #e8cf9c; }
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-size: 7.4pt; font-weight: 650; letter-spacing: .04em;
+  }
+  .tag-ano { background: #fdeceb; color: #b3261e; border: 1px solid #f0c2bd; }
+  .tag-evo { background: #f1ecfd; color: #5b35b8; border: 1px solid #d3c6f2; }
+  .tag-neutre { background: #f2f5f9; color: #4a5a72; border: 1px solid #d7dfea; }
+
+  /* ---------- ecart ---------- */
+  .ecart { border: 1px solid #dbe2ec; border-radius: 4px; overflow: hidden; }
+  .ecart-head {
+    background: #fdf4f3; border-bottom: 1px solid #f0c2bd;
+    padding: 10px 14px; display: flex; align-items: center; gap: 11px;
+  }
+  .ecart-head .id { font-family: "Consolas", monospace; font-weight: 700; font-size: 10pt; color: #b3261e; }
+  .ecart-head .ttl { font-size: 9.2pt; color: #16233a; flex: 1; }
+  .ecart-body { padding: 13px 14px; }
+  .ab { display: flex; gap: 13px; margin-bottom: 12px; }
+  .ab > div { flex: 1; border: 1px solid #e6ebf2; border-radius: 4px; padding: 10px 12px; }
+  .ab .k {
+    font-size: 7.4pt; letter-spacing: .13em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 4px;
+  }
+  .ab .attendu { background: #f7f9fc; }
+  .ab .attendu .k { color: #1b4f7f; }
+  .ab .constate { background: #fdf6f5; border-color: #f0d5d2; }
+  .ab .constate .k { color: #b3261e; }
+  .ab p { font-size: 8.5pt; margin: 0; text-align: left; }
+
+  .suite { display: flex; gap: 13px; }
+  .suite > div { flex: 1; }
+  .suite .k {
+    font-size: 7.4pt; letter-spacing: .13em; text-transform: uppercase;
+    color: #6b7a90; font-weight: 700; margin-bottom: 4px;
+  }
+  .suite p { font-size: 8.5pt; margin: 0; text-align: left; }
+
+  figure { margin: 0; }
+  figure img { width: 100%; border: 1px solid #dbe2ec; border-radius: 3px; display: block; }
+  figcaption { font-size: 7.5pt; color: #7b879b; margin-top: 5px; text-align: center; font-style: italic; }
+
+  .callout {
+    border-left: 3px solid #1b4f7f; background: #f5f8fc;
+    padding: 9px 13px; font-size: 8.6pt; border-radius: 0 3px 3px 0;
+  }
+
+  .signblock { display: flex; gap: 16px; margin-top: 14px; }
+  .signblock > div { flex: 1; border-top: 1px solid #c3cddb; padding-top: 6px; }
+  .signblock .k { font-size: 7.4pt; letter-spacing: .12em; text-transform: uppercase; color: #6b7a90; font-weight: 700; }
+  .signblock .v { font-size: 8.6pt; color: #16233a; margin-top: 20px; }
+</style>
+</head>
+<body>
+{{PAGES}}
+</body>
+</html>
+
+<!-- ##PAGE_SYNTHESE## -->
+<section class="page">
+  <div class="masthead">
+    <div>
+      <div class="eyebrow">Rapport de recette fonctionnelle</div>
+      <h1>{{FEATURE_INTITULE}}</h1>
+      <div class="sub">{{FEATURE_SOUS_TITRE}}</div>
+    </div>
+    <div class="idblock">
+      <div><b>Recette du</b> {{DATE}}</div>
+      <div><b>Perimetre</b> {{PERIMETRE}}</div>
+      <div><b>Execution</b> {{OUTIL_COURT}}</div>
+    </div>
+  </div>
+
+  <div class="verdict {{VERDICT_CLASSE}}">
+    <div class="vmain">
+      <div class="vlabel">Verdict de recette</div>
+      <div class="vvalue">{{VERDICT_VALEUR}}</div>
+      <div class="vnote">{{VERDICT_NOTE}}</div>
+    </div>
+    <div class="vdate">
+      <div class="k">{{VERDICT_ASIDE_K}}</div>
+      <div class="v">{{VERDICT_ASIDE_V}}</div>
+    </div>
+  </div>
+
+  <div class="kpis">
+{{KPIS}}
+  </div>
+
+  <div class="cols">
+    <div class="col-main">
+      <h2>Synthese</h2>
+{{SYNTHESE}}
+    </div>
+
+    <div class="col-side">
+      <h2>Execution de reference</h2>
+      <table class="info-table">
+{{INFO_ROWS}}
+      </table>
+{{CALLOUT}}
+    </div>
+  </div>
+
+  <div class="pagefoot">
+    <span>{{PIED_GAUCHE}}</span>
+    <span>{{PIED_DROIT}}</span>
+  </div>
+</section>
+
+<!-- ##PAGE_MATRICE## -->
+<section class="page">
+  <div class="runhead">
+    <div class="t">Matrice de tracabilite</div>
+    <div class="n">{{MATRICE_SOUS_TITRE}}</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:9%">Cas de test</th>
+        <th style="width:38%">Ce qui est verifie</th>
+        <th style="width:7%; text-align:center">Verdict</th>
+        <th style="width:19%">Preuve</th>
+        <th style="width:18%">Source</th>
+        <th style="width:9%; text-align:center">Decision</th>
+      </tr>
+    </thead>
+    <tbody>
+{{ROWS}}
+    </tbody>
+  </table>
+
+{{CALLOUT_MATRICE}}
+{{SIGNATURE}}
+
+  <div class="pagefoot">
+    <span>{{PIED_GAUCHE}}</span>
+    <span>{{PIED_DROIT}}</span>
+  </div>
+</section>
+
+<!-- ##PAGE_ECART## -->
+<section class="page">
+  <div class="runhead">
+    <div class="t">Ecart constate et suite donnee</div>
+    <div class="n">{{ECART_SOUS_TITRE}}</div>
+  </div>
+
+  <div class="ecart">
+    <div class="ecart-head">
+      <span class="id">{{ECART_ID}}</span>
+      <span class="ttl">{{ECART_TITRE}}</span>
+      {{ECART_TAG}}
+    </div>
+    <div class="ecart-body">
+      <div class="cols" style="gap:16px">
+        <div class="col-main">
+          <div class="ab">
+            <div class="attendu">
+              <div class="k">Attendu</div>
+              <p>{{ATTENDU}}</p>
+            </div>
+            <div class="constate">
+              <div class="k">Constate</div>
+              <p>{{CONSTATE}}</p>
+            </div>
+          </div>
+
+          <div class="suite">
+            <div>
+              <div class="k">Criteres en echec</div>
+              <p>{{CRITERES}}</p>
+            </div>
+            <div>
+              <div class="k">Nature retenue</div>
+              <p>{{NATURE}}</p>
+            </div>
+          </div>
+
+          <div class="suite" style="margin-top:12px">
+            <div>
+              <div class="k">Elements de diagnostic</div>
+              <p>{{DIAGNOSTIC}}</p>
+            </div>
+            <div>
+              <div class="k">Suite donnee</div>
+              <p>{{SUITE}}</p>
+            </div>
+          </div>
+        </div>
+
+{{FIGURE}}
+      </div>
+    </div>
+  </div>
+
+{{SIGNATURE}}
+
+  <div class="pagefoot">
+    <span>{{PIED_GAUCHE}}</span>
+    <span>{{PIED_DROIT}}</span>
+  </div>
+</section>
+
+<!-- ##FRAGMENT_KPI## -->
+    <div class="kpi {{KPI_CLASSE}}"><div class="n">{{KPI_N}}</div><div class="l">{{KPI_L}}</div></div>
+
+<!-- ##FRAGMENT_INFO_ROW## -->
+        <tr><td class="k">{{INFO_K}}</td><td class="v {{INFO_CLASSE}}">{{INFO_V}}</td></tr>
+
+<!-- ##FRAGMENT_ROW_CAS## -->
+      <tr class="{{ROW_CLASSE}}"><td class="ref">{{CAS_REF}}</td><td class="phrase">{{CAS_PHRASE}}</td><td class="c">{{CAS_BADGE}}</td><td class="proof">{{CAS_PREUVE}}</td><td class="src">{{CAS_SOURCE}}</td><td class="c">{{CAS_DECISION}}</td></tr>
+
+<!-- ##FRAGMENT_CALLOUT## -->
+  <div class="callout" style="margin-top:10px">{{CALLOUT_TEXTE}}</div>
+
+<!-- ##FRAGMENT_CALLOUT_SIDE## -->
+      <div class="callout" style="margin-top:12px">{{CALLOUT_TEXTE}}</div>
+
+<!-- ##FRAGMENT_FIGURE## -->
+        <div class="col-side">
+          <figure>
+            <img src="data:image/png;base64,{{IMAGE_B64}}" alt="Capture du cas {{ECART_ID}}">
+            <figcaption>{{LEGENDE}}</figcaption>
+          </figure>
+        </div>
+
+<!-- ##FRAGMENT_SIGNATURE## -->
+  <div class="signblock">
+    <div>
+      <div class="k">Verdict prononce</div>
+      <div class="v">{{SIGN_VERDICT}}</div>
+    </div>
+    <div>
+      <div class="k">Date de la recette</div>
+      <div class="v">{{SIGN_DATE}}</div>
+    </div>
+    <div>
+      <div class="k">Testeur</div>
+      <div class="v">{{SIGN_TESTEUR}}</div>
+    </div>
+    <div>
+      <div class="k">Visa</div>
+      <div class="v">&nbsp;</div>
+    </div>
+  </div>

@@ -91,7 +91,7 @@ le testeur valide (porte de recette). Les écarts constatés se traitent ensuite
 | 1 | `validation-init` | installe les gabarits + enregistre l'environnement de recette | après la première feature livrée |
 | 2 | `plan-de-validation` | dérive le plan de test de la spec : un cas par critère, tracé, jamais interprété | **plan validé par le testeur** (humain) |
 | 3 | `execution-validation` | joue le plan dans le navigateur (Chrome / Playwright / mission Cowork) ; résultats + preuves | le testeur choisit l'outil ; l'IA constate |
-| 4 | `rapport-de-validation` | rapport tracé critère par critère + tri des écarts vers `/maintenance:*` | **verdict de recette** (humain) |
+| 4 | `rapport-de-validation` | rapport PDF tracé critère par critère + tri des écarts vers `/maintenance:*` | **verdict de recette** (humain) |
 
 ### Phase 6 : `maintenance` (traitement des écarts après livraison)
 Quand le PO ou la validation fonctionnelle constate un écart sur une feature livrée, tout devient
