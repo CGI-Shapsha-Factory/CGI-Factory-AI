@@ -171,4 +171,4 @@ contrôler les états et patterns d'erreur.
 `designer-out/` - **y compris l'export du design system déposé dans
 `designer-out/maquette-de-claude-design/`**. La phase suivante lit le **repo committé**, pas ta session.
 
-Étape suivante : `/assembleur:assembleur-init` - démarrer la convergence des 3 contrats (fonctionnel, technique, design) puis l'amorçage du repo SpecKit. Ou corriger d'abord la couverture via `/designer:designer-atelier` (puis regénérer le prompt via `/designer:designer-prompt`).
+**Étape suivante : `/assembleur:assembleur-init` - démarrer la convergence des 3 contrats (fonctionnel, technique, design) puis l'amorçage du repo SpecKit. Ou corriger d'abord la couverture via `/designer:designer-atelier` (puis regénérer le prompt via `/designer:designer-prompt`).**

@@ -71,4 +71,4 @@ Read-modify-write + revalidation JSON, **en silence** :
 - **Pas de fuite de champ** en sortie utilisateur ; **manifeste mis à jour en silence** (voir
   `references/ux-conventions.md`).
 
-Étape suivante : `/designer:designer-atelier` - dérouler la checklist de couverture (fondation, expérience, technique) et arbitrer les choix d'expérience.
+**Étape suivante : `/designer:designer-atelier` - dérouler la checklist de couverture (fondation, expérience, technique) et arbitrer les choix d'expérience.**

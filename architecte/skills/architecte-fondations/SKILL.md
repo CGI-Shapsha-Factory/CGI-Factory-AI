@@ -127,4 +127,4 @@ appliquer les retours (ajout/fusion/suppression) ;
 À la fin, dire en clair **ce qui a été produit** (en prose, sans tableau, sans ligne
 de manifeste) puis l'étape suivante.
 
-Étape suivante : `/architecte:architecte-stack` - choisir la stack, activer les conventions, arbitrer les ADR et figer le walking skeleton.
+**Étape suivante : `/architecte:architecte-stack` - choisir la stack, activer les conventions, arbitrer les ADR et figer le walking skeleton.**

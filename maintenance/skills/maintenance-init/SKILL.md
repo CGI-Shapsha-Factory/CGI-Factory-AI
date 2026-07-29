@@ -111,4 +111,4 @@ le bloc `maintenance`).
 - **Typographie humaine** : aucun glyphe de style IA dans les sorties (cf. la section
   Typographie de `references/ux-conventions.md`).
 
-Étape suivante : `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` - créer le premier écart constaté en recette, selon sa nature.
+**Étape suivante : `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` - créer le premier écart constaté en recette, selon sa nature.**

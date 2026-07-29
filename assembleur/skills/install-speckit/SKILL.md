@@ -122,4 +122,4 @@ Les seuls messages d'arrêt viennent d'un environnement réellement non installa
 - **Manifeste en silence.** Le bloc `speckit` est écrit sans le narrer ; restitution en prose.
 - **TLS jamais désactivé.** On respecte la CA système (proxys d'entreprise) ; jamais `--skip-tls`.
 
-Étape suivante : `/speckit.constitution` en fournissant `assembleur-out/pre-constitution.md`, puis les `/speckit.specify` dans l'ordre de `assembleur-out/feature-map.md` (walking skeleton d'abord).
+**Étape suivante : `/speckit.constitution` en fournissant `assembleur-out/pre-constitution.md`, puis les `/speckit.specify` dans l'ordre de `assembleur-out/feature-map.md` (walking skeleton d'abord).**

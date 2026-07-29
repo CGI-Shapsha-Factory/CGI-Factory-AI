@@ -101,4 +101,4 @@ manifeste (l'état vit dans Linear).
 - **Typographie humaine** dans les commentaires et sorties (cf. la section Typographie de
   `references/ux-conventions.md`).
 
-Étape suivante : `/maintenance:creation-evolution` si l'anomalie a été requalifiée (geste du PO), sinon reprendre la recette de la feature.
+**Étape suivante : `/maintenance:creation-evolution` si l'anomalie a été requalifiée (geste du PO), sinon reprendre la recette de la feature.**

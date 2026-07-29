@@ -124,4 +124,4 @@ Le **message qui déclenche le skill** (et, le cas échéant, les arguments pass
 - **Rien d'inventé.** On ne met à jour qu'un ticket **confirmé** ; jamais un état non demandé.
 - **Rien dans le manifeste.** L'état vit dans Linear ; restitution en prose (aucun statut brut à l'écran).
 
-Étape suivante : reprendre la fabrication de la feature suivante (le cycle SpecKit `/speckit.specify` -> `/speckit.plan` -> `/speckit.tasks` -> `/speckit.implement`), et relancer ce skill dès qu'une tâche avance.
+**Étape suivante : reprendre la fabrication de la feature suivante (le cycle SpecKit `/speckit.specify` -> `/speckit.plan` -> `/speckit.tasks` -> `/speckit.implement`), et relancer ce skill dès qu'une tâche avance.**

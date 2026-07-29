@@ -191,4 +191,4 @@ critère source.)
   **Aucune question rédigée en prose dans le fil.** Un refus se termine par une question, jamais
   par un point final (cf. `references/interactive-loop.md`).
 
-Étape suivante : `/validation:execution-validation` - jouer le plan dans le navigateur contre l'environnement de recette. Ou relancer `/validation:plan-de-validation` si le plan doit être retouché avant exécution (la porte de régénération te demandera quoi faire de l'existant). Ou `/maintenance:creation-evolution` si un critère à clarifier révèle une spécification fausse ou incomplète (geste du PO, la spécification ne se corrige jamais ici).
+**Étape suivante : `/validation:execution-validation` - jouer le plan dans le navigateur contre l'environnement de recette. Ou relancer `/validation:plan-de-validation` si le plan doit être retouché avant exécution (la porte de régénération te demandera quoi faire de l'existant). Ou `/maintenance:creation-evolution` si un critère à clarifier révèle une spécification fausse ou incomplète (geste du PO, la spécification ne se corrige jamais ici).**

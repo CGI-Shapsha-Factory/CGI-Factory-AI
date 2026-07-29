@@ -148,4 +148,4 @@ par feature, une fois le contrat de design figé.)
 **et** `architecte-out/` - la phase suivante lit le **repo committé**, pas ta session ni ta machine. Un
 manifeste non re-committé après la validation ferait échouer `designer-init` (flag à `false`) sur un autre poste.
 
-Étape suivante : `/designer:designer-init` - démarrer le contrat de design (la phase design exige le cadrage ET l'architecture validés). Ou corriger d'abord les points signalés en relançant le skill concerné (`/architecte:architecte-fondations`, `/architecte:architecte-stack` ou `/architecte:architecte-livrables`).
+**Étape suivante : `/designer:designer-init` - démarrer le contrat de design (la phase design exige le cadrage ET l'architecture validés). Ou corriger d'abord les points signalés en relançant le skill concerné (`/architecte:architecte-fondations`, `/architecte:architecte-stack` ou `/architecte:architecte-livrables`).**

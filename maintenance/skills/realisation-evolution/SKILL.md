@@ -145,4 +145,4 @@ dans Linear).
 - **Typographie humaine** dans la spécification, les commentaires et les sorties (cf. la
   section Typographie de `references/ux-conventions.md`).
 
-Étape suivante : si l'évolution a été parquée en attente d'arbitrage, **relancer ce même skill** sur le ticket une fois le contrat partagé amendé. Sinon, `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` - tracer le prochain écart constaté en recette.
+**Étape suivante : si l'évolution a été parquée en attente d'arbitrage, relancer ce même skill sur le ticket une fois le contrat partagé amendé. Sinon, `/maintenance:creation-anomalie` ou `/maintenance:creation-evolution` - tracer le prochain écart constaté en recette.**

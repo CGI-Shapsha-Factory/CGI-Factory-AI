@@ -104,4 +104,4 @@ Read-modify-write + revalidation JSON, **en silence** (ne pas narrer la mise à 
 - **Pas de fuite de champ** ni de jargon en sortie utilisateur ; **manifeste mis à jour en silence** (voir
   `references/ux-conventions.md`).
 
-Étape suivante : `/designer:designer-prompt` - générer le prompt Claude Design et le rapport de couverture.
+**Étape suivante : `/designer:designer-prompt` - générer le prompt Claude Design et le rapport de couverture.**

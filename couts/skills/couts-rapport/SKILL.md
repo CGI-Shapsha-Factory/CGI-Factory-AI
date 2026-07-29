@@ -45,4 +45,4 @@ facturé. Tout en **français**.
 `rapport-couts.md` au 1ᵉʳ run, puis `rapport-couts-2.md`, `rapport-couts-3.md`, ... Indiquer en clair
 **le chemin du fichier écrit** (le script le renvoie).
 
-Étape suivante : relancer ce rapport quand voulu (un nouveau fichier numéroté sera créé à chaque fois).
+**Étape suivante : relancer ce rapport quand voulu (un nouveau fichier numéroté sera créé à chaque fois).**

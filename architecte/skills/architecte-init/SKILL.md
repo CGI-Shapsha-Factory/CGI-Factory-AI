@@ -196,4 +196,4 @@ redémarrage est prioritaire (sans lui, l'enforcement ne tourne pas).
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/architecte:architecte-fondations` - poser les fondations du contrat technique (lire le cadrage, drivers & attributs de qualité, composants).
+**Étape suivante : `/architecte:architecte-fondations` - poser les fondations du contrat technique (lire le cadrage, drivers & attributs de qualité, composants).**

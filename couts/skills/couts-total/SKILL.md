@@ -40,4 +40,4 @@ coût estimé € (USD) daté, disclaimer estimation.
 - **Un seul fichier.** Le script écrase `bilan-couts.md` à chaque run - le fichier reflète toujours
   l'état courant du journal local.
 
-Étape suivante : remettre `.factory/couts/bilan-couts.md` au chef d'équipe.
+**Étape suivante : remettre `.factory/couts/bilan-couts.md` au chef d'équipe.**

@@ -89,4 +89,4 @@ Linear).
 - **Typographie humaine** dans le titre, la description et les sorties (cf. la section
   Typographie de `references/ux-conventions.md`).
 
-Étape suivante : `/maintenance:correction-anomalie` - quand un développeur prend l'anomalie en charge.
+**Étape suivante : `/maintenance:correction-anomalie` - quand un développeur prend l'anomalie en charge.**

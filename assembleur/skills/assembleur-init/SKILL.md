@@ -122,4 +122,4 @@ sans écraser le bloc `assembly`).
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/assembleur:assembleur-convergence` - lire les 3 contrats en parallèle, les converger et produire le paquet de handoff SpecKit.
+**Étape suivante : `/assembleur:assembleur-convergence` - lire les 3 contrats en parallèle, les converger et produire le paquet de handoff SpecKit.**

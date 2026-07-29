@@ -68,4 +68,4 @@ repo ni dans le manifeste.
 - **Écart circonscrit ou rien** : une proposition floue ou trop large ne part pas dans Linear.
 - **Ne rien inventer** ; **typographie humaine** (cf. `references/ux-conventions.md`).
 
-Étape suivante : `/maintenance:realisation-evolution` - quand un développeur prend l'évolution en charge.
+**Étape suivante : `/maintenance:realisation-evolution` - quand un développeur prend l'évolution en charge.**

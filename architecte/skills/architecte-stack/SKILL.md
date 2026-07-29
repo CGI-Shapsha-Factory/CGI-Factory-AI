@@ -190,4 +190,4 @@ manifeste en silence (walking skeleton = l'`id` correspondant).
 À la fin, dire en clair **ce qui a été produit** (en prose, sans tableau, sans ligne
 de manifeste) puis l'étape suivante.
 
-Étape suivante : `/architecte:architecte-livrables` - produire les diagrammes, le registre de risques, le handoff design, les fichiers d'environnement et vérifier l'enforcement.
+**Étape suivante : `/architecte:architecte-livrables` - produire les diagrammes, le registre de risques, le handoff design, les fichiers d'environnement et vérifier l'enforcement.**

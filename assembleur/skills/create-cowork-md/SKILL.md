@@ -159,4 +159,4 @@ liens à chaque relance** : à la relance, les proposer en option recommandée.
 - **Rien d'inventé.** Uniquement du contenu réellement présent dans les 3 contrats / le manifeste.
 - **Manifeste en silence.** Aucun nom de clé à l'écran ; restitution en prose.
 
-Étape suivante : `/assembleur:install-speckit` - poser SpecKit dans le repo, puis fabriquer feature par feature (chaque ticket Linear pilote un cycle SpecKit).
+**Étape suivante : `/assembleur:install-speckit` - poser SpecKit dans le repo, puis fabriquer feature par feature (chaque ticket Linear pilote un cycle SpecKit).**

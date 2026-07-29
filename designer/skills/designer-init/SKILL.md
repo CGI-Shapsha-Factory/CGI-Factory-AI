@@ -132,4 +132,4 @@ des **gestes humains** (jamais auto).*
   `references/ux-conventions.md`).
 - **Skill indépendant.** La cohérence passe par le manifeste partagé.
 
-Étape suivante : `/designer:designer-ingestion` - ingérer les handoffs cadrage + architecte et pré-remplir la checklist de couverture.
+**Étape suivante : `/designer:designer-ingestion` - ingérer les handoffs cadrage + architecte et pré-remplir la checklist de couverture.**

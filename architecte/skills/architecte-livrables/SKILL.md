@@ -189,4 +189,4 @@ indéfini. Aucun fichier annexe.
 À la fin, dire en clair **ce qui a été produit** (en prose, sans tableau, sans ligne
 de manifeste) puis l'étape suivante.
 
-Étape suivante : `/architecte:architecte-coherence` - valider la cohérence du contrat technique avant le passage à l'assembleur.
+**Étape suivante : `/architecte:architecte-coherence` - valider la cohérence du contrat technique avant le passage à l'assembleur.**

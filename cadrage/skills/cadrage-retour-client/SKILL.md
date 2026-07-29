@@ -233,4 +233,4 @@ Read-modify-write puis revalidation JSON :
   (réjeu incrémental inline) et n'écrit aucun fichier nouveau dans
   `cadrage-out/`.
 
-Étape suivante : `/cadrage:cadrage-completude` - faire le point d'état sur le pack réconcilié (verdict Definition of Ready).
+**Étape suivante : `/cadrage:cadrage-completude` - faire le point d'état sur le pack réconcilié (verdict Definition of Ready).**

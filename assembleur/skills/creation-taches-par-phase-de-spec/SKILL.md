@@ -190,6 +190,6 @@ recréée ni proposée** : son travail est déjà suivi par ce ticket (cf. étap
   pas** dans Linear.
 - **Restitution en prose.** Aucun nom de clé à l'écran.
 
-Étape suivante : reprendre la fabrication SpecKit de la feature (`/speckit.implement`), puis
+**Étape suivante : reprendre la fabrication SpecKit de la feature (`/speckit.implement`), puis
 `/assembleur:update-issue-linear` pour faire avancer l'état d'un ticket `Feature` ou d'un sous-ticket
-`Task` quand une phase est terminée.
+`Task` quand une phase est terminée.**
