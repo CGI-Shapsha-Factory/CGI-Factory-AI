@@ -90,7 +90,9 @@ localise le journal `.factory/couts/` avec journal, pas le git root), `reference
 (bilan agrégé toutes-sessions -> `.factory/couts/bilan-couts.md`, écrasé à chaque run),
 `references/install_cost_hook.py` (copie `turn_cost.py` en `.claude/hooks/` + fusion hook SessionEnd,
 cible le dossier courant, lanceur Python détecté), `references/price-table.json`,
-`references/OTEL.md` (rollup org). Garde-fou : `scripts/check_costs.py`.
+`references/OTEL.md` (rollup org). Garde-fou : `scripts/check_costs.py` (dispositif en place +
+**typographie des rapports produits**). Nettoyage typographique partagé :
+`cost_report.sanitize_typo()`, importé par `cost_total.py`.
 
 ## Vérifications (à la place des tests)
 ```bash
@@ -110,4 +112,4 @@ manuelle) ; **dossier courant** (installation + mesure confinées au dossier de 
 externe et datée** ; **rapport par session** (pas de ventilation phase/feature/tier) ; installation
 **fusionnante** (ne jamais écraser un hook existant) ; **interaction en français, sans mécanique
 exposée** ; **manifeste silencieux** - ne jamais annoncer que le bloc `costs` est écrit, ni afficher un
-`champ: valeur`/`true`/`false` (l'utilisateur ne s'intéresse pas à l'état du manifeste). **Typographie humaine** : aucun glyphe de style IA dans les rapports/sorties (pas de tiret cadratin, de points de suspension unicode, de flèches unicode, de guillemets à chevrons, ni de coche/croix ; équivalents clavier, cf. la section Typographie de `references/ux-conventions.md`).
+`champ: valeur`/`true`/`false` (l'utilisateur ne s'intéresse pas à l'état du manifeste). **Typographie humaine, garantie par le code** : aucun glyphe de style IA dans les rapports (pas de tiret cadratin, de points de suspension unicode, de flèches unicode, de guillemets à chevrons, de coche/croix, de point médian ni d'espace insécable). Ce n'est pas qu'une consigne de rédaction : `cost_report.sanitize_typo()` nettoie le **document entier** juste avant écriture (appelé par les deux générateurs), et `check_costs.py` **échoue** si un rapport de `.factory/couts/` en porte encore un - en nommant le fichier, la ligne et le glyphe. Une chaîne ajoutée plus tard dans un générateur est donc couverte d'office ; ne jamais retirer l'appel au nettoyage. Cf. la section Typographie de `references/ux-conventions.md`.

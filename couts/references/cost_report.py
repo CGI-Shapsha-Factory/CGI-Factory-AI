@@ -23,6 +23,46 @@ USD_EUR = 0.92
 RATE_DATE = "2026-07-06"
 
 
+# Typographie humaine : le rapport est un document partage, il doit se lire comme de la frappe
+# clavier, pas comme une sortie de modele. Ces caracteres n'y entrent jamais - on ne compte pas
+# sur la facon dont les chaines ont ete tapees, on nettoie le document avant de l'ecrire.
+# Liste de reference : la section Typographie de references/ux-conventions.md.
+#
+# ATTENTION : cette table est la DEFINITION des caracteres interdits, elle les contient donc
+# forcement. Un balayage typographique du depot ne doit JAMAIS la "nettoyer" : il la viderait
+# de son sens et le nettoyage deviendrait silencieusement inoperant.
+_TYPO = {
+    "—": " - ",    # tiret cadratin (em dash)
+    "–": " - ",    # tiret demi-cadratin (en dash)
+    "…": "...",    # points de suspension
+    "→": "->",     # fleche droite
+    "←": "<-",     # fleche gauche
+    "↔": "<->",    # fleche double
+    "«": '"',      # guillemet ouvrant a chevrons
+    "»": '"',      # guillemet fermant a chevrons
+    "“": '"',      # guillemet courbe ouvrant
+    "”": '"',      # guillemet courbe fermant
+    "‘": "'",      # apostrophe courbe ouvrante
+    "’": "'",      # apostrophe courbe fermante
+    "✓": "Oui",    # coche
+    "✗": "Non",    # croix
+    "·": " - ",    # point median
+    " ": " ",      # espace insecable
+    " ": " ",      # espace fine insecable
+}
+
+
+def sanitize_typo(text):
+    """Remplace tout glyphe de style IA par son equivalent clavier.
+
+    Applique au document entier juste avant ecriture : une chaine ajoutee plus tard dans le
+    generateur est couverte sans qu'on ait a y penser.
+    """
+    for glyphe, remplacement in _TYPO.items():
+        text = text.replace(glyphe, remplacement)
+    return text
+
+
 _SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "__pycache__", "dist", "build", ".factory"}
 
 
@@ -183,7 +223,7 @@ def build_report(root):
         "records": len(records), "price_table_date": pdate,
         "fx": {"usd_eur": USD_EUR, "date": RATE_DATE},
     }
-    return "\n".join(lines), data
+    return sanitize_typo("\n".join(lines)), data
 
 
 def _next_report_path(outdir):

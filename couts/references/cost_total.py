@@ -84,9 +84,9 @@ def main(argv):
     lines.append(f"- **Sessions** : {n_sessions}")
     lines.append(f"- **Total tokens** : {_fmt_int(total_tok)}")
     lines.append(
-        f"  entrée {_fmt_token(tok['input'])} · sortie {_fmt_token(tok['output'])} · "
-        f"cache lu {_fmt_token(tok['cache_read'])} · "
-        f"cache 5m {_fmt_token(tok['cache_write_5m'])} · "
+        f"  entrée {_fmt_token(tok['input'])}, sortie {_fmt_token(tok['output'])}, "
+        f"cache lu {_fmt_token(tok['cache_read'])}, "
+        f"cache 5m {_fmt_token(tok['cache_write_5m'])}, "
         f"cache 1h {_fmt_token(tok['cache_write_1h'])}"
     )
     lines.append(f"- **Coût estimé (simulation)** : {cost_report.eur(sim_usd)} € (~{sim_usd:.2f} USD)")
@@ -103,7 +103,8 @@ def main(argv):
             "_Aucun enregistrement trouvé - lancer `couts-init` puis attendre la fin d'une session._"
         )
 
-    md = "\n".join(lines)
+    # Typographie humaine : nettoyage du document entier avant restitution et ecriture.
+    md = cost_report.sanitize_typo("\n".join(lines))
     print(md)
     try:
         with open(os.path.join(outdir, "bilan-couts.md"), "w", encoding="utf-8") as f:

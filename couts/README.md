@@ -57,7 +57,7 @@ chemin du fichier écrit.
 couts/
 ├── .claude-plugin/plugin.json
 ├── skills/{couts-init, couts-rapport}/SKILL.md
-├── references/   # turn_cost.py (hook SessionEnd) · cost_report.py · install_cost_hook.py · price-table.json · OTEL.md
+├── references/   # turn_cost.py (hook SessionEnd), cost_report.py, install_cost_hook.py, price-table.json, OTEL.md
 ├── scripts/check_costs.py
 └── README.md
 ```

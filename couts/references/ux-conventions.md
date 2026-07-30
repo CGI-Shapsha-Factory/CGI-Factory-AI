@@ -10,4 +10,13 @@ S'applique à **tout ce que la Factory écrit** : les rapports, les tableaux, et
 - guillemets à chevrons (U+00AB / U+00BB) -> guillemets droits "...".
 - coche / croix (U+2713 / U+2717) -> les mots Oui / Non.
 - espaces insécables (U+00A0 / U+202F) et caractères invisibles -> une espace normale.
+- point médian (U+00B7) en séparateur -> une virgule, ou " - ".
 Objectif : le texte doit ressembler à de la frappe clavier humaine, pas à une sortie de modèle.
+
+**Pour les rapports, ce n'est plus une consigne mais une garantie.** `rapport-couts.md` et
+`bilan-couts.md` sont des documents qu'on transmet tels quels : les générateurs
+(`cost_report.py`, `cost_total.py`) passent le document entier dans `sanitize_typo()` **juste
+avant de l'écrire**, et `check_costs.py` **échoue** si un rapport présent dans `.factory/couts/`
+porte encore un de ces caractères. Une chaîne ajoutée plus tard dans un générateur est donc
+couverte sans qu'on ait à y penser. Ne jamais contourner l'appel au nettoyage pour "gagner un
+appel" : c'est lui qui tient la promesse.

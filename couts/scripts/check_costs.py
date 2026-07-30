@@ -28,6 +28,51 @@ def _project_root(manifest_path):
     return os.path.dirname(d) if os.path.basename(d) == "cadrage-out" else d
 
 
+# Glyphes de style IA interdits dans les rapports (cf. section Typographie de
+# references/ux-conventions.md). Les generateurs les nettoient avant ecriture ; ce controle
+# verifie le resultat, pour qu'un rapport ecrit a la main ou par une version anterieure du
+# plugin ne passe pas inapercu.
+#
+# ATTENTION : cette table est la DEFINITION des caracteres interdits, elle les contient donc
+# forcement. Un balayage typographique du depot ne doit JAMAIS la "nettoyer" : le controle
+# passerait alors sur tout, sans rien detecter.
+_GLYPHES_INTERDITS = {
+    "—": "tiret cadratin",
+    "–": "tiret demi-cadratin",
+    "…": "points de suspension unicode",
+    "→": "fleche unicode",
+    "←": "fleche unicode",
+    "↔": "fleche unicode",
+    "«": "guillemet a chevrons",
+    "»": "guillemet a chevrons",
+    "✓": "coche",
+    "✗": "croix",
+    "·": "point median",
+    " ": "espace insecable",
+    " ": "espace fine insecable",
+}
+
+
+def _check_typographie(root, problems):
+    """Aucun glyphe de style IA dans les rapports produits : ils sont partages tels quels."""
+    couts = os.path.join(root, ".factory", "couts")
+    rapports = sorted(glob.glob(os.path.join(couts, "rapport-couts*.md")))
+    rapports += sorted(glob.glob(os.path.join(couts, "bilan-couts.md")))
+    for rapport in rapports:
+        try:
+            contenu = open(rapport, encoding="utf-8").read()
+        except OSError:
+            problems.append(f"{os.path.relpath(rapport, root)} illisible")
+            continue
+        for i, ligne in enumerate(contenu.splitlines(), 1):
+            trouves = sorted({_GLYPHES_INTERDITS[c] for c in ligne if c in _GLYPHES_INTERDITS})
+            if trouves:
+                problems.append(
+                    f"{os.path.relpath(rapport, root)}:{i} typographie : {', '.join(trouves)} "
+                    f"(regenerer le rapport)"
+                )
+
+
 def main(argv):
     manifest = _manifest_path(argv)
     root = _project_root(manifest)
@@ -65,7 +110,7 @@ def main(argv):
     # .gitignore doit couvrir .factory/couts/ (donnees individuelles, jamais poussees)
     gitignore = os.path.join(root, ".gitignore")
     if not os.path.isfile(gitignore):
-        problems.append(".gitignore absent — .factory/couts/ non git-ignore (lancer couts-init)")
+        problems.append(".gitignore absent : .factory/couts/ non git-ignore (lancer couts-init)")
     else:
         try:
             lines_gi = open(gitignore, encoding="utf-8").read().splitlines()
@@ -75,7 +120,7 @@ def main(argv):
             )
             if not covered:
                 problems.append(
-                    ".factory/couts/ non git-ignore — ajouter la ligne dans .gitignore (lancer couts-init)"
+                    ".factory/couts/ non git-ignore : ajouter la ligne dans .gitignore (lancer couts-init)"
                 )
         except OSError:
             problems.append(".gitignore illisible")
@@ -94,12 +139,14 @@ def main(argv):
         except ValueError:
             problems.append(f"{os.path.relpath(jf, root)} : JSONL invalide")
 
+    _check_typographie(root, problems)
+
     if problems:
         print("DISPOSITIF DE COUTS INCOMPLET :", file=sys.stderr)
         for p in problems:
             print(f"  - {p}", file=sys.stderr)
         return 1
-    print("COUTS OK — compteur pose, table datee, journal exploitable.")
+    print("COUTS OK : compteur pose, table datee, journal exploitable.")
     return 0
 
 
