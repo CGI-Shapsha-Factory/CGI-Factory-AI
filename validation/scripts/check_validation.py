@@ -21,13 +21,18 @@ Avec une feature en second argument (le nom de son dossier sous validation-out/)
     humain, son absence signale une porte de recette non franchie ;
   - repli historique : un ancien `rapport-de-validation.md` existe mais son verdict n'est pas
     rempli (on exige une ligne `- **Verdict** : <valeur>` dont la valeur n'est pas le
-    placeholder entre parentheses du gabarit).
+    placeholder entre parentheses du gabarit) ;
+  - typographie : un glyphe de style IA (tiret cadratin, points de suspension unicode, fleche,
+    guillemet a chevrons ou courbe, coche/croix, point median, espace insecable) subsiste dans
+    les donnees du rapport ou dans un artefact Markdown commite - le message nomme le fichier,
+    la ligne et le glyphe.
 
 Exit 0 si tout est present, sinon 1.
 
 Usage:
     python check_validation.py [chemin/vers/manifest.json] [feature]
 """
+import glob
 import json
 import os
 import re
@@ -35,6 +40,36 @@ import sys
 
 GABARITS = ("plan-de-test.md", "execution-resultats.md", "mission-cowork.md",
             "rapport-de-validation.html")
+
+# Typographie humaine : le rapport se lit en reunion et se signe, il doit ressembler a de la
+# frappe clavier. `build_rapport_pdf.py` nettoie deja tout ce qui entre dans le PDF ; ce controle
+# couvre la SOURCE (donnees du rapport) et les artefacts Markdown commites, ou un glyphe recopie
+# d'une execution amont resterait sinon invisible.
+#
+# ATTENTION : cette table est la DEFINITION des caracteres interdits, elle les contient donc
+# forcement. Un balayage typographique du depot ne doit JAMAIS la "nettoyer".
+_GLYPHES_INTERDITS = {
+    "—": "tiret cadratin",
+    "–": "tiret demi-cadratin",
+    "…": "points de suspension unicode",
+    "→": "fleche droite",
+    "←": "fleche gauche",
+    "↔": "fleche double",
+    "«": "guillemet a chevrons",
+    "»": "guillemet a chevrons",
+    "“": "guillemet courbe",
+    "”": "guillemet courbe",
+    "‘": "apostrophe courbe",
+    "’": "apostrophe courbe",
+    "✓": "coche",
+    "✗": "croix",
+    "·": "point median",
+    # Caracteres invisibles : ecrits en echappement, jamais en litteral. Un litteral se fait
+    # aplatir en espace ordinaire par un editeur ou un copier-coller, et la cle apparie alors
+    # TOUTES les lignes contenant une espace (faux positif sur tout le fichier).
+    " ": "espace insecable",
+    " ": "espace fine insecable",
+}
 
 
 def _manifest_path(argv):
@@ -123,6 +158,33 @@ def _check_feature(root, feature, problems):
             f"n'est ecrit qu'apres le verdict humain : la porte de recette n'a pas ete franchie")
 
     _check_rapport_md(fdir, feature, problems)
+    _check_typographie(root, feature, problems)
+
+
+def _check_typographie(root, feature, problems):
+    """Aucun glyphe de style IA dans la source du rapport ni dans les artefacts commites.
+
+    Le PDF est binaire, il n'est pas balaye : c'est `build_rapport_pdf.sanitize_typo` qui le
+    couvre. Ici on controle ce qui l'alimente et ce qui part dans git.
+    """
+    cibles = [os.path.join(root, ".factory", "validation", f"rapport-{feature}.json")]
+    fdir = os.path.join(root, "validation-out", feature)
+    for motif in ("*.md", os.path.join("resultats", "*.md")):
+        cibles.extend(glob.glob(os.path.join(fdir, motif)))
+    for chemin in cibles:
+        if not os.path.isfile(chemin) or os.sep + "_archives" + os.sep in chemin:
+            continue
+        try:
+            with open(chemin, encoding="utf-8-sig") as f:
+                lignes = f.readlines()
+        except OSError:
+            continue
+        rel = os.path.relpath(chemin, root).replace(os.sep, "/")
+        for numero, ligne in enumerate(lignes, start=1):
+            trouves = sorted({nom for glyphe, nom in _GLYPHES_INTERDITS.items() if glyphe in ligne})
+            if trouves:
+                problems.append(f"{rel}:{numero} typographie : {', '.join(trouves)} "
+                                f"(remplacer par l'equivalent clavier)")
 
 
 def _check_rapport_md(fdir, feature, problems):

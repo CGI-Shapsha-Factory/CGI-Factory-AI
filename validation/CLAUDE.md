@@ -93,7 +93,8 @@ jamais écrasé.
 Garde-fou déterministe : `scripts/check_validation.py` (bloc `validation` + gabarits en
 place ; par feature : plan présent et tracé, et si les données du rapport existent, **le PDF
 produit** - il n'est écrit qu'après le verdict, donc sa présence atteste la porte ; un ancien
-rapport Markdown reste contrôlé sur son verdict, en repli).
+rapport Markdown reste contrôlé sur son verdict, en repli ; **typographie** des données du
+rapport et des artefacts Markdown committés, `_archives/` hors balayage).
 Rendu du rapport : `scripts/build_rapport_pdf.py` (données JSON + gabarit HTML -> PDF via
 Chrome headless ; pagination, numéros de page, pastilles et encadrés calculés là, jamais en
 session).
@@ -139,7 +140,16 @@ des données, le gabarit et le script font la page. **Contrat de sortie commun**
 d'exécution. **Fiabilité** : relance unique triée avant KO, budget d'étapes borné, preuve à
 chaque verdict, jamais d'action destructive sans confirmation, données de test uniquement.
 **Aucun état d'avancement dans le manifeste** (rapport committé + Linear). Restitutions en
-prose, manifeste mis à jour en silence ; **typographie humaine** : aucun glyphe de style IA
-dans les artefacts/commentaires/sorties (pas de tiret cadratin, de points de suspension
-unicode, de flèches unicode, de guillemets à chevrons, ni de coche/croix ; équivalents
-clavier, cf. la section Typographie de `references/ux-conventions.md`).
+prose, manifeste mis à jour en silence ; **typographie humaine, garantie par le code** : aucun
+glyphe de style IA dans les artefacts/commentaires/sorties (pas de tiret cadratin ni
+demi-cadratin, de points de suspension unicode, de flèches unicode, de guillemets à chevrons ou
+courbes, d'apostrophes courbes, de coche/croix, de point médian ni d'espace insécable ;
+équivalents clavier, cf. la section Typographie de `references/ux-conventions.md`). Ce n'est pas
+qu'une consigne de rédaction : **tout** le contenu du rapport est de la prose rédigée par le
+modèle, et `html.escape` ne touche que `& < >` - sans nettoyage, un glyphe traverserait verbatim
+jusqu'au PDF. `build_rapport_pdf.sanitize_typo()` nettoie donc dans `_texte` et `_rich`, les deux
+entonnoirs par lesquels passe chaque chaîne (un champ ajouté plus tard est couvert d'office ;
+nettoyage **avant** l'échappement, sinon les balises produites seraient abîmées), et
+`check_validation.py` **échoue** si un glyphe subsiste dans les données du rapport ou un artefact
+Markdown committé, en nommant fichier, ligne et glyphe. Le PDF étant binaire n'est pas balayé :
+c'est la sanitisation qui le couvre. Ne jamais retirer l'appel au nettoyage.

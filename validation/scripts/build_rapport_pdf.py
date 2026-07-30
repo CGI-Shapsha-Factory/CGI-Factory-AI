@@ -50,6 +50,55 @@ CHROME_PATH = ("google-chrome", "google-chrome-stable", "chromium", "chromium-br
                "chrome", "msedge")
 
 
+# --------------------------------------------------------------------------- typographie
+
+# Le rapport est un document montre en reunion et signe : il doit se lire comme de la frappe
+# clavier, pas comme une sortie de modele. TOUT le contenu du rapport est de la prose redigee par
+# le modele (synthese, phrase de chaque cas, sept champs de prose par ecart, note de verdict...),
+# et `html.escape` ne touche que `& < >` : sans ce nettoyage, un glyphe unicode traverse verbatim
+# jusqu'au PDF. Liste de reference : la section Typographie de references/ux-conventions.md.
+#
+# Table VOLONTAIREMENT dupliquee depuis couts/references/cost_report.py : les plugins sont
+# distribues separement par la marketplace, un import inter-plugins casserait a l'installation.
+# Les deux tables doivent rester identiques.
+#
+# ATTENTION : cette table est la DEFINITION des caracteres interdits, elle les contient donc
+# forcement. Un balayage typographique du depot ne doit JAMAIS la "nettoyer" : il la viderait
+# de son sens et le nettoyage deviendrait silencieusement inoperant.
+_TYPO = {
+    "—": " - ",    # tiret cadratin (em dash)
+    "–": " - ",    # tiret demi-cadratin (en dash)
+    "…": "...",    # points de suspension
+    "→": "->",     # fleche droite
+    "←": "<-",     # fleche gauche
+    "↔": "<->",    # fleche double
+    "«": '"',      # guillemet ouvrant a chevrons
+    "»": '"',      # guillemet fermant a chevrons
+    "“": '"',      # guillemet courbe ouvrant
+    "”": '"',      # guillemet courbe fermant
+    "‘": "'",      # apostrophe courbe ouvrante
+    "’": "'",      # apostrophe courbe fermante
+    "✓": "OK",     # coche (dans un rapport de test : OK)
+    "✗": "KO",     # croix (dans un rapport de test : KO)
+    "·": " - ",    # point median
+    # Caracteres invisibles : ecrits en echappement, jamais en litteral (un litteral se fait
+    # aplatir en espace ordinaire par un editeur, et la substitution devient un no-op silencieux).
+    " ": " ",  # espace insecable
+    " ": " ",  # espace fine insecable
+}
+
+
+def sanitize_typo(text):
+    """Remplace tout glyphe de style IA par son equivalent clavier.
+
+    Applique dans `_texte` et `_rich`, les deux entonnoirs par lesquels passe chaque chaine
+    redigee par le modele : un champ ajoute plus tard au rapport est donc couvert d'office.
+    """
+    for glyphe, remplacement in _TYPO.items():
+        text = text.replace(glyphe, remplacement)
+    return text
+
+
 # --------------------------------------------------------------------------- gabarit
 
 def _fragments(source):
@@ -69,8 +118,8 @@ def _remplir(gabarit, valeurs):
 
 
 def _texte(valeur):
-    """Texte simple echappe (aucune balise ne passe)."""
-    return html.escape(str(valeur or ""), quote=False)
+    """Texte simple echappe (aucune balise ne passe), typographie nettoyee."""
+    return html.escape(sanitize_typo(str(valeur or "")), quote=False)
 
 
 def _rich(valeur):
@@ -78,7 +127,9 @@ def _rich(valeur):
 
     Le modele ecrit du texte, jamais du HTML : on lui laisse ces trois marques et rien d'autre.
     """
-    texte = html.escape(str(valeur or ""), quote=False)
+    # Nettoyage AVANT l'echappement et avant le micro-formatage : nettoyer apres abimerait
+    # les balises <b> et <span> qu'on vient de produire.
+    texte = html.escape(sanitize_typo(str(valeur or "")), quote=False)
     texte = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", texte, flags=re.DOTALL)
     texte = re.sub(r"`([^`]+?)`", r'<span class="mono">\1</span>', texte)
     return texte.replace("\n", "<br>")

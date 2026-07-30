@@ -201,7 +201,11 @@ produit - le PDF n'étant écrit qu'après le verdict, sa présence atteste la p
 - **Traçabilité totale** : aucun critère du plan n'est absent de la matrice.
 - Manifeste silencieux, restitutions en prose, typographie humaine (cf.
   `references/ux-conventions.md`) - y compris dans les données du rapport : guillemets droits,
-  tiret simple, "..." en trois points, jamais de flèche unicode ni de coche/croix.
+  tiret simple, "..." en trois points, jamais de flèche unicode ni de coche/croix. **Le rendu
+  nettoie de toute façon** les 17 glyphes avant impression, donc un glyphe recopié d'un fichier
+  d'exécution n'atteint jamais le PDF ; ce n'est pas une raison pour en écrire : le garde-fou
+  `check_validation.py` échoue sur les données et les artefacts committés, en nommant fichier,
+  ligne et glyphe.
 - **Mécanique interne silencieuse** : ne jamais annoncer au testeur le fichier de données de
   `.factory/` (dossier caché, git-ignoré, sans intérêt pour lui) ; on lui confirme le PDF.
 - **Toujours afficher la phrase "Étape suivante"** avec ses branches en fin d'exécution, en la

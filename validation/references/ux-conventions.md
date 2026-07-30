@@ -5,13 +5,25 @@ S'applique à **tout ce que la Factory écrit** : le plan de test, la mission Co
 résultats d'exécution, le rapport de recette, les commentaires
 Linear, et le texte affiché. Ne jamais employer ces caractères ; toujours l'équivalent
 clavier naturel :
-- tiret cadratin (em dash, U+2014) -> ponctuation adaptée au contexte : deux-points dans un titre, virgule ou parenthèses dans une phrase, tiret simple " - " dans une liste.
+- tiret cadratin (em dash, U+2014) et demi-cadratin (en dash, U+2013) -> ponctuation adaptée au contexte : deux-points dans un titre, virgule ou parenthèses dans une phrase, tiret simple " - " dans une liste.
 - points de suspension unicode (U+2026) -> trois points ASCII "..."
-- flèches unicode (U+2192 / U+2194) -> "->" / "<->" (ou un mot : "vers", "puis").
-- guillemets à chevrons (U+00AB / U+00BB) -> guillemets droits "...".
+- flèches unicode (U+2192 / U+2190 / U+2194) -> "->" / "<-" / "<->" (ou un mot : "vers", "puis").
+- guillemets à chevrons (U+00AB / U+00BB) et guillemets courbes (U+201C / U+201D) -> guillemets droits "...".
+- apostrophes courbes (U+2018 / U+2019) -> apostrophe droite '.
 - coche / croix (U+2713 / U+2717) -> les mots Oui / Non (dans un rapport de test : OK / KO).
+- point médian (U+00B7) -> tiret simple " - ".
 - espaces insécables (U+00A0 / U+202F) et caractères invisibles -> une espace normale.
 Objectif : le texte doit ressembler à de la frappe clavier humaine, pas à une sortie de modèle.
+
+**Garantie par le code, pas seulement énoncée.** Les 17 glyphes ci-dessus sont nettoyés
+automatiquement par `sanitize_typo()` dans `scripts/build_rapport_pdf.py`, appelé depuis `_texte`
+et `_rich` - les deux entonnoirs par lesquels passe **chaque** chaîne rédigée par le modèle. Un
+champ ajouté plus tard au rapport est donc couvert d'office. En second rideau,
+`scripts/check_validation.py` **échoue** si un glyphe subsiste dans les données du rapport ou dans
+un artefact Markdown committé, en nommant le fichier, la ligne et le glyphe. Les deux tables sont
+la **définition** des caractères interdits : un balayage typographique du dépôt ne doit jamais les
+"nettoyer". Elles reflètent volontairement celle du plugin `couts` (les plugins sont distribués
+séparément, un import inter-plugins casserait à l'installation) : les garder identiques.
 
 Règles transverses pour tout ce que les skills affichent à l'utilisateur. Mêmes principes
 que les autres plugins de la Factory.
