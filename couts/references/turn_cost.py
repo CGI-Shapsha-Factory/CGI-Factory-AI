@@ -63,17 +63,25 @@ def load_price_table(root):
         return None
 
 
-def resolve_prices(model, table):
+def resolve_prices(model, table, ts=None):
     if not table:
         return None, None
     # Overrides par PREFIXE (cle la plus longue d'abord) : un id date comme
     # `claude-opus-4-1-20250805` doit matcher l'override `claude-opus-4-1` (sinon il
     # retomberait en silence sur le tarif de base du tier, sous-facture).
     overrides = table.get("overrides") or {}
+    jour = (ts or "")[:10]
     ov = None
     for k in sorted(overrides, key=len, reverse=True):
         if (model or "").startswith(k):
-            ov = overrides[k]
+            cand = overrides[k]
+            # `until` = tarif d'introduction, borne dans le temps : passe cette date le tier
+            # reprend de lui-meme, sans edition de la table. Un message non date ne recoit
+            # PAS la remise : au benefice du doute on facture au tarif catalogue, jamais moins.
+            fin = cand.get("until")
+            if fin and (not jour or jour > fin):
+                break
+            ov = cand
             break
     tiers = table.get("tiers") or {}
     tier = next((t for t in TIERS if t in (model or "")), None)
@@ -205,7 +213,7 @@ def main():
     records = []
     for (mid, req), rec in seen.items():
         cats = cats_of(rec["usage"])
-        tier, prices = resolve_prices(rec["model"], table)
+        tier, prices = resolve_prices(rec["model"], table, rec["ts"])
         cost = cost_of(cats, prices, mult_1h) if prices else None
         records.append({
             "schema": SCHEMA, "session_id": sid, "key": f"{mid}:{req}", "dev": dev,

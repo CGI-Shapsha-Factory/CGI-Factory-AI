@@ -18,6 +18,14 @@ Gemini est un **systeme externe** (pas le repo cible, pas un artefact SpecKit). 
 fichier dans l'arbre versionne** : il ne pose qu'un **diff temporaire git-ignore** (`.factory/gemini-review/`)
 et restitue **en session**. **La revue est faite par Gemini, jamais par Claude** (c'est tout l'interet).
 
+## Consommation mesuree (cout REEL)
+Ces appels sont **reellement factures** : ce sont les seuls de la Factory. `gemini_review.py`
+journalise donc la consommation de **chaque appel** (tokens d'entree, de sortie et de raisonnement,
+lus dans `usage_metadata` du SDK) dans `.factory/couts/` (git-ignore), ou le plugin `couts` la
+tarife et la restitue dans le **tableau de cout reel** du rapport, une ligne par jour. Rien a
+lancer : la mesure est automatique, **best-effort et jamais bloquante** - une revue ne doit
+jamais echouer parce que la mesure a echoue. Voir `couts/CLAUDE.md`.
+
 ## Etape 1 : Pre-requis : cle API Gemini
 Verifier la cle Gemini. **Precedence** : le `.env` du projet (`GEMINI_API_KEY`, la cle que ce skill
 gere) **prime** sur les variables d'environnement ambiantes (`GEMINI_API_KEY`/`GOOGLE_API_KEY`) - pour

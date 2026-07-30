@@ -4,10 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working **on th
 (this directory). Factory-wide overview: `../CLAUDE.md`.
 
 ## Ce qu'est le plugin
-`couts` = **mesure du coût de simulation** de la fabrication (pas une phase). Un seul chiffre : les
-tokens des sessions valorisés au **tarif API** (estimation "combien ça coûterait en API", jamais un
-montant facturé). **Autonome** et installé dans le **dossier courant**. Skills Markdown + scripts
-Python ; pas de build/test. **Pas de coût réel, pas de saisie manuelle, pas de fichier de config.**
+`couts` = **mesure du coût de la fabrication** (pas une phase), en **deux natures qui ne se
+mélangent jamais** :
+- **Coût estimé (simulation)** - les tokens des sessions Claude valorisés au **tarif API**
+  ("combien ça coûterait en API"), jamais un montant facturé.
+- **Coût réel (facturé)** - les appels **API Gemini** de `revue-gemini`, seuls appels payants de
+  la Factory. Mesurés par `assembleur/scripts/gemini_review.py` (qui lit `usage_metadata` du SDK
+  `google-genai`), tarifés ici.
+
+**Autonome** et installé dans le **dossier courant**. Skills Markdown + scripts Python ; pas de
+build/test. **Pas de saisie manuelle, pas de fichier de config.**
+
+**Piège de facturation Gemini (vérifié sur un vrai appel).** Le prix de sortie est annoncé
+"including thinking tokens", et `thoughts_token_count` **n'est pas compté dans**
+`candidates_token_count` : la sortie facturée vaut **candidates + thoughts**. Sur un simple ping
+de validation, la mesure réelle donne 4 tokens de sortie visible pour 19 de raisonnement - ne
+retenir que `candidates` sous-compterait la facture d'un facteur 5. `cost_report.jours_reels()`
+additionne les deux ; ne jamais "simplifier" ce calcul.
 
 ## Langue & invocation
 - **Tout en français** ; identifiants machine et noms d'outils/formats restent tels quels.
@@ -21,13 +34,15 @@ Python ; pas de build/test. **Pas de coût réel, pas de saisie manuelle, pas de
   l'installation), installe la table de prix datée dans `.factory/couts/`, crée `.factory/couts/` +
   **`.gitignore`** (ligne `.factory/` - tout `.factory/` est git-ignoré). Interaction **en français,
   sans exposer la mécanique**.
-- `couts-rapport` - restitue un **tableau par session** (tokens input/output + coût en euros) et écrit
-  un rapport **versionné** dans `.factory/couts/` (`rapport-couts.md`, puis `-2`, `-3`... - **jamais
-  d'écrasement**).
+- `couts-rapport` - restitue **deux tableaux** et écrit un rapport **versionné** dans
+  `.factory/couts/` (`rapport-couts.md`, puis `-2`, `-3`... - **jamais d'écrasement**) :
+  **coût estimé**, une ligne **par session** (modèle, tokens input/output, cache, coût) ; puis
+  **coût réel**, une ligne **par jour** et par modèle (`Période`, `Modèle`, `Input`, `Output`,
+  `Coût`). Aucun appel externe mesuré -> une phrase, jamais un tableau vide.
 - `couts-total` - agrège **toutes les sessions locales** en un seul fichier de bilan partageable
   (`.factory/couts/bilan-couts.md` : dev, période, nombre de sessions, total tokens en 5 catégories,
-  coût estimé en euros) - le fichier à remettre au chef d'équipe ; **écrasé à chaque run** (reflète
-  toujours l'état courant du journal local).
+  **coût estimé ET coût réel**, distincts) - le fichier à remettre au chef d'équipe ; **écrasé à
+  chaque run** (reflète toujours l'état courant du journal local).
 
 ## Le compteur (`references/turn_cost.py`) : hook `SessionEnd` (écriture en fin de session)
 Best-effort (ne bloque jamais, exit 0). **Un seul comportement**, déclenché par `SessionEnd` : lit
@@ -65,10 +80,39 @@ rollup org via OTel.
 (pas de doublon) ; (2) **nouvel id qui rejoue** l'historique -> chaque enregistrement porte sa `key`
 `(message.id, requestId)` -> `cost_report.py` **déduplique GLOBALEMENT** (chaque requête comptée une fois).
 
+## Journal du coût réel (Gemini)
+Écrit par `assembleur/scripts/gemini_review.py` (fonction `journaliser_usage`), **pas** par ce
+plugin : l'assembleur **mesure**, `couts` **tarife** - aucun import croisé entre plugins.
+**Un enregistrement par appel API** dans
+`.factory/couts/<aaaa-mm>/gemini-<aaaa-mm-jj>-<dimension>-<pid>.jsonl` :
+`{kind:"reel", provider, model, ts, jour, dimension, key, tokens:{input, output, thoughts, cached}}`.
+**Un fichier par processus** : `revue-gemini` lance six sous-agents en parallèle, un fichier
+distinct évite tout verrou et tout entrelacement. La journalisation est **best-effort absolu** :
+toute erreur est avalée, mesurer le coût ne doit jamais faire échouer une revue. La granularité
+**par appel** est nécessaire : le palier long contexte se déclenche sur la taille du prompt, donc
+agréger avant de tarifer perdrait le seuil.
+
 ## Table de prix (`references/price-table.json`, datée)
 Structurée par **tier** : `{ tiers:{haiku,sonnet,opus,fable}, overrides:{<model-id>}, cache_write_1h_multiplier }`.
 Résolveur `model-id -> tier` dans `turn_cost.py` (sous-chaîne + `overrides` pour les versions au prix
 différent, ex. Opus 4.1 = 3×). Externe et **datée** (jamais en dur).
+**Tarifs d'introduction : override borné par `until`** (`AAAA-MM-JJ`). Un modèle lancé à prix réduit
+pour quelques mois (Sonnet 5 : 2/10 au lieu de 3/15 jusqu'au 2026-08-31) prendrait, en override
+simple, ce tarif **pour toujours** - et surestimerait à l'inverse si on ne le met pas. Le résolveur
+compare donc `until` à la **date du message** : la remise ne s'applique qu'aux messages antérieurs,
+après quoi le tier reprend **sans édition**. Un même journal peut ainsi porter les deux tarifs, chaque
+message au prix qui avait cours ce jour-là. **Message non daté = pas de remise** (on facture au tarif
+catalogue, jamais moins - même prudence que le match par préfixe contre la sous-facturation).
+
+## Table de prix Gemini (`references/gemini-price-table.json`, datée)
+Prix **par modèle** (pas par tier), relevés sur la page officielle
+`ai.google.dev/gemini-api/docs/pricing` - **les blogs agrégateurs sont périmés** (ils donnaient
+0.15/1.25 pour 2.5 Flash contre 0.30/2.50 en réalité). Les modèles Pro portent un bloc
+`long_context {seuil, input, output}` appliqué quand le **prompt** dépasse le seuil (200 000
+tokens). Résolveur `prix_gemini()` dans `cost_report.py` : correspondance exacte puis par préfixe
+(tolère un suffixe de version, `gemini-2.5-flash-002`). Un modèle absent de la table est
+**signalé dans le rapport, jamais tarifé à zéro en silence**. Les modèles 2.5 sont annoncés en
+retrait au **16 octobre 2026** : revoir la table à cette échéance.
 
 ## Rapport (par session, versionné)
 `cost_report.py` agrège le journal **par session** : début/fin (`ts` min/max, format `JJ-MM`), tokens
@@ -103,8 +147,13 @@ python scripts/check_costs.py <projet>/manifest.json
 ```
 
 ## Invariants
-**Simulation seule** (estimation au tarif API, jamais un montant facturé ; pas de config, pas de saisie
-manuelle) ; **dossier courant** (installation + mesure confinées au dossier de la session, hook ancré sur
+**Deux natures de coût, jamais mélangées** : la **simulation** (sessions Claude, estimation au tarif
+API, jamais un montant facturé) et le **réel facturé** (appels API Gemini). Chacune a sa table de
+prix datée, sa ligne dans le bilan et son tableau dans le rapport ; on ne les additionne jamais en
+un chiffre unique, et le rapport dit lequel est facturé. **Sortie Gemini = candidates + thoughts**
+(le prix de sortie inclut le raisonnement) ; **l'assembleur mesure, `couts` tarife** (pas d'import
+croisé) ; **journalisation best-effort** (jamais bloquante pour la revue) ; pas de config, pas de
+saisie manuelle ; **dossier courant** (installation + mesure confinées au dossier de la session, hook ancré sur
 `__file__`) ; **fin de session** (hook `SessionEnd`, réécriture idempotente du fichier de session ;
 **zéro latence par tour**) ; **granularité par message** conservée (relue du transcript) ; **dédup
 `(message.id, requestId)` last-wins** (streaming) **puis dédup globale par `key`** au rapport

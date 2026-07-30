@@ -1,0 +1,22 @@
+{
+  "_comment": "Table de prix DATEE des appels Gemini reellement factures (revue-gemini). Valeurs PAR TOKEN (USD), relevees sur la page officielle ai.google.dev/gemini-api/docs/pricing. IMPORTANT : le prix de sortie est annonce 'including thinking tokens', et thoughts_token_count n'est PAS compte dans candidates_token_count - la sortie facturee vaut donc candidates + thoughts (c'est cost_report.py qui les additionne). 'long_context' s'applique quand le PROMPT depasse 'seuil' tokens (modeles Pro). Les modeles 2.5 sont annonces en retrait au 16 octobre 2026 : revoir cette table a cette echeance. Mettre a jour a la main, avec sa date.",
+  "source": "https://ai.google.dev/gemini-api/docs/pricing (paid tier, texte)",
+  "date": "2026-07-30",
+  "currency": "USD",
+  "unit": "per_token",
+  "models": {
+    "gemini-2.5-flash":      { "input": 0.30e-06, "output": 2.50e-06 },
+    "gemini-2.5-flash-lite": { "input": 0.10e-06, "output": 0.40e-06 },
+    "gemini-2.5-pro": {
+      "input": 1.25e-06, "output": 10.00e-06,
+      "long_context": { "seuil": 200000, "input": 2.50e-06, "output": 15.00e-06 }
+    },
+    "gemini-3.6-flash":      { "input": 1.50e-06, "output": 7.50e-06 },
+    "gemini-3.5-flash":      { "input": 1.50e-06, "output": 9.00e-06 },
+    "gemini-3.5-flash-lite": { "input": 0.30e-06, "output": 2.50e-06 },
+    "gemini-3.1-pro": {
+      "input": 2.00e-06, "output": 12.00e-06,
+      "long_context": { "seuil": 200000, "input": 4.00e-06, "output": 18.00e-06 }
+    }
+  }
+}

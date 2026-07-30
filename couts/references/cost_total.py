@@ -58,17 +58,29 @@ def main(argv):
     # Le taux USD->EUR est une constante datee de cost_report (pas de fichier de config).
     rate = cost_report.USD_EUR
 
+    # Les deux natures de cout ne se melangent pas : la simulation Claude d'un cote, les appels
+    # API reellement factures de l'autre.
+    sim_records = [r for r in records if not cost_report.est_reel(r)]
+    reel_records = [r for r in records if cost_report.est_reel(r)]
+
     # Total tokens (5 categories - net-new, cost_report.py ne somme que sim_cost_usd)
     tok = {"input": 0, "output": 0, "cache_read": 0, "cache_write_5m": 0, "cache_write_1h": 0}
-    for r in records:
+    for r in sim_records:
         t = r.get("tokens") or {}
         for k in tok:
             tok[k] += t.get(k) or 0
     total_tok = sum(tok.values())
 
-    sim_usd = sum(r.get("sim_cost_usd") or 0.0 for r in records)
-    n_sessions = len({r.get("session_id") for r in records})
-    devs = sorted({r.get("dev") or "?" for r in records})
+    sim_usd = sum(r.get("sim_cost_usd") or 0.0 for r in sim_records)
+
+    # Cout reel : meme tarification que le rapport detaille (seuil de contexte long compris).
+    gtable = cost_report.gemini_price_table(root)
+    jours_r, inconnus_r = cost_report.jours_reels(reel_records, gtable)
+    reel_usd = sum(d["usd"] for d in jours_r.values())
+    reel_tok = sum(d["input"] + d["output"] for d in jours_r.values())
+
+    n_sessions = len({r.get("session_id") for r in sim_records})
+    devs = sorted({r.get("dev") or "?" for r in sim_records})
     ts_list = sorted(r.get("ts", "") or "" for r in records)
     periode = None
     if ts_list and ts_list[0]:
@@ -90,13 +102,24 @@ def main(argv):
         f"cache 1h {_fmt_token(tok['cache_write_1h'])}"
     )
     lines.append(f"- **Coût estimé (simulation)** : {cost_report.eur(sim_usd)} € (~{sim_usd:.2f} USD)")
+    if jours_r:
+        lines.append(
+            f"- **Coût réel (facturé)** : {cost_report.eur(reel_usd)} € (~{reel_usd:.2f} USD) "
+            f"sur {_fmt_int(reel_tok)} tokens d'appels API externes"
+        )
+    else:
+        lines.append("- **Coût réel (facturé)** : aucun appel API externe mesuré")
     lines.append("")
     parts = []
     if pdate:
         parts.append(f"table {pdate}")
     parts.append(f"FX {rate} au {cost_report.RATE_DATE}")
     dline = ", ".join(parts) if parts else "table de prix locale"
-    lines.append(f"_Estimation au tarif API ({dline}) - pas un montant facturé._")
+    gdate = gtable.get("date")
+    table_reelle = f" (table {gdate})" if gdate else ""
+    lines.append(f"_Coût estimé : simulation au tarif API ({dline}), pas un montant facturé. "
+                 f"Coût réel : appels API externes effectivement payés{table_reelle}, "
+                 f"sortie incluant les tokens de raisonnement._")
     if not records:
         lines.append("")
         lines.append(

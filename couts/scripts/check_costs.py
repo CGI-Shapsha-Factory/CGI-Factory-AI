@@ -125,7 +125,11 @@ def main(argv):
         except OSError:
             problems.append(".gitignore illisible")
 
-    required = {"session_id", "key", "tokens", "attribution"}
+    # Deux natures d'enregistrement cohabitent dans le journal : la simulation (sessions Claude,
+    # posee par turn_cost.py) et le cout reel (appels API factures, pose par gemini_review.py).
+    # Elles n'ont pas les memes champs : valider selon `kind`.
+    required_sim = {"session_id", "key", "tokens", "attribution"}
+    required_reel = {"kind", "provider", "model", "ts", "tokens", "key"}
     for jf in glob.glob(os.path.join(root, ".factory", "couts", "**", "*.jsonl"), recursive=True):
         try:
             for i, line in enumerate(open(jf, encoding="utf-8"), 1):
@@ -133,6 +137,7 @@ def main(argv):
                 if not line:
                     continue
                 rec = json.loads(line)
+                required = required_reel if rec.get("kind") == "reel" else required_sim
                 miss = required - set(rec)
                 if miss:
                     problems.append(f"{os.path.relpath(jf, root)}:{i} champs manquants {sorted(miss)}")

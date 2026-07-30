@@ -150,19 +150,29 @@ def _jjmm(ts):
     return f"{ts[8:10]}-{ts[5:7]}" if (ts and len(ts) >= 10) else "?"
 
 
+def est_reel(rec):
+    """Un enregistrement de cout REEL (appel API facture) plutot que de simulation."""
+    return (rec.get("kind") == "reel")
+
+
 def sessions_of(records):
     """Agrege le journal PAR session : debut/fin (ts min/max), tokens input/output, cache lu/ecrit, cout USD."""
     sess = {}
     for r in records:
+        if est_reel(r):
+            continue
         sid = r.get("session_id") or "?"
         s = sess.setdefault(sid, {"start": None, "end": None, "input": 0, "output": 0,
-                                  "cache_read": 0, "cache_write": 0, "usd": 0.0})
+                                  "cache_read": 0, "cache_write": 0, "usd": 0.0,
+                                  "models": set()})
         ts = r.get("ts")
         if ts:
             if s["start"] is None or ts < s["start"]:
                 s["start"] = ts
             if s["end"] is None or ts > s["end"]:
                 s["end"] = ts
+        if r.get("model"):
+            s["models"].add(r["model"])
         tok = r.get("tokens") or {}
         s["input"] += tok.get("input", 0) or 0
         s["output"] += tok.get("output", 0) or 0
@@ -170,6 +180,69 @@ def sessions_of(records):
         s["cache_write"] += (tok.get("cache_write_5m", 0) or 0) + (tok.get("cache_write_1h", 0) or 0)
         s["usd"] += r.get("sim_cost_usd") or 0.0
     return sess
+
+
+# --- Cout reel : appels API factures (Gemini) ---------------------------------------------------
+
+def gemini_price_table(root):
+    """Table de prix Gemini datee, posee par couts-init a cote de celle de Claude."""
+    try:
+        return json.load(open(os.path.join(root, ".factory", "couts", "gemini-price-table.json"),
+                              encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
+def prix_gemini(model, tokens_input, table):
+    """Prix (input, output) par token pour ce modele, seuil de contexte long applique.
+
+    Le palier long contexte se declenche sur la taille du PROMPT, d'ou la tarification par
+    appel : agreger d'abord ferait perdre le seuil.
+    """
+    modeles = (table or {}).get("models") or {}
+    prix = modeles.get(model)
+    if prix is None:  # tolere un suffixe de version (gemini-2.5-flash-002)
+        prix = next((v for k, v in modeles.items() if model and model.startswith(k)), None)
+    if prix is None:
+        return None
+    long_ctx = prix.get("long_context")
+    if long_ctx and tokens_input > (long_ctx.get("seuil") or float("inf")):
+        return long_ctx.get("input", 0.0), long_ctx.get("output", 0.0)
+    return prix.get("input", 0.0), prix.get("output", 0.0)
+
+
+def jours_reels(records, table):
+    """Agrege les appels factures PAR JOUR et par modele.
+
+    La sortie facturee vaut candidates + thoughts : le prix de sortie Gemini inclut les tokens
+    de raisonnement, et `thoughts_token_count` n'est pas compte dans `candidates_token_count`.
+    Ne retenir que `output` sous-compterait la facture.
+    """
+    jours = {}
+    inconnus = set()
+    for r in records:
+        if not est_reel(r):
+            continue
+        ts = r.get("ts") or ""
+        jour = r.get("jour") or ts[:10]
+        model = r.get("model") or "?"
+        tok = r.get("tokens") or {}
+        tin = tok.get("input", 0) or 0
+        tout = (tok.get("output", 0) or 0) + (tok.get("thoughts", 0) or 0)
+        prix = prix_gemini(model, tin, table)
+        if prix is None:
+            inconnus.add(model)
+            usd = None
+        else:
+            usd = tin * prix[0] + tout * prix[1]
+        d = jours.setdefault((jour, model), {"input": 0, "output": 0, "usd": 0.0, "tarife": True})
+        d["input"] += tin
+        d["output"] += tout
+        if usd is None:
+            d["tarife"] = False
+        else:
+            d["usd"] += usd
+    return jours, sorted(inconnus)
 
 
 def build_report(root):
@@ -181,8 +254,8 @@ def build_report(root):
     lines = ["# Rapport de coûts : Factory", ""]
     lines.append(f"## Coût de simulation (estimation, tarif API - table du {pdate or '?'})")
     lines.append("")
-    lines.append("| Session (début -> fin) | Tokens input | Tokens output | Cache lu | Cache écrit | Coût (€) |")
-    lines.append("|---|---|---|---|---|---|")
+    lines.append("| Session (début -> fin) | Modèle | Tokens input | Tokens output | Cache lu | Cache écrit | Coût (€) |")
+    lines.append("|---|---|---|---|---|---|---|")
 
     tot_in = tot_out = tot_cread = tot_cwrite = 0
     tot_usd = 0.0
@@ -191,7 +264,8 @@ def build_report(root):
         label = f"{_jjmm(s['start'])} -> {_jjmm(s['end'])}"
         e = eur(s["usd"])
         cout = f"{e:.2f} €" if e is not None else "-"
-        lines.append(f"| {label} | {_int(s['input'])} | {_int(s['output'])} | "
+        modeles = ", ".join(sorted(s["models"])) or "-"
+        lines.append(f"| {label} | {modeles} | {_int(s['input'])} | {_int(s['output'])} | "
                      f"{_int(s['cache_read'])} | {_int(s['cache_write'])} | {cout} |")
         tot_in += s["input"]
         tot_out += s["output"]
@@ -201,13 +275,47 @@ def build_report(root):
 
     te = eur(tot_usd)
     tot_cout = f"{te:.2f} €" if te is not None else "-"
-    lines.append(f"| **Total** | **{_int(tot_in)}** | **{_int(tot_out)}** | "
+    lines.append(f"| **Total** | | **{_int(tot_in)}** | **{_int(tot_out)}** | "
                  f"**{_int(tot_cread)}** | **{_int(tot_cwrite)}** | **{tot_cout}** |")
     lines.append("")
     lines.append(f"_{len(sess)} session(s). Input = tokens d'entrée hors cache ; Cache écrit = "
                  f"écriture 5m + 1h cumulée ; le coût inclut le cache (lecture + écriture). "
                  f"Taux {USD_EUR} €/$ au {RATE_DATE}. "
                  f"Devise native USD, estimation au tarif API - pas un montant facturé._")
+
+    # --- Cout REEL : appels API factures (Gemini, via revue-gemini) ---
+    gtable = gemini_price_table(root)
+    jours, inconnus = jours_reels(records, gtable)
+    lines.append("")
+    lines.append(f"## Coût réel (appels API facturés - table du {gtable.get('date') or '?'})")
+    lines.append("")
+    tot_rin = tot_rout = 0
+    tot_rusd = 0.0
+    if not jours:
+        lines.append("Aucun appel API externe mesuré sur ce projet. La revue de code par Gemini "
+                     "est le seul appel facturé de la Factory ; elle n'a pas encore tourné ici.")
+    else:
+        lines.append("| Période | Modèle | Input | Output | Coût (€) |")
+        lines.append("|---|---|---|---|---|")
+        for (jour, model) in sorted(jours):
+            d = jours[(jour, model)]
+            e = eur(d["usd"]) if d["tarife"] else None
+            cout = f"{e:.2f} €" if e is not None else "-"
+            lines.append(f"| {_jjmm(jour)} | {model} | {_int(d['input'])} | {_int(d['output'])} | {cout} |")
+            tot_rin += d["input"]
+            tot_rout += d["output"]
+            tot_rusd += d["usd"]
+        tre = eur(tot_rusd)
+        lines.append(f"| **Total** | | **{_int(tot_rin)}** | **{_int(tot_rout)}** | "
+                     f"**{f'{tre:.2f} €' if tre is not None else '-'}** |")
+        lines.append("")
+        note = ("_Une ligne par jour. Output inclut les tokens de raisonnement du modèle, "
+                "facturés au tarif de sortie. Montant réellement dépensé, contrairement au "
+                "tableau ci-dessus._")
+        if inconnus:
+            note = note[:-1] + (f" Modèle(s) absent(s) de la table de prix, non tarifé(s) : "
+                                f"{', '.join(inconnus)}._")
+        lines.append(note)
 
     data = {
         "sessions": [
@@ -220,6 +328,19 @@ def build_report(root):
         "total": {"input": tot_in, "output": tot_out,
                   "cache_read": tot_cread, "cache_write": tot_cwrite,
                   "sim_cost_usd": round(tot_usd, 6), "sim_cost_eur": eur(tot_usd)},
+        "reel": {
+            "jours": [
+                {"jour": jour, "model": model, "input": jours[(jour, model)]["input"],
+                 "output": jours[(jour, model)]["output"],
+                 "cost_usd": round(jours[(jour, model)]["usd"], 6),
+                 "cost_eur": eur(jours[(jour, model)]["usd"])}
+                for (jour, model) in sorted(jours)
+            ],
+            "total": {"input": tot_rin, "output": tot_rout,
+                      "cost_usd": round(tot_rusd, 6), "cost_eur": eur(tot_rusd)},
+            "price_table_date": gtable.get("date"),
+            "modeles_non_tarifes": inconnus,
+        },
         "records": len(records), "price_table_date": pdate,
         "fx": {"usd_eur": USD_EUR, "date": RATE_DATE},
     }

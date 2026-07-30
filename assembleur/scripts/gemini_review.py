@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Reviewer de code INDEPENDANT via l'API Gemini — UNE dimension de revue par invocation.
+"""Reviewer de code INDEPENDANT via l'API Gemini : UNE dimension de revue par invocation.
 
 Objectif : contrer l'exces de confiance de Claude en introduisant un relecteur **externe et non
 biaise** (Gemini) juste avant la creation/le merge d'une PR. Ce script est le **bras arme** du skill
@@ -22,6 +22,7 @@ Usage :
     python gemini_review.py --list-dimensions
 """
 import argparse
+import datetime
 import json
 import os
 import re
@@ -85,6 +86,49 @@ def emit(obj, code):
     """Imprime l'unique objet JSON de resultat sur stdout et sort avec le code voulu."""
     print(json.dumps(obj, ensure_ascii=False))
     sys.exit(code)
+
+
+# --- Journal de consommation (cout REEL, lu par le plugin couts) --------------------------------
+def journaliser_usage(repo, model, dimension, usage, index):
+    """Ecrit un enregistrement de consommation par appel API dans .factory/couts/.
+
+    Ce script MESURE, il ne tarife pas : la table de prix et le calcul vivent dans le plugin
+    `couts` (pas d'import croise entre plugins). On garde `output` (candidates) et `thoughts`
+    separes - la sortie FACTUREE vaut leur somme, le prix de sortie Gemini incluant les tokens
+    de raisonnement, et `thoughts_token_count` n'etant pas compte dans `candidates_token_count`.
+
+    Un fichier PAR PROCESSUS : `revue-gemini` lance six sous-agents en parallele, un fichier
+    distinct evite tout verrou et tout entrelacement de lignes.
+
+    Best-effort absolu : la revue ne doit JAMAIS echouer parce que la mesure a echoue.
+    """
+    try:
+        if usage is None:
+            return
+        now = datetime.datetime.now(datetime.timezone.utc)
+        jour = now.strftime("%Y-%m-%d")
+        outdir = os.path.join(repo, ".factory", "couts", now.strftime("%Y-%m"))
+        os.makedirs(outdir, exist_ok=True)
+        rec = {
+            "kind": "reel",
+            "provider": "gemini",
+            "model": model,
+            "ts": now.isoformat(timespec="seconds").replace("+00:00", "Z"),
+            "jour": jour,
+            "dimension": dimension,
+            "key": f"{os.getpid()}:{dimension}:{index}",
+            "tokens": {
+                "input": int(getattr(usage, "prompt_token_count", 0) or 0),
+                "output": int(getattr(usage, "candidates_token_count", 0) or 0),
+                "thoughts": int(getattr(usage, "thoughts_token_count", 0) or 0),
+                "cached": int(getattr(usage, "cached_content_token_count", 0) or 0),
+            },
+        }
+        path = os.path.join(outdir, f"gemini-{jour}-{dimension}-{os.getpid()}.jsonl")
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except Exception:  # noqa: BLE001 - la mesure ne fait jamais tomber la revue
+        pass
 
 
 def fail(dimension, reason, error, findings=None):
@@ -162,7 +206,7 @@ def get_diff(repo, base, diff_file):
         return None, "pas un depot git"
     base = base or detect_base(repo)
     if not base:
-        return None, "branche de base introuvable (ni origin/main ni main) — precise --base"
+        return None, "branche de base introuvable (ni origin/main ni main) : precise --base"
     r = subprocess.run(["git", "-C", repo, "diff", "--no-color", f"{base}...HEAD"],
                        capture_output=True, text=True, errors="replace")
     if r.returncode != 0:
@@ -191,7 +235,7 @@ def chunk_diff(diff):
 
 
 # --- Appel Gemini (avec retry backoff) ----------------------------------------------------------
-def call_gemini(client, model, system, content, dimension):
+def call_gemini(client, model, system, content, dimension, repo=".", index=0):
     """Renvoie (findings, None) ou (None, (reason, message)). Retry sur quota/serveur/reseau."""
     from google.genai import errors, types
     for attempt in range(RETRIES):
@@ -202,6 +246,11 @@ def call_gemini(client, model, system, content, dimension):
                     system_instruction=system, temperature=0.2,
                     response_mime_type="application/json"),
             )
+            # Journalise AVANT toute analyse de la reponse : les tokens sont consommes et
+            # factures meme si la reponse est vide ou illisible. Chaque tentative qui a
+            # abouti compte, d'ou l'index qui inclut le numero d'essai.
+            journaliser_usage(repo, model, dimension, getattr(resp, "usage_metadata", None),
+                              f"{index}.{attempt}")
             text = (resp.text or "").strip()
             if not text:
                 return [], None
@@ -278,7 +327,8 @@ def main(argv):
 
     if args.check:
         # validation legere : un appel minimal pour verifier cle + API + modele.
-        findings, err = call_gemini(client, args.model, "Reponds {\"findings\":[]}.", "ping", "check")
+        findings, err = call_gemini(client, args.model, "Reponds {\"findings\":[]}.", "ping",
+                                    "check", repo=repo)
         if err:
             fail("check", err[0], err[1])
         emit({"dimension": "check", "status": "ok", "model": args.model, "findings": []}, 0)
@@ -294,11 +344,12 @@ def main(argv):
               "findings": [], "note": "aucun changement a revoir (diff vide)."}, 0)
 
     chunks, truncated = chunk_diff(diff)
-    system = f"{BASE_ROLE}\n\nDIMENSION A EXAMINER — {DIMENSIONS[args.dimension]}\n\n{SCHEMA_INSTRUCTION}"
+    system = f"{BASE_ROLE}\n\nDIMENSION A EXAMINER : {DIMENSIONS[args.dimension]}\n\n{SCHEMA_INSTRUCTION}"
     all_findings, last_err = [], None
     ok_chunks = 0
-    for ch in chunks:
-        findings, err = call_gemini(client, args.model, system, ch, args.dimension)
+    for i, ch in enumerate(chunks):
+        findings, err = call_gemini(client, args.model, system, ch, args.dimension,
+                                    repo=repo, index=i)
         if err:
             last_err = err
             continue
