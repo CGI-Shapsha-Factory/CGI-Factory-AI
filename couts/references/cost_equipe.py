@@ -140,7 +140,11 @@ def table_gemini(collecte):
 
 
 def build_equipe(collecte):
-    """Construit le rapport d'equipe. Retourne (markdown, anomalies)."""
+    """Construit le rapport d'equipe. Retourne (markdown, anomalies, data).
+
+    `data` porte les memes chiffres que le tableau, sous forme structuree, pour le rendu PDF :
+    le Markdown n'est jamais reparse.
+    """
     gtable, origine_table = table_gemini(collecte)
     anomalies = []
 
@@ -170,7 +174,7 @@ def build_equipe(collecte):
         lines.append("")
         lines.append("_Attendu : un sous-dossier par développeur, contenant son répertoire "
                      "de coûts (les fichiers `.jsonl` et son `identite.json`)._")
-        return cost_report.sanitize_typo("\n".join(lines)), anomalies
+        return cost_report.sanitize_typo("\n".join(lines)), anomalies, {"devs": []}
 
     lines.append("| Développeur | Projet | Sessions | Input | Output | Cache lu | "
                  "Cache écrit | Estimé (€) | Réel (€) |")
@@ -180,7 +184,8 @@ def build_equipe(collecte):
     t_sim = 0.0
     t_reel = 0.0
     a_du_reel = False
-    for d in sorted(devs, key=lambda x: (x["prenom"] or "").lower()):
+    ordonnes = sorted(devs, key=lambda x: (x["prenom"] or "").lower())
+    for d in ordonnes:
         e = cost_report.eur(d["sim_usd"])
         estime = f"{e:.2f} €" if e is not None else "-"
         if d["reel_usd"] is None:
@@ -242,7 +247,25 @@ def build_equipe(collecte):
         for a in anomalies:
             lines.append(f"- {a}")
 
-    return cost_report.sanitize_typo("\n".join(lines)), anomalies
+    # Donnees structurees pour le PDF. La repartition est ici PAR DEVELOPPEUR : sur un rapport
+    # d'equipe, savoir qui consomme quoi est plus parlant que la ventilation par categorie de
+    # tokens, qui a sa place sur le rapport individuel.
+    data = {
+        "devs": [{"prenom": d["prenom"], "projet": d["projet"], "sessions": d["sessions"],
+                  "input": d["input"], "output": d["output"], "cache_read": d["cache_read"],
+                  "cache_write": d["cache_write"], "sim_eur": cost_report.eur(d["sim_usd"]),
+                  "reel_eur": cost_report.eur(d["reel_usd"]) if d["reel_usd"] is not None else None}
+                 for d in ordonnes],
+        "total": {**t, "sim_cost_eur": te},
+        "reel": {"jours": [], "total": {"cost_eur": tr}, "modeles_non_tarifes": inconnus},
+        "price_table_date": gdate,
+        "fx": {"usd_eur": cost_report.USD_EUR, "date": cost_report.RATE_DATE},
+        "projet": ", ".join(sorted({d["projet"] for d in ordonnes if d["projet"] != "?"})) or "",
+        "periode": "",
+        "repartition": [(d["prenom"], d["sim_usd"]) for d in
+                        sorted(ordonnes, key=lambda x: -x["sim_usd"])],
+    }
+    return cost_report.sanitize_typo("\n".join(lines)), anomalies, data
 
 
 def main(argv):
@@ -259,17 +282,25 @@ def main(argv):
         print(f"cost_equipe: dossier de collecte introuvable: {collecte}", file=sys.stderr)
         return 2
 
-    md, _ = build_equipe(collecte)
+    md, _, data = build_equipe(collecte)
     chemin = None
     try:
         chemin = cost_report.next_report_path(collecte, "rapport-equipe")
         open(chemin, "w", encoding="utf-8").write(md + "\n")
     except OSError as exc:
         print(f"cost_equipe: ecriture echouee: {exc}", file=sys.stderr)
+    # PDF presentable a cote du Markdown. Jamais bloquant : le Markdown est le livrable.
+    pdf_path, pdf_message = (None, None)
+    if data.get("devs"):
+        pdf_path, pdf_message = cost_report.rendre_pdf(data, "equipe", chemin)
     try:
         print(md)
         if chemin:
             print(f"\n_Rapport écrit : {chemin}_")
+        if pdf_path:
+            print(f"_PDF écrit : {pdf_path}_")
+        if pdf_message:
+            print(f"_PDF : {pdf_message}_")
     except Exception:
         pass
     return 0

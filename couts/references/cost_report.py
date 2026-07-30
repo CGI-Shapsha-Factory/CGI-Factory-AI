@@ -128,6 +128,54 @@ def load_journal(root):
     return list(records.values())
 
 
+def identite(root):
+    """Prenom + nom de projet poses par couts-init ({} si le fichier manque)."""
+    try:
+        return json.load(open(os.path.join(root, ".factory", "couts", "identite.json"),
+                              encoding="utf-8")) or {}
+    except (OSError, ValueError):
+        return {}
+
+
+def periode_de(records):
+    """`JJ-MM -> JJ-MM` couvrant le journal ('' si aucun horodatage)."""
+    ts = sorted(r.get("ts") or "" for r in records)
+    ts = [t for t in ts if t]
+    if not ts:
+        return ""
+    debut, fin = _jjmm(ts[0]), _jjmm(ts[-1])
+    return debut if debut == fin else f"{debut} -> {fin}"
+
+
+def repartition_cout(records, root):
+    """Cout USD ventile par categorie sur l'ensemble des sessions.
+
+    Un total unique masque d'ou vient la depense : sur une session agentique longue le cache lu
+    pese bien plus que la sortie. La tarification n'est pas redite ici, elle est reprise du
+    compteur (`turn_cost`) - seule source de verite des prix. Sans table de prix : None, et le
+    rapport n'affiche pas de barre plutot que d'en inventer une.
+    """
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import turn_cost  # noqa: PLC0415 - import local : le module vit a cote
+    except ImportError:
+        return None
+    table = turn_cost.load_price_table(root)
+    if not table:
+        return None
+    mult = table.get("cache_write_1h_multiplier", 2.0)
+    parts = {"input": 0.0, "output": 0.0, "cache_read": 0.0, "cache_write": 0.0}
+    for r in records:
+        if est_reel(r):
+            continue
+        _, prix = turn_cost.resolve_prices(r.get("model"), table, r.get("ts"))
+        if not prix:
+            continue
+        for cle, usd in turn_cost.cost_par_categorie(r.get("tokens") or {}, prix, mult).items():
+            parts[cle] += usd
+    return parts if sum(parts.values()) > 0 else None
+
+
 def price_table_date(root):
     try:
         return json.load(open(os.path.join(root, ".factory", "couts", "price-table.json"),
@@ -320,6 +368,7 @@ def build_report(root):
     data = {
         "sessions": [
             {"session_id": sid, "start": sess[sid]["start"], "end": sess[sid]["end"],
+             "models": sorted(sess[sid]["models"]),
              "input": sess[sid]["input"], "output": sess[sid]["output"],
              "cache_read": sess[sid]["cache_read"], "cache_write": sess[sid]["cache_write"],
              "sim_cost_usd": round(sess[sid]["usd"], 6), "sim_cost_eur": eur(sess[sid]["usd"])}
@@ -343,6 +392,10 @@ def build_report(root):
         },
         "records": len(records), "price_table_date": pdate,
         "fx": {"usd_eur": USD_EUR, "date": RATE_DATE},
+        # Contexte de mise en page du PDF (le Markdown n'en a pas besoin).
+        "projet": identite(root).get("projet") or "",
+        "periode": periode_de(records),
+        "repartition_usd": repartition_cout(records, root),
     }
     return sanitize_typo("\n".join(lines)), data
 
@@ -367,6 +420,30 @@ def next_report_path(outdir, base="rapport-couts"):
 # Compat : ancien nom prive, conserve le temps que d'eventuels appels externes suivent.
 _next_report_path = next_report_path
 
+# Ordre d'affichage de la barre de repartition : du poste le plus lourd au plus leger sur une
+# session agentique reelle. Un ordre fixe rend deux rapports comparables d'un coup d'oeil.
+CATEGORIES = (("cache_read", "Cache lu"), ("output", "Sortie"),
+              ("cache_write", "Cache ecrit"), ("input", "Entree"))
+
+
+def rendre_pdf(data, kind, chemin_md):
+    """Imprime le PDF a cote du Markdown, meme nom, meme numero de version.
+
+    Best-effort : sans Chrome ou sans gabarit, le Markdown reste le livrable. Retourne
+    (chemin_pdf ou None, message ou None).
+    """
+    if not chemin_md:
+        return None, None
+    try:
+        sys.path.insert(0, os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+        import build_couts_pdf  # noqa: PLC0415 - import local : scripts/ du meme plugin
+    except ImportError as exc:
+        return None, f"rendu PDF indisponible: {exc}"
+    chemin_pdf = os.path.splitext(chemin_md)[0] + ".pdf"
+    ok, message = build_couts_pdf.rendre(data, kind, chemin_pdf, sanitize=sanitize_typo)
+    return (chemin_pdf if ok else None), message
+
 
 def main(argv):
     try:
@@ -387,13 +464,26 @@ def main(argv):
     except OSError:
         pass
     data["report_path"] = report_path
+
+    # PDF presentable, a cote du Markdown. Jamais bloquant : le Markdown est le livrable.
+    parts = data.get("repartition_usd") or {}
+    data["repartition"] = [(libelle, parts.get(cle, 0.0)) for cle, libelle in CATEGORIES
+                           if parts.get(cle, 0.0) > 0]
+    pdf_path, pdf_message = rendre_pdf(data, "session", report_path)
+    data["pdf_path"] = pdf_path
+
     try:
         if "--json" in argv:
-            print(json.dumps(data, ensure_ascii=False, indent=2))
+            print(json.dumps({k: v for k, v in data.items() if k != "repartition"},
+                             ensure_ascii=False, indent=2))
         else:
             print(md)
             if report_path:
                 print(f"\n_Rapport écrit : {report_path}_")
+            if pdf_path:
+                print(f"_PDF écrit : {pdf_path}_")
+            if pdf_message:
+                print(f"_PDF : {pdf_message}_")
     except Exception:
         pass
     return 0

@@ -64,6 +64,17 @@ répertoire déposé deux fois, qui gonflerait le total.
 `rapport-couts.md` au 1ᵉʳ run, puis `rapport-couts-2.md`, `rapport-couts-3.md`, ... Le script renvoie le
 chemin du fichier écrit.
 
+## Le PDF (le document présentable)
+`couts-rapport` et `couts-equipe` écrivent **aussi un PDF**, à côté du Markdown, même nom et même
+numéro (`rapport-couts-2.md` / `rapport-couts-2.pdf`). Page 1 : chiffres clés et **barre de
+répartition du coût** - par catégorie de tokens sur le rapport individuel (elle rend visible que le
+cache lu domine), par développeur sur le rapport d'équipe. Pages suivantes : les tableaux.
+
+Le code couleur porte l'invariant du plugin : **teal pour l'estimé, ambre pour le réel facturé**,
+jamais additionnés. Rendu par Chrome headless, document autonome (aucune ressource externe).
+**Sans navigateur installé, le Markdown est produit quand même** et le script le dit : le PDF est un
+bonus, jamais une condition.
+
 ## Les points gravés dans le code
 1. **Dédup** par `(message.id, requestId)` en gardant la **dernière** valeur (sinon total gonflé) - au
    sein d'une session (streaming) **et globalement au rapport** (reprise/fork comptés une seule fois).
@@ -78,7 +89,8 @@ couts/
 ├── .claude-plugin/plugin.json
 ├── skills/{couts-init, couts-rapport, couts-total, couts-equipe}/SKILL.md
 ├── references/   # turn_cost.py (hook SessionEnd), cost_report.py, cost_total.py, cost_equipe.py, install_cost_hook.py, price-table.json, gemini-price-table.json, OTEL.md
-├── scripts/check_costs.py
+├── templates/rapport-couts.html   # mise en page du PDF
+├── scripts/{check_costs.py, build_couts_pdf.py}
 └── README.md
 ```
 

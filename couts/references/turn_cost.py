@@ -105,16 +105,30 @@ def cats_of(u):
             "cache_write_5m": w5, "cache_write_1h": w1}
 
 
-def cost_of(cats, prices, mult_1h):
+def cost_par_categorie(cats, prices, mult_1h):
+    """Cout USD ventile par categorie (les deux ecritures de cache sont cumulees).
+
+    Sert au rapport PDF, qui montre d'ou vient reellement la depense : sur une session
+    agentique longue, le cache lu pese bien plus que la sortie, ce qu'un total unique cache.
+    """
     # Tolerant aux categories absentes d'une table de prix editee a la main (le hook est
     # best-effort et ne doit JAMAIS sortir en erreur) : categorie manquante = 0.
     def p(cat):
         return prices.get(cat, 0) or 0
-    return round(cats["input"] * p("input")
-                 + cats["output"] * p("output")
-                 + cats["cache_read"] * p("cache_read")
-                 + cats["cache_write_5m"] * p("cache_write_5m")
-                 + cats["cache_write_1h"] * (p("input") * mult_1h), 8)
+
+    def t(cat):
+        return cats.get(cat, 0) or 0
+    return {
+        "input": t("input") * p("input"),
+        "output": t("output") * p("output"),
+        "cache_read": t("cache_read") * p("cache_read"),
+        "cache_write": t("cache_write_5m") * p("cache_write_5m")
+                       + t("cache_write_1h") * (p("input") * mult_1h),
+    }
+
+
+def cost_of(cats, prices, mult_1h):
+    return round(sum(cost_par_categorie(cats, prices, mult_1h).values()), 8)
 
 
 def collect_messages(raw_lines):

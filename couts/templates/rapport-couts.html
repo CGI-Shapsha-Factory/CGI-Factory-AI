@@ -1,0 +1,224 @@
+<!--
+  Gabarit du rapport de couts (A4 paysage), rendu par scripts/build_couts_pdf.py.
+
+  Contrat : le script ne fabrique jamais de CSS ; tout le visuel vit ici. Les blocs sont
+  decoupes sur les marqueurs `<!-- ##NOM## -->` et les jetons `{{NOM}}` sont substitues.
+
+  Identite visuelle propre a ce plugin, a ne pas aligner sur celle de la validation : la ou un
+  rapport de recette code un VERDICT (vert / ambre / rouge), un rapport de couts code la
+  distinction ESTIME / REEL, l'invariant central du plugin. Teal petrole pour l'estime
+  (simulation), ambre brun pour le reel facture. Aucun badge, aucun bloc de signature : il n'y a
+  rien a prononcer ni a signer dans un cout.
+
+  Points deja regles, ne pas defaire :
+  - pied de page par `margin-top:auto` dans une `.page` en flex colonne, jamais `position:fixed`
+    (qui remonte en haut des pages suivantes) ;
+  - `min-height` calcule sur la hauteur utile A4 paysage moins les marges `@page` ;
+  - `page-break-inside:avoid` sur les lignes de tableau ;
+  - `tabular-nums` partout ou il y a des chiffres, sinon les colonnes ne s'alignent pas ;
+  - aucune ressource externe (police, image, feuille de style) : le PDF doit etre autonome.
+-->
+
+<!-- ##DOCUMENT## -->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>{{TITRE_DOC}}</title>
+<style>
+  @page { size: A4 landscape; margin: 13mm 14mm 15mm 14mm; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
+    font-size: 9.4pt; line-height: 1.5; color: #1c2330;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    page-break-after: always;
+    display: flex; flex-direction: column;
+    min-height: 179mm;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  .pagefoot {
+    margin-top: auto; padding-top: 6px; border-top: 1px solid #e4eaea;
+    display: flex; justify-content: space-between;
+    font-size: 7pt; color: #93a1a1;
+  }
+
+  /* ---- bandeau titre ---- */
+  .masthead {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-bottom: 2px solid #0f4c52; padding-bottom: 8px; margin-bottom: 16px;
+  }
+  .masthead h1 {
+    margin: 0; font-size: 17pt; font-weight: 640; letter-spacing: -.01em; color: #0f4c52;
+  }
+  .masthead .sous { margin-top: 2px; font-size: 8.6pt; color: #5d6b6b; }
+  .masthead .meta { text-align: right; font-size: 8.2pt; color: #5d6b6b; }
+  .masthead .meta .projet { font-size: 10.5pt; font-weight: 620; color: #1c2330; }
+
+  .runhead {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 1px solid #d5e0e0; padding-bottom: 5px; margin-bottom: 11px;
+  }
+  .runhead h2 { margin: 0; font-size: 11pt; font-weight: 620; color: #0f4c52; }
+  .runhead .sous { font-size: 8pt; color: #7c8a8a; }
+
+  /* ---- chiffres cles ---- */
+  .kpis { display: flex; gap: 10px; margin-bottom: 18px; }
+  .kpi {
+    flex: 1; border: 1px solid #d5e0e0; border-radius: 4px;
+    padding: 11px 14px; background: #fbfdfd;
+  }
+  .kpi .n {
+    font-size: 21pt; font-weight: 660; line-height: 1.05; color: #0f4c52;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi .l {
+    margin-top: 3px; font-size: 7.7pt; text-transform: uppercase;
+    letter-spacing: .08em; color: #6f7d7d;
+  }
+  .kpi.reel { border-color: #e6d3b4; background: #fdfaf4; }
+  .kpi.reel .n { color: #96591b; }
+  .kpi.vide .n { color: #a7b1b1; }
+
+  /* ---- barre de repartition ---- */
+  .repartition { margin-bottom: 18px; }
+  .bar {
+    display: flex; width: 100%; height: 26px; border-radius: 3px; overflow: hidden;
+    border: 1px solid #d5e0e0;
+  }
+  .bar .seg { display: flex; align-items: center; justify-content: center; min-width: 0; }
+  .bar .seg span {
+    font-size: 7.6pt; font-weight: 620; color: #ffffff;
+    white-space: nowrap; overflow: hidden; padding: 0 4px;
+  }
+  .bar .seg.pale span { color: #34504f; }
+  .legende { display: flex; gap: 18px; margin-top: 8px; flex-wrap: wrap; }
+  .legende .item { display: flex; align-items: center; gap: 6px; font-size: 7.9pt; color: #55635f; }
+  .legende .puce { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+  .legende .val { font-variant-numeric: tabular-nums; color: #1c2330; font-weight: 600; }
+
+  /* ---- notes ---- */
+  .note {
+    border-left: 3px solid #125c63; background: #f4f9f9;
+    padding: 8px 11px; font-size: 8.1pt; color: #44544f; border-radius: 0 3px 3px 0;
+  }
+  .note.reel { border-left-color: #96591b; background: #fdfaf4; color: #5c4a2c; }
+  .notes-pair { display: flex; gap: 12px; }
+  .notes-pair .note { flex: 1; }
+
+  /* ---- tableaux ---- */
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: #0f4c52; color: #ffffff; font-size: 7.7pt; font-weight: 620;
+    text-transform: uppercase; letter-spacing: .05em; text-align: left;
+    padding: 7px 9px;
+  }
+  thead th.n { text-align: right; }
+  tbody tr { page-break-inside: avoid; }
+  tbody td {
+    padding: 5px 9px; border-bottom: 1px solid #e4eaea; vertical-align: top;
+    font-size: 8.6pt;
+  }
+  tbody tr:nth-child(even) td { background: #f7fafa; }
+  td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.eur { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; }
+  td.eur.reel { color: #96591b; }
+  td.k { font-weight: 620; color: #0f4c52; white-space: nowrap; }
+  td.mono {
+    font-family: "Consolas", "SF Mono", monospace; font-size: 7.7pt; color: #55635f;
+    overflow-wrap: break-word; word-break: break-word;
+  }
+  td.muted { color: #a7b1b1; }
+  tbody tr.total td {
+    background: #eef5f5; font-weight: 660; border-top: 2px solid #0f4c52;
+    border-bottom: none; color: #0f4c52;
+  }
+  tbody tr.total td.eur.reel { color: #96591b; }
+
+  .apres-table { margin-top: 10px; }
+</style>
+</head>
+<body>
+{{PAGES}}
+</body>
+</html>
+
+<!-- ##PAGE_SYNTHESE## -->
+<section class="page">
+  <div class="masthead">
+    <div>
+      <h1>{{TITRE}}</h1>
+      <div class="sous">{{SOUS_TITRE}}</div>
+    </div>
+    <div class="meta">
+      <div class="projet">{{PROJET}}</div>
+      <div>{{PERIODE}}</div>
+    </div>
+  </div>
+
+  <div class="kpis">
+{{KPIS}}
+  </div>
+
+  <div class="repartition">
+    <div class="runhead">
+      <h2>Repartition du cout estime</h2>
+      <div class="sous">{{REPARTITION_SOUS}}</div>
+    </div>
+    <div class="bar">
+{{SEGMENTS}}
+    </div>
+    <div class="legende">
+{{LEGENDE}}
+    </div>
+  </div>
+
+  <div class="notes-pair">
+    <div class="note">{{NOTE_ESTIME}}</div>
+    <div class="note reel">{{NOTE_REEL}}</div>
+  </div>
+
+  <div class="pagefoot"><div>{{PIED_GAUCHE}}</div><div>{{PIED_DROIT}}</div></div>
+</section>
+
+<!-- ##PAGE_TABLE## -->
+<section class="page">
+  <div class="runhead">
+    <h2>{{TABLE_TITRE}}</h2>
+    <div class="sous">{{TABLE_SOUS}}</div>
+  </div>
+  <table>
+    <thead><tr>
+{{ENTETES}}
+    </tr></thead>
+    <tbody>
+{{LIGNES}}
+    </tbody>
+  </table>
+  <div class="apres-table">{{APRES_TABLE}}</div>
+  <div class="pagefoot"><div>{{PIED_GAUCHE}}</div><div>{{PIED_DROIT}}</div></div>
+</section>
+
+<!-- ##FRAGMENT_KPI## -->
+    <div class="kpi {{KPI_CLASSE}}"><div class="n">{{KPI_N}}</div><div class="l">{{KPI_L}}</div></div>
+
+<!-- ##FRAGMENT_SEG## -->
+      <div class="seg {{SEG_CLASSE}}" style="width:{{SEG_PCT}}%;background:{{SEG_FOND}}"><span>{{SEG_TEXTE}}</span></div>
+
+<!-- ##FRAGMENT_LEGENDE## -->
+      <div class="item"><span class="puce" style="background:{{LEG_FOND}}"></span>{{LEG_LIBELLE}} <span class="val">{{LEG_VALEUR}}</span></div>
+
+<!-- ##FRAGMENT_TH## -->
+      <th class="{{TH_CLASSE}}" style="width:{{TH_LARGEUR}}">{{TH_LIBELLE}}</th>
+
+<!-- ##FRAGMENT_ROW## -->
+      <tr class="{{ROW_CLASSE}}">{{CELLULES}}</tr>
+
+<!-- ##FRAGMENT_CELL## -->
+<td class="{{CELL_CLASSE}}">{{CELL_VALEUR}}</td>

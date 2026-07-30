@@ -45,4 +45,17 @@ facturé. Tout en **français**.
 `rapport-couts.md` au 1ᵉʳ run, puis `rapport-couts-2.md`, `rapport-couts-3.md`, ... Indiquer en clair
 **le chemin du fichier écrit** (le script le renvoie).
 
+## Deux livrables : le Markdown et le PDF
+Le script produit **aussi un PDF** à côté du Markdown, **même nom, même numéro** (`rapport-couts-2.md`
+et `rapport-couts-2.pdf`) : une page de synthèse (chiffres clés, répartition du coût par catégorie)
+puis les tableaux. C'est **le document présentable**, celui qu'on montre en réunion ; le Markdown
+reste le format diffable.
+
+Donner **les deux chemins**. Le script les affiche : `_Rapport écrit : ..._` et `_PDF écrit : ..._`.
+
+**Le PDF est un bonus, jamais une condition.** S'il manque un navigateur (Chrome, Chromium ou Edge),
+le script écrit quand même le Markdown et affiche une ligne `_PDF : ..._`. Dans ce cas : le dire
+simplement, préciser que le rapport Markdown est disponible, et proposer d'installer Chrome puis de
+relancer. **Ne jamais présenter ça comme un échec du rapport.**
+
 **Étape suivante : relancer ce rapport quand voulu (un nouveau fichier numéroté sera créé à chaque fois).**

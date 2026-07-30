@@ -1,6 +1,6 @@
 {
   "name": "couts",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Mesure en fin de session le coût de simulation du projet au tarif API et le restitue en un tableau par session (tokens input/output + coût en euros).",
   "author": {
     "name": "IA Factory"

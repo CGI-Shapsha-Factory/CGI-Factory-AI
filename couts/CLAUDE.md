@@ -80,6 +80,32 @@ pas une** : `couts-equipe` (dépôt de répertoires, aucune infra, à la demande
 dashboards, mais collecteur et `settings.json` géré à mettre en place). OTel reste la voie du suivi
 continu à l'échelle organisation.
 
+## Rendu PDF (`scripts/build_couts_pdf.py` + `templates/rapport-couts.html`)
+`couts-rapport` et `couts-equipe` écrivent **un PDF à côté du Markdown**, même nom et même numéro
+de version (`rapport-couts-2.md` / `rapport-couts-2.pdf`) : la paire est évidente et la règle de
+non-écrasement reste unique. Page 1 = synthèse (chiffres clés + **barre de répartition du coût**),
+pages suivantes = les tableaux, paginés.
+- **Identité visuelle propre, à ne pas aligner sur la validation.** Là où un rapport de recette code
+  un **verdict** (vert/ambre/rouge, badges, bloc de signature), un rapport de coûts code la
+  distinction **estimé / réel** - l'invariant central du plugin. Teal pétrole pour l'estimé, ambre
+  brun pour le réel. Aucun badge, aucune signature : il n'y a rien à prononcer dans un coût.
+- **La barre de répartition** est l'élément propre à ce plugin : par **catégorie de tokens** sur le
+  rapport individuel (elle rend visible que le cache lu domine, ce qu'un total unique masque), par
+  **développeur** sur le rapport d'équipe (qui consomme quoi). La rampe de teintes est **calculée**
+  pour n parts, pas figée : une liste fixe donnerait la même couleur à tous les développeurs
+  au-delà du quatrième.
+- **La ventilation par catégorie ne redit pas la tarification** : elle passe par
+  `turn_cost.cost_par_categorie`, seule source de vérité des prix. Sans table de prix, pas de barre
+  plutôt qu'une barre inventée.
+- **Mécanique copiée de `validation/scripts/build_rapport_pdf.py`** (découpe du gabarit,
+  substitution de jetons, pagination équilibrée, découverte de Chrome, comptage des pages) : les
+  plugins sont distribués séparément, un import inter-plugins casserait à l'installation.
+- **Jamais bloquant** : sans navigateur ou sans gabarit, le Markdown reste le livrable et le script
+  affiche un message actionnable, sortie 0.
+- Le PDF étant binaire, `check_costs.py` ne le balaie pas : sa typographie est garantie par
+  `sanitize_typo`, passé au rendu et appliqué à chaque chaîne d'origine humaine (nom de projet,
+  prénom).
+
 ## Consolidation d'équipe (`references/cost_equipe.py`)
 Le journal étant git-ignoré donc individuel, la consolidation se fait par **dépôt de répertoires** :
 un sous-dossier par développeur dans un dossier de collecte, et un tableau à **une ligne par
@@ -173,7 +199,7 @@ cible le dossier courant, lanceur Python détecté), `references/price-table.jso
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python -m py_compile references/turn_cost.py references/cost_report.py references/cost_total.py references/cost_equipe.py references/install_cost_hook.py scripts/check_costs.py
+python -m py_compile references/*.py scripts/*.py
 python scripts/check_costs.py <projet>/manifest.json
 python references/cost_equipe.py <dossier-de-collecte>   # total = somme des rapports individuels
 ```

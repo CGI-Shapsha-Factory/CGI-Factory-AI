@@ -36,7 +36,14 @@ Le **prénom** et le **nom de projet** viennent de son `identite.json`, posé pa
 
 2. **Afficher le tableau en session**, tel que produit.
 
-3. Donner **le chemin absolu** du fichier écrit (`rapport-equipe.md`, versionné : jamais écrasé).
+3. Donner **les deux chemins absolus** : `rapport-equipe.md` et le **PDF** produit à côté, même nom
+   et même numéro (`rapport-equipe-2.md` / `rapport-equipe-2.pdf`). Les deux sont versionnés, jamais
+   écrasés. Le PDF est le document présentable : synthèse chiffrée, répartition du coût par
+   développeur, puis le tableau.
+
+   **Le PDF est un bonus, jamais une condition.** Sans navigateur (Chrome, Chromium ou Edge), le
+   Markdown est écrit quand même et le script affiche une ligne `_PDF : ..._`. Le dire simplement,
+   proposer d'installer Chrome et de relancer ; ne jamais présenter ça comme un échec du rapport.
 
 4. **Relayer en clair la section "À vérifier"** si elle est présente. Ne jamais la passer sous
    silence : un total d'équipe faux et silencieux est pire que pas de total. Les cas possibles :
