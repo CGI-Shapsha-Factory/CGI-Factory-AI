@@ -36,7 +36,7 @@ décision n'a été manqué avant de challenger.
 
 ## Contrôles de cohérence : stricts et adversariaux
 **Challenger, pas cocher.** Dérouler la **grille canonique** de
-`references/coherence-checklist-guide.md` : **35 items cochables** (`CHK001`+) répartis en
+`references/coherence-checklist-guide.md` : **36 items cochables** (`CHK001`+) répartis en
 **trois lentilles** (chaque item porte sa dimension et sa source de traçabilité).
 
 **Un item à la fois, dans l'ordre.** Un item dont la réponse est "non" ou "je ne sais pas"
@@ -58,7 +58,10 @@ appliquée en place. Un item sans objet se coche **avec sa raison**. Les codes `
   par ≥1 composant et/ou ADR ; **sens arrière** - chaque composant remonte à un besoin (sinon
   **orphelin**) ; **use cases <-> features** en couverture 1:1 ; **composant <-> stack** (technos +
   versions exactes concordantes, composant Frontend/UI présent si écrans) ; **conventions <->
-  stack** (chaque langage a son fichier).
+  stack** (chaque langage a son fichier) ; **diagramme de classes <-> composants** (notation UML
+  respectée - stéréotypes, triangles creux, losange de composition, cardinalités aux deux bouts -
+  et chaque classe rattachable à un composant ; "sans objet" motivé si le produit est un simple
+  CRUD).
 
 - **Lentille C - Complétude (exigences bien formées)** : **scénarios qualité 6-parties** avec
   **mesure de réponse chiffrée et testable** (rejeter "scalable/robuste" sans mesure) ;

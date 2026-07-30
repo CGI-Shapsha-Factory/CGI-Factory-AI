@@ -107,6 +107,12 @@ liens **manquants** ou **non mis à jour** quand une exigence a changé.
       facteurs-et-qualite.md -> composants.md]
 - [ ] CHK011 (B1) Chaque entité de l'ERD a-t-elle un composant qui la gère ? [Couverture,
       composants.md]
+- [ ] CHK036 (B1) Le diagramme de classes est-il **conforme à la notation UML** et cohérent avec
+      l'architecture - interfaces stéréotypées, réalisations et héritages en triangle creux (et
+      non en flèche simple étiquetée), composition en losange plein posé sur le conteneur,
+      cardinalités aux deux extrémités, et chaque classe rattachable à un composant de
+      `composants.md` ? Un "sans objet" est acceptable **s'il est écrit avec sa raison** (produit
+      purement CRUD, sans interface ni héritage). [Consistance, diagrammes/ + composants.md]
 - [ ] CHK012 (B1) Les besoins de sécurité, de droits et d'audit sont-ils reflétés par un composant
       **et** un ADR - journal d'audit présent s'il est exigé ? [Couverture, composants.md +
       decisions/]

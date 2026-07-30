@@ -36,7 +36,8 @@ date: AAAA-MM-JJ
      #7c3aed (violet), #15803d (vert), #b91c1c (rouge), #a16207 (ocre). Au-delà de six
      sources, recycler la palette sans donner la même teinte à deux sources dont les flèches
      se croisent. La couleur complète les libellés, elle ne les remplace pas. Ne s'applique
-     PAS au diagramme de contexte (peu de flèches) ni à l'ERD (relations de données). -->
+     PAS au diagramme de contexte (peu de flèches), ni à l'ERD (relations de données), ni au
+     diagramme de classes (relations structurelles, pas des flux d'appel). -->
 
 ---
 
@@ -227,4 +228,145 @@ cloud.compute.b -> externe.ext
 (internet.user -> **)[*].style.stroke: "#c2410c"
 (cloud.compute.a -> **)[*].style.stroke: "#0891b2"
 (cloud.compute.b -> **)[*].style.stroke: "#7c3aed"
+```
+
+---
+
+## 6. Diagramme de classes (UML)
+
+<!-- Diagramme de classes UML des composants applicatifs : interfaces, implémentations,
+     entités et services, avec leurs attributs et leurs signatures de méthodes.
+
+     PÉRIMÈTRE - ce qui entre, ce qui n'entre pas :
+     - Entrent : les classes qui structurent la conception - interfaces et les classes qui les
+       réalisent, entités persistées, services porteurs de la logique, hiérarchies d'erreurs,
+       énumérations. Ce sont elles qui montrent comment le code tient ensemble.
+     - N'entrent PAS : les modules de câblage, les fichiers de configuration, les structures de
+       données de transport triviales (DTO d'un seul usage) et le code généré. Ils gonflent le
+       diagramme sans rien apprendre.
+     - Si le produit est un simple CRUD sans interface ni héritage, le dire en clair à la place
+       du bloc plutôt que de dessiner une rangée de boîtes sans relation - jamais une omission
+       silencieuse.
+
+     NOTATION UML - c'est la pointe de la flèche qui porte le sens, pas le libellé :
+     - trait pointillé + triangle creux = réalisation (une classe implémente une interface) ;
+     - trait plein + triangle creux     = généralisation (héritage) ;
+     - losange plein                    = composition (le composant ne survit pas au conteneur) ;
+     - losange creux                    = agrégation (le composant existe indépendamment) ;
+     - trait pointillé + flèche simple  = dépendance (utilise, sans détenir) ;
+     - cardinalités posées AUX DEUX EXTRÉMITÉS de l'association (`1`, `0..1`, `1..*`).
+
+     PIÈGE D2 (vérifié) : D2 ne dessine une forme d'extrémité que du côté CIBLE. Pour poser le
+     losange sur le conteneur, écrire la connexion DEPUIS le composant VERS le conteneur
+     (`Composant -> Conteneur`) et mettre le losange en `target-arrowhead`. Les LIBELLÉS, eux,
+     s'affichent bien des deux côtés (`source-arrowhead.label`).
+
+     Visibilité : `+` public, `-` privé, `#` protégé. Une clé contenant `(` est une méthode,
+     sa valeur est le type de retour. Stéréotypes en ASCII (`<<interface>>`), jamais les
+     chevrons unicode. Pas de coloriage par source : la notation porte déjà le sens. -->
+
+```d2 theme=0
+title: "Diagramme de classes - [Nom du système]" { near: top-center; shape: text; style.font-size: 22; style.bold: true }
+direction: right
+
+# ---------- Interface et ses réalisations ----------
+
+InterfaceA: "<<interface>>\n[NomInterface]" {
+  shape: class
+  style.stroke-dash: 3
+
+  +operation(argument): "[TypeRetour]"
+  +autreOperation(): void
+}
+
+ImplA: "[ImplementationA]" {
+  shape: class
+
+  -dependance: "[TypeDependance]"
+  +operation(argument): "[TypeRetour]"
+  +autreOperation(): void
+}
+
+ImplB: "[ImplementationB]" {
+  shape: class
+
+  -dependance: "[TypeDependance]"
+  +operation(argument): "[TypeRetour]"
+  +autreOperation(): void
+}
+
+# ---------- Service qui dépend de l'abstraction ----------
+
+Service: "[NomService]" {
+  shape: class
+
+  -collaborateur: "[NomInterface]"
+  +actionPrincipale(argument): "[TypeRetour]"
+  -etapeInterne(argument): void
+}
+
+# ---------- Entités liées par une composition ----------
+
+Conteneur: "[EntiteConteneur]" {
+  shape: class
+
+  +id: uuid
+  +champ: string
+  +statut: "[NomEnumeration]"
+}
+
+Composant: "[EntiteComposant]" {
+  shape: class
+
+  +id: uuid
+  +conteneurId: uuid
+  +champ: string
+}
+
+# ---------- Hiérarchie d'héritage ----------
+
+ClasseBase: "[ClasseBase]" {
+  shape: class
+
+  +champCommun: string
+  +methodeCommune(): void
+}
+
+ClasseDerivee: "[ClasseDerivee]" {
+  shape: class
+
+  +champSpecifique: string
+  +methodeCommune(): void
+}
+
+# ---------- Énumération ----------
+
+Enumeration: "<<enumeration>>\n[NomEnumeration]" {
+  shape: class
+
+  +VALEUR_UNE
+  +VALEUR_DEUX
+}
+
+# ---------- Réalisations : pointillé + triangle creux ----------
+
+ImplA -> InterfaceA { style.stroke-dash: 4; target-arrowhead: { shape: triangle; style.filled: false } }
+ImplB -> InterfaceA { style.stroke-dash: 4; target-arrowhead: { shape: triangle; style.filled: false } }
+
+# ---------- Généralisation : trait plein + triangle creux ----------
+
+ClasseDerivee -> ClasseBase { target-arrowhead: { shape: triangle; style.filled: false } }
+
+# ---------- Composition : losange plein, pose sur le conteneur ----------
+
+Composant -> Conteneur { source-arrowhead.label: "1..*"; target-arrowhead: { shape: diamond; style.filled: true; label: "1" } }
+
+# ---------- Association : cardinalites aux deux extremites ----------
+
+Service -> InterfaceA { source-arrowhead.label: "1"; target-arrowhead.label: "1" }
+
+# ---------- Dependances : pointille, fleche simple ----------
+
+Service -> Conteneur: "utilise" { style.stroke-dash: 4 }
+Conteneur -> Enumeration { style.stroke-dash: 4 }
 ```

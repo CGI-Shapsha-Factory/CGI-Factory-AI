@@ -41,7 +41,13 @@ feature_sequence, risks, **design_impact**, **env_files**, **test_enforcement**,
 du projet** (vrais fichiers de config). Écriture = read-modify-write + revalidation JSON.
 **Handoff designer** : le skill `architecte-livrables` produit `impact-design.md` (section "Décisions à
 impact design") - la tranche de l'archi qui se voit à l'écran, consommée par `/designer:designer-ingestion` ;
-`check_architecture.py` exige `architecture.design_impact = true`. Les diagrammes sont écrits en
+`check_architecture.py` exige `architecture.design_impact = true`. **Six diagrammes** : contexte
+C4, conteneurs C4, flux d'un parcours critique, ERD, déploiement et **classes (UML)** - un vrai
+diagramme de classes (`shape: class` D2) avec sa **notation** : stéréotypes `<<interface>>` /
+`<<enumeration>>`, réalisations et héritages en **triangle creux**, composition en **losange
+plein posé sur le conteneur** (D2 ne dessinant une forme que du côté cible, la connexion s'écrit
+du composant vers le conteneur), cardinalités **aux deux extrémités** ; "sans objet" motivé si
+le produit est un simple CRUD. Ils sont écrits en
 **syntaxe D2** (moteur ELK : routage orthogonal, sans chevauchement) et rendus en **SVG** (source de
 vérité, vectoriel) **+ PNG** (best-effort) dans `architecte-out/diagrammes/` (via
 `scripts/render_diagrams.py`, binaire **D2**) ; le rendu est **robuste et auto-installé** (SVG sans

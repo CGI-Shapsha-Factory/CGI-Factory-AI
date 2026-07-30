@@ -55,7 +55,8 @@ Premier passage (rien n'existe) : générer directement, sans porte.
 
 ### Étape 1 : Diagrammes (+ images SVG/PNG)
 Produire `architecte-out/diagrammes.md` (gabarit `templates/diagrammes.md`) :
-C4 contexte, C4 conteneurs, flux d'un parcours critique, ERD, déploiement - en **syntaxe D2**
+C4 contexte, C4 conteneurs, flux d'un parcours critique, ERD, déploiement, **classes (UML)** -
+en **syntaxe D2**
 (moteur de layout **ELK** : routage orthogonal, sans chevauchement de flèches ni de libellés),
 avec les noms réels (pas de placeholders). Garder les libellés de flèche courts là où plusieurs
 flèches convergent (sinon les libellés se serrent). **Couleur de trait par entité source** : dans
@@ -69,7 +70,24 @@ deux sources dont les flèches se croisent. La **même couleur** sert de **conto
 pour retrouver d'un coup d'oeil la boîte d'où part un faisceau ; les entités qui n'émettent rien
 (bases, secrets, journalisation, systèmes externes) **gardent leur contour d'origine**. La couleur
 **complète** les libellés, elle ne les remplace pas. **Pas de coloriage** sur le diagramme de
-contexte ni sur l'ERD (sur une `sql_table`, D2 applique `stroke` au fond de l'en-tête).
+contexte, sur l'ERD (sur une `sql_table`, D2 applique `stroke` au fond de l'en-tête) ni sur le
+diagramme de classes (relations structurelles, pas des flux d'appel).
+
+Le **diagramme de classes** est un vrai **diagramme UML** : interfaces et classes qui les
+réalisent, entités, services, hiérarchies d'erreurs et énumérations, avec leurs attributs et
+leurs **signatures de méthodes**. C'est la **pointe de la flèche qui porte le sens**, jamais un
+libellé en toutes lettres : pointillé + triangle creux pour une réalisation, trait plein +
+triangle creux pour un héritage, losange plein pour une composition, losange creux pour une
+agrégation, pointillé simple pour une dépendance, et les **cardinalités aux deux extrémités**.
+Visibilités `+`/`-`/`#`, stéréotypes en ASCII (`<<interface>>`, `<<enumeration>>`). **Exclure**
+les modules de câblage, les fichiers de configuration, les DTO d'un seul usage et le code
+généré. Si le produit est un simple CRUD sans interface ni héritage, l'écrire en clair (avec la
+raison) plutôt que d'aligner des boîtes sans relation - **jamais une omission silencieuse**.
+
+*(Piège D2 déjà tranché : une forme d'extrémité ne se dessine que du côté **cible**. Pour poser
+le losange sur le conteneur, écrire la connexion **du composant vers le conteneur** et mettre le
+losange en `target-arrowhead` ; les libellés de cardinalité, eux, s'affichent des deux côtés.)*
+
 Puis **générer les images** : lancer
 `py -3 "${CLAUDE_PLUGIN_ROOT}/scripts/render_diagrams.py" <projet>/architecte-out/diagrammes.md`
 (remplacer `py -3` par `python` si `py` est absent) - il rend un **SVG par diagramme** (source de
@@ -162,7 +180,12 @@ indéfini. Aucun fichier annexe.
   installées dans `conventions/` ; walking skeleton et séquence de features figés.
 - Dans `diagrammes.md`, **chaque source émettant plusieurs flèches** des diagrammes conteneurs,
   flux et déploiement porte sa **couleur** - **sur ses flèches et sur son contour**, même valeur hex
-  aux deux endroits (aucune source laissée au trait par défaut) ; contexte et ERD restent neutres.
+  aux deux endroits (aucune source laissée au trait par défaut) ; contexte, ERD et diagramme de
+  classes restent neutres.
+- **Diagramme de classes UML** présent et **conforme à la notation** : interfaces stéréotypées,
+  réalisations en pointillé à triangle creux, héritages en trait plein à triangle creux,
+  composition en losange plein posé sur le conteneur, cardinalités aux deux extrémités des
+  associations - ou "sans objet" **écrit avec sa raison** si le produit est un simple CRUD.
 - **Composant Frontend/UI présent** dans `composants.md` si le produit a des écrans ;
   **chaque techno de `stack-technique.md` porte une version exacte** (aucun "latest" / vide) ;
   `composants.md` et `stack-technique.md` **cohérents** (mêmes technos/versions, pas de stack
