@@ -1,6 +1,6 @@
 ---
 name: couts-init
-description: Pose le compteur de coûts de SIMULATION (hook SessionEnd + table de prix) directement dans le dossier courant. Aucune question, aucun pré-requis : installe et confirme, en français.
+description: Pose le compteur de coûts de SIMULATION (hook SessionEnd + table de prix) directement dans le dossier courant. Demande une seule fois le prénom du développeur et le nom du projet (pour la consolidation d'équipe), puis installe et confirme, en français.
 ---
 
 # couts-init
@@ -12,7 +12,9 @@ mesurées.
 
 ## Règles d'interaction (impératif)
 - **Tout en français** avec l'utilisateur.
-- **Ne jamais poser de question** d'emplacement ni proposer d'options : installer **directement**.
+- **Une seule question, à la première installation** : le prénom et le nom de projet (Étape 0
+  ci-dessous). En dehors de celle-là, **ne jamais poser de question** d'emplacement ni proposer
+  d'options : installer **directement**.
 - **Ne jamais décrire la mécanique interne** (scripts, hooks, versions, chemins, éventuels
   décalages de nommage). Pas de liste de fichiers, pas de note technique, pas d'exposé de "blocage".
 - **Confirmation finale courte**, en français, sans détail.
@@ -32,6 +34,7 @@ dossier parent, **jamais** un `.factory/` / `factory-docs/` situé plus haut. To
 dossier :
 - `.claude/hooks/turn_cost.py`
 - `.claude/settings.json` (hook `SessionEnd`, par fusion)
+- `.factory/couts/identite.json` (prénom + nom de projet, pour la consolidation d'équipe)
 - `.factory/couts/price-table.json` (tarifs Claude, coût estimé)
 - `.factory/couts/gemini-price-table.json` (tarifs Gemini, coût réellement facturé)
 - `.factory/couts/` (le journal - un `.jsonl` par session, plus un par revue Gemini)
@@ -41,6 +44,15 @@ Le compteur est **ancré sur son propre emplacement** : il n'écrit que dans le 
 dossier où il est posé, et ne mesure **que** les sessions lancées dans ce dossier.
 
 ## Procédure (idempotent : n'installe que le manquant)
+0. **Identité (une seule fois)** : si `.factory/couts/identite.json` **existe déjà**, passer
+   directement à l'étape 1 - **ne rien demander, ne rien réécrire**. Sinon, demander avec
+   **`AskUserQuestion`** le **prénom** du développeur et le **nom du projet** mesuré dans ce
+   dossier, en disant **pourquoi** : ces deux valeurs identifieront sa ligne dans le tableau
+   consolidé quand les répertoires de coûts de l'équipe seront regroupés (`/couts:couts-equipe`).
+   Utiliser la **saisie libre** pour les deux (aucune valeur ne peut être devinée) ; proposer
+   comme point de départ le nom du dossier courant pour le projet. Écrire ensuite
+   `.factory/couts/identite.json` : `{ "prenom": "<prénom>", "projet": "<nom de projet>" }`.
+   Ce n'est **pas** une saisie de coût : rien de chiffré n'est jamais saisi à la main.
 1. **Copier le compteur + enregistrer le hook (déterministe, par fusion, sans écraser l'existant)** :
    lancer `python "${CLAUDE_PLUGIN_ROOT}/references/install_cost_hook.py"` **sans argument** (il cible
    le dossier courant). Le script fait les deux gestes lui-même : il copie `turn_cost.py` ->
@@ -68,12 +80,14 @@ rapport (chaque requête comptée une seule fois).
 - `.claude/hooks/turn_cost.py` présent ; `.claude/settings.json` contient le hook `SessionEnd` du
   compteur (les autres hooks préservés).
 - `.factory/couts/price-table.json` et `.factory/couts/gemini-price-table.json` présents ;
+  `.factory/couts/identite.json` présent et renseigné (prénom + projet) ;
   `.factory/couts/` existe ; `.gitignore` couvre `.factory/` (donc `.factory/couts/`).
 - Vérifier : `python "${CLAUDE_PLUGIN_ROOT}/scripts/check_costs.py" <dossier courant>/manifest.json`
   (exit 0 attendu ; s'il renvoie exit 1, corriger le manquant sans l'exposer en détail).
 
 ## Règles invariantes
-- **Simulation seule.** Aucun coût réel, aucune saisie manuelle, aucun fichier de config.
+- **Simulation seule.** Aucun coût réel, **aucun chiffre saisi à la main**, aucun fichier de config.
+  Le prénom et le nom de projet sont une **identité**, pas un coût : ils n'entrent dans aucun calcul.
 - **Dossier courant.** Installation et mesure sont confinées au dossier où la session est lancée.
 - **Fin de session, pas par tour.** Zéro latence pendant les tours ; granularité par message conservée.
 - **Ne rien écraser.** L'enregistrement du hook est une **fusion** dans `.claude/settings.json`.

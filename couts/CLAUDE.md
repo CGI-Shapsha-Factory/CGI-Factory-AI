@@ -13,7 +13,8 @@ mélangent jamais** :
   `google-genai`), tarifés ici.
 
 **Autonome** et installé dans le **dossier courant**. Skills Markdown + scripts Python ; pas de
-build/test. **Pas de saisie manuelle, pas de fichier de config.**
+build/test. **Aucun chiffre saisi à la main, pas de fichier de config.** (Seule saisie du plugin :
+prénom + nom de projet à l'init, une identité qui n'entre dans aucun calcul.)
 
 **Piège de facturation Gemini (vérifié sur un vrai appel).** Le prix de sortie est annoncé
 "including thinking tokens", et `thoughts_token_count` **n'est pas compté dans**
@@ -26,9 +27,12 @@ additionne les deux ; ne jamais "simplifier" ce calcul.
 - **Tout en français** ; identifiants machine et noms d'outils/formats restent tels quels.
 - **Skills uniquement, pas de `commands/`**. Invocation : `/couts:<skill>` + auto par le modèle.
 
-## Les 3 skills
+## Les 4 skills
 - `couts-init` - pose le compteur **dans le dossier courant** (à lancer tôt, autonome - pas de
-  pré-requis, **aucune question**) : `references/install_cost_hook.py` copie `turn_cost.py` en
+  pré-requis). **Une seule question, à la première installation** : prénom du développeur et nom du
+  projet, écrits dans `.factory/couts/identite.json` - ils identifieront sa ligne dans le tableau
+  d'équipe (`couts-equipe`). Si le fichier existe, rien n'est redemandé ni réécrit
+  (idempotence). `references/install_cost_hook.py` copie `turn_cost.py` en
   `.claude/hooks/` **et fusionne** le hook `SessionEnd` dans `.claude/settings.json` (sans écraser
   les hooks existants ; commande ancrée sur `${CLAUDE_PROJECT_DIR}`, lanceur Python détecté à
   l'installation), installe la table de prix datée dans `.factory/couts/`, crée `.factory/couts/` +
@@ -43,6 +47,11 @@ additionne les deux ; ne jamais "simplifier" ce calcul.
   (`.factory/couts/bilan-couts.md` : dev, période, nombre de sessions, total tokens en 5 catégories,
   **coût estimé ET coût réel**, distincts) - le fichier à remettre au chef d'équipe ; **écrasé à
   chaque run** (reflète toujours l'état courant du journal local).
+- `couts-equipe` - **consolidation multi-développeurs** (`references/cost_equipe.py <collecte>`) :
+  chacun envoie son répertoire de coûts, on les dépose en sous-dossiers côte à côte, et le script
+  produit **une ligne par développeur** (`Développeur`, `Projet`, `Sessions`, `Input`, `Output`,
+  `Cache lu`, `Cache écrit`, `Estimé`, `Réel`) + un Total, dans `rapport-equipe.md` **versionné**.
+  Voir la section Consolidation d'équipe ci-dessous.
 
 ## Le compteur (`references/turn_cost.py`) : hook `SessionEnd` (écriture en fin de session)
 Best-effort (ne bloque jamais, exit 0). **Un seul comportement**, déclenché par `SessionEnd` : lit
@@ -66,15 +75,37 @@ chaque interaction (+13-16 s rapportés sur des stacks réels). `SessionEnd` tir
 ## Suivi org (`references/OTEL.md`) : OpenTelemetry, sans hook par machine
 Doc (pas de code) : activer `CLAUDE_CODE_ENABLE_TELEMETRY=1` + OTLP (métriques natives
 `claude_code.token.usage` / `cost.usage`, par user/modèle) vers un collecteur, via un `settings.json` géré -
-pour le rollup au niveau organisation. Alternative au journal-repo. Le journal `.factory/couts/` étant git-ignoré (individuel), OTel est
-la voie pour le rollup cross-dev.
+pour le rollup au niveau organisation. Alternative au journal-repo. **Deux voies pour le cross-dev,
+pas une** : `couts-equipe` (dépôt de répertoires, aucune infra, à la demande) et OTel (temps réel,
+dashboards, mais collecteur et `settings.json` géré à mettre en place). OTel reste la voie du suivi
+continu à l'échelle organisation.
+
+## Consolidation d'équipe (`references/cost_equipe.py`)
+Le journal étant git-ignoré donc individuel, la consolidation se fait par **dépôt de répertoires** :
+un sous-dossier par développeur dans un dossier de collecte, et un tableau à **une ligne par
+développeur**. Décisions structurantes :
+- **L'identité vit au niveau du dossier** (`identite.json`), pas dans l'enregistrement. Raison : les
+  enregistrements Gemini (`kind:"reel"`) n'ont **pas** de champ `dev` - une identité par
+  enregistrement ne couvrirait pas la colonne de coût réel sans modifier `assembleur`. Bonus : un
+  développeur sur deux projets a naturellement deux `.factory/couts/`, chacun avec son nom de projet.
+- **Repli d'identité signalé** : `identite.json` -> champ `dev` (email git) -> nom du dossier. La
+  ligne apparaît toujours, mais le repli est écrit dans une section **À vérifier**.
+- **Dédup locale à chaque dossier, jamais entre développeurs.** Une dédup globale par `key` (celle du
+  rapport individuel) ferait disparaître en silence les messages d'un développeur au profit d'un
+  autre en cas de recouvrement. Le recouvrement est donc **détecté et signalé**, jamais fusionné.
+- **Rien n'est retarifé côté simulation** (`sim_cost_usd` vient du compteur de chacun) ; le réel est
+  tarifé avec **une seule table pour toute l'équipe**, sinon les lignes ne seraient pas comparables.
+- **Tolérance de forme** : contenu de `.factory/couts/`, `.factory/` entier ou racine projet.
+- **Hors portée de `check_costs.py`** : le rapport d'équipe vit en dehors d'un projet, le garde-fou
+  ne le balaie pas. `sanitize_typo()` sur le document entier reste la seule garantie typographique.
 
 ## Stockage (individuel, git-ignoré)
 **Un fichier par session** `.factory/couts/<aaaa-mm>/<session-id>.jsonl`, **réécrit à chaque `SessionEnd`**
 depuis le transcript complet. **Pas d'état/curseur** (on réécrit tout à chaque fois). Tout `.factory/couts/`
 est **git-ignoré** (données individuelles, jamais poussées au repo). Table de prix dans
-`.factory/couts/`. **Partage au chef d'équipe** : remettre un `rapport-couts.md` (fichier versionné) ou
-rollup org via OTel.
+`.factory/couts/`, identité du développeur dans `.factory/couts/identite.json`. **Partage au chef
+d'équipe** : remettre un `rapport-couts.md` (fichier versionné), envoyer **tout le répertoire** pour
+une consolidation via `couts-equipe`, ou rollup org via OTel.
 
 **Reprise de session** : (1) **même id** -> réécriture idempotente du fichier depuis le transcript complet
 (pas de doublon) ; (2) **nouvel id qui rejoue** l'historique -> chaque enregistrement porte sa `key`
@@ -142,8 +173,9 @@ cible le dossier courant, lanceur Python détecté), `references/price-table.jso
 ```bash
 python -c "import json; json.load(open('.claude-plugin/plugin.json', encoding='utf-8'))"
 grep -L "^name:" skills/*/SKILL.md          # doit ne rien retourner
-python -m py_compile references/turn_cost.py references/cost_report.py references/install_cost_hook.py scripts/check_costs.py
+python -m py_compile references/turn_cost.py references/cost_report.py references/cost_total.py references/cost_equipe.py references/install_cost_hook.py scripts/check_costs.py
 python scripts/check_costs.py <projet>/manifest.json
+python references/cost_equipe.py <dossier-de-collecte>   # total = somme des rapports individuels
 ```
 
 ## Invariants

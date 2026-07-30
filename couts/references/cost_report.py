@@ -347,17 +347,25 @@ def build_report(root):
     return sanitize_typo("\n".join(lines)), data
 
 
-def _next_report_path(outdir):
-    """Versionnage : ne JAMAIS ecraser. rapport-couts.md, puis rapport-couts-2.md, -3.md, ..."""
-    base = os.path.join(outdir, "rapport-couts.md")
-    if not os.path.exists(base):
-        return base
+def next_report_path(outdir, base="rapport-couts"):
+    """Versionnage : ne JAMAIS ecraser. <base>.md, puis <base>-2.md, -3.md, ...
+
+    Le prefixe est parametrable pour que le rapport d'equipe (cost_equipe.py) reutilise
+    exactement la meme regle de versionnage plutot que d'en redefinir une.
+    """
+    p0 = os.path.join(outdir, f"{base}.md")
+    if not os.path.exists(p0):
+        return p0
     n = 2
     while True:
-        p = os.path.join(outdir, f"rapport-couts-{n}.md")
+        p = os.path.join(outdir, f"{base}-{n}.md")
         if not os.path.exists(p):
             return p
         n += 1
+
+
+# Compat : ancien nom prive, conserve le temps que d'eventuels appels externes suivent.
+_next_report_path = next_report_path
 
 
 def main(argv):
@@ -374,7 +382,7 @@ def main(argv):
     try:
         outdir = os.path.join(root, ".factory", "couts")
         os.makedirs(outdir, exist_ok=True)
-        report_path = _next_report_path(outdir)
+        report_path = next_report_path(outdir)
         open(report_path, "w", encoding="utf-8").write(md + "\n")
     except OSError:
         pass
