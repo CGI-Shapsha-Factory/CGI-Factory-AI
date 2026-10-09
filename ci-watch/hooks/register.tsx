@@ -161,6 +161,7 @@ let polling = false
         project: item?.project ? { ...item.project, status: item.fieldValueByName?.name } : undefined,
         needsProjectScope,
         summary: body.length > 0 && body.length <= 280 ? body : undefined,
+        summaryStatus: (body.length === 0 ? 'none' : body.length <= 280 ? 'done' : 'loading') as CiTicket['summaryStatus'],
       }))
       if (body.length > 280) void summarizeTicket($, issue.number, issue.title, body)
     } catch {
@@ -169,15 +170,23 @@ let polling = false
   }
 
   async function summarizeTicket($: EngineInterface, n: number, title: string, body: string): Promise<void> {
-    const r = await $.model.complete({
-      model: 'haiku',
-      maxTokens: 200,
-      system:
-        "Résume ce ticket en français en 2 phrases courtes : ce qu'il faut faire et pourquoi. " +
-        'Pas de liste, pas de titre, pas de reformulation du titre.',
-      prompt: `Ticket #${n} : ${title}\n\n${body.slice(0, 8000)}`,
-    })
-    if (r.isAnswered) await update($, ticket, t => (t.number === n ? { ...t, summary: r.text.trim() } : t))
+    let text: string | undefined
+    try {
+      const r = await $.model.complete({
+        model: 'haiku',
+        maxTokens: 200,
+        system:
+          "Résume ce ticket en français en 2 phrases courtes : ce qu'il faut faire et pourquoi. " +
+          'Pas de liste, pas de titre, pas de reformulation du titre.',
+        prompt: `Ticket #${n} : ${title}\n\n${body.slice(0, 8000)}`,
+      })
+      if (r.isAnswered && r.text.trim()) text = r.text.trim()
+    } catch {
+      text = undefined
+    }
+    await update($, ticket, t =>
+      t.number === n ? { ...t, summary: text, summaryStatus: text ? ('done' as const) : ('error' as const) } : t,
+    )
   }
 
   async function summarize($: EngineInterface, check: CiCheck): Promise<void> {
@@ -317,11 +326,9 @@ export const register: Register = on => {
               </Box>
             )}
             {(tk.labels?.length ?? 0) > 0 && <Text dimColor>{tk.labels?.map(l => `#${l}`).join('  ')}</Text>}
-            {tk.summary ? (
-              <Text>{tk.summary}</Text>
-            ) : (
-              <Text dimColor italic>Résumé en cours…</Text>
-            )}
+            {tk.summaryStatus === 'done' && tk.summary && <Text>{tk.summary}</Text>}
+            {tk.summaryStatus === 'loading' && <Text dimColor italic>Résumé en cours…</Text>}
+            {tk.summaryStatus === 'error' && <Text dimColor italic>Résumé indisponible</Text>}
             {tk.needsProjectScope && (
               <Text dimColor>Statut du Project masqué : lance gh auth refresh -s read:project</Text>
             )}
