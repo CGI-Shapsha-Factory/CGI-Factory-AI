@@ -1,6 +1,6 @@
 {
   "name": "ci-watch",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Suit la CI GitHub Actions d'une PR dans un panneau latéral, résume les jobs en échec et affiche le ticket lié.",
   "author": {
     "name": "IA Factory"

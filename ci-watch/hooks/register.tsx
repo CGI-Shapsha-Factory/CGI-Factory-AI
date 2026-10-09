@@ -169,23 +169,41 @@ let polling = false
     }
   }
 
-  async function summarizeTicket($: EngineInterface, n: number, title: string, body: string): Promise<void> {
-    let text: string | undefined
-    try {
-      const r = await $.model.complete({
-        model: 'haiku',
-        maxTokens: 200,
-        system:
-          "Résume ce ticket en français en 2 phrases courtes : ce qu'il faut faire et pourquoi. " +
-          'Pas de liste, pas de titre, pas de reformulation du titre.',
-        prompt: `Ticket #${n} : ${title}\n\n${body.slice(0, 8000)}`,
-      })
-      if (r.isAnswered && r.text.trim()) text = r.text.trim()
-    } catch {
-      text = undefined
+  /**
+   * Une complétion courte : Haiku d'abord, Sonnet si Haiku est refusé ou en erreur d'API (compte ou
+   * organisation sans accès à Haiku). Rend le texte, ou la raison de l'échec du dernier essai.
+   */
+  async function ask(
+    $: EngineInterface,
+    system: string,
+    prompt: string,
+    maxTokens: number,
+  ): Promise<{ text?: string; why?: string }> {
+    const tried: string[] = []
+    for (const model of ['haiku', 'sonnet']) {
+      try {
+        const r = await $.model.complete({ model, system, prompt, maxTokens })
+        if (r.isAnswered && r.text.trim()) return { text: r.text.trim() }
+        if (r.isAnswered) return { why: `${model} : réponse vide` }
+        tried.push(r.reason === 'api-error' ? `${model} : api-error ${r.status ?? ''} ${r.error}`.trim() : `${model} : ${r.reason}`)
+        if (r.reason !== 'api-error') break
+      } catch (err) {
+        tried.push(`${model} : ${String(err).slice(0, 120)}`)
+      }
     }
+    return { why: tried.join(' ; ') }
+  }
+
+  async function summarizeTicket($: EngineInterface, n: number, title: string, body: string): Promise<void> {
+    const { text, why } = await ask(
+      $,
+      "Résume ce ticket en français en 2 phrases courtes : ce qu'il faut faire et pourquoi. " +
+        'Pas de liste, pas de titre, pas de reformulation du titre.',
+      `Ticket #${n} : ${title}\n\n${body.slice(0, 8000)}`,
+      200,
+    )
     await update($, ticket, t =>
-      t.number === n ? { ...t, summary: text, summaryStatus: text ? ('done' as const) : ('error' as const) } : t,
+      t.number === n ? { ...t, summary: text, summaryError: why, summaryStatus: text ? ('done' as const) : ('error' as const) } : t,
     )
   }
 
@@ -209,19 +227,16 @@ let polling = false
         await set({ status: 'error', text: 'Logs vides ou indisponibles (run encore en cours, ou logs expirés).' })
         return
       }
-      const r = await $.model.complete({
-        model: 'haiku',
-        maxTokens: 500,
-        system:
-          "Tu analyses des logs d'échec GitHub Actions. Réponds en français, en Markdown, 3 à 5 puces très courtes : " +
+      const { text, why } = await ask(
+        $,
+        "Tu analyses des logs d'échec GitHub Actions. Réponds en français, en Markdown, 3 à 5 puces très courtes : " +
           "l'étape qui échoue, le message d'erreur clé (cité tel quel, entre backticks), le fichier:ligne s'il apparaît, " +
           'la cause probable et une piste de correction. Aucune introduction ni conclusion.',
-        prompt: `Workflow : ${check.workflow}\nJob : ${check.name}\n\nLogs (fin) :\n${log}`,
-      })
+        `Workflow : ${check.workflow}\nJob : ${check.name}\n\nLogs (fin) :\n${log}`,
+        500,
+      )
       await set(
-        r.isAnswered
-          ? { status: 'done', text: r.text.trim() }
-          : { status: 'error', text: `Le résumé a échoué (${r.reason}). Réessaie.` },
+        text ? { status: 'done', text } : { status: 'error', text: `Le résumé a échoué (${why}). Réessaie.` },
       )
     } catch (err) {
       await set({ status: 'error', text: `Impossible de lire les logs : ${String(err).slice(0, 200)}` })
@@ -328,7 +343,9 @@ export const register: Register = on => {
             {(tk.labels?.length ?? 0) > 0 && <Text dimColor>{tk.labels?.map(l => `#${l}`).join('  ')}</Text>}
             {tk.summaryStatus === 'done' && tk.summary && <Text>{tk.summary}</Text>}
             {tk.summaryStatus === 'loading' && <Text dimColor italic>Résumé en cours…</Text>}
-            {tk.summaryStatus === 'error' && <Text dimColor italic>Résumé indisponible</Text>}
+            {tk.summaryStatus === 'error' && (
+              <Text dimColor italic>{`Résumé indisponible${tk.summaryError ? ` (${tk.summaryError})` : ''}`}</Text>
+            )}
             {tk.needsProjectScope && (
               <Text dimColor>Statut du Project masqué : lance gh auth refresh -s read:project</Text>
             )}
