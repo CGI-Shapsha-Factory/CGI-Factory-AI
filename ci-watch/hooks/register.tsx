@@ -171,6 +171,7 @@ let polling = false
 
   async function summarizeTicket($: EngineInterface, n: number, title: string, body: string): Promise<void> {
     let text: string | undefined
+    let why: string | undefined
     try {
       const r = await $.model.complete({
         model: 'haiku',
@@ -181,11 +182,13 @@ let polling = false
         prompt: `Ticket #${n} : ${title}\n\n${body.slice(0, 8000)}`,
       })
       if (r.isAnswered && r.text.trim()) text = r.text.trim()
-    } catch {
-      text = undefined
+      else if (r.isAnswered) why = 'réponse vide'
+      else why = r.reason === 'api-error' ? `api-error ${r.status ?? ''} ${r.error}`.trim() : r.reason
+    } catch (err) {
+      why = String(err).slice(0, 160)
     }
     await update($, ticket, t =>
-      t.number === n ? { ...t, summary: text, summaryStatus: text ? ('done' as const) : ('error' as const) } : t,
+      t.number === n ? { ...t, summary: text, summaryError: why, summaryStatus: text ? ('done' as const) : ('error' as const) } : t,
     )
   }
 
@@ -328,7 +331,9 @@ export const register: Register = on => {
             {(tk.labels?.length ?? 0) > 0 && <Text dimColor>{tk.labels?.map(l => `#${l}`).join('  ')}</Text>}
             {tk.summaryStatus === 'done' && tk.summary && <Text>{tk.summary}</Text>}
             {tk.summaryStatus === 'loading' && <Text dimColor italic>Résumé en cours…</Text>}
-            {tk.summaryStatus === 'error' && <Text dimColor italic>Résumé indisponible</Text>}
+            {tk.summaryStatus === 'error' && (
+              <Text dimColor italic>{`Résumé indisponible${tk.summaryError ? ` (${tk.summaryError})` : ''}`}</Text>
+            )}
             {tk.needsProjectScope && (
               <Text dimColor>Statut du Project masqué : lance gh auth refresh -s read:project</Text>
             )}

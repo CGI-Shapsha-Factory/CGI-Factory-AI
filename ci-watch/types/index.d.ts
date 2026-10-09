@@ -26,6 +26,7 @@ export type CiTicket = {
   needsProjectScope?: boolean
   summary?: string
   summaryStatus?: 'none' | 'loading' | 'done' | 'error'
+  summaryError?: string
 }
 
 export type CiWatch = {

@@ -96,7 +96,7 @@ test('gh pr create starts the watch and a red job gets a French summary', async 
 })
 
 for (const [label, body, expected, absent] of [
-  ['long body, model fails', 'x'.repeat(400), /Résumé indisponible/, /Résumé en cours/],
+  ['long body, model fails', 'x'.repeat(400), /Résumé indisponible \(api-error 529/, /Résumé en cours/],
   ['empty body', '', undefined, /Résumé (en cours|indisponible)/],
 ] as const) {
   test(`ticket summary: ${label}`, async ($, on) => {
