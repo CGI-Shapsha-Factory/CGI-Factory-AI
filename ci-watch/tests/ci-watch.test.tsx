@@ -96,8 +96,9 @@ test('gh pr create starts the watch and a red job gets a French summary', async 
 })
 
 for (const [label, body, expected, absent] of [
-  ['long body, model fails', 'x'.repeat(400), /Résumé indisponible \(api-error 529/, /Résumé en cours/],
+  ['long body, model fails', 'x'.repeat(400), /Résumé indisponible \(haiku : api-error 529.*sonnet : api-error 529/, /Résumé en cours/],
   ['empty body', '', undefined, /Résumé (en cours|indisponible)/],
+  ['haiku refused, sonnet answers', 'y'.repeat(400), /Résumé par Sonnet/, /Résumé (en cours|indisponible)/],
 ] as const) {
   test(`ticket summary: ${label}`, async ($, on) => {
     on('tool.call', { tool: 'Bash' }, () => ({ result: { stdout: PR, stderr: '', interrupted: false }, text: PR }) as never)
@@ -112,7 +113,10 @@ for (const [label, body, expected, absent] of [
           : CHECKS
       return { value: { exitCode: 0, stdout, stderr: '', isStdoutTruncated: false, isStderrTruncated: false } }
     })
-    on('model.complete', () => ({
+    on('model.complete', ($, e) =>
+      e.model === 'sonnet' && label.includes('sonnet')
+        ? ({ value: { isAnswered: true, text: 'Résumé par Sonnet.', usage: { input_tokens: 1, output_tokens: 1, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 } } } as never)
+        : ({
       value: {
         isAnswered: false as const,
         reason: 'api-error' as const,
