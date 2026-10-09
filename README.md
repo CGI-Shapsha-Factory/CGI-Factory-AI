@@ -42,6 +42,7 @@ L'installation se fait **uniquement via la marketplace** Claude Code — il n'y 
 ```shell
 /plugin marketplace add CGI-Shapsha-Factory/CGI-Factory-AI
 /plugin install cadrage@Shapsha-Factory        # puis architecte/designer/assembleur au besoin
+/plugin install ci-watch@Shapsha-Factory       # harnais de dev : suivi de la CI des PR dans un panneau
 ```
 
 Dans l'app, `/plugin` → onglet **Discover** montre les modules **groupés par rôle** (catégories).

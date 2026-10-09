@@ -82,6 +82,17 @@
       "category": "Couts (transversal)",
       "tags": ["couts", "cost", "tokens", "pilotage", "observabilite"],
       "description": "Mesure du cout de simulation : un tableau par session (tokens input/output + cout en euros)."
+    },
+    {
+      "name": "ci-watch",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/CGI-Shapsha-Factory/CGI-Factory-AI.git",
+        "path": "ci-watch"
+      },
+      "category": "Harnais de dev (transversal)",
+      "tags": ["developpeur", "ci", "github-actions", "pull-request", "mod"],
+      "description": "Panneau de suivi de la CI GitHub Actions d'une PR : jobs en direct, resume des echecs, ticket lie."
     }
   ]
 }
