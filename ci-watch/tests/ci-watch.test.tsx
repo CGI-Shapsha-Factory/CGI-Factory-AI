@@ -94,3 +94,40 @@ test('gh pr create starts the watch and a red job gets a French summary', async 
     await ui.unmount()
   }
 })
+
+for (const [label, body, expected, absent] of [
+  ['long body, model fails', 'x'.repeat(400), /Résumé indisponible/, /Résumé en cours/],
+  ['empty body', '', undefined, /Résumé (en cours|indisponible)/],
+] as const) {
+  test(`ticket summary: ${label}`, async ($, on) => {
+    on('tool.call', { tool: 'Bash' }, () => ({ result: { stdout: PR, stderr: '', interrupted: false }, text: PR }) as never)
+    on('ui.status', () => ({ value: undefined }))
+    on('ui.toast', () => ({ value: undefined }))
+    on('ui.open', () => ({ value: { isOpen: true } }) as never)
+    on('process.run', ($, e) => {
+      const issue = { ...ISSUE, body }
+      const stdout =
+        e.argv[1] === 'api'
+          ? JSON.stringify({ data: { repository: { pullRequest: { headRefName: 'x', closingIssuesReferences: { nodes: [issue] } } } } })
+          : CHECKS
+      return { value: { exitCode: 0, stdout, stderr: '', isStdoutTruncated: false, isStderrTruncated: false } }
+    })
+    on('model.complete', () => ({
+      value: {
+        isAnswered: false as const,
+        reason: 'api-error' as const,
+        status: 529,
+        error: 'overloaded' as never,
+        usage: { input_tokens: 0, output_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 },
+      },
+    }) as never)
+
+    await $.tool.call({ tool: 'Bash', command: 'gh pr create --fill' })
+    const ui = await $.ui.mount({ plugin: 'ci-watch', surface: 'desktop', component: 'Pane', requestId: 'ci-watch', props: {} as never })
+    expect(await ui.find({ text: /#12  Exporter le diagnostic en PDF/ })).toBeDefined()
+    for (let i = 0; i < 50 && expected && !(await ui.find({ text: expected })); i++) await ui.redraw()
+    if (expected) expect(await ui.find({ text: expected })).toBeDefined()
+    expect(await ui.find({ text: absent })).toBeUndefined()
+    await ui.unmount()
+  })
+}
